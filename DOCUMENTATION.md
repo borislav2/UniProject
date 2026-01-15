@@ -54,7 +54,7 @@
 
 ### 1. Клониране на проекта
 ```bash
-git clone <repository-url>
+git clone https://github.com/borislav2/UniProject.git
 cd UniProject
 ```
 
@@ -815,5 +815,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 ---
 
-*Документацията е актуализирана на: {{ date('d.m.Y') }}*
+*Документацията е актуализирана на: 15.01.2026*
 *Версия на системата: 1.0.0*
