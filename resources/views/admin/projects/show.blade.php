@@ -4,7 +4,12 @@
 
 @section('content')
 <div class="mb-6 flex justify-between items-center">
-    <h2 class="text-2xl font-bold text-gray-800">{{ $project->name }}</h2>
+    <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+        {{ $project->name }}
+        @if($project->source === 'website')
+            <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-medium">Запитване от сайта</span>
+        @endif
+    </h2>
     <div class="flex space-x-4">
         <a href="{{ route('admin.projects.edit', $project) }}" class="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600">
             <i class="fas fa-edit mr-2"></i>Edit Project
@@ -86,6 +91,17 @@
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Project Information</h3>
             <div class="space-y-3">
+                @if($project->client_email || $project->client_phone)
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Контакт с клиента</h4>
+                        @if($project->client_email)
+                            <p class="text-gray-900"><a href="mailto:{{ $project->client_email }}" class="text-blue-600 hover:underline">{{ $project->client_email }}</a></p>
+                        @endif
+                        @if($project->client_phone)
+                            <p class="text-gray-900"><a href="tel:{{ $project->client_phone }}" class="text-blue-600 hover:underline">{{ $project->client_phone }}</a></p>
+                        @endif
+                    </div>
+                @endif
                 <div>
                     <h4 class="text-sm font-medium text-gray-500">Created</h4>
                     <p class="text-gray-900">{{ $project->created_at->format('M d, Y H:i') }}</p>

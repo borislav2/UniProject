@@ -18,54 +18,54 @@ class ProjectSeeder extends Seeder
     {
         $projects = [
             [
-                'name' => 'E-commerce Platform',
-                'description' => 'A full-featured e-commerce platform with payment integration and inventory management.',
-                'start_date' => '2024-01-15',
-                'end_date' => '2024-06-30',
+                'name' => 'Сайт за ресторант "Вкусотия"',
+                'description' => 'Бизнес сайт с меню, галерия и форма за резервации за семеен ресторант.',
+                'start_date' => '2026-02-01',
+                'end_date' => '2026-03-10',
                 'status' => 'Completed',
-                'manager' => 'John Smith',
-                'category_name' => 'Web Development',
-                'technologies' => ['Laravel', 'React', 'MySQL', 'Docker']
+                'manager' => 'Уеб екип',
+                'category_name' => 'Ресторанти',
+                'technologies' => ['Laravel', 'MySQL']
             ],
             [
-                'name' => 'Mobile Banking App',
-                'description' => 'Secure mobile banking application with biometric authentication.',
-                'start_date' => '2024-03-01',
-                'end_date' => '2024-12-31',
-                'status' => 'In Progress',
-                'manager' => 'Sarah Johnson',
-                'category_name' => 'Mobile Development',
-                'technologies' => ['React', 'Node.js', 'PostgreSQL']
-            ],
-            [
-                'name' => 'Data Analytics Dashboard',
-                'description' => 'Real-time analytics dashboard for business intelligence.',
-                'start_date' => '2024-02-01',
-                'end_date' => '2024-08-15',
-                'status' => 'In Progress',
-                'manager' => 'Michael Brown',
-                'category_name' => 'Data Science',
-                'technologies' => ['Python', 'Django', 'MongoDB', 'Vue.js']
-            ],
-            [
-                'name' => 'DevOps Pipeline',
-                'description' => 'Automated CI/CD pipeline for microservices architecture.',
-                'start_date' => '2024-01-01',
-                'end_date' => '2024-04-30',
+                'name' => 'Онлайн магазин за козметика "Glow"',
+                'description' => 'Онлайн магазин с плащане с карта и интеграция с куриерска фирма.',
+                'start_date' => '2026-01-15',
+                'end_date' => '2026-04-01',
                 'status' => 'Completed',
-                'manager' => 'David Wilson',
-                'category_name' => 'DevOps',
-                'technologies' => ['Docker', 'Kubernetes', 'Node.js']
+                'manager' => 'Уеб екип',
+                'category_name' => 'Онлайн магазини',
+                'technologies' => ['Laravel', 'React', 'MySQL']
             ],
             [
-                'name' => 'Desktop CRM System',
-                'description' => 'Customer relationship management desktop application.',
-                'start_date' => '2024-05-01',
+                'name' => 'Маркетинг кампания за козметичен салон "Bella"',
+                'description' => 'Месечна реклама във Facebook и Instagram, насочена към локални клиенти.',
+                'start_date' => '2026-03-01',
+                'end_date' => null,
+                'status' => 'In Progress',
+                'manager' => 'Маркетинг екип',
+                'category_name' => 'Козметични салони',
+                'technologies' => []
+            ],
+            [
+                'name' => 'Сайт-визитка за дентален кабинет "Усмивка"',
+                'description' => 'Едностраничен сайт с информация за услуги и контактна форма.',
+                'start_date' => '2026-04-01',
                 'end_date' => null,
                 'status' => 'Planning',
-                'manager' => 'Emily Davis',
-                'category_name' => 'Desktop Applications',
-                'technologies' => ['Python', 'PostgreSQL']
+                'manager' => 'Уеб екип',
+                'category_name' => 'Медицински кабинети',
+                'technologies' => []
+            ],
+            [
+                'name' => 'SEO оптимизация за автосервиз "Турбо"',
+                'description' => 'Локално SEO и профил в Google Business за по-добра видимост в търсенето.',
+                'start_date' => '2026-02-15',
+                'end_date' => '2026-05-15',
+                'status' => 'In Progress',
+                'manager' => 'Маркетинг екип',
+                'category_name' => 'Автосервизи',
+                'technologies' => []
             ],
         ];
 

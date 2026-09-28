@@ -1,225 +1,196 @@
 @extends('layouts.public')
 
-@section('title', 'Home')
+@section('title', 'Уебсайтове и маркетинг за бизнеса в България')
 
 @section('content')
+
+@if(session('success'))
+    <div class="max-w-3xl mx-auto mt-6 px-4">
+        <div class="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded-lg text-center">
+            {{ session('success') }}
+        </div>
+    </div>
+@endif
+
 <!-- Hero Section -->
-<section class="hero-gradient text-white py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6">
-                Project Management System
+<section class="bg-gray-50 py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
+                Уебсайт, който ви носи <span class="text-blue-600">клиенти.</span>
             </h1>
-            <p class="text-xl md:text-2xl mb-8 text-gray-100">
-                Organize, track, and manage your projects with our comprehensive management solution
+            <p class="text-lg text-gray-600 mb-8">
+                Creatium Lab изгражда бързи и красиви сайтове за български бизнеси и ги подкрепя с маркетинг стратегия.
+                Един екип от идеята до първите запитвания.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                @auth
-                    <div class="text-center">
-                        <p class="text-white mb-4">Добре дошли, {{ auth()->user()->name }}!</p>
-                        <a href="{{ route('admin.dashboard') }}" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-cog mr-2"></i>Admin Panel
-                        </a>
-                    </div>
-                @endauth
-                @guest
-                    <a href="{{ route('login') }}" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Login
-                    </a>
-                    <a href="{{ route('register') }}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-indigo-600 transition-colors">
-                        <i class="fas fa-user-plus mr-2"></i>Register
-                    </a>
-                @endguest
-                <a href="#features" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-indigo-600 transition-colors">
-                    Learn More
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a href="#kontakt" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold text-center hover:bg-blue-700 transition-colors">
+                    Поискайте оферта
+                </a>
+                <a href="#uslugi" class="border-2 border-gray-300 text-gray-800 px-6 py-3 rounded-lg font-semibold text-center hover:border-blue-600 hover:text-blue-600 transition-colors">
+                    Вижте услугите
                 </a>
             </div>
         </div>
-    </div>
-</section>
 
-<!-- Statistics Section -->
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">System Overview</h2>
-            <p class="text-lg text-gray-600">Real-time statistics from our project management system</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-            <div class="text-center p-6 bg-blue-50 rounded-lg card-hover">
-                <div class="text-3xl font-bold text-blue-600 mb-2">{{ $stats['total_projects'] }}</div>
-                <div class="text-gray-600">Total Projects</div>
-            </div>
-            <div class="text-center p-6 bg-green-50 rounded-lg card-hover">
-                <div class="text-3xl font-bold text-green-600 mb-2">{{ $stats['completed_projects'] }}</div>
-                <div class="text-gray-600">Completed</div>
-            </div>
-            <div class="text-center p-6 bg-orange-50 rounded-lg card-hover">
-                <div class="text-3xl font-bold text-orange-600 mb-2">{{ $stats['in_progress_projects'] }}</div>
-                <div class="text-gray-600">In Progress</div>
-            </div>
-            <div class="text-center p-6 bg-purple-50 rounded-lg card-hover">
-                <div class="text-3xl font-bold text-purple-600 mb-2">{{ $stats['total_categories'] }}</div>
-                <div class="text-gray-600">Categories</div>
-            </div>
-            <div class="text-center p-6 bg-indigo-50 rounded-lg card-hover">
-                <div class="text-3xl font-bold text-indigo-600 mb-2">{{ $stats['total_technologies'] }}</div>
-                <div class="text-gray-600">Technologies</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Featured Projects Section -->
-<section id="features" class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">Featured Projects</h2>
-            <p class="text-lg text-gray-600">Explore some of our recent and notable projects</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @forelse($featuredProjects as $project)
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="px-3 py-1 text-xs rounded-full 
-                                @if($project->status == 'Completed') bg-green-100 text-green-800
-                                @elseif($project->status == 'In Progress') bg-blue-100 text-blue-800
-                                @elseif($project->status == 'Planning') bg-yellow-100 text-yellow-800
-                                @elseif($project->status == 'On Hold') bg-orange-100 text-orange-800
-                                @else bg-red-100 text-red-800
-                                @endif">
-                                {{ $project->status }}
-                            </span>
-                            <span class="text-sm text-gray-500">{{ $project->category->name }}</span>
-                        </div>
-                        
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ $project->name }}</h3>
-                        <p class="text-gray-600 mb-4">{{ Str::limit($project->description, 100) }}</p>
-                        
-                        <div class="mb-4">
-                            <div class="text-sm text-gray-500 mb-2">Technologies:</div>
-                            <div class="flex flex-wrap gap-1">
-                                @foreach($project->technologies->take(3) as $technology)
-                                    <span class="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded">
-                                        {{ $technology->name }}
-                                    </span>
-                                @endforeach
-                                @if($project->technologies->count() > 3)
-                                    <span class="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded">
-                                        +{{ $project->technologies->count() - 3 }}
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center justify-between text-sm text-gray-500">
-                            <span><i class="fas fa-user mr-1"></i>{{ $project->manager }}</span>
-                            <span><i class="fas fa-calendar mr-1"></i>{{ $project->start_date->format('M Y') }}</span>
-                        </div>
-                    </div>
+        <div class="relative">
+            <div class="bg-white rounded-xl shadow-xl p-4">
+                <div class="flex gap-1.5 mb-4">
+                    <span class="w-3 h-3 rounded-full bg-gray-200"></span>
+                    <span class="w-3 h-3 rounded-full bg-gray-200"></span>
+                    <span class="w-3 h-3 rounded-full bg-gray-200"></span>
                 </div>
-            @empty
-                <div class="col-span-full text-center py-12">
-                    <p class="text-gray-500">No projects available at the moment.</p>
+                <div class="bg-blue-600 rounded-lg p-6 mb-4">
+                    <div class="h-3 w-2/3 bg-white/70 rounded mb-3"></div>
+                    <div class="h-3 w-1/2 bg-white/50 rounded mb-3"></div>
+                    <div class="h-8 w-1/3 bg-white rounded mt-4"></div>
                 </div>
-            @endforelse
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div class="h-14 bg-gray-100 rounded-lg"></div>
+                    <div class="h-14 bg-gray-100 rounded-lg"></div>
+                    <div class="h-14 bg-gray-100 rounded-lg"></div>
+                </div>
+                <div class="h-3 w-full bg-gray-100 rounded"></div>
+            </div>
+            <div class="absolute -bottom-6 -left-6 bg-gray-900 text-white rounded-xl shadow-lg px-5 py-3 flex items-center gap-3">
+                <i class="fas fa-chart-line text-blue-400"></i>
+                <span class="text-sm font-medium">Дизайн, код<br>и маркетинг</span>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Categories Section -->
-<section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">Project Categories</h2>
-            <p class="text-lg text-gray-600">Browse projects by category</p>
+<!-- Industries bar -->
+<section class="bg-gray-900 text-white py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center gap-4">
+        <span class="text-xs uppercase tracking-wider text-gray-400 whitespace-nowrap">Работим с бизнеси като:</span>
+        <div class="flex flex-wrap gap-x-8 gap-y-2 text-gray-200 text-sm">
+            @foreach($industries as $industry)
+                <span>{{ $industry }}</span>
+            @endforeach
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            @foreach($categories as $category)
-                <div class="text-center p-6 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg card-hover">
-                    <div class="text-3xl mb-4">
-                        @if($category->name == 'Web Development')
-                            <i class="fas fa-globe text-blue-600"></i>
-                        @elseif($category->name == 'Mobile Development')
-                            <i class="fas fa-mobile-alt text-green-600"></i>
-                        @elseif($category->name == 'Desktop Applications')
-                            <i class="fas fa-desktop text-purple-600"></i>
-                        @elseif($category->name == 'Data Science')
-                            <i class="fas fa-chart-bar text-orange-600"></i>
-                        @else
-                            <i class="fas fa-cogs text-indigo-600"></i>
-                        @endif
+    </div>
+</section>
+
+<!-- Услуги -->
+<section id="uslugi" class="py-16 md:py-20 bg-white scroll-mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <span class="text-blue-600 text-sm font-semibold uppercase tracking-wider">Услуги</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-12">
+            Всичко, от което бизнесът ви се нуждае онлайн
+        </h2>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            @foreach($services as $service)
+                <div class="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas {{ $service['icon'] }} text-blue-600"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 mb-2">{{ $category->name }}</h3>
-                    <p class="text-sm text-gray-600">{{ $category->projects_count }} projects</p>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ $service['title'] }}</h3>
+                    <p class="text-gray-600 mb-4">{{ $service['description'] }}</p>
+                    <ul class="space-y-1">
+                        @foreach($service['points'] as $point)
+                            <li class="text-sm text-gray-600 flex items-center gap-2">
+                                <i class="fas fa-check text-blue-600 text-xs"></i>{{ $point }}
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
             @endforeach
         </div>
     </div>
 </section>
 
-<!-- Technologies Section -->
-<section class="py-16 bg-gray-50">
+<!-- Как работим -->
+<section id="proces" class="py-16 md:py-20 bg-blue-50 scroll-mt-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">Popular Technologies</h2>
-            <p class="text-lg text-gray-600">Technologies used in our projects</p>
-        </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-            @foreach($technologies as $technology)
-                <div class="text-center p-4 bg-white rounded-lg shadow card-hover">
-                    <div class="text-2xl mb-2">
-                        @if(strtolower($technology->name) == 'laravel')
-                            <i class="fab fa-laravel text-red-600"></i>
-                        @elseif(strtolower($technology->name) == 'react')
-                            <i class="fab fa-react text-blue-400"></i>
-                        @elseif(strtolower($technology->name) == 'vue.js')
-                            <i class="fab fa-vuejs text-green-600"></i>
-                        @elseif(strtolower($technology->name) == 'angular')
-                            <i class="fab fa-angular text-red-600"></i>
-                        @elseif(strtolower($technology->name) == 'node.js')
-                            <i class="fab fa-node text-green-600"></i>
-                        @elseif(strtolower($technology->name) == 'python')
-                            <i class="fab fa-python text-blue-600"></i>
-                        @elseif(strtolower($technology->name) == 'docker')
-                            <i class="fab fa-docker text-blue-500"></i>
-                        @else
-                            <i class="fas fa-cube text-indigo-600"></i>
-                        @endif
-                    </div>
-                    <h4 class="text-sm font-medium text-gray-900">{{ $technology->name }}</h4>
-                    <p class="text-xs text-gray-500">{{ $technology->projects_count }} projects</p>
+        <span class="text-blue-600 text-sm font-semibold uppercase tracking-wider">Как работим</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-12">
+            Ясен процес, без изненади
+        </h2>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            @foreach($process as $step)
+                <div>
+                    <div class="text-3xl font-extrabold text-blue-600 mb-3">{{ $step['step'] }}</div>
+                    <h3 class="font-semibold text-gray-900 mb-2">{{ $step['title'] }}</h3>
+                    <p class="text-sm text-gray-600">{{ $step['description'] }}</p>
                 </div>
             @endforeach
         </div>
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="py-20 bg-indigo-600 text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        @if(auth()->check())
-            <h2 class="text-3xl font-bold mb-4">Готови да управлявате проектите?</h2>
-            <p class="text-xl mb-8 text-indigo-100">
-                Достъпвайте административния панел за създаване и управление на проекти
+<!-- Пакети -->
+<section id="paketi" class="py-16 md:py-20 bg-white scroll-mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <span class="text-blue-600 text-sm font-semibold uppercase tracking-wider">Пакети</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-12">
+            Изберете началото си
+        </h2>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            @foreach($packages as $package)
+                <div class="rounded-xl p-8 flex flex-col {{ $package['highlighted'] ? 'bg-gray-900 text-white shadow-xl' : 'border border-gray-200 text-gray-900' }}">
+                    <h3 class="text-xl font-bold mb-2">{{ $package['name'] }}</h3>
+                    <p class="{{ $package['highlighted'] ? 'text-gray-300' : 'text-gray-600' }} mb-6">{{ $package['description'] }}</p>
+                    <p class="text-2xl font-extrabold mb-6">{{ $package['price_note'] }}</p>
+                    <ul class="space-y-2 mb-8 flex-1">
+                        @foreach($package['features'] as $feature)
+                            <li class="text-sm flex items-center gap-2 {{ $package['highlighted'] ? 'text-gray-200' : 'text-gray-600' }}">
+                                <i class="fas fa-check {{ $package['highlighted'] ? 'text-blue-400' : 'text-blue-600' }} text-xs"></i>{{ $feature }}
+                            </li>
+                        @endforeach
+                    </ul>
+                    <a href="#kontakt" class="text-center px-6 py-3 rounded-lg font-semibold transition-colors {{ $package['highlighted'] ? 'bg-white text-gray-900 hover:bg-gray-100' : 'border-2 border-gray-300 hover:border-blue-600 hover:text-blue-600' }}">
+                        Поискайте оферта
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<!-- Контакт -->
+<section id="kontakt" class="py-16 md:py-20 bg-gray-900 text-white scroll-mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-start">
+        <div>
+            <span class="text-blue-400 text-sm font-semibold uppercase tracking-wider">Контакт</span>
+            <h2 class="text-3xl md:text-4xl font-bold mt-2 mb-4">Разкажете ни за вашия бизнес.</h2>
+            <p class="text-gray-300 mb-8">
+                Първият разговор е безплатен и без ангажимент. Ще се свържем с вас възможно най-скоро.
             </p>
-            <a href="{{ route('admin.dashboard') }}" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                <i class="fas fa-cog mr-2"></i>Admin Panel
-            </a>
-        @else
-            <h2 class="text-3xl font-bold mb-4">Готови да управлявате проектите?</h2>
-            <p class="text-xl mb-8 text-indigo-100">
-                Регистрирайте се за достъп до нашия административен панел
-            </p>
-            <a href="{{ route('register') }}" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                <i class="fas fa-user-plus mr-2"></i>Регистрирайте се
-            </a>
-        @endif
+            <div class="space-y-2 text-gray-300 text-sm">
+                <p><i class="fas fa-envelope mr-2 text-blue-400"></i>{{ $contact['email'] }}</p>
+                <p><i class="fas fa-phone mr-2 text-blue-400"></i>{{ $contact['phone'] }}</p>
+                <p><i class="fas fa-location-dot mr-2 text-blue-400"></i>{{ $contact['city'] }}, България</p>
+            </div>
+        </div>
+
+        <form action="{{ route('contact.submit') }}" method="POST" class="bg-white rounded-xl p-6 space-y-4">
+            @csrf
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Име</label>
+                <input type="text" id="name" name="name" value="{{ old('name') }}" required
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                @error('name')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label for="contact" class="block text-sm font-medium text-gray-700 mb-1">Телефон или имейл</label>
+                <input type="text" id="contact" name="contact" value="{{ old('contact') }}" required
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                @error('contact')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Разкажете ни повече</label>
+                <textarea id="message" name="message" rows="4" required
+                          class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">{{ old('message') }}</textarea>
+                @error('message')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                Изпратете запитване
+            </button>
+        </form>
     </div>
 </section>
 @endsection

@@ -13,30 +13,54 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $stats = [
-            'total_projects' => Project::count(),
-            'total_categories' => Category::count(),
-            'total_technologies' => Technology::count(),
-            'completed_projects' => Project::where('status', 'Completed')->count(),
-            'in_progress_projects' => Project::where('status', 'In Progress')->count(),
-        ];
-        
-        $featuredProjects = Project::with(['category', 'technologies'])
-            ->inRandomOrder()
-            ->take(6)
-            ->get();
-        
-        $categories = Category::withCount('projects')->get();
-        $technologies = Technology::withCount('projects')->orderBy('projects_count', 'desc')->take(8)->get();
-        
-        return view('home', compact('stats', 'featuredProjects', 'categories', 'technologies'));
+        $industries = config('creatium.industries');
+        $services = config('creatium.services');
+        $process = config('creatium.process');
+        $packages = config('creatium.packages');
+        $contact = config('creatium.contact');
+
+        return view('home', compact('industries', 'services', 'process', 'packages', 'contact'));
     }
-    
+
+    public function submitContact(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'contact' => 'required|string|max:255',
+            'message' => 'required|string',
+        ], [
+            'name.required' => 'Моля, въведете вашето име.',
+            'contact.required' => 'Моля, въведете телефон или имейл за връзка.',
+            'message.required' => 'Моля, разкажете ни малко повече за вашия бизнес.',
+        ]);
+
+        $leadCategory = Category::firstOrCreate(
+            ['name' => 'Ново запитване'],
+            ['description' => 'Автоматично създадени запитвания от сайта, изчакващи категоризация']
+        );
+
+        $isEmail = str_contains($validated['contact'], '@');
+
+        Project::create([
+            'name' => 'Запитване от ' . $validated['name'],
+            'description' => $validated['message'],
+            'start_date' => now()->toDateString(),
+            'status' => 'Planning',
+            'manager' => 'Неразпределен',
+            'category_id' => $leadCategory->id,
+            'client_email' => $isEmail ? $validated['contact'] : null,
+            'client_phone' => $isEmail ? null : $validated['contact'],
+            'source' => 'website',
+        ]);
+
+        return back()->with('success', 'Благодарим ви! Ще се свържем с вас възможно най-скоро.');
+    }
+
     public function about()
     {
         return view('about');
     }
-    
+
     public function contact()
     {
         return view('contact');
