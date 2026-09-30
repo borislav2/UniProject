@@ -50,7 +50,11 @@ INI
 echo "==> MariaDB"
 printf "[mysqld]\nbind-address=127.0.0.1\n" > /etc/my.cnf.d/99-creatium.cnf
 systemctl enable --now mariadb
-DB_PASS="$(openssl rand -base64 24 | tr -d '=+/' | cut -c1-24)"
+if [ -f /root/creatium-db.txt ]; then
+    DB_PASS="$(grep '^DB_PASSWORD=' /root/creatium-db.txt | cut -d= -f2-)"
+else
+    DB_PASS="$(openssl rand -base64 24 | tr -d '=+/' | cut -c1-24)"
+fi
 mysql -e "CREATE DATABASE IF NOT EXISTS \`$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';
 ALTER USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';
@@ -77,6 +81,15 @@ if systemctl is-active --quiet firewalld; then
 fi
 
 systemctl enable --now php-fpm nginx
+
+echo "==> Проверка на инсталираното"
+missing=0
+for tool in php composer node npm nginx mysql certbot git; do
+    if command -v "$tool" >/dev/null; then printf '  ok   %s\n' "$tool"; else printf '  ЛИПСВА %s\n' "$tool"; missing=1; fi
+done
+systemctl is-active --quiet nginx && systemctl is-active --quiet php-fpm && systemctl is-active --quiet mariadb \
+    || { echo "  ЛИПСВА: някоя от услугите nginx/php-fpm/mariadb не работи"; missing=1; }
+[ "$missing" -eq 0 ] || { echo "Инсталацията НЕ е пълна. Прегледайте грешките по-горе."; exit 1; }
 
 cat <<MSG
 
