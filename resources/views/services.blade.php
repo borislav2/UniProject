@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Услуги: уебсайтове, маркетинг и SEO')
-@section('meta_description', 'Изработка на уебсайтове и онлайн магазини, маркетинг във Facebook, Instagram и Google и локално SEO за български бизнеси.')
+@section('title', 'Услуги: уебсайтове и SEO')
+@section('meta_description', 'Изработка на уебсайтове и онлайн магазини и локално SEO, за да ви намират в Google. За български бизнеси.')
 
 @section('content')
 @include('partials/page-header', ['heading' => 'Услуги', 'sub' => 'Всичко, от което бизнесът ви се нуждае, за да бъде намерен и избран онлайн.'])

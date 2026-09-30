@@ -65,6 +65,8 @@ CREATIUM_NOTIFY_EMAIL=...   # къде да пристигат известия�
 CREATIUM_COMPANY="..."
 CREATIUM_EIK=...
 CREATIUM_ADDRESS="..."
+
+# META_PIXEL_ID=123456789012345   # по желание, вижте „Проследяване на запитванията и Meta Pixel“
 ```
 
 След това:
@@ -93,10 +95,28 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache
 - [ ] Прегледайте `/poveritelnost` и `/usloviya` с юрист или счетоводител: това са шаблони, не правна консултация
 - [ ] Добавете Google Search Console и подайте `https://creatiumlab.com/sitemap.xml`
 - [ ] Създайте Google Business профил за фирмата
-- [ ] Свържете Facebook/Instagram профилите във footer-а (сега са скрити, защото няма реални линкове)
 - [ ] Следене на наличността (напр. UptimeRobot към `https://creatiumlab.com/up`)
 - [ ] Автоматичен бекъп на базата данни и на `public/uploads/` (поне веднъж дневно)
 - [ ] Ако добавите Google Analytics, Meta Pixel или подобни: нужен е **банер за съгласие с бисквитки** и обновена политика
+
+## Проследяване на запитванията и Meta Pixel
+
+**Откъде идват клиентите.** Всяко запитване от сайта записва канала, от който е дошъл посетителят. Каналът се вижда в `/admin` (етикет в списъка с проекти, подробности в самия проект и обобщение за последните 30 дни на таблото). Разпознават се:
+
+- UTM параметри в линка: `utm_source`, `utm_medium`, `utm_campaign`
+- реклами: `gclid` (Google) и `fbclid` (Meta)
+- препращащ сайт (напр. google.com)
+- всичко останало е „Директно“
+
+Слагайте UTM параметри на всеки линк към сайта, който публикувате, например:
+
+```
+https://creatiumlab.com/?utm_source=instagram&utm_medium=bio
+https://creatiumlab.com/?utm_source=facebook&utm_medium=paid&utm_campaign=esen-2026
+https://creatiumlab.com/?utm_source=vizitka&utm_medium=qr
+```
+
+**Meta Pixel (по желание).** Сложете ID-то на пиксела в `.env` (`META_PIXEL_ID=...`) и пуснете `php artisan config:cache`. Тогава сайтът показва банер за бисквитки. Пикселът се зарежда **само** след „Приемам“ и отчита `PageView`, а при изпратено запитване и `Lead`, по който рекламите в Meta могат да се оптимизират. Политиката за поверителност автоматично добавя текст за пиксела, а във footer-а се появява „Настройки за бисквитки“ за оттегляне на съгласието. Без `META_PIXEL_ID` няма нито банер, нито пиксел.
 
 ## 6. Деплой на промени
 

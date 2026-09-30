@@ -91,6 +91,20 @@
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Project Information</h3>
             <div class="space-y-3">
+                @if($project->source === 'website')
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Канал</h4>
+                        <p class="text-gray-900 font-semibold">{{ $project->lead_channel ?? 'Директно' }}</p>
+                        @if($project->utm_source || $project->utm_medium || $project->utm_campaign || $project->referrer)
+                            <dl class="mt-1 text-xs text-gray-500 space-y-0.5">
+                                @if($project->utm_source)<div>utm_source: {{ $project->utm_source }}</div>@endif
+                                @if($project->utm_medium)<div>utm_medium: {{ $project->utm_medium }}</div>@endif
+                                @if($project->utm_campaign)<div>utm_campaign: {{ $project->utm_campaign }}</div>@endif
+                                @if($project->referrer)<div>Препращащ сайт: {{ $project->referrer }}</div>@endif
+                            </dl>
+                        @endif
+                    </div>
+                @endif
                 @if($project->client_email || $project->client_phone)
                     <div>
                         <h4 class="text-sm font-medium text-gray-500">Контакт с клиента</h4>

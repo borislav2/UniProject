@@ -3,6 +3,29 @@
 @section('title', 'Dashboard')
 
 @section('content')
+<div class="bg-white rounded-lg shadow p-6 mb-8">
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700">Запитвания от сайта по канал</h3>
+        <span class="text-sm text-gray-500">последните 30 дни</span>
+    </div>
+    @if($leadChannels->isEmpty())
+        <p class="text-gray-500">Още няма запитвания от сайта през последните 30 дни.</p>
+    @else
+        @php $maxLeads = $leadChannels->max('total'); @endphp
+        <div class="space-y-3">
+            @foreach($leadChannels as $row)
+                <div class="flex items-center gap-4">
+                    <span class="w-40 shrink-0 text-sm text-gray-700 truncate">{{ $row->channel }}</span>
+                    <div class="flex-1 h-3 rounded-full bg-gray-100 overflow-hidden">
+                        <div class="h-full rounded-full bg-brand-500" style="width: {{ max(4, round($row->total / $maxLeads * 100)) }}%"></div>
+                    </div>
+                    <span class="w-10 text-right text-sm font-semibold text-gray-900">{{ $row->total }}</span>
+                </div>
+            @endforeach
+        </div>
+    @endif
+</div>
+
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center">

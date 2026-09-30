@@ -23,6 +23,11 @@ class Project extends Model
         'client_phone',
         'source',
         'is_public',
+        'lead_channel',
+        'utm_source',
+        'utm_medium',
+        'utm_campaign',
+        'referrer',
     ];
     
     protected $casts = [

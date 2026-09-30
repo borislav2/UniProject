@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\NewLeadMail;
 use App\Models\Category;
 use App\Models\Project;
+use App\Support\LeadAttribution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -64,6 +65,7 @@ class HomeController extends Controller
         );
 
         $isEmail = str_contains($validated['contact'], '@');
+        $attribution = $request->session()->get(LeadAttribution::SESSION_KEY);
 
         $lead = Project::create([
             'name' => 'Запитване от ' . $validated['name'],
@@ -75,6 +77,11 @@ class HomeController extends Controller
             'client_email' => $isEmail ? $validated['contact'] : null,
             'client_phone' => $isEmail ? null : $validated['contact'],
             'source' => 'website',
+            'lead_channel' => LeadAttribution::channel($attribution),
+            'utm_source' => $attribution['utm_source'] ?? null,
+            'utm_medium' => $attribution['utm_medium'] ?? null,
+            'utm_campaign' => $attribution['utm_campaign'] ?? null,
+            'referrer' => $attribution['referrer'] ?? null,
         ]);
 
         try {
@@ -83,7 +90,9 @@ class HomeController extends Controller
             Log::error('Lead notification email failed: ' . $e->getMessage(), ['project_id' => $lead->id]);
         }
 
-        return back()->with('success', 'Получихме запитването ви и ще се свържем с вас възможно най-скоро.');
+        return back()
+            ->with('success', 'Получихме запитването ви и ще се свържем с вас възможно най-скоро.')
+            ->with('lead_created', true);
     }
 
     public function showLoginForm()

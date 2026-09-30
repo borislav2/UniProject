@@ -137,6 +137,9 @@
                 <div class="flex flex-wrap gap-x-6 gap-y-2">
                     <a href="{{ route('privacy') }}" class="hover:text-white">Политика за поверителност</a>
                     <a href="{{ route('terms') }}" class="hover:text-white">Условия за ползване</a>
+                    @if(config('creatium.meta_pixel_id'))
+                        <a href="#" data-cookie-settings class="hover:text-white">Настройки за бисквитки</a>
+                    @endif
                     @guest
                         <a href="{{ route('login') }}" class="hover:text-white">Вход за екипа</a>
                     @endguest
@@ -144,6 +147,10 @@
             </div>
         </div>
     </footer>
+
+    @if(config('creatium.meta_pixel_id'))
+        @include('partials/cookie-consent')
+    @endif
 
     <script>
         document.querySelector('.mobile-menu-button').addEventListener('click', function () {

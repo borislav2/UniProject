@@ -21,7 +21,7 @@
                 Уебсайт, който ви носи <span class="text-gradient">клиенти.</span>
             </h1>
             <p class="mt-6 text-lg text-gray-600 leading-relaxed max-w-xl">
-                Creatium Lab изгражда бързи и красиви сайтове за български бизнеси и ги подкрепя с маркетинг стратегия.
+                Creatium Lab изгражда бързи и красиви сайтове за български бизнеси и ги прави видими в Google.
                 Един екип от идеята до първите запитвания.
             </p>
             <div class="mt-8 flex flex-col sm:flex-row gap-3">
@@ -35,7 +35,7 @@
             <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-gray-600">
                 <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Безплатна първа консултация</li>
                 <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Отговор до 1 работен ден</li>
-                <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Сайт и маркетинг от един екип</li>
+                <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Сайт и SEO от един екип</li>
             </ul>
         </div>
 
@@ -67,7 +67,7 @@
                         <div class="h-8 w-32 rounded-lg bg-white"></div>
                     </div>
                     <div class="grid grid-cols-3 gap-3">
-                        @foreach(['fa-display', 'fa-bullhorn', 'fa-magnifying-glass'] as $icon)
+                        @foreach(['fa-display', 'fa-magnifying-glass', 'fa-location-dot'] as $icon)
                             <div class="rounded-xl border border-gray-100 bg-gray-50 p-3">
                                 <div class="w-7 h-7 rounded-lg bg-brand-100 flex items-center justify-center mb-2"><i class="fas {{ $icon }} text-xs text-brand-600"></i></div>
                                 <div class="h-2 w-full rounded bg-gray-200 mb-1.5"></div>
@@ -88,7 +88,7 @@
 
             <div class="absolute -bottom-6 left-2 sm:-left-8 rounded-xl bg-brand-950 text-white shadow-xl px-5 py-3.5 flex items-center gap-3">
                 <span class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center"><i class="fas fa-chart-line text-brand-300"></i></span>
-                <span class="text-sm font-semibold leading-tight">Дизайн, код<br>и маркетинг</span>
+                <span class="text-sm font-semibold leading-tight">Дизайн, код<br>и SEO</span>
             </div>
         </div>
     </div>
@@ -116,7 +116,7 @@
             <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950">Всичко, от което бизнесът ви се нуждае онлайн</h2>
         </div>
 
-        <div class="mt-14 grid md:grid-cols-3 gap-6">
+        <div class="mt-14 grid md:grid-cols-2 gap-6">
             @foreach($services as $service)
                 <div class="reveal card-hover group rounded-2xl border border-gray-200 bg-white p-7 flex flex-col" style="--reveal-delay: {{ $loop->index * 100 }}ms">
                     <div class="w-12 h-12 rounded-xl bg-brand-gradient flex items-center justify-center shadow-lg shadow-brand-900/20">

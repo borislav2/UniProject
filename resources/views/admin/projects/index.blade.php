@@ -51,6 +51,9 @@
                                     </a>
                                     @if($project->source === 'website')
                                         <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800">От сайта</span>
+                                        @if($project->lead_channel)
+                                            <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700" title="Канал">{{ $project->lead_channel }}</span>
+                                        @endif
                                     @endif
                                 </div>
                                 <div class="text-sm text-gray-500">{{ Str::limit($project->description, 50) }}</div>

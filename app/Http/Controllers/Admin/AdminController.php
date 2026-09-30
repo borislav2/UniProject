@@ -27,6 +27,13 @@ class AdminController extends Controller
             ->take(5)
             ->get();
         
-        return view('admin.dashboard', compact('stats', 'recentProjects'));
+        $leadChannels = Project::where('source', 'website')
+            ->where('created_at', '>=', now()->subDays(30))
+            ->selectRaw('COALESCE(lead_channel, ?) as channel, COUNT(*) as total', ['Директно'])
+            ->groupBy('channel')
+            ->orderByDesc('total')
+            ->get();
+
+        return view('admin.dashboard', compact('stats', 'recentProjects', 'leadChannels'));
     }
 }

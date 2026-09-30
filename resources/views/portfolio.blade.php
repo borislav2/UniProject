@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'Проекти')
-@section('meta_description', 'Избрани проекти на Creatium Lab: уебсайтове, онлайн магазини и маркетинг кампании за български бизнеси.')
+@section('meta_description', 'Избрани проекти на Creatium Lab: уебсайтове, онлайн магазини и SEO за български бизнеси.')
 
 @section('content')
 @include('partials/page-header', ['heading' => 'Проекти', 'sub' => 'Избрани работи за български бизнеси.'])
