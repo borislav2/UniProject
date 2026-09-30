@@ -4,6 +4,11 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+export PATH="/usr/local/bin:$PATH"
+for tool in git composer npm php; do
+    command -v "$tool" >/dev/null || { echo "Липсва '$tool'. Пуснете първо deploy/almalinux-setup.sh (или инсталирайте $tool)."; exit 1; }
+done
+
 [ -f .env ] || { echo "Липсва .env. Копирайте .env.example и го попълнете (вижте DEPLOY-WEBDOCK.md)."; exit 1; }
 
 git pull --ff-only
