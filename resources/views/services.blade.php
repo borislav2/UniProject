@@ -4,7 +4,7 @@
 @section('meta_description', 'Изработка на уебсайтове и онлайн магазини и локално SEO, за да ви намират в Google. За български бизнеси.')
 
 @section('content')
-@include('partials/page-header', ['heading' => 'Услуги', 'sub' => 'Всичко, от което бизнесът ви се нуждае, за да бъде намерен и избран онлайн.'])
+@include('partials/page-header', ['heading' => 'Услуги', 'sub' => 'Правим две неща: сайтове и SEO. Ето какво включва всяко от тях.'])
 
 <section class="py-16 bg-white">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 divide-y divide-gray-100 [&>*]:py-12 [&>*:first-child]:pt-0">

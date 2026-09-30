@@ -56,7 +56,7 @@ class HomeController extends Controller
 
         // Honeypot: real visitors never fill this hidden field.
         if ($request->filled('website')) {
-            return back()->with('success', 'Получихме запитването ви и ще се свържем с вас възможно най-скоро.');
+            return back()->with('success', 'Получихме съобщението ви. Ще ви отговорим до един работен ден.');
         }
 
         $leadCategory = Category::firstOrCreate(
@@ -91,7 +91,7 @@ class HomeController extends Controller
         }
 
         return back()
-            ->with('success', 'Получихме запитването ви и ще се свържем с вас възможно най-скоро.')
+            ->with('success', 'Получихме съобщението ви. Ще ви отговорим до един работен ден.')
             ->with('lead_created', true);
     }
 

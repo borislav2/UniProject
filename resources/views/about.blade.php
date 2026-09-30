@@ -1,16 +1,16 @@
 @extends('layouts.public')
 
 @section('title', 'За нас')
-@section('meta_description', 'Creatium Lab е малък екип от уеб разработчик и маркетолог, който помага на български бизнеси да се намират и избират онлайн.')
+@section('meta_description', 'Creatium Lab сме двама: единият прави сайтовете, другият се грижи хората да ги намират в Google. Работим с малки фирми в България.')
 
 @section('content')
-@include('partials/page-header', ['heading' => 'За нас', 'sub' => 'Малък екип, един отговорен човек за всяка задача.'])
+@include('partials/page-header', ['heading' => 'За нас', 'sub' => 'Двама души, които правят сайтове за малки фирми.'])
 
 <section class="py-16 bg-white">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 text-lg text-gray-700">
-        <p>Creatium Lab обединява два умения, които малкият бизнес рядко има под един покрив: <strong>уеб разработка</strong> и <strong>маркетинг</strong>.</p>
-        <p>Често сайтът се прави от един човек, а за това да бъде намиран се грижи друг, и двамата не си говорят. При нас сайтът се прави така, че да бъде намиран в Google и да води запитвания, а не просто да „стои онлайн“.</p>
-        <p>Работим директно с вас, без посредници и без неразбираем жаргон. Знаете с кого говорите, какво се прави и какво ще получите.</p>
+        <p>Ние сме двама. Единият прави сайтовете, другият се занимава с маркетинг и SEO. Затова мислим за това как ще ви намират в Google още докато правим сайта, а не след като е готов.</p>
+        <p>Работим директно с вас. Ако имате въпрос, пишете или звъннете и ще говорите с човека, който прави сайта ви.</p>
+        <p>Creatium Lab е нов и сега правим първите си проекти. Това значи, че всеки клиент получава цялото ни внимание.</p>
     </div>
 </section>
 
@@ -35,11 +35,11 @@
 
 <section class="py-16 bg-white">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 text-center mb-10">Как работим</h2>
+        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 text-center mb-10">Какво можете да очаквате</h2>
         <div class="grid sm:grid-cols-3 gap-8 text-center">
-            <div><i class="fas fa-comments text-brand-600 text-2xl mb-3"></i><h3 class="font-semibold mb-1">Ясна комуникация</h3><p class="text-sm text-gray-600">Говорим на разбираем език и винаги знаете на какъв етап сме.</p></div>
-            <div><i class="fas fa-bullseye text-brand-600 text-2xl mb-3"></i><h3 class="font-semibold mb-1">Фокус върху резултат</h3><p class="text-sm text-gray-600">Мерим успеха по запитванията и клиентите, не по „красиви“ метрики.</p></div>
-            <div><i class="fas fa-handshake text-brand-600 text-2xl mb-3"></i><h3 class="font-semibold mb-1">Дългосрочно партньорство</h3><p class="text-sm text-gray-600">Не изчезваме след пускането на сайта. Поддържаме го и го развиваме заедно с вас.</p></div>
+            <div><i class="fas fa-reply text-brand-600 text-2xl mb-3"></i><h3 class="font-semibold mb-1">Отговаряме бързо</h3><p class="text-sm text-gray-600">До един работен ден, по телефона или по имейл.</p></div>
+            <div><i class="fas fa-tag text-brand-600 text-2xl mb-3"></i><h3 class="font-semibold mb-1">Цената е ясна предварително</h3><p class="text-sm text-gray-600">Знаете колко ще струва, преди да започнем работа.</p></div>
+            <div><i class="fas fa-screwdriver-wrench text-brand-600 text-2xl mb-3"></i><h3 class="font-semibold mb-1">Оставаме и след това</h3><p class="text-sm text-gray-600">Ако трябва да смените нещо или нещо спре да работи, пишете ни.</p></div>
         </div>
     </div>
 </section>

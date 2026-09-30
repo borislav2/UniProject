@@ -4,7 +4,7 @@
 @section('meta_description', 'Избрани проекти на Creatium Lab: уебсайтове, онлайн магазини и SEO за български бизнеси.')
 
 @section('content')
-@include('partials/page-header', ['heading' => 'Проекти', 'sub' => 'Избрани работи за български бизнеси.'])
+@include('partials/page-header', ['heading' => 'Проекти', 'sub' => 'Сайтове, които правим.'])
 
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,9 +13,9 @@
                 <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-brand-50 flex items-center justify-center">
                     <i class="fas fa-rocket text-brand-600 text-xl"></i>
                 </div>
-                <h2 class="text-2xl font-bold mb-3">Първите проекти идват скоро</h2>
-                <p class="text-gray-600 mb-6">Работим по първите си клиентски проекти и ще ги покажем тук. Искате ли вашият да е сред тях?</p>
-                <a href="{{ route('contact') }}" class="inline-block bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-700 transition-colors">Свържете се с нас</a>
+                <h2 class="text-2xl font-bold mb-3">Тук скоро ще има проекти</h2>
+                <p class="text-gray-600 mb-6">Сега правим първите си сайтове и ще ги покажем тук, щом са готови и клиентите се съгласят. Ако искате вашият да е сред тях, пишете ни.</p>
+                <a href="{{ route('contact') }}" class="inline-block bg-brand-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-brand-700 transition-colors">Пишете ни</a>
             </div>
         @else
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

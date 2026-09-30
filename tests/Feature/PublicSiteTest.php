@@ -66,7 +66,7 @@ class PublicSiteTest extends TestCase
 
     public function test_empty_portfolio_shows_coming_soon(): void
     {
-        $this->get('/proekti')->assertSee('Първите проекти идват скоро');
+        $this->get('/proekti')->assertSee('Тук скоро ще има проекти');
     }
 
     public function test_contact_form_creates_lead_and_notifies_team(): void

@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'Уебсайтове и маркетинг за бизнеса в България')
-@section('meta_description', 'Creatium Lab изгражда бързи и красиви сайтове за ресторанти, салони, кабинети, фирми и онлайн магазини и ги подкрепя с маркетинг и SEO. Безплатна консултация.')
+@section('meta_description', 'Правим сайтове за ресторанти, салони, кабинети, сервизи и малки магазини и се грижим хората да ги намират в Google. Първата консултация е безплатна.')
 
 @section('content')
 
@@ -15,14 +15,14 @@
         <div class="reveal">
             <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/80 px-4 py-1.5 text-xs font-semibold text-brand-700 shadow-sm">
                 <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
-                Уебсайтове и маркетинг за бизнеса в България
+                Сайтове и SEO за малки фирми
             </span>
             <h1 class="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-brand-950 leading-[1.05]">
                 Уебсайт, който ви носи <span class="text-gradient">клиенти.</span>
             </h1>
             <p class="mt-6 text-lg text-gray-600 leading-relaxed max-w-xl">
-                Creatium Lab изгражда бързи и красиви сайтове за български бизнеси и ги прави видими в Google.
-                Един екип от идеята до първите запитвания.
+                Правим сайтове за малки фирми и се грижим хората да ги намират в Google.
+                Ние сме двама и с вас говори точно човекът, който върши работата.
             </p>
             <div class="mt-8 flex flex-col sm:flex-row gap-3">
                 <a href="#kontakt" class="inline-flex items-center justify-center gap-2 bg-brand-950 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-brand-800 transition-colors shadow-lg shadow-brand-950/20">
@@ -33,9 +33,9 @@
                 </a>
             </div>
             <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-gray-600">
-                <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Безплатна първа консултация</li>
-                <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Отговор до 1 работен ден</li>
-                <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Сайт и SEO от един екип</li>
+                <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Първата консултация е безплатна</li>
+                <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Отговаряме до един работен ден</li>
+                <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Без посредници</li>
             </ul>
         </div>
 
@@ -97,7 +97,7 @@
 {{-- Industries --}}
 <section class="border-y border-gray-100 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row lg:items-center gap-5">
-        <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 whitespace-nowrap">Работим с бизнеси като</span>
+        <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 whitespace-nowrap">Подходящо за</span>
         <div class="flex flex-wrap gap-2.5">
             @foreach($industries as $industry)
                 <span class="inline-flex items-center gap-2 rounded-full bg-gray-50 border border-gray-100 px-3.5 py-1.5 text-sm text-gray-700">
@@ -113,7 +113,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-2xl reveal">
             <span class="text-brand-600 text-sm font-bold uppercase tracking-wider">Услуги</span>
-            <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950">Всичко, от което бизнесът ви се нуждае онлайн</h2>
+            <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950">С какво можем да помогнем</h2>
         </div>
 
         <div class="mt-14 grid md:grid-cols-2 gap-6">
@@ -132,7 +132,7 @@
                         @endforeach
                     </ul>
                     <a href="{{ route('services') }}" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 group-hover:gap-3 transition-all">
-                        Научете повече <i class="fas fa-arrow-right text-xs"></i>
+                        Вижте повече <i class="fas fa-arrow-right text-xs"></i>
                     </a>
                 </div>
             @endforeach
@@ -146,7 +146,7 @@
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-2xl reveal">
             <span class="text-brand-600 text-sm font-bold uppercase tracking-wider">Как работим</span>
-            <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950">Ясен процес, без изненади</h2>
+            <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950">Как протича работата</h2>
         </div>
 
         <ol class="mt-14 relative grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -169,8 +169,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-2xl mx-auto text-center reveal">
             <span class="text-brand-600 text-sm font-bold uppercase tracking-wider">Пакети</span>
-            <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950">Изберете началото си</h2>
-            <p class="mt-4 text-gray-600">Всеки пакет може да се допълни според нуждите ви. Точната цена уточняваме след кратък разговор.</p>
+            <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950">Откъде да започнете</h2>
+            <p class="mt-4 text-gray-600">Цената зависи от това колко страници и какво съдържание ви трябва. Кажете ни и ще ви дадем точна оферта.</p>
         </div>
 
         <div class="mt-14 grid md:grid-cols-3 gap-6 items-stretch">
@@ -223,9 +223,9 @@
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
         <div class="reveal">
             <span class="text-brand-300 text-sm font-bold uppercase tracking-wider">Контакт</span>
-            <h2 class="mt-3 text-3xl md:text-5xl font-extrabold tracking-tight">Разкажете ни за вашия бизнес.</h2>
+            <h2 class="mt-3 text-3xl md:text-5xl font-extrabold tracking-tight">Пишете ни.</h2>
             <p class="mt-5 text-lg text-brand-100/90 max-w-md">
-                Първият разговор е безплатен и без ангажимент. Ще се свържем с вас възможно най-скоро.
+                Кажете ни с какво се занимавате и какво търсите. Ще ви отговорим до един работен ден, а първият разговор е безплатен.
             </p>
             <ul class="mt-8 space-y-4">
                 <li class="flex items-center gap-4">

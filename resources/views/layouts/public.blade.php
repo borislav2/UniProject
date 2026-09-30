@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>document.documentElement.classList.add('js');</script>
     @php
-        $pageTitle = trim($__env->yieldContent('title', 'Уебсайтове и маркетинг за бизнеса'));
-        $pageDescription = trim($__env->yieldContent('meta_description', 'Creatium Lab изгражда бързи и красиви сайтове за български бизнеси и ги подкрепя с маркетинг и SEO. Безплатна консултация.'));
+        $pageTitle = trim($__env->yieldContent('title', 'Сайтове и SEO за малки фирми'));
+        $pageDescription = trim($__env->yieldContent('meta_description', 'Правим сайтове за малки фирми и се грижим хората да ги намират в Google. Първата консултация е безплатна.'));
     @endphp
     <title>{{ $pageTitle }} | Creatium Lab</title>
     <meta name="description" content="{{ $pageDescription }}">
@@ -105,7 +105,7 @@
             <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
                 <div class="md:col-span-5">
                     <img src="{{ asset('images/logo-white.png') }}" alt="Creatium Lab" width="668" height="96" class="h-8 w-auto mb-5" loading="lazy">
-                    <p class="text-gray-300 max-w-sm leading-relaxed">Уебсайтове и маркетинг за бизнеса в България. Един екип от идеята до първите запитвания.</p>
+                    <p class="text-gray-300 max-w-sm leading-relaxed">Сайтове и SEO за малки фирми в България.</p>
                     <a href="{{ route('contact') }}" class="mt-6 inline-flex items-center gap-2 bg-white text-brand-950 px-5 py-2.5 rounded-xl font-semibold hover:bg-brand-50 transition-colors">
                         Поискайте оферта <i class="fas fa-arrow-right text-xs"></i>
                     </a>

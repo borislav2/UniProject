@@ -4,7 +4,7 @@
             <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
                 <i class="fas fa-check text-green-600 text-xl"></i>
             </div>
-            <h3 class="text-xl font-bold mb-2">Благодарим ви!</h3>
+            <h3 class="text-xl font-bold mb-2">Благодарим!</h3>
             <p class="text-gray-600">{{ session('success') }}</p>
         </div>
     @else
@@ -27,7 +27,7 @@
                 @error('contact')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Разкажете ни повече</label>
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">С какво можем да помогнем?</label>
                 <textarea id="message" name="message" rows="4" required
                           class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition">{{ old('message') }}</textarea>
                 @error('message')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
@@ -35,7 +35,7 @@
             <div>
                 <label class="flex items-start gap-2 text-sm text-gray-600">
                     <input type="checkbox" name="consent" value="1" class="mt-1 accent-brand-600" {{ old('consent') ? 'checked' : '' }}>
-                    <span>Запознат/а съм с <a href="{{ route('privacy') }}" target="_blank" class="text-brand-700 underline">Политиката за поверителност</a> и съм съгласен/а данните ми да бъдат използвани, за да се свържете с мен.</span>
+                    <span>Съгласен/на съм да използвате данните ми, за да ми отговорите. Прочетох <a href="{{ route('privacy') }}" target="_blank" class="text-brand-700 underline">Политиката за поверителност</a>.</span>
                 </label>
                 @error('consent')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
