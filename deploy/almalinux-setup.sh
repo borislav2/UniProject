@@ -3,6 +3,9 @@
 # Пуска се като root:  sudo bash deploy/almalinux-setup.sh creatiumlab.com
 set -euo pipefail
 
+# sudo на RHEL не включва /usr/local/bin (там е composer)
+export PATH="/usr/local/bin:$PATH"
+
 DOMAIN="${1:?Използване: almalinux-setup.sh <домейн>, напр. creatiumlab.com}"
 APP_DIR="/var/www/creatiumlab"
 APP_USER="deploy"
@@ -21,7 +24,7 @@ dnf -y install "https://rpms.remirepo.net/enterprise/remi-release-$(rpm -E %rhel
 dnf -y module reset php
 dnf -y module enable "php:${PHP_STREAM}"
 dnf -y module enable nodejs:22 || true
-dnf -y install nginx mariadb-server nodejs \
+dnf -y install nginx mariadb-server nodejs npm \
     php-fpm php-cli php-mbstring php-xml php-mysqlnd php-pdo php-bcmath php-intl php-zip php-gd php-opcache php-curl \
     certbot python3-certbot-nginx
 
