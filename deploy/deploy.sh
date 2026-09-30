@@ -21,14 +21,9 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-chgrp nginx .env && chmod 640 .env
-
-# Права за PHP-FPM (работи като nginx)
-chgrp -R nginx storage bootstrap/cache
-chmod -R ug+rwX storage bootstrap/cache
-mkdir -p public/uploads/projects && chgrp -R nginx public/uploads && chmod -R ug+rwX public/uploads
-
-# SELinux контекстите се прилагат върху новосъздадените файлове
-command -v restorecon >/dev/null && restorecon -R storage bootstrap/cache public/uploads public/build || true
+# PHP-FPM работи като потребителя 'deploy', така че всички файлове са негови и не се сменят групи.
+chmod 640 .env
+chmod -R u+rwX storage bootstrap/cache
+mkdir -p public/uploads/projects
 
 echo "Деплоят завърши."

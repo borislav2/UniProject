@@ -38,8 +38,8 @@ id "$APP_USER" >/dev/null 2>&1 || useradd -m -s /bin/bash "$APP_USER"
 mkdir -p "$APP_DIR"
 chown -R "$APP_USER":nginx "$APP_DIR"
 
-echo "==> PHP-FPM (работи като nginx)"
-sed -i 's/^user = .*/user = nginx/; s/^group = .*/group = nginx/' /etc/php-fpm.d/www.conf
+echo "==> PHP-FPM (работи като $APP_USER, групата на сокета е nginx)"
+sed -i "s/^user = .*/user = $APP_USER/; s/^group = .*/group = nginx/" /etc/php-fpm.d/www.conf
 sed -i 's/^;\?listen.owner = .*/listen.owner = nginx/; s/^;\?listen.group = .*/listen.group = nginx/' /etc/php-fpm.d/www.conf
 cat > /etc/php.d/99-creatium.ini <<'INI'
 expose_php = Off
@@ -76,6 +76,9 @@ semanage fcontext -a -t httpd_sys_content_t "$APP_DIR(/.*)?" || true
 for d in storage bootstrap/cache public/uploads; do
     semanage fcontext -a -t httpd_sys_rw_content_t "$APP_DIR/$d(/.*)?" || true
 done
+mkdir -p "$APP_DIR/public/uploads/projects"
+chown -R "$APP_USER":nginx "$APP_DIR"
+restorecon -R "$APP_DIR"
 
 echo "==> Защитна стена"
 if systemctl is-active --quiet firewalld; then
