@@ -12,7 +12,7 @@
             <article id="{{ \Illuminate\Support\Str::slug($service['title'], '-', 'en') ?: 'usluga-'.$loop->iteration }}" class="grid md:grid-cols-3 gap-8 scroll-mt-28 reveal">
                 <div>
                     <div class="w-12 h-12 rounded-xl bg-brand-gradient flex items-center justify-center mb-4 shadow-lg shadow-brand-900/20">
-                        <i class="fas {{ $service['icon'] }} text-white"></i>
+                        <x-icon :name="$service['icon']" class="text-white" />
                     </div>
                     <h2 class="text-2xl font-extrabold tracking-tight text-brand-950">{{ $service['title'] }}</h2>
                 </div>
@@ -21,7 +21,7 @@
                     <h3 class="font-semibold text-gray-900 mb-3">Какво включва</h3>
                     <ul class="space-y-2">
                         @foreach($service['includes'] as $item)
-                            <li class="flex items-start gap-2 text-gray-700"><i class="fas fa-check text-brand-600 text-xs mt-1.5"></i>{{ $item }}</li>
+                            <li class="flex items-start gap-2 text-gray-700"><x-icon name="check" class="text-brand-600 text-xs mt-1.5" />{{ $item }}</li>
                         @endforeach
                     </ul>
                 </div>
@@ -36,7 +36,7 @@
         <div class="space-y-3">
             @foreach($faq as $item)
                 <details class="group bg-white rounded-xl border border-gray-200 p-5 open:shadow-sm reveal">
-                    <summary class="font-semibold text-brand-950 cursor-pointer list-none flex items-center justify-between gap-4 [&::-webkit-details-marker]:hidden">{{ $item['q'] }}<i class="fas fa-chevron-down text-xs text-gray-400 transition-transform group-open:rotate-180"></i></summary>
+                    <summary class="font-semibold text-brand-950 cursor-pointer list-none flex items-center justify-between gap-4 [&::-webkit-details-marker]:hidden">{{ $item['q'] }}<x-icon name="chevron-down" class="text-xs text-gray-400 transition-transform group-open:rotate-180" /></summary>
                     <p class="text-gray-600 mt-3">{{ $item['a'] }}</p>
                 </details>
             @endforeach

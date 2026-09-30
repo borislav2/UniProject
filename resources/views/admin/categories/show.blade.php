@@ -7,13 +7,13 @@
     <h2 class="text-2xl font-bold text-gray-800">{{ $category->name }}</h2>
     <div class="flex space-x-4">
         <a href="{{ route('admin.categories.edit', $category) }}" class="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600">
-            <i class="fas fa-edit mr-2"></i>Edit Category
+            <x-icon name="edit" class="mr-2" />Edit Category
         </a>
         <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?')">
             @csrf
             @method('DELETE')
             <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" {{ $category->projects->count() > 0 ? 'disabled' : '' }}>
-                <i class="fas fa-trash mr-2"></i>Delete
+                <x-icon name="trash" class="mr-2" />Delete
             </button>
         </form>
     </div>
@@ -111,7 +111,7 @@
 
 <div class="mt-6">
     <a href="{{ route('admin.categories.index') }}" class="text-blue-600 hover:underline">
-        <i class="fas fa-arrow-left mr-2"></i>Back to Categories
+        <x-icon name="arrow-left" class="mr-2" />Back to Categories
     </a>
 </div>
 @endsection

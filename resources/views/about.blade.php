@@ -37,9 +37,9 @@
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 text-center mb-10">Какво можете да очаквате</h2>
         <div class="grid sm:grid-cols-3 gap-8 text-center">
-            <div><i class="fas fa-reply text-brand-600 text-2xl mb-3"></i><h3 class="font-semibold mb-1">Отговаряме бързо</h3><p class="text-sm text-gray-600">До един работен ден, по телефона или по имейл.</p></div>
-            <div><i class="fas fa-tag text-brand-600 text-2xl mb-3"></i><h3 class="font-semibold mb-1">Цената е ясна предварително</h3><p class="text-sm text-gray-600">Знаете колко ще струва, преди да започнем работа.</p></div>
-            <div><i class="fas fa-screwdriver-wrench text-brand-600 text-2xl mb-3"></i><h3 class="font-semibold mb-1">Оставаме и след това</h3><p class="text-sm text-gray-600">Ако трябва да смените нещо или нещо спре да работи, пишете ни.</p></div>
+            <div><x-icon name="reply" class="text-brand-600 text-2xl mb-3" /><h3 class="font-semibold mb-1">Отговаряме бързо</h3><p class="text-sm text-gray-600">До един работен ден, по телефона или по имейл.</p></div>
+            <div><x-icon name="tag" class="text-brand-600 text-2xl mb-3" /><h3 class="font-semibold mb-1">Цената е ясна предварително</h3><p class="text-sm text-gray-600">Знаете колко ще струва, преди да започнем работа.</p></div>
+            <div><x-icon name="screwdriver-wrench" class="text-brand-600 text-2xl mb-3" /><h3 class="font-semibold mb-1">Оставаме и след това</h3><p class="text-sm text-gray-600">Ако трябва да смените нещо или нещо спре да работи, пишете ни.</p></div>
         </div>
     </div>
 </section>

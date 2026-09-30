@@ -26,16 +26,16 @@
             </p>
             <div class="mt-8 flex flex-col sm:flex-row gap-3">
                 <a href="#kontakt" class="inline-flex items-center justify-center gap-2 bg-brand-950 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-brand-800 transition-colors shadow-lg shadow-brand-950/20">
-                    Поискайте оферта <i class="fas fa-arrow-right text-sm"></i>
+                    Поискайте оферта <x-icon name="arrow-right" class="text-sm" />
                 </a>
                 <a href="{{ route('services') }}" class="inline-flex items-center justify-center gap-2 bg-white border border-gray-200 text-brand-950 px-7 py-3.5 rounded-xl font-semibold hover:border-brand-300 hover:text-brand-700 transition-colors">
                     Вижте услугите
                 </a>
             </div>
             <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-gray-600">
-                <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Първата консултация е безплатна</li>
-                <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Отговаряме до един работен ден</li>
-                <li class="flex items-center gap-2"><i class="fas fa-circle-check text-brand-500"></i>Без посредници</li>
+                <li class="flex items-center gap-2"><x-icon name="circle-check" class="text-brand-500" />Първата консултация е безплатна</li>
+                <li class="flex items-center gap-2"><x-icon name="circle-check" class="text-brand-500" />Отговаряме до един работен ден</li>
+                <li class="flex items-center gap-2"><x-icon name="circle-check" class="text-brand-500" />Без посредници</li>
             </ul>
         </div>
 
@@ -48,8 +48,8 @@
                         <span class="w-3 h-3 rounded-full bg-amber-300"></span>
                         <span class="w-3 h-3 rounded-full bg-emerald-300"></span>
                     </div>
-                    <div class="flex-1 flex items-center gap-2 rounded-md bg-white border border-gray-200 px-3 py-1 text-xs text-gray-400">
-                        <i class="fas fa-lock text-[10px] text-emerald-500"></i> vashiat-biznes.bg
+                    <div class="flex-1 flex items-center gap-2 rounded-md bg-white border border-gray-200 px-3 py-1 text-xs text-gray-500">
+                        <x-icon name="lock" class="text-[10px] text-emerald-500" /> vashiat-biznes.bg
                     </div>
                 </div>
                 <div class="p-5 space-y-4">
@@ -69,7 +69,7 @@
                     <div class="grid grid-cols-3 gap-3">
                         @foreach(['fa-display', 'fa-magnifying-glass', 'fa-location-dot'] as $icon)
                             <div class="rounded-xl border border-gray-100 bg-gray-50 p-3">
-                                <div class="w-7 h-7 rounded-lg bg-brand-100 flex items-center justify-center mb-2"><i class="fas {{ $icon }} text-xs text-brand-600"></i></div>
+                                <div class="w-7 h-7 rounded-lg bg-brand-100 flex items-center justify-center mb-2"><x-icon :name="$icon" class="text-xs text-brand-600" /></div>
                                 <div class="h-2 w-full rounded bg-gray-200 mb-1.5"></div>
                                 <div class="h-2 w-2/3 rounded bg-gray-200"></div>
                             </div>
@@ -80,14 +80,14 @@
 
             <div class="absolute -top-6 right-2 sm:-right-6 animate-float rounded-xl bg-white shadow-xl ring-1 ring-gray-200/70 px-4 py-3 flex items-center gap-3">
                 <span class="relative flex w-9 h-9 rounded-full bg-emerald-50 items-center justify-center">
-                    <i class="fas fa-bell text-emerald-600 text-sm"></i>
+                    <x-icon name="bell" class="text-emerald-600 text-sm" />
                     <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></span>
                 </span>
                 <span class="text-sm leading-tight"><strong class="block text-brand-950">Ново запитване</strong><span class="text-gray-500 text-xs">от контактната форма</span></span>
             </div>
 
             <div class="absolute -bottom-6 left-2 sm:-left-8 rounded-xl bg-brand-950 text-white shadow-xl px-5 py-3.5 flex items-center gap-3">
-                <span class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center"><i class="fas fa-chart-line text-brand-300"></i></span>
+                <span class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center"><x-icon name="chart-line" class="text-brand-300" /></span>
                 <span class="text-sm font-semibold leading-tight">Дизайн, код<br>и SEO</span>
             </div>
         </div>
@@ -97,11 +97,11 @@
 {{-- Industries --}}
 <section class="border-y border-gray-100 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row lg:items-center gap-5">
-        <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 whitespace-nowrap">Подходящо за</span>
+        <span class="text-xs font-semibold uppercase tracking-wider text-gray-500 whitespace-nowrap">Подходящо за</span>
         <div class="flex flex-wrap gap-2.5">
             @foreach($industries as $industry)
                 <span class="inline-flex items-center gap-2 rounded-full bg-gray-50 border border-gray-100 px-3.5 py-1.5 text-sm text-gray-700">
-                    <i class="fas {{ $industry['icon'] }} text-brand-500 text-xs"></i>{{ $industry['name'] }}
+                    <x-icon :name="$industry['icon']" class="text-brand-500 text-xs" />{{ $industry['name'] }}
                 </span>
             @endforeach
         </div>
@@ -120,19 +120,19 @@
             @foreach($services as $service)
                 <div class="reveal card-hover group rounded-2xl border border-gray-200 bg-white p-7 flex flex-col" style="--reveal-delay: {{ $loop->index * 100 }}ms">
                     <div class="w-12 h-12 rounded-xl bg-brand-gradient flex items-center justify-center shadow-lg shadow-brand-900/20">
-                        <i class="fas {{ $service['icon'] }} text-white"></i>
+                        <x-icon :name="$service['icon']" class="text-white" />
                     </div>
                     <h3 class="mt-6 text-xl font-bold text-brand-950">{{ $service['title'] }}</h3>
                     <p class="mt-3 text-gray-600 leading-relaxed">{{ $service['description'] }}</p>
                     <ul class="mt-5 space-y-2 flex-1">
                         @foreach($service['points'] as $point)
                             <li class="text-sm text-gray-700 flex items-center gap-2.5">
-                                <i class="fas fa-check text-brand-500 text-xs"></i>{{ $point }}
+                                <x-icon name="check" class="text-brand-500 text-xs" />{{ $point }}
                             </li>
                         @endforeach
                     </ul>
                     <a href="{{ route('services') }}" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 group-hover:gap-3 transition-all">
-                        Вижте повече <i class="fas fa-arrow-right text-xs"></i>
+                        Вижте повече <x-icon name="arrow-right" class="text-xs" />
                     </a>
                 </div>
             @endforeach
@@ -189,7 +189,7 @@
                             <ul class="mt-6 space-y-3 flex-1">
                                 @foreach($package['features'] as $feature)
                                     <li class="text-sm flex items-center gap-3 text-gray-200">
-                                        <span class="w-5 h-5 rounded-full bg-brand-500/25 flex items-center justify-center"><i class="fas fa-check text-brand-200 text-[10px]"></i></span>{{ $feature }}
+                                        <span class="w-5 h-5 rounded-full bg-brand-500/25 flex items-center justify-center"><x-icon name="check" class="text-brand-200 text-[10px]" /></span>{{ $feature }}
                                     </li>
                                 @endforeach
                             </ul>
@@ -204,7 +204,7 @@
                         <ul class="mt-6 space-y-3 flex-1">
                             @foreach($package['features'] as $feature)
                                 <li class="text-sm flex items-center gap-3 text-gray-700">
-                                    <span class="w-5 h-5 rounded-full bg-brand-50 flex items-center justify-center"><i class="fas fa-check text-brand-600 text-[10px]"></i></span>{{ $feature }}
+                                    <span class="w-5 h-5 rounded-full bg-brand-50 flex items-center justify-center"><x-icon name="check" class="text-brand-600 text-[10px]" /></span>{{ $feature }}
                                 </li>
                             @endforeach
                         </ul>
@@ -229,15 +229,15 @@
             </p>
             <ul class="mt-8 space-y-4">
                 <li class="flex items-center gap-4">
-                    <span class="w-11 h-11 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center"><i class="fas fa-envelope text-brand-200"></i></span>
+                    <span class="w-11 h-11 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center"><x-icon name="envelope" class="text-brand-200" /></span>
                     <a href="mailto:{{ $contact['email'] }}" class="hover:underline">{{ $contact['email'] }}</a>
                 </li>
                 <li class="flex items-center gap-4">
-                    <span class="w-11 h-11 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center"><i class="fas fa-phone text-brand-200"></i></span>
+                    <span class="w-11 h-11 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center"><x-icon name="phone" class="text-brand-200" /></span>
                     {{ $contact['phone'] }}
                 </li>
                 <li class="flex items-center gap-4">
-                    <span class="w-11 h-11 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center"><i class="fas fa-location-dot text-brand-200"></i></span>
+                    <span class="w-11 h-11 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center"><x-icon name="location-dot" class="text-brand-200" /></span>
                     {{ $contact['city'] }}, България
                 </li>
             </ul>

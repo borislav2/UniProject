@@ -30,7 +30,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center">
             <div class="p-3 bg-blue-500 rounded-full text-white">
-                <i class="fas fa-project-diagram text-2xl"></i>
+                <x-icon name="project-diagram" class="text-2xl" />
             </div>
             <div class="ml-4">
                 <h3 class="text-lg font-semibold text-gray-700">Total Projects</h3>
@@ -42,7 +42,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center">
             <div class="p-3 bg-green-500 rounded-full text-white">
-                <i class="fas fa-tags text-2xl"></i>
+                <x-icon name="tags" class="text-2xl" />
             </div>
             <div class="ml-4">
                 <h3 class="text-lg font-semibold text-gray-700">Categories</h3>
@@ -54,7 +54,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center">
             <div class="p-3 bg-purple-500 rounded-full text-white">
-                <i class="fas fa-cogs text-2xl"></i>
+                <x-icon name="cogs" class="text-2xl" />
             </div>
             <div class="ml-4">
                 <h3 class="text-lg font-semibold text-gray-700">Technologies</h3>
@@ -66,7 +66,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center">
             <div class="p-3 bg-yellow-500 rounded-full text-white">
-                <i class="fas fa-check-circle text-2xl"></i>
+                <x-icon name="check-circle" class="text-2xl" />
             </div>
             <div class="ml-4">
                 <h3 class="text-lg font-semibold text-gray-700">Completed</h3>
@@ -78,7 +78,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center">
             <div class="p-3 bg-orange-500 rounded-full text-white">
-                <i class="fas fa-spinner text-2xl"></i>
+                <x-icon name="spinner" class="text-2xl" />
             </div>
             <div class="ml-4">
                 <h3 class="text-lg font-semibold text-gray-700">In Progress</h3>
@@ -90,7 +90,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center">
             <div class="p-3 bg-indigo-500 rounded-full text-white">
-                <i class="fas fa-users text-2xl"></i>
+                <x-icon name="users" class="text-2xl" />
             </div>
             <div class="ml-4">
                 <h3 class="text-lg font-semibold text-gray-700">Users</h3>

@@ -2,7 +2,7 @@
     @if(session('success'))
         <div class="text-center py-8" role="status">
             <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
-                <i class="fas fa-check text-green-600 text-xl"></i>
+                <x-icon name="check" class="text-green-600 text-xl" />
             </div>
             <h3 class="text-xl font-bold mb-2">Благодарим!</h3>
             <p class="text-gray-600">{{ session('success') }}</p>
@@ -40,7 +40,7 @@
                 @error('consent')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
             <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-brand-950 text-white py-3.5 px-6 rounded-xl font-semibold hover:bg-brand-800 transition-colors">
-                Изпратете запитване <i class="fas fa-paper-plane text-sm"></i>
+                Изпратете запитване <x-icon name="paper-plane" class="text-sm" />
             </button>
         </form>
     @endif

@@ -12,13 +12,13 @@
     </h2>
     <div class="flex space-x-4">
         <a href="{{ route('admin.projects.edit', $project) }}" class="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600">
-            <i class="fas fa-edit mr-2"></i>Edit Project
+            <x-icon name="edit" class="mr-2" />Edit Project
         </a>
         <form action="{{ route('admin.projects.destroy', $project) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this project?')">
             @csrf
             @method('DELETE')
             <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-                <i class="fas fa-trash mr-2"></i>Delete
+                <x-icon name="trash" class="mr-2" />Delete
             </button>
         </form>
     </div>
@@ -129,7 +129,7 @@
                         <h4 class="text-sm font-medium text-gray-500">Project File</h4>
                         <a href="{{ asset($project->file_path) }}" target="_blank" 
                            class="text-blue-600 hover:underline flex items-center">
-                            <i class="fas fa-file mr-2"></i>
+                            <x-icon name="file" class="mr-2" />
                             {{ basename($project->file_path) }}
                         </a>
                     </div>
@@ -141,7 +141,7 @@
 
 <div class="mt-6">
     <a href="{{ route('admin.projects.index') }}" class="text-blue-600 hover:underline">
-        <i class="fas fa-arrow-left mr-2"></i>Back to Projects
+        <x-icon name="arrow-left" class="mr-2" />Back to Projects
     </a>
 </div>
 @endsection

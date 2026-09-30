@@ -42,7 +42,7 @@
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Основна навигация">
             <div class="flex justify-between items-center h-16 md:h-20">
                 <a href="{{ route('home') }}" class="flex items-center shrink-0" aria-label="Creatium Lab - начало">
-                    <img src="{{ asset('images/logo.png') }}" alt="Creatium Lab" width="668" height="96" class="h-7 md:h-8 w-auto">
+                    <img src="{{ asset('images/logo.webp') }}" srcset="{{ asset('images/logo-224.webp') }} 224w, {{ asset('images/logo-336.webp') }} 336w, {{ asset('images/logo.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" fetchpriority="high" class="h-7 md:h-8 w-auto">
                 </a>
 
                 <div class="hidden md:flex items-center gap-1">
@@ -57,23 +57,23 @@
 
                     @auth
                         <a href="{{ route('admin.dashboard') }}" class="ml-2 w-9 h-9 inline-flex items-center justify-center rounded-lg text-gray-500 hover:text-brand-700 hover:bg-gray-50" title="Административен панел" aria-label="Административен панел">
-                            <i class="fas fa-user-gear"></i>
+                            <x-icon name="user-gear" />
                         </a>
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
                             <button type="submit" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-gray-500 hover:text-brand-700 hover:bg-gray-50" title="Изход" aria-label="Изход">
-                                <i class="fas fa-sign-out-alt"></i>
+                                <x-icon name="sign-out-alt" />
                             </button>
                         </form>
                     @endauth
 
                     <a href="{{ route('contact') }}" class="ml-3 inline-flex items-center gap-2 bg-brand-950 text-white px-5 py-2.5 rounded-xl hover:bg-brand-800 transition-colors text-sm font-semibold shadow-sm">
-                        Безплатна консултация <i class="fas fa-arrow-right text-xs"></i>
+                        Безплатна консултация <x-icon name="arrow-right" class="text-xs" />
                     </a>
                 </div>
 
                 <button type="button" class="mobile-menu-button md:hidden w-10 h-10 inline-flex items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100" aria-label="Меню" aria-expanded="false" aria-controls="mobile-menu">
-                    <i class="fas fa-bars text-lg"></i>
+                    <x-icon name="bars" class="text-lg" />
                 </button>
             </div>
         </nav>
@@ -104,10 +104,10 @@
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
                 <div class="md:col-span-5">
-                    <img src="{{ asset('images/logo-white.png') }}" alt="Creatium Lab" width="668" height="96" class="h-8 w-auto mb-5" loading="lazy">
+                    <img src="{{ asset('images/logo-white.webp') }}" alt="Creatium Lab" width="445" height="64" class="h-8 w-auto mb-5" loading="lazy">
                     <p class="text-gray-300 max-w-sm leading-relaxed">Сайтове и SEO за малки фирми в България.</p>
                     <a href="{{ route('contact') }}" class="mt-6 inline-flex items-center gap-2 bg-white text-brand-950 px-5 py-2.5 rounded-xl font-semibold hover:bg-brand-50 transition-colors">
-                        Поискайте оферта <i class="fas fa-arrow-right text-xs"></i>
+                        Поискайте оферта <x-icon name="arrow-right" class="text-xs" />
                     </a>
                 </div>
 
@@ -125,9 +125,9 @@
                 <div class="md:col-span-4">
                     <h3 class="text-sm font-semibold uppercase tracking-wider text-brand-300 mb-4">Контакти</h3>
                     <ul class="space-y-3 text-gray-300">
-                        <li class="flex items-center gap-3"><i class="fas fa-envelope w-4 text-brand-300"></i><a href="mailto:{{ config('creatium.contact.email') }}" class="hover:text-white">{{ config('creatium.contact.email') }}</a></li>
-                        <li class="flex items-center gap-3"><i class="fas fa-phone w-4 text-brand-300"></i>{{ config('creatium.contact.phone') }}</li>
-                        <li class="flex items-center gap-3"><i class="fas fa-location-dot w-4 text-brand-300"></i>{{ config('creatium.contact.city') }}, България</li>
+                        <li class="flex items-center gap-3"><x-icon name="envelope" class="w-4 text-brand-300" /><a href="mailto:{{ config('creatium.contact.email') }}" class="hover:text-white">{{ config('creatium.contact.email') }}</a></li>
+                        <li class="flex items-center gap-3"><x-icon name="phone" class="w-4 text-brand-300" />{{ config('creatium.contact.phone') }}</li>
+                        <li class="flex items-center gap-3"><x-icon name="location-dot" class="w-4 text-brand-300" />{{ config('creatium.contact.city') }}, България</li>
                     </ul>
                 </div>
             </div>

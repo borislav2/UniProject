@@ -1,5 +1,3 @@
-import './bootstrap';
-
 const revealed = document.querySelectorAll('.reveal');
 
 if ('IntersectionObserver' in window && revealed.length) {

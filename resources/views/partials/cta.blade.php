@@ -9,7 +9,7 @@
                     <p class="mt-2 text-brand-100/90">Пишете ни. Първият разговор е безплатен.</p>
                 </div>
                 <a href="{{ route('contact') }}" class="shrink-0 inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold hover:bg-brand-50 transition-colors">
-                    Поискайте оферта <i class="fas fa-arrow-right text-sm"></i>
+                    Поискайте оферта <x-icon name="arrow-right" class="text-sm" />
                 </a>
             </div>
         </div>

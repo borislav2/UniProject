@@ -11,11 +11,11 @@
                    value="{{ $search ?? '' }}" 
                    class="px-4 py-2 border rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500">
             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-r hover:bg-blue-600">
-                <i class="fas fa-search"></i>
+                <x-icon name="search" />
             </button>
         </form>
         <a href="{{ route('admin.projects.create') }}" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-            <i class="fas fa-plus mr-2"></i>New Project
+            <x-icon name="plus" class="mr-2" />New Project
         </a>
     </div>
 </div>

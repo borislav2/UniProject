@@ -11,7 +11,7 @@
         @if($projects->isEmpty())
             <div class="max-w-xl mx-auto text-center py-8">
                 <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-brand-50 flex items-center justify-center">
-                    <i class="fas fa-rocket text-brand-600 text-xl"></i>
+                    <x-icon name="rocket" class="text-brand-600 text-xl" />
                 </div>
                 <h2 class="text-2xl font-bold mb-3">Тук скоро ще има проекти</h2>
                 <p class="text-gray-600 mb-6">Сега правим първите си сайтове и ще ги покажем тук, щом са готови и клиентите се съгласят. Ако искате вашият да е сред тях, пишете ни.</p>
