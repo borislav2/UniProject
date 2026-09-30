@@ -40,10 +40,10 @@ set_env SESSION_DRIVER database
 set_env CACHE_STORE database
 set_env QUEUE_CONNECTION sync
 set_env MAIL_MAILER log
+set_env APP_KEY "base64:$(openssl rand -base64 32)"
 
 chown "$APP_USER":nginx .env
 chmod 640 .env
-runuser -u "$APP_USER" -- php artisan key:generate --force
 
 cat <<MSG
 
