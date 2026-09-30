@@ -109,6 +109,14 @@
         </div>
 
         <div class="mt-6">
+            <label class="flex items-center">
+                <input type="checkbox" name="is_public" value="1" class="mr-2" {{ old('is_public', $project->is_public) ? 'checked' : '' }}>
+                <span class="text-sm font-medium text-gray-700">Покажи в публичното портфолио (/proekti)</span>
+            </label>
+            <p class="text-xs text-gray-500 mt-1">Показват се само завършени проекти. Ползвайте само с разрешение на клиента.</p>
+        </div>
+
+        <div class="mt-6">
             <label for="file" class="block text-sm font-medium text-gray-700 mb-2">Project File</label>
             @if($project->file_path)
                 <div class="mb-2 p-3 bg-gray-50 rounded">

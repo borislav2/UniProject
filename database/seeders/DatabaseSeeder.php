@@ -17,10 +17,16 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoleSeeder::class,
-            UserSeeder::class,
             CategorySeeder::class,
             TechnologySeeder::class,
-            ProjectSeeder::class,
         ]);
+
+        // Demo accounts and fake projects must never exist on a live site.
+        if (app()->environment(['local', 'testing'])) {
+            $this->call([
+                UserSeeder::class,
+                ProjectSeeder::class,
+            ]);
+        }
     }
 }

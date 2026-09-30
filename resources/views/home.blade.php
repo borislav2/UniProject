@@ -1,16 +1,9 @@
 @extends('layouts.public')
 
 @section('title', 'Уебсайтове и маркетинг за бизнеса в България')
+@section('meta_description', 'Creatium Lab изгражда бързи и красиви сайтове за ресторанти, салони, кабинети, фирми и онлайн магазини и ги подкрепя с маркетинг и SEO. Безплатна консултация.')
 
 @section('content')
-
-@if(session('success'))
-    <div class="max-w-3xl mx-auto mt-6 px-4">
-        <div class="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded-lg text-center">
-            {{ session('success') }}
-        </div>
-    </div>
-@endif
 
 <!-- Hero Section -->
 <section class="bg-gray-50 py-16 md:py-24">
@@ -27,7 +20,7 @@
                 <a href="#kontakt" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold text-center hover:bg-blue-700 transition-colors">
                     Поискайте оферта
                 </a>
-                <a href="#uslugi" class="border-2 border-gray-300 text-gray-800 px-6 py-3 rounded-lg font-semibold text-center hover:border-blue-600 hover:text-blue-600 transition-colors">
+                <a href="{{ route('services') }}" class="border-2 border-gray-300 text-gray-800 px-6 py-3 rounded-lg font-semibold text-center hover:border-blue-600 hover:text-blue-600 transition-colors">
                     Вижте услугите
                 </a>
             </div>
@@ -167,30 +160,7 @@
             </div>
         </div>
 
-        <form action="{{ route('contact.submit') }}" method="POST" class="bg-white rounded-xl p-6 space-y-4">
-            @csrf
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Име</label>
-                <input type="text" id="name" name="name" value="{{ old('name') }}" required
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                @error('name')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <label for="contact" class="block text-sm font-medium text-gray-700 mb-1">Телефон или имейл</label>
-                <input type="text" id="contact" name="contact" value="{{ old('contact') }}" required
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                @error('contact')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Разкажете ни повече</label>
-                <textarea id="message" name="message" rows="4" required
-                          class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">{{ old('message') }}</textarea>
-                @error('message')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
-            </div>
-            <button type="submit" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                Изпратете запитване
-            </button>
-        </form>
+        @include('partials/contact-form')
     </div>
 </section>
 @endsection

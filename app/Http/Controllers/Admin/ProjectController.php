@@ -38,12 +38,14 @@ class ProjectController extends Controller
             'status' => 'required|string|in:Planning,In Progress,Completed,On Hold,Cancelled',
             'manager' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'is_public' => 'nullable|boolean',
             'technologies' => 'nullable|array',
             'technologies.*' => 'exists:technologies,id',
             'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240'
         ]);
         
         $data = $request->except('technologies', 'file');
+        $data['is_public'] = $request->boolean('is_public');
         
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -87,12 +89,14 @@ class ProjectController extends Controller
             'status' => 'required|string|in:Planning,In Progress,Completed,On Hold,Cancelled',
             'manager' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'is_public' => 'nullable|boolean',
             'technologies' => 'nullable|array',
             'technologies.*' => 'exists:technologies,id',
             'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240'
         ]);
         
         $data = $request->except('technologies', 'file');
+        $data['is_public'] = $request->boolean('is_public');
         
         if ($request->hasFile('file')) {
             // Delete old file if exists

@@ -33,10 +33,11 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-envelope text-gray-400"></i>
                             </div>
-                            <input type="email" id="email" name="email" required
-                                placeholder="admin@example.com"
+                            <input type="email" id="email" name="email" required autocomplete="username"
+                                placeholder="name@creatiumlab.com" value="{{ old('email') }}"
                                 class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                         </div>
+                        @error('email')<p class="text-red-600 text-sm mt-2">{{ $message }}</p>@enderror
                     </div>
                     
                     <div>
@@ -56,7 +57,6 @@
                             <input type="checkbox" id="remember" name="remember" class="mr-2">
                             <label for="remember" class="text-sm text-gray-600">Запомни ме</label>
                         </div>
-                        <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500">Забравена парола?</a>
                     </div>
                     
                     <button type="submit" 
@@ -64,13 +64,6 @@
                         <i class="fas fa-sign-in-alt mr-2"></i>Вход в системата
                     </button>
                 </form>
-                
-                <div class="mt-6 text-center">
-                    <p class="text-gray-600">
-                        Нямате акаунт? 
-                        <a href="{{ route('register') }}" class="text-indigo-600 hover:text-indigo-500 font-medium">Регистрирайте се</a>
-                    </p>
-                </div>
             </div>
         </div>
     </section>

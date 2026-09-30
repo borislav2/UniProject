@@ -22,11 +22,13 @@ class Project extends Model
         'client_email',
         'client_phone',
         'source',
+        'is_public',
     ];
     
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'is_public' => 'boolean',
     ];
     
     public function category()
