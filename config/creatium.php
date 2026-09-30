@@ -14,6 +14,9 @@ return [
     // Meta Pixel (Facebook/Instagram реклами). Празно = изключен. Зарежда се само след съгласие в банера за бисквитки.
     'meta_pixel_id' => preg_match('/^\d{5,20}$/', (string) env('META_PIXEL_ID')) ? (string) env('META_PIXEL_ID') : null,
 
+    // Вграден CSS в HTML-а (по-бързо първо зареждане). По подразбиране само в production.
+    'inline_css' => (bool) env('INLINE_CSS', env('APP_ENV') === 'production'),
+
     // Къде пристигат известията за нови запитвания от сайта.
     'notify_email' => env('CREATIUM_NOTIFY_EMAIL', env('CREATIUM_EMAIL', 'hello@creatiumlab.com')),
 

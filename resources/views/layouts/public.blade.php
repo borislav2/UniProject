@@ -25,7 +25,13 @@
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link rel="icon" type="image/png" href="{{ asset('favicon-64.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @if(config('creatium.inline_css') && ! \Illuminate\Support\Facades\Vite::isRunningHot())
+        {{-- Inline CSS (~10 KB gzip) saves a render-blocking request on first load --}}
+        <style>{!! \Illuminate\Support\Facades\Vite::content('resources/css/app.css') !!}</style>
+        @vite(['resources/js/app.js'])
+    @else
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @endif
 </head>
 <body class="bg-white text-gray-900 antialiased">
     @php
@@ -42,7 +48,7 @@
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Основна навигация">
             <div class="flex justify-between items-center h-16 md:h-20">
                 <a href="{{ route('home') }}" class="flex items-center shrink-0" aria-label="Creatium Lab - начало">
-                    <img src="{{ asset('images/logo.webp') }}" srcset="{{ asset('images/logo-224.webp') }} 224w, {{ asset('images/logo-336.webp') }} 336w, {{ asset('images/logo.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" fetchpriority="high" class="h-7 md:h-8 w-auto">
+                    <img src="{{ asset('images/logo.webp') }}" srcset="{{ asset('images/logo-224.webp') }} 224w, {{ asset('images/logo-352.webp') }} 352w, {{ asset('images/logo.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" fetchpriority="high" class="h-7 md:h-8 w-auto">
                 </a>
 
                 <div class="hidden md:flex items-center gap-1">
@@ -104,7 +110,7 @@
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
                 <div class="md:col-span-5">
-                    <img src="{{ asset('images/logo-white.webp') }}" alt="Creatium Lab" width="445" height="64" class="h-8 w-auto mb-5" loading="lazy">
+                    <img src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="223px" alt="Creatium Lab" width="445" height="64" class="h-8 w-auto mb-5" loading="lazy" decoding="async">
                     <p class="text-gray-300 max-w-sm leading-relaxed">Сайтове и SEO за малки фирми в България.</p>
                     <a href="{{ route('contact') }}" class="mt-6 inline-flex items-center gap-2 bg-white text-brand-950 px-5 py-2.5 rounded-xl font-semibold hover:bg-brand-50 transition-colors">
                         Поискайте оферта <x-icon name="arrow-right" class="text-xs" />
