@@ -45,10 +45,13 @@
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div>
-                                <div class="text-sm font-medium text-gray-900">
+                                <div class="text-sm font-medium text-gray-900 flex items-center gap-2">
                                     <a href="{{ route('admin.projects.show', $project) }}" class="text-blue-600 hover:underline">
                                         {{ $project->name }}
                                     </a>
+                                    @if($project->source === 'website')
+                                        <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800">От сайта</span>
+                                    @endif
                                 </div>
                                 <div class="text-sm text-gray-500">{{ Str::limit($project->description, 50) }}</div>
                             </div>

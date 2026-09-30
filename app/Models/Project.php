@@ -11,19 +11,24 @@ class Project extends Model
     use HasFactory;
     
     protected $fillable = [
-        'name', 
-        'description', 
-        'start_date', 
-        'end_date', 
-        'status', 
-        'manager', 
-        'category_id', 
-        'file_path'
+        'name',
+        'description',
+        'start_date',
+        'end_date',
+        'status',
+        'manager',
+        'category_id',
+        'file_path',
+        'client_email',
+        'client_phone',
+        'source',
+        'is_public',
     ];
     
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'is_public' => 'boolean',
     ];
     
     public function category()

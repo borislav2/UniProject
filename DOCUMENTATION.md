@@ -451,7 +451,6 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 
 // Аутентикация
 Route::get('/login', [HomeController::class, 'showLoginForm'])->name('login');
-Route::get('/register', [HomeController::class, 'showRegisterForm'])->name('register');
 Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
 ```
 
@@ -727,14 +726,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 });
 ```
 
-### Демо потребители
-- **Administrator:** admin@projectmanager.com / password
-- **Project Manager:** pm@projectmanager.com / password
-- **Developer:** dev@projectmanager.com / password
+### Акаунти
+Публична регистрация няма. Първият администратор се създава с `php artisan creatium:make-admin <имейл>`, а следващите - от админ панела (Users). Демо акаунти (`admin@projectmanager.com` и др., парола `password`) се създават само в `local` среда и никога в production.
 
 ### Потребителски интерфейс
 - **Login форма:** С CSRF защита и валидация
-- **Register форма:** Автоматично присвояване на developer роля
 - **Navigation:** Показване на роли и бутони според статус
 - **Admin Panel:** Достъп само за оторизирани потребители
 

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel') - Project Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="robots" content="noindex, nofollow">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100">
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <div class="w-64 bg-gray-800 text-white">
+        <div class="w-64 shrink-0 bg-gray-800 text-white overflow-y-auto">
             <div class="p-4">
                 <h1 class="text-xl font-bold">Admin Panel</h1>
             </div>
@@ -27,14 +27,16 @@
                 <a href="{{ route('admin.technologies.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.technologies.*') ? 'bg-gray-700' : '' }}">
                     <i class="fas fa-cogs mr-2"></i> Technologies
                 </a>
+                @if(auth()->user()->isAdmin())
                 <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.users.*') ? 'bg-gray-700' : '' }}">
                     <i class="fas fa-users mr-2"></i> Users
                 </a>
+                @endif
             </nav>
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
+        <div class="flex-1 min-w-0 flex flex-col overflow-y-auto">
             <!-- Header -->
             <header class="bg-white shadow-sm border-b">
                 <div class="px-6 py-4 flex justify-between items-center">

@@ -108,6 +108,14 @@
         </div>
 
         <div class="mt-6">
+            <label class="flex items-center">
+                <input type="checkbox" name="is_public" value="1" class="mr-2" {{ old('is_public') ? 'checked' : '' }}>
+                <span class="text-sm font-medium text-gray-700">Покажи в публичното портфолио (/proekti)</span>
+            </label>
+            <p class="text-xs text-gray-500 mt-1">Показват се само завършени проекти. Ползвайте само с разрешение на клиента.</p>
+        </div>
+
+        <div class="mt-6">
             <label for="file" class="block text-sm font-medium text-gray-700 mb-2">Project File</label>
             <input type="file" name="file" id="file" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif"
                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
