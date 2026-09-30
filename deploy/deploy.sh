@@ -15,6 +15,7 @@ git pull --ff-only
 composer install --no-dev --optimize-autoloader --no-interaction
 npm ci
 npm run build
+rm -f public/hot   # остатък от `npm run dev` кара Laravel да зарежда Vite dev сървър вместо билда
 php artisan migrate --force
 php artisan db:seed --force          # в production добавя само роли, категории и технологии
 php artisan config:cache
