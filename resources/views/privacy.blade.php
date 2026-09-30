@@ -12,7 +12,7 @@
 
         <div>
             <h2 class="text-xl font-bold text-gray-900 mb-2">1. Кой обработва данните ви</h2>
-            <p>Администратор на лични данни е <strong>{{ $legal['company'] }}</strong>, ЕИК {{ $legal['eik'] }}, адрес: {{ $legal['address'] }}. За въпроси относно личните ви данни пишете на <a href="mailto:{{ $contact['email'] }}" class="text-blue-600 underline">{{ $contact['email'] }}</a>.</p>
+            <p>Администратор на лични данни е <strong>{{ $legal['company'] }}</strong>, ЕИК {{ $legal['eik'] }}, адрес: {{ $legal['address'] }}. За въпроси относно личните ви данни пишете на <a href="mailto:{{ $contact['email'] }}" class="text-brand-600 underline">{{ $contact['email'] }}</a>.</p>
         </div>
 
         <div>
@@ -48,7 +48,7 @@
 
         <div>
             <h2 class="text-xl font-bold text-gray-900 mb-2">7. Вашите права</h2>
-            <p>Имате право на достъп, коригиране, изтриване, ограничаване на обработването, преносимост и възражение, както и да оттеглите съгласието си по всяко време. Пишете ни на имейла по-горе. Имате право да подадете жалба до Комисията за защита на личните данни (<a href="https://www.cpdp.bg" class="text-blue-600 underline" target="_blank" rel="noopener">www.cpdp.bg</a>).</p>
+            <p>Имате право на достъп, коригиране, изтриване, ограничаване на обработването, преносимост и възражение, както и да оттеглите съгласието си по всяко време. Пишете ни на имейла по-горе. Имате право да подадете жалба до Комисията за защита на личните данни (<a href="https://www.cpdp.bg" class="text-brand-600 underline" target="_blank" rel="noopener">www.cpdp.bg</a>).</p>
         </div>
 
         <p class="text-sm text-gray-500">Последна промяна: {{ now()->format('d.m.Y') }}</p>

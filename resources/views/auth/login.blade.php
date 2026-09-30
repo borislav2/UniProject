@@ -20,7 +20,7 @@
         <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white rounded-lg shadow-lg p-8">
                 <div class="text-center mb-8">
-                    <i class="fas fa-sign-in-alt text-4xl text-indigo-600 mb-4"></i>
+                    <i class="fas fa-sign-in-alt text-4xl text-brand-600 mb-4"></i>
                     <h2 class="text-2xl font-bold text-gray-900">Вход</h2>
                     <p class="text-gray-600 mt-2">Въведете вашите данни за достъп</p>
                 </div>
@@ -35,7 +35,7 @@
                             </div>
                             <input type="email" id="email" name="email" required autocomplete="username"
                                 placeholder="name@creatiumlab.com" value="{{ old('email') }}"
-                                class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                         </div>
                         @error('email')<p class="text-red-600 text-sm mt-2">{{ $message }}</p>@enderror
                     </div>
@@ -48,7 +48,7 @@
                             </div>
                             <input type="password" id="password" name="password" required
                                 placeholder="••••••••"
-                                class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                         </div>
                     </div>
                     
@@ -60,7 +60,7 @@
                     </div>
                     
                     <button type="submit" 
-                            class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+                            class="w-full bg-brand-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-brand-700 transition-colors">
                         <i class="fas fa-sign-in-alt mr-2"></i>Вход в системата
                     </button>
                 </form>

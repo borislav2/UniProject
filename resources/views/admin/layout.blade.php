@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel') - Project Management</title>
     <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100">
@@ -12,7 +13,8 @@
         <!-- Sidebar -->
         <div class="w-64 shrink-0 bg-gray-800 text-white overflow-y-auto">
             <div class="p-4">
-                <h1 class="text-xl font-bold">Admin Panel</h1>
+                <a href="{{ route('admin.dashboard') }}" class="block"><img src="{{ asset('images/logo-white.png') }}" alt="Creatium Lab" class="h-6 w-auto"></a>
+                <p class="mt-2 text-xs uppercase tracking-wider text-gray-400">Административен панел</p>
             </div>
             <nav class="mt-4">
                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : '' }}">

@@ -22,11 +22,11 @@
         </div>
         <div>
             <h2 class="text-xl font-bold text-gray-900 mb-2">4. Лични данни</h2>
-            <p>Как обработваме личните ви данни е описано в <a href="{{ route('privacy') }}" class="text-blue-600 underline">Политиката за поверителност</a>.</p>
+            <p>Как обработваме личните ви данни е описано в <a href="{{ route('privacy') }}" class="text-brand-600 underline">Политиката за поверителност</a>.</p>
         </div>
         <div>
             <h2 class="text-xl font-bold text-gray-900 mb-2">5. Приложимо право</h2>
-            <p>За тези условия се прилага българското право. Въпроси: <a href="mailto:{{ $contact['email'] }}" class="text-blue-600 underline">{{ $contact['email'] }}</a>.</p>
+            <p>За тези условия се прилага българското право. Въпроси: <a href="mailto:{{ $contact['email'] }}" class="text-brand-600 underline">{{ $contact['email'] }}</a>.</p>
         </div>
     </div>
 </section>

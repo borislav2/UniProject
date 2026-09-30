@@ -1,7 +1,17 @@
-<section class="py-16 bg-blue-600 text-white">
-    <div class="max-w-3xl mx-auto px-4 text-center">
-        <h2 class="text-2xl md:text-3xl font-bold mb-3">Готови да започнем?</h2>
-        <p class="text-blue-100 mb-6">Първият разговор е безплатен и без ангажимент.</p>
-        <a href="{{ route('contact') }}" class="inline-block bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">Поискайте оферта</a>
+<section class="py-16 md:py-20 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative overflow-hidden rounded-3xl bg-brand-gradient px-6 py-12 md:px-14 md:py-14 text-white reveal">
+            <div class="absolute inset-0 bg-grid-light" aria-hidden="true"></div>
+            <div class="absolute -bottom-24 -right-16 w-72 h-72 rounded-full bg-brand-500/30 blur-3xl" aria-hidden="true"></div>
+            <div class="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Готови да започнем?</h2>
+                    <p class="mt-2 text-brand-100/90">Първият разговор е безплатен и без ангажимент.</p>
+                </div>
+                <a href="{{ route('contact') }}" class="shrink-0 inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold hover:bg-brand-50 transition-colors">
+                    Поискайте оферта <i class="fas fa-arrow-right text-sm"></i>
+                </a>
+            </div>
+        </div>
     </div>
 </section>
