@@ -1,10 +1,10 @@
-<div id="contact-form" class="bg-white rounded-xl p-6 text-gray-900">
+<div id="contact-form" class="bg-white rounded-2xl p-6 md:p-8 text-gray-900">
     @if(session('success'))
         <div class="text-center py-8" role="status">
             <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
-                <i class="fas fa-check text-green-600 text-xl"></i>
+                <x-icon name="check" class="text-green-600 text-xl" />
             </div>
-            <h3 class="text-xl font-bold mb-2">Благодарим ви!</h3>
+            <h3 class="text-xl font-bold mb-2">Благодарим!</h3>
             <p class="text-gray-600">{{ session('success') }}</p>
         </div>
     @else
@@ -17,30 +17,44 @@
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Име</label>
                 <input type="text" id="name" name="name" value="{{ old('name') }}" required autocomplete="name"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                       class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition">
                 @error('name')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label for="contact" class="block text-sm font-medium text-gray-700 mb-1">Телефон или имейл</label>
-                <input type="text" id="contact" name="contact" value="{{ old('contact') }}" required autocomplete="email"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                @error('contact')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Телефон</label>
+                <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required autocomplete="tel" inputmode="tel" placeholder="08X XXX XXXX"
+                       class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition placeholder:text-gray-500">
+                @error('phone')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Разкажете ни повече</label>
-                <textarea id="message" name="message" rows="4" required
-                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">{{ old('message') }}</textarea>
+                <label for="service" class="block text-sm font-medium text-gray-700 mb-1">С какво да помогнем?</label>
+                <div class="relative">
+                    <select id="service" name="service" required
+                            class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition appearance-none pr-10 {{ old('service') ? '' : 'text-gray-500' }}" onchange="this.classList.remove('text-gray-500')">
+                        <option value="" disabled {{ old('service') ? '' : 'selected' }}>Изберете услуга</option>
+                        @foreach(config('creatium.contact_topics') as $topic)
+                            <option value="{{ $topic }}" class="text-gray-900" @selected(old('service') === $topic)>{{ $topic }}</option>
+                        @endforeach
+                    </select>
+                    <x-icon name="chevron-down" class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-500" />
+                </div>
+                @error('service')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Нещо повече за бизнеса ви <span class="text-gray-500 font-normal">(по желание)</span></label>
+                <textarea id="message" name="message" rows="3"
+                          class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition">{{ old('message') }}</textarea>
                 @error('message')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="flex items-start gap-2 text-sm text-gray-600">
-                    <input type="checkbox" name="consent" value="1" class="mt-1" {{ old('consent') ? 'checked' : '' }}>
-                    <span>Запознат/а съм с <a href="{{ route('privacy') }}" target="_blank" class="text-blue-600 underline">Политиката за поверителност</a> и съм съгласен/а данните ми да бъдат използвани, за да се свържете с мен.</span>
+                    <input type="checkbox" name="consent" value="1" class="mt-1 accent-brand-600" {{ old('consent') ? 'checked' : '' }}>
+                    <span>Съгласен/на съм да използвате данните ми, за да ми отговорите. Прочетох <a href="{{ route('privacy') }}" target="_blank" class="text-brand-700 underline">Политиката за поверителност</a>.</span>
                 </label>
                 @error('consent')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
-            <button type="submit" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                Изпратете запитване
+            <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-brand-950 text-white py-3.5 px-6 rounded-xl font-semibold hover:bg-brand-800 transition-colors">
+                Изпратете запитване <x-icon name="paper-plane" class="text-sm" />
             </button>
         </form>
     @endif

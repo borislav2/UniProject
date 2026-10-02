@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @if(config('creatium.gtm_id'))
+        @include('partials/gtm-head')
+    @endif
+    @if(config('creatium.google_site_verification'))
+        <meta name="google-site-verification" content="{{ config('creatium.google_site_verification') }}">
+    @endif
+    <script>document.documentElement.classList.add('js');</script>
     @php
-        $pageTitle = trim($__env->yieldContent('title', 'Уебсайтове и маркетинг за бизнеса'));
-        $pageDescription = trim($__env->yieldContent('meta_description', 'Creatium Lab изгражда бързи и красиви сайтове за български бизнеси и ги подкрепя с маркетинг и SEO. Безплатна консултация.'));
+        $pageTitle = trim($__env->yieldContent('title', 'Сайтове и дигитален маркетинг за малки фирми'));
+        $pageDescription = trim($__env->yieldContent('meta_description', 'Правим сайтове за малки фирми и се грижим хората да ги намират в Google. Първата консултация е безплатна.'));
     @endphp
     <title>{{ $pageTitle }} | Creatium Lab</title>
     <meta name="description" content="{{ $pageDescription }}">
@@ -16,67 +23,84 @@
     <meta property="og:title" content="{{ $pageTitle }} | Creatium Lab">
     <meta property="og:description" content="{{ $pageDescription }}">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta name="theme-color" content="#2563eb">
-    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <meta property="og:image" content="{{ asset('images/og-image.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#0f1a2b">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="icon" type="image/png" href="{{ asset('favicon-64.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+    @if(config('creatium.inline_css') && ! \Illuminate\Support\Facades\Vite::isRunningHot())
+        {{-- Inline CSS (~10 KB gzip) saves a render-blocking request on first load --}}
+        <style>{!! \Illuminate\Support\Facades\Vite::content('resources/css/app.css') !!}</style>
+        @vite(['resources/js/app.js'])
+    @else
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @endif
 </head>
-<body class="bg-gray-50 text-gray-900 antialiased">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="flex items-center" aria-label="Creatium Lab - начало">
-                        <span class="font-extrabold text-xl text-gray-900">Creatium</span><span class="font-extrabold text-xl text-blue-600">&nbsp;Lab</span>
-                    </a>
-                </div>
+<body class="bg-white text-gray-900 antialiased">
+    @if(config('creatium.gtm_id'))
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('creatium.gtm_id') }}" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    @endif
+    @php
+        $links = [
+            ['Услуги', route('services'), request()->routeIs('services')],
+            ['Пакети', route('packages'), request()->routeIs('packages')],
+            ['Проекти', route('portfolio'), request()->routeIs('portfolio')],
+            ['За нас', route('about'), request()->routeIs('about')],
+            ['Контакти', route('contact'), request()->routeIs('contact')],
+        ];
+    @endphp
 
-                <div class="hidden md:flex items-center space-x-6">
-                    @php
-                        $links = [
-                            ['Услуги', route('services'), request()->routeIs('services')],
-                            ['Проекти', route('portfolio'), request()->routeIs('portfolio')],
-                            ['Пакети', route('home') . '#paketi', false],
-                            ['За нас', route('about'), request()->routeIs('about')],
-                            ['Контакти', route('contact'), request()->routeIs('contact')],
-                        ];
-                    @endphp
+    <header class="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-gray-100">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Основна навигация">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <a href="{{ route('home') }}" class="flex items-center shrink-0" aria-label="Creatium Lab - начало">
+                    <img src="{{ asset('images/logo.webp') }}" srcset="{{ asset('images/logo-224.webp') }} 224w, {{ asset('images/logo-352.webp') }} 352w, {{ asset('images/logo.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" fetchpriority="high" class="h-7 md:h-8 w-auto">
+                </a>
+
+                <div class="hidden md:flex items-center gap-1">
                     @foreach($links as [$label, $href, $active])
-                        <a href="{{ $href }}" class="{{ $active ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600' }} py-2 text-sm font-medium transition-colors">{{ $label }}</a>
+                        <a href="{{ $href }}" class="relative px-3 py-2 text-sm font-semibold rounded-lg transition-colors {{ $active ? 'text-brand-700' : 'text-gray-600 hover:text-brand-950 hover:bg-gray-50' }}">
+                            {{ $label }}
+                            @if($active)
+                                <span class="absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full bg-brand-500"></span>
+                            @endif
+                        </a>
                     @endforeach
 
                     @auth
-                        <a href="{{ route('admin.dashboard') }}" class="text-gray-500 hover:text-blue-600 text-sm" title="Административен панел" aria-label="Административен панел">
-                            <i class="fas fa-user-gear"></i>
+                        <a href="{{ route('admin.dashboard') }}" class="ml-2 w-9 h-9 inline-flex items-center justify-center rounded-lg text-gray-500 hover:text-brand-700 hover:bg-gray-50" title="Административен панел" aria-label="Административен панел">
+                            <x-icon name="user-gear" />
                         </a>
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="text-gray-500 hover:text-blue-600 text-sm" title="Изход" aria-label="Изход">
-                                <i class="fas fa-sign-out-alt"></i>
+                            <button type="submit" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-gray-500 hover:text-brand-700 hover:bg-gray-50" title="Изход" aria-label="Изход">
+                                <x-icon name="sign-out-alt" />
                             </button>
                         </form>
                     @endauth
 
-                    <a href="{{ route('contact') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
-                        Безплатна консултация
+                    <a href="{{ route('contact') }}" class="ml-3 inline-flex items-center gap-2 bg-brand-950 text-white px-5 py-2.5 rounded-xl hover:bg-brand-800 transition-colors text-sm font-semibold shadow-sm">
+                        Безплатна консултация <x-icon name="arrow-right" class="text-xs" />
                     </a>
                 </div>
 
-                <div class="md:hidden flex items-center">
-                    <button type="button" class="mobile-menu-button text-gray-700 hover:text-blue-600 focus:outline-none" aria-label="Меню" aria-expanded="false">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
+                <button type="button" class="mobile-menu-button md:hidden w-10 h-10 inline-flex items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100" aria-label="Меню" aria-expanded="false" aria-controls="mobile-menu">
+                    <x-icon name="bars" class="text-lg" />
+                </button>
             </div>
-        </div>
+        </nav>
 
-        <div class="mobile-menu hidden md:hidden bg-white border-t">
-            <div class="px-2 pt-2 pb-3 space-y-1">
+        <div id="mobile-menu" class="mobile-menu hidden md:hidden border-t border-gray-100 bg-white">
+            <div class="px-4 py-3 space-y-1">
                 @foreach($links as [$label, $href, $active])
-                    <a href="{{ $href }}" class="block px-3 py-2 {{ $active ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600' }}">{{ $label }}</a>
+                    <a href="{{ $href }}" class="block px-3 py-2.5 rounded-lg font-medium {{ $active ? 'text-brand-700 bg-brand-50' : 'text-gray-700 hover:bg-gray-50' }}">{{ $label }}</a>
                 @endforeach
-                <a href="{{ route('contact') }}" class="block px-3 py-2 bg-blue-600 text-white rounded mt-2 text-center font-semibold">Безплатна консултация</a>
+                <a href="{{ route('contact') }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold">Безплатна консултация</a>
                 @auth
                     <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-gray-500">Административен панел</a>
                     <form action="{{ route('logout') }}" method="POST">
@@ -86,48 +110,54 @@
                 @endauth
             </div>
         </div>
-    </nav>
+    </header>
 
     <main>
         @yield('content')
     </main>
 
-    <footer class="bg-gray-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="md:col-span-2">
-                    <div class="mb-4">
-                        <span class="font-extrabold text-xl">Creatium</span><span class="font-extrabold text-xl text-blue-400">&nbsp;Lab</span>
-                    </div>
-                    <p class="text-gray-300">Уебсайтове и маркетинг за бизнеса в България.</p>
+    <footer class="relative bg-brand-950 text-white overflow-hidden">
+        <div class="absolute inset-0 bg-grid-light opacity-60" aria-hidden="true"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
+                <div class="md:col-span-5">
+                    <img src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="223px" alt="Creatium Lab" width="445" height="64" class="h-8 w-auto mb-5" loading="lazy" decoding="async">
+                    <p class="text-gray-300 max-w-sm leading-relaxed">Сайтове, SEO и имейл кампании за малки и средни фирми в България.</p>
+                    <a href="{{ route('contact') }}" class="mt-6 inline-flex items-center gap-2 bg-white text-brand-950 px-5 py-2.5 rounded-xl font-semibold hover:bg-brand-50 transition-colors">
+                        Свържете се с нас <x-icon name="arrow-right" class="text-xs" />
+                    </a>
                 </div>
 
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Навигация</h3>
-                    <ul class="space-y-2">
+                <div class="md:col-span-3">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-brand-300 mb-4">Навигация</h3>
+                    <ul class="space-y-2.5">
                         <li><a href="{{ route('services') }}" class="text-gray-300 hover:text-white transition-colors">Услуги</a></li>
+                        <li><a href="{{ route('packages') }}" class="text-gray-300 hover:text-white transition-colors">Пакети</a></li>
                         <li><a href="{{ route('portfolio') }}" class="text-gray-300 hover:text-white transition-colors">Проекти</a></li>
-                        <li><a href="{{ route('home') }}#paketi" class="text-gray-300 hover:text-white transition-colors">Пакети</a></li>
                         <li><a href="{{ route('about') }}" class="text-gray-300 hover:text-white transition-colors">За нас</a></li>
                         <li><a href="{{ route('contact') }}" class="text-gray-300 hover:text-white transition-colors">Контакти</a></li>
                     </ul>
                 </div>
 
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Контакти</h3>
-                    <ul class="space-y-2 text-gray-300">
-                        <li><i class="fas fa-envelope mr-2"></i><a href="mailto:{{ config('creatium.contact.email') }}" class="hover:text-white">{{ config('creatium.contact.email') }}</a></li>
-                        <li><i class="fas fa-phone mr-2"></i>{{ config('creatium.contact.phone') }}</li>
-                        <li><i class="fas fa-location-dot mr-2"></i>{{ config('creatium.contact.city') }}, България</li>
+                <div class="md:col-span-4">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-brand-300 mb-4">Контакти</h3>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-center gap-3"><x-icon name="envelope" class="w-4 text-brand-300" /><a href="mailto:{{ config('creatium.contact.email') }}" class="hover:text-white">{{ config('creatium.contact.email') }}</a></li>
+                        <li class="flex items-center gap-3"><x-icon name="phone" class="w-4 text-brand-300" />{{ config('creatium.contact.phone') }}</li>
+                        <li class="flex items-center gap-3"><x-icon name="location-dot" class="w-4 text-brand-300" />{{ config('creatium.contact.city') }}, България</li>
                     </ul>
                 </div>
             </div>
 
-            <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between gap-4 text-gray-400 text-sm">
+            <div class="border-t border-white/10 mt-12 pt-6 flex flex-col md:flex-row justify-between gap-4 text-gray-400 text-sm">
                 <p>&copy; {{ date('Y') }} Creatium Lab. Всички права запазени.</p>
-                <div class="flex gap-6">
+                <div class="flex flex-wrap gap-x-6 gap-y-2">
                     <a href="{{ route('privacy') }}" class="hover:text-white">Политика за поверителност</a>
-                    <a href="{{ route('terms') }}" class="hover:text-white">Условия за ползване</a>
+                    <a href="{{ route('terms') }}" class="hover:text-white">Общи условия</a>
+                    <a href="{{ route('cookies') }}" class="hover:text-white">Политика за бисквитките</a>
+                    @if(config('creatium.gtm_id'))
+                        <a href="#" data-cookie-settings class="hover:text-white">Настройки за бисквитки</a>
+                    @endif
                     @guest
                         <a href="{{ route('login') }}" class="hover:text-white">Вход за екипа</a>
                     @endguest
@@ -136,9 +166,13 @@
         </div>
     </footer>
 
+    @if(config('creatium.gtm_id'))
+        @include('partials/cookie-consent')
+    @endif
+
     <script>
         document.querySelector('.mobile-menu-button').addEventListener('click', function () {
-            var menu = document.querySelector('.mobile-menu');
+            var menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
             this.setAttribute('aria-expanded', menu.classList.contains('hidden') ? 'false' : 'true');
         });

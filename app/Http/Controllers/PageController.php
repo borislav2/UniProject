@@ -15,6 +15,14 @@ class PageController extends Controller
         ]);
     }
 
+    public function packages()
+    {
+        return view('packages', [
+            'packages' => config('creatium.packages'),
+            'notes' => config('creatium.package_notes'),
+        ]);
+    }
+
     public function portfolio()
     {
         $projects = Project::with(['category', 'technologies'])
@@ -44,9 +52,14 @@ class PageController extends Controller
         return view('terms', ['contact' => config('creatium.contact')]);
     }
 
+    public function cookies()
+    {
+        return view('cookies');
+    }
+
     public function sitemap(): Response
     {
-        $pages = ['home', 'services', 'portfolio', 'about', 'contact', 'privacy', 'terms'];
+        $pages = ['home', 'services', 'packages', 'portfolio', 'about', 'contact', 'privacy', 'terms', 'cookies'];
 
         return response()
             ->view('sitemap', ['urls' => array_map(fn ($name) => route($name), $pages)])

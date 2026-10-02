@@ -17,7 +17,8 @@ class PublicSiteTest extends TestCase
     {
         return array_merge([
             'name' => 'Иван Иванов',
-            'contact' => 'ivan@example.com',
+            'phone' => '+359 888 123 456',
+            'service' => 'Изработка / Развитие на сайт',
             'message' => 'Искам сайт за моя ресторант.',
             'consent' => '1',
         ], $overrides);
@@ -25,7 +26,7 @@ class PublicSiteTest extends TestCase
 
     public function test_public_pages_load(): void
     {
-        foreach (['/', '/uslugi', '/proekti', '/za-nas', '/kontakti', '/poveritelnost', '/usloviya', '/sitemap.xml', '/robots.txt'] as $url) {
+        foreach (['/', '/uslugi', '/paketi', '/proekti', '/za-nas', '/kontakti', '/poveritelnost', '/usloviya', '/biskvitki', '/sitemap.xml', '/robots.txt'] as $url) {
             $this->get($url)->assertOk();
         }
     }
@@ -66,7 +67,31 @@ class PublicSiteTest extends TestCase
 
     public function test_empty_portfolio_shows_coming_soon(): void
     {
-        $this->get('/proekti')->assertSee('Първите проекти идват скоро');
+        $this->get('/proekti')->assertSee('Тук скоро ще има проекти');
+    }
+
+    public function test_home_page_follows_the_spec(): void
+    {
+        $this->get('/')
+            ->assertSee('Бъди разпознаваем.')
+            ->assertSee('Подходящо за')
+            ->assertSee('С какво можем да ви помогнем да се отличите')
+            ->assertSee('Мониторинг и здраве на сайта')
+            ->assertSee('Имейл кампании')
+            ->assertSee('Вижте повече')
+            ->assertSee('Работен процес')
+            ->assertSee('Клиентът е цар')
+            ->assertDontSee('id="paketi"', false);
+    }
+
+    public function test_packages_page_links_to_contact(): void
+    {
+        $this->get('/paketi')->assertOk()->assertSee('Свържете се с нас')->assertSee(route('contact'), false);
+    }
+
+    public function test_sitemap_lists_new_pages(): void
+    {
+        $this->get('/sitemap.xml')->assertSee(route('packages'))->assertSee(route('cookies'));
     }
 
     public function test_contact_form_creates_lead_and_notifies_team(): void
@@ -77,30 +102,30 @@ class PublicSiteTest extends TestCase
 
         $lead = Project::where('source', 'website')->firstOrFail();
         $this->assertSame('Запитване от Иван Иванов', $lead->name);
-        $this->assertSame('ivan@example.com', $lead->client_email);
-        $this->assertNull($lead->client_phone);
+        $this->assertSame('+359 888 123 456', $lead->client_phone);
+        $this->assertSame('Изработка / Развитие на сайт', $lead->service);
+        $this->assertSame('Искам сайт за моя ресторант.', $lead->description);
         $this->assertSame('Planning', $lead->status);
         $this->assertFalse($lead->is_public);
 
         Mail::assertSent(NewLeadMail::class);
     }
 
-    public function test_contact_form_stores_phone_numbers(): void
+    public function test_message_is_optional(): void
     {
         Mail::fake();
 
-        $this->post('/kontakti', $this->payload(['contact' => '+359 888 123 456']))->assertSessionHasNoErrors();
+        $this->post('/kontakti', $this->payload(['message' => '']))->assertSessionHasNoErrors();
 
         $lead = Project::where('source', 'website')->firstOrFail();
-        $this->assertSame('+359 888 123 456', $lead->client_phone);
-        $this->assertNull($lead->client_email);
+        $this->assertStringContainsString('Изработка / Развитие на сайт', $lead->description);
     }
 
     public function test_contact_form_validation(): void
     {
-        $this->post('/kontakti', [])->assertSessionHasErrors(['name', 'contact', 'message', 'consent']);
-        $this->post('/kontakti', $this->payload(['contact' => 'not-an-email@']))->assertSessionHasErrors('contact');
-        $this->post('/kontakti', $this->payload(['contact' => 'abc']))->assertSessionHasErrors('contact');
+        $this->post('/kontakti', [])->assertSessionHasErrors(['name', 'phone', 'service', 'consent']);
+        $this->post('/kontakti', $this->payload(['phone' => 'abc']))->assertSessionHasErrors('phone');
+        $this->post('/kontakti', $this->payload(['service' => 'Нещо друго']))->assertSessionHasErrors('service');
         $this->post('/kontakti', $this->payload(['consent' => null]))->assertSessionHasErrors('consent');
 
         $this->assertDatabaseCount('projects', 0);

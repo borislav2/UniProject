@@ -1,0 +1,66 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## What this is
+
+A Laravel 12 app that is two things at once:
+
+- **The public site of Creatium Lab** (a two-person agency for small Bulgarian businesses: website build and monitoring, GEO/SEO, email campaigns), live at creatiumlab.com. All public copy is Bulgarian.
+- **An internal admin panel** (`/admin`) for managing client projects. It started as a university "project management system", which is why the core model is `Project` with `Category` / `Technology` and roles `admin` / `project-manager` / `developer`.
+
+The two halves meet in one place: **a contact-form submission becomes a `Project`** (`source = 'website'`, status `Planning`, category "Ново запитване"), so leads show up in the admin list next to real client work.
+
+Visual and copy rules live in `DESIGN.md`; read it before touching views or text. The site follows a technical specification from the marketing partner (Владимир Цончев); its later phases (GTM + Consent Mode, blog/CMS, BG/EN) are not built yet.
+
+## Commands
+
+```bash
+composer install && npm ci          # dependencies
+npm run build                       # Vite build -> public/build (Tailwind v4)
+php artisan test                    # full suite (SQLite in memory, see phpunit.xml)
+php artisan test --filter=test_contact_form_creates_lead_and_notifies_team   # one test
+php artisan test tests/Feature/MarketingTest.php                              # one file
+php artisan migrate:fresh --seed    # local: also seeds demo users + demo projects
+php artisan creatium:make-admin you@example.com --name="Name"   # create/promote an admin
+```
+
+Local DB: set `DB_CONNECTION=sqlite` and `DB_DATABASE=<abs path>/database/database.sqlite` in `.env`. Demo logins (local/testing only): `admin@projectmanager.com` / `password`.
+
+`npm run dev` (and `composer dev`, which runs it) writes `public/hot`; while that file exists `@vite` points at the dev server and the built CSS is not used. Never leave it on a server (`deploy/deploy.sh` deletes it).
+
+CI (`.github/workflows/tests.yml`) runs `php artisan test` on PHP 8.2/8.3/8.4 after copying `.env.example`; tests call `withoutVite()` (see `tests/TestCase.php`), so no build is needed for tests.
+
+## Architecture
+
+**Routing** (`routes/web.php`): public pages use Bulgarian slugs (`/uslugi`, `/paketi`, `/proekti`, `/za-nas`, `/kontakti`, `/poveritelnost`, `/usloviya`, `/biskvitki`) plus dynamic `/sitemap.xml` and `/robots.txt` (`PageController`). `/about` and `/contact` 301-redirect. There is **no public registration**; accounts come from `creatium:make-admin` or the admin Users screen. Admin routes use `auth` + `admin` (`CheckAdminAccess`: any of the three roles); user management additionally needs `role:admin` (`RequireRole`). Login and the contact POST are throttled.
+
+**Site content is data, not markup.** `config/creatium.php` holds contact details, hero and audience copy, services, `contact_topics` (the form's service dropdown), process steps, packages/prices, FAQ, team, industries, legal entity data, `gtm_id`, `google_site_verification`, the `cookies` list shown on `/biskvitki`, `inline_css` and `notify_email`. Views loop over it; change copy there first. Contact/legal values can be overridden by `CREATIUM_*` env vars. Because production runs `config:cache`, read env only inside config files.
+
+**Lead flow** (`HomeController@submitContact`):
+1. Validates name, phone, `service` (must be one of `creatium.contact_topics`), an optional message, and a required `consent` checkbox. A hidden `website` field is a honeypot: if filled, the request fakes success and stores nothing.
+2. Creates the `Project` lead (phone in `client_phone`, topic in `service`), copying attribution from the session.
+3. Sends `App\Mail\NewLeadMail` to `creatium.notify_email`; a mail failure is logged and never loses the lead.
+4. Flashes `success`, `lead_created` and `lead_service`; the next page pushes `{event: 'generate_lead', lead_service}` to the GTM dataLayer.
+
+**Attribution**: `CaptureLeadAttribution` (appended to the `web` group in `bootstrap/app.php`) stores UTM params, `gclid`/`fbclid` and the external referrer host in the session on GET requests (skipping admin/login). `App\Support\LeadAttribution::channel()` maps that to a channel label saved on the lead; the admin dashboard aggregates leads by channel for the last 30 days.
+
+**Portfolio** (`/proekti`) shows only projects with `is_public = true` and status `Completed`; the admin form has the checkbox.
+
+**Tracking (GTM + Consent Mode v2)**: `creatium.gtm_id` comes from `GTM_ID` (validated; defaults to `GTM-5QRGW6DP` only when `APP_ENV=production`, empty disables it). When set, `partials/gtm-head` (top of `<head>`) first sets Consent Mode defaults to denied, re-applies a stored choice from localStorage (`creatium-consent`, valid 12 months), then loads GTM; the noscript iframe follows `<body>`. `partials/cookie-consent` is the category banner (necessary / analytics / marketing): it sends `gtag('consent','update')` plus a `consent_update` dataLayer event, and on withdrawal clears tracking cookies and reloads. GA4, Clarity and ad pixels are configured inside GTM by the marketing partner, never hard-coded in the site. The privacy and cookie pages switch their text on `gtm_id`. `GOOGLE_SITE_VERIFICATION` adds the Search Console meta tag (not needed with DNS verification).
+
+**Frontend**: Tailwind v4 via Vite with brand tokens and custom utilities defined in `resources/css/app.css`. Icons are inline SVG via `<x-icon name="...">` (`resources/views/components/icon.blade.php`), with paths stored in `App\Support\Icons` (Font Awesome Free, CC BY 4.0). The Font Awesome package is not installed: to add an icon, add its solid SVG path to `Icons::ICONS`. In production the public layout inlines the built CSS (`Vite::content`) when `creatium.inline_css` is true; the admin layout always links it. Shared public pieces: `partials/page-header`, `partials/cta`, `partials/contact-form`.
+
+**Seeders** are idempotent (`firstOrCreate`). `DatabaseSeeder` only seeds roles/categories/technologies in production; demo users and projects are limited to `local`/`testing`.
+
+## Deployment
+
+Production is a Webdock VPS (AlmaLinux 9, Nginx, PHP-FPM, MariaDB, SELinux enforcing). Full guide: `DEPLOY-WEBDOCK.md` (general notes in `DEPLOY.md`). Scripts in `deploy/`:
+
+- `almalinux-setup.sh`: one-time setup; safe to rerun.
+- `configure-env.sh`: writes the production `.env` from the DB credentials in `/root/creatium-db.txt`.
+- `deploy.sh`: pull, composer, npm build, migrate, seed, caches. Run it as the `deploy` user.
+- `update-nginx.sh`: static-file caching.
+- `backup.sh`: DB + uploads backup.
+
+PHP-FPM runs as the `deploy` user, so app files belong to `deploy`; don't reintroduce `chgrp`/group-based permissions. Run git and artisan on the server as `deploy`.

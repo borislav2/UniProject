@@ -9,7 +9,10 @@
         <p><strong>Имейл:</strong> {{ $lead->client_email }}</p>
     @endif
     @if($lead->client_phone)
-        <p><strong>Телефон:</strong> {{ $lead->client_phone }}</p>
+        <p><strong>Телефон:</strong> <a href="tel:{{ preg_replace('/[^0-9+]/', '', $lead->client_phone) }}">{{ $lead->client_phone }}</a></p>
+    @endif
+    @if($lead->service)
+        <p><strong>Услуга:</strong> {{ $lead->service }}</p>
     @endif
     <p><strong>Съобщение:</strong></p>
     <p style="white-space: pre-line; background: #f3f4f6; padding: 12px; border-radius: 6px;">{{ $lead->description }}</p>

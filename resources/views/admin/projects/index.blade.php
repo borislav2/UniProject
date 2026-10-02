@@ -11,11 +11,11 @@
                    value="{{ $search ?? '' }}" 
                    class="px-4 py-2 border rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500">
             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-r hover:bg-blue-600">
-                <i class="fas fa-search"></i>
+                <x-icon name="search" />
             </button>
         </form>
         <a href="{{ route('admin.projects.create') }}" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-            <i class="fas fa-plus mr-2"></i>New Project
+            <x-icon name="plus" class="mr-2" />New Project
         </a>
     </div>
 </div>
@@ -51,9 +51,12 @@
                                     </a>
                                     @if($project->source === 'website')
                                         <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800">От сайта</span>
+                                        @if($project->lead_channel)
+                                            <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700" title="Канал">{{ $project->lead_channel }}</span>
+                                        @endif
                                     @endif
                                 </div>
-                                <div class="text-sm text-gray-500">{{ Str::limit($project->description, 50) }}</div>
+                                <div class="text-sm text-gray-500">{{ $project->service ? $project->service . ' · ' : '' }}{{ Str::limit($project->description, 50) }}</div>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $project->manager }}</td>

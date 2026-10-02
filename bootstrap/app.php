@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\CaptureLeadAttribution;
 use App\Http\Middleware\CheckAdminAccess;
 use App\Http\Middleware\RequireRole;
 
@@ -16,7 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
     $middleware->alias([
             'admin' => CheckAdminAccess::class,
             'role' => RequireRole::class,
-        ]); 
+        ]);
+        $middleware->web(append: [CaptureLeadAttribution::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

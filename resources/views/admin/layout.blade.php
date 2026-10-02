@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel') - Project Management</title>
     <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100">
@@ -12,24 +13,25 @@
         <!-- Sidebar -->
         <div class="w-64 shrink-0 bg-gray-800 text-white overflow-y-auto">
             <div class="p-4">
-                <h1 class="text-xl font-bold">Admin Panel</h1>
+                <a href="{{ route('admin.dashboard') }}" class="block"><img src="{{ asset('images/logo-white.webp') }}" alt="Creatium Lab" class="h-6 w-auto"></a>
+                <p class="mt-2 text-xs uppercase tracking-wider text-gray-400">Административен панел</p>
             </div>
             <nav class="mt-4">
                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : '' }}">
-                    <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                    <x-icon name="tachometer-alt" class="mr-2" /> Dashboard
                 </a>
                 <a href="{{ route('admin.projects.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.projects.*') ? 'bg-gray-700' : '' }}">
-                    <i class="fas fa-project-diagram mr-2"></i> Projects
+                    <x-icon name="project-diagram" class="mr-2" /> Projects
                 </a>
                 <a href="{{ route('admin.categories.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.categories.*') ? 'bg-gray-700' : '' }}">
-                    <i class="fas fa-tags mr-2"></i> Categories
+                    <x-icon name="tags" class="mr-2" /> Categories
                 </a>
                 <a href="{{ route('admin.technologies.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.technologies.*') ? 'bg-gray-700' : '' }}">
-                    <i class="fas fa-cogs mr-2"></i> Technologies
+                    <x-icon name="cogs" class="mr-2" /> Technologies
                 </a>
                 @if(auth()->user()->isAdmin())
                 <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.users.*') ? 'bg-gray-700' : '' }}">
-                    <i class="fas fa-users mr-2"></i> Users
+                    <x-icon name="users" class="mr-2" /> Users
                 </a>
                 @endif
             </nav>
@@ -42,7 +44,7 @@
                 <div class="px-6 py-4 flex justify-between items-center">
                     <h2 class="text-2xl font-semibold text-gray-800">@yield('title', 'Admin Panel')</h2>
                     <a href="{{ route('home') }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
-                        <i class="fas fa-home mr-2"></i>Back to Home
+                        <x-icon name="home" class="mr-2" />Back to Home
                     </a>
                 </div>
             </header>

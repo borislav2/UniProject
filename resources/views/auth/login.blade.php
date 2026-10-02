@@ -20,7 +20,7 @@
         <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white rounded-lg shadow-lg p-8">
                 <div class="text-center mb-8">
-                    <i class="fas fa-sign-in-alt text-4xl text-indigo-600 mb-4"></i>
+                    <x-icon name="sign-in-alt" class="text-4xl text-brand-600 mb-4" />
                     <h2 class="text-2xl font-bold text-gray-900">Вход</h2>
                     <p class="text-gray-600 mt-2">Въведете вашите данни за достъп</p>
                 </div>
@@ -31,11 +31,11 @@
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Имейл адрес</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-envelope text-gray-400"></i>
+                                <x-icon name="envelope" class="text-gray-400" />
                             </div>
                             <input type="email" id="email" name="email" required autocomplete="username"
                                 placeholder="name@creatiumlab.com" value="{{ old('email') }}"
-                                class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                         </div>
                         @error('email')<p class="text-red-600 text-sm mt-2">{{ $message }}</p>@enderror
                     </div>
@@ -44,11 +44,11 @@
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Парола</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-gray-400"></i>
+                                <x-icon name="lock" class="text-gray-400" />
                             </div>
                             <input type="password" id="password" name="password" required
                                 placeholder="••••••••"
-                                class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
                         </div>
                     </div>
                     
@@ -60,8 +60,8 @@
                     </div>
                     
                     <button type="submit" 
-                            class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Вход в системата
+                            class="w-full bg-brand-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-brand-700 transition-colors">
+                        <x-icon name="sign-in-alt" class="mr-2" />Вход в системата
                     </button>
                 </form>
             </div>

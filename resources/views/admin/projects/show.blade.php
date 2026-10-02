@@ -12,13 +12,13 @@
     </h2>
     <div class="flex space-x-4">
         <a href="{{ route('admin.projects.edit', $project) }}" class="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600">
-            <i class="fas fa-edit mr-2"></i>Edit Project
+            <x-icon name="edit" class="mr-2" />Edit Project
         </a>
         <form action="{{ route('admin.projects.destroy', $project) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this project?')">
             @csrf
             @method('DELETE')
             <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-                <i class="fas fa-trash mr-2"></i>Delete
+                <x-icon name="trash" class="mr-2" />Delete
             </button>
         </form>
     </div>
@@ -91,6 +91,26 @@
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Project Information</h3>
             <div class="space-y-3">
+                @if($project->service)
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Услуга</h4>
+                        <p class="text-gray-900 font-semibold">{{ $project->service }}</p>
+                    </div>
+                @endif
+                @if($project->source === 'website')
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Канал</h4>
+                        <p class="text-gray-900 font-semibold">{{ $project->lead_channel ?? 'Директно' }}</p>
+                        @if($project->utm_source || $project->utm_medium || $project->utm_campaign || $project->referrer)
+                            <dl class="mt-1 text-xs text-gray-500 space-y-0.5">
+                                @if($project->utm_source)<div>utm_source: {{ $project->utm_source }}</div>@endif
+                                @if($project->utm_medium)<div>utm_medium: {{ $project->utm_medium }}</div>@endif
+                                @if($project->utm_campaign)<div>utm_campaign: {{ $project->utm_campaign }}</div>@endif
+                                @if($project->referrer)<div>Препращащ сайт: {{ $project->referrer }}</div>@endif
+                            </dl>
+                        @endif
+                    </div>
+                @endif
                 @if($project->client_email || $project->client_phone)
                     <div>
                         <h4 class="text-sm font-medium text-gray-500">Контакт с клиента</h4>
@@ -115,7 +135,7 @@
                         <h4 class="text-sm font-medium text-gray-500">Project File</h4>
                         <a href="{{ asset($project->file_path) }}" target="_blank" 
                            class="text-blue-600 hover:underline flex items-center">
-                            <i class="fas fa-file mr-2"></i>
+                            <x-icon name="file" class="mr-2" />
                             {{ basename($project->file_path) }}
                         </a>
                     </div>
@@ -127,7 +147,7 @@
 
 <div class="mt-6">
     <a href="{{ route('admin.projects.index') }}" class="text-blue-600 hover:underline">
-        <i class="fas fa-arrow-left mr-2"></i>Back to Projects
+        <x-icon name="arrow-left" class="mr-2" />Back to Projects
     </a>
 </div>
 @endsection

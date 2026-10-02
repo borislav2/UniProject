@@ -6,7 +6,7 @@
 <div class="mb-6 flex justify-between items-center">
     <h2 class="text-2xl font-bold text-gray-800">Technologies</h2>
     <a href="{{ route('admin.technologies.create') }}" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-        <i class="fas fa-plus mr-2"></i>New Technology
+        <x-icon name="plus" class="mr-2" />New Technology
     </a>
 </div>
 

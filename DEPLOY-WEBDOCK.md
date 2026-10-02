@@ -40,18 +40,18 @@ sudo bash /var/www/creatiumlab/deploy/almalinux-setup.sh creatiumlab.com
 
 ```bash
 sudo -iu deploy
+cd /var/www/creatiumlab && git pull        # взима последните скриптове
+exit                                       # обратно към вашия потребител
+sudo bash /var/www/creatiumlab/deploy/configure-env.sh creatiumlab.com   # създава .env с данните за базата
+sudo -iu deploy
 cd /var/www/creatiumlab
-cp .env.example .env
-nano .env          # стойностите са описани в DEPLOY.md, раздел 3
-php artisan key:generate
-```
-
-В `.env` сложете `DB_CONNECTION=mysql`, `DB_HOST=127.0.0.1`, `DB_PORT=3306` и `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` от `/root/creatium-db.txt` (`sudo cat /root/creatium-db.txt`). Не забравяйте `APP_ENV=production`, `APP_DEBUG=false` и `APP_URL=https://creatiumlab.com`.
-
-```bash
 bash deploy/deploy.sh
 php artisan creatium:make-admin you@creatiumlab.com --name="Вашето име"
 ```
+
+`configure-env.sh` чете паролата на базата от `/root/creatium-db.txt` и сам попълва `.env`, така че не се налага да я преписвате. Имейлите засега се записват в лога (`MAIL_MAILER=log`); SMTP настройките се добавят по-късно (вижте раздел 6).
+
+До издаването на HTTPS сертификата (следващата стъпка) сайтът може да се зарежда без стилове, защото в production адресите са с `https://`.
 
 ## 5. HTTPS
 
@@ -64,6 +64,14 @@ sudo certbot renew --dry-run
 ```
 
 Проверка: отворете `https://creatiumlab.com`, влезте в `/login`, изпратете тестово запитване от `/kontakti` и проверете, че се появява в админ панела и пристига на имейла.
+
+### Кеширане на статичните файлове
+
+На сървър, пуснат преди този скрипт да съществува, добавете кеширането на логото, favicon-а и картинките (еднократно, безопасно е и повторно):
+
+```bash
+sudo bash /var/www/creatiumlab/deploy/update-nginx.sh
+```
 
 ## 6. Имейл от сървъра
 
