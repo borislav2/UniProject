@@ -4,6 +4,8 @@
 @section('meta_description', 'Какви бисквитки използва сайтът на Creatium Lab, за какво служат и как да управлявате съгласието си.')
 
 @section('content')
+@php($tracking = (bool) config('creatium.gtm_id'))
+@php($cookies = config('creatium.cookies'))
 @include('partials/page-header', ['heading' => 'Политика за бисквитките'])
 
 <section class="py-12 bg-white">
@@ -28,38 +30,43 @@
                     <tbody class="divide-y divide-gray-100">
                         <tr><td class="px-4 py-2.5 font-mono text-xs">{{ config('session.cookie') }}</td><td class="px-4 py-2.5">Сесия: помни, че формата е изпратена, и показва грешки в нея</td><td class="px-4 py-2.5 whitespace-nowrap">{{ config('session.lifetime') }} мин.</td></tr>
                         <tr><td class="px-4 py-2.5 font-mono text-xs">XSRF-TOKEN</td><td class="px-4 py-2.5">Защита на формите от злоупотреби</td><td class="px-4 py-2.5 whitespace-nowrap">{{ config('session.lifetime') }} мин.</td></tr>
-                        @if(config('creatium.meta_pixel_id'))
-                            <tr><td class="px-4 py-2.5 font-mono text-xs">creatium-cookie-consent</td><td class="px-4 py-2.5">Помни избора ви в банера за бисквитки (localStorage)</td><td class="px-4 py-2.5 whitespace-nowrap">до изтриване</td></tr>
+                        @if($tracking)
+                            <tr><td class="px-4 py-2.5 font-mono text-xs">creatium-consent</td><td class="px-4 py-2.5">Помни избора ви в банера за бисквитки (localStorage)</td><td class="px-4 py-2.5 whitespace-nowrap">1 година</td></tr>
                         @endif
                     </tbody>
                 </table>
             </div>
 
-            <h3 class="font-semibold text-gray-900 mt-6 mb-2">Аналитични</h3>
-            <p>В момента не използваме аналитични бисквитки. Ако започнем, ще ги заредим само след ваше съгласие и ще ги опишем тук.</p>
-
-            <h3 class="font-semibold text-gray-900 mt-6 mb-2">Маркетингови</h3>
-            @if(config('creatium.meta_pixel_id'))
-                <p>Зареждат се само ако ги приемете в банера.</p>
-                <div class="mt-3 overflow-x-auto rounded-xl border border-gray-200">
-                    <table class="w-full text-sm text-left">
-                        <thead class="bg-gray-50 text-gray-900">
-                            <tr><th class="px-4 py-2.5 font-semibold">Име</th><th class="px-4 py-2.5 font-semibold">Доставчик и цел</th><th class="px-4 py-2.5 font-semibold">Срок</th></tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            <tr><td class="px-4 py-2.5 font-mono text-xs">_fbp, _fbc</td><td class="px-4 py-2.5">Meta Pixel (Meta Platforms Ireland Ltd.): измерване на посещенията и изпратените запитвания от реклами</td><td class="px-4 py-2.5 whitespace-nowrap">90 дни</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <p>В момента не използваме маркетингови бисквитки. Ако започнем, ще ги заредим само след ваше съгласие и ще ги опишем тук.</p>
+            @if($tracking)
+                <p class="mt-6">Аналитичните и маркетинговите бисквитки се зареждат през <strong>Google Tag Manager</strong> (Google Ireland Ltd.). Самият Tag Manager не поставя бисквитки. Докато не дадете съгласие, инструментите по-долу не записват бисквитки (използваме Google Consent Mode v2).</p>
             @endif
+
+            @foreach(['analytics' => 'Аналитични', 'marketing' => 'Маркетингови'] as $category => $label)
+                <h3 class="font-semibold text-gray-900 mt-6 mb-2">{{ $label }}</h3>
+                @if($tracking && count($cookies[$category]))
+                    <p>Зареждат се само ако ги разрешите в банера.</p>
+                    <div class="mt-3 overflow-x-auto rounded-xl border border-gray-200">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-gray-50 text-gray-900">
+                        <tr><th class="px-4 py-2.5 font-semibold">Име</th><th class="px-4 py-2.5 font-semibold">Доставчик и цел</th><th class="px-4 py-2.5 font-semibold">Срок</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                            @foreach($cookies[$category] as $cookie)
+                                <tr><td class="px-4 py-2.5 font-mono text-xs whitespace-nowrap">{{ $cookie['name'] }}</td><td class="px-4 py-2.5"><strong class="font-semibold">{{ $cookie['provider'] }}</strong>: {{ $cookie['purpose'] }}</td><td class="px-4 py-2.5 whitespace-nowrap">{{ $cookie['duration'] }}</td></tr>
+                            @endforeach
+                    </tbody>
+                </table>
+            </div>
+                @else
+                    <p>В момента не използваме {{ mb_strtolower($label) }} бисквитки. Ако започнем, ще ги заредим само след ваше съгласие и ще ги опишем тук.</p>
+                @endif
+            @endforeach
         </div>
 
         <div>
             <h2 class="text-xl font-bold text-gray-900 mb-2">3. Как да промените избора си</h2>
-            @if(config('creatium.meta_pixel_id'))
-                <p>Може да промените или оттеглите съгласието си по всяко време от <a href="#" data-cookie-settings class="text-brand-700 underline">Настройки за бисквитки</a> (линкът е и най-долу на всяка страница).</p>
+            @if($tracking)
+                <p>Може да промените или оттеглите съгласието си по всяко време от <a href="#" data-cookie-settings class="text-brand-700 underline">Настройки за бисквитки</a> (линкът е и най-долу на всяка страница). Изборът ви важи 12 месеца, след което ще ви попитаме отново.</p>
             @endif
             <p class="mt-3">Може и да изтриете или блокирате бисквитките от настройките на браузъра си. Ако блокирате строго необходимите, контактната форма може да не работи.</p>
         </div>

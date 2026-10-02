@@ -11,8 +11,29 @@ return [
         'city' => env('CREATIUM_CITY', 'София'),
     ],
 
-    // Meta Pixel (Facebook/Instagram реклами). Празно = изключен. Зарежда се само след съгласие в банера за бисквитки.
-    'meta_pixel_id' => preg_match('/^\d{5,20}$/', (string) env('META_PIXEL_ID')) ? (string) env('META_PIXEL_ID') : null,
+    // Google Tag Manager. По подразбиране е включен само в production; GTM_ID= (празно) в .env го изключва.
+    // Аналитиката и пикселите (GA4, Clarity, Meta) се настройват в GTM и тръгват само след съгласие в банера (Consent Mode v2).
+    'gtm_id' => (function () {
+        $id = (string) env('GTM_ID', env('APP_ENV') === 'production' ? 'GTM-5QRGW6DP' : '');
+
+        return preg_match('/^GTM-[A-Z0-9]{4,12}$/', $id) ? $id : null;
+    })(),
+
+    // Код за потвърждение в Google Search Console (метод „HTML tag“). Не е нужен, ако домейнът е потвърден през DNS.
+    'google_site_verification' => preg_match('/^[A-Za-z0-9_-]{10,100}$/', (string) env('GOOGLE_SITE_VERIFICATION')) ? (string) env('GOOGLE_SITE_VERIFICATION') : null,
+
+    // Бисквитките по категории, които се зареждат през GTM след съгласие. Показват се в Политиката за бисквитките.
+    // Ако добавите или махнете инструмент в GTM, обновете списъка тук.
+    'cookies' => [
+        'analytics' => [
+            ['name' => '_ga, _ga_*', 'provider' => 'Google Analytics 4 (Google Ireland Ltd.)', 'purpose' => 'Брои посещенията и показва кои страници се четат и откъде идват посетителите', 'duration' => 'до 2 години'],
+            ['name' => '_clck, _clsk', 'provider' => 'Microsoft Clarity (Microsoft Ireland Operations Ltd.)', 'purpose' => 'Показва как се използва страницата (кликове, превъртане), за да оправяме неудобните места', 'duration' => 'до 1 година / 1 ден'],
+        ],
+        'marketing' => [
+            ['name' => '_fbp, _fbc', 'provider' => 'Meta Pixel (Meta Platforms Ireland Ltd.)', 'purpose' => 'Измерва посещенията и запитванията, дошли от рекламите ни', 'duration' => 'до 90 дни'],
+            ['name' => '_gcl_au', 'provider' => 'Google Ads (Google Ireland Ltd.)', 'purpose' => 'Измерва запитванията, дошли от рекламите ни в Google', 'duration' => 'до 90 дни'],
+        ],
+    ],
 
     // Вграден CSS в HTML-а (по-бързо първо зареждане). По подразбиране само в production.
     'inline_css' => (bool) env('INLINE_CSS', env('APP_ENV') === 'production'),

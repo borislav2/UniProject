@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @if(config('creatium.gtm_id'))
+        @include('partials/gtm-head')
+    @endif
+    @if(config('creatium.google_site_verification'))
+        <meta name="google-site-verification" content="{{ config('creatium.google_site_verification') }}">
+    @endif
     <script>document.documentElement.classList.add('js');</script>
     @php
         $pageTitle = trim($__env->yieldContent('title', 'Сайтове и дигитален маркетинг за малки фирми'));
@@ -34,6 +40,11 @@
     @endif
 </head>
 <body class="bg-white text-gray-900 antialiased">
+    @if(config('creatium.gtm_id'))
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('creatium.gtm_id') }}" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    @endif
     @php
         $links = [
             ['Услуги', route('services'), request()->routeIs('services')],
@@ -144,7 +155,7 @@
                     <a href="{{ route('privacy') }}" class="hover:text-white">Политика за поверителност</a>
                     <a href="{{ route('terms') }}" class="hover:text-white">Общи условия</a>
                     <a href="{{ route('cookies') }}" class="hover:text-white">Политика за бисквитките</a>
-                    @if(config('creatium.meta_pixel_id'))
+                    @if(config('creatium.gtm_id'))
                         <a href="#" data-cookie-settings class="hover:text-white">Настройки за бисквитки</a>
                     @endif
                     @guest
@@ -155,7 +166,7 @@
         </div>
     </footer>
 
-    @if(config('creatium.meta_pixel_id'))
+    @if(config('creatium.gtm_id'))
         @include('partials/cookie-consent')
     @endif
 

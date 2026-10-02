@@ -63,7 +63,7 @@ class HomeController extends Controller
 
         $lead = Project::create([
             'name' => 'Запитване от ' . $validated['name'],
-            'description' => $validated['message'] ?: 'Без съобщение. Тема: ' . $validated['service'] . '.',
+            'description' => ($validated['message'] ?? null) ?: 'Без съобщение. Тема: ' . $validated['service'] . '.',
             'start_date' => now()->toDateString(),
             'status' => 'Planning',
             'manager' => 'Неразпределен',
@@ -86,7 +86,8 @@ class HomeController extends Controller
 
         return back()
             ->with('success', 'Получихме запитването ви. Ще ви се обадим до един работен ден.')
-            ->with('lead_created', true);
+            ->with('lead_created', true)
+            ->with('lead_service', $validated['service']);
     }
 
     public function showLoginForm()

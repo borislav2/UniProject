@@ -86,31 +86,65 @@ class MarketingTest extends TestCase
         $this->actingAs($admin)->get('/admin')->assertOk()->assertSee('Запитвания от сайта по канал')->assertSee('Google');
     }
 
-    public function test_no_pixel_or_banner_without_pixel_id(): void
+    public function test_no_tracking_or_banner_without_gtm_id(): void
     {
-        config(['creatium.meta_pixel_id' => null]);
+        config(['creatium.gtm_id' => null]);
 
-        $this->get('/')->assertDontSee('cookie-banner')->assertDontSee('fbevents.js');
+        $this->get('/')->assertDontSee('googletagmanager.com')->assertDontSee('cookie-banner')->assertDontSee('Настройки за бисквитки');
         $this->get('/poveritelnost')->assertSee('Не използваме аналитични или рекламни бисквитки');
     }
 
-    public function test_pixel_is_behind_consent_banner_when_configured(): void
+    public function test_gtm_loads_after_consent_mode_defaults(): void
     {
-        config(['creatium.meta_pixel_id' => '123456789012345']);
+        config(['creatium.gtm_id' => 'GTM-5QRGW6DP']);
 
-        $this->get('/')
+        $html = $this->get('/')
             ->assertSee('cookie-banner', false)
-            ->assertSee('123456789012345')
-            ->assertSee('Настройки за бисквитки');
-        $this->get('/poveritelnost')->assertSee('Meta Pixel');
+            ->assertSee('ns.html?id=GTM-5QRGW6DP', false)
+            ->assertSee('Настройки за бисквитки')
+            ->getContent();
+
+        $default = strpos($html, "gtag('consent', 'default'");
+        $this->assertNotFalse($default);
+        $this->assertStringContainsString("analytics_storage: 'denied'", $html);
+        $this->assertLessThan(strpos($html, 'googletagmanager.com/gtm.js'), $default);
+        $this->assertLessThan(strpos($html, '<title>'), strpos($html, '<!-- Google Tag Manager -->'));
+
+        $this->get('/biskvitki')->assertSee('Google Analytics 4')->assertSee('Meta Pixel');
+        $this->get('/poveritelnost')->assertSee('Google Tag Manager');
     }
 
-    public function test_pixel_id_must_be_numeric(): void
+    public function test_lead_is_pushed_to_the_data_layer(): void
     {
-        putenv('META_PIXEL_ID=12345</script><script>alert(1)');
-        $config = require base_path('config/creatium.php');
-        putenv('META_PIXEL_ID');
+        config(['creatium.gtm_id' => 'GTM-5QRGW6DP']);
 
-        $this->assertNull($config['meta_pixel_id']);
+        $this->followingRedirects()->post('/kontakti', [
+            'name' => 'Мария', 'phone' => '0888123456', 'service' => 'GEO & SEO видимост', 'consent' => '1',
+        ])->assertSee("event: 'generate_lead'", false)->assertSee('GEO \u0026 SEO', false);
+
+        $this->get('/')->assertDontSee('generate_lead');
+    }
+
+    public function test_gtm_id_is_validated_and_off_outside_production(): void
+    {
+        putenv('GTM_ID=GTM-1</script><script>alert(1)');
+        $config = require base_path('config/creatium.php');
+        $this->assertNull($config['gtm_id']);
+
+        putenv('GTM_ID');
+        $config = require base_path('config/creatium.php');
+        $this->assertNull($config['gtm_id']);
+
+        putenv('GTM_ID=GTM-ABC1234');
+        $config = require base_path('config/creatium.php');
+        putenv('GTM_ID');
+        $this->assertSame('GTM-ABC1234', $config['gtm_id']);
+    }
+
+    public function test_search_console_verification_meta(): void
+    {
+        config(['creatium.google_site_verification' => 'abcDEF123_-xyz']);
+
+        $this->get('/')->assertSee('<meta name="google-site-verification" content="abcDEF123_-xyz">', false);
     }
 }
