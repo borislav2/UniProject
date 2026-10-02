@@ -10,16 +10,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 
 class HomeController extends Controller
 {
     public function index()
     {
         return view('home', [
+            'hero' => config('creatium.hero'),
+            'audience' => config('creatium.audience'),
             'industries' => config('creatium.industries'),
             'services' => config('creatium.services'),
             'process' => config('creatium.process'),
-            'packages' => config('creatium.packages'),
+            'promise' => config('creatium.process_promise'),
             'contact' => config('creatium.contact'),
         ]);
     }
@@ -33,30 +36,22 @@ class HomeController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'contact' => [
-                'required', 'string', 'max:255',
-                function (string $attribute, mixed $value, \Closure $fail) {
-                    $isValid = str_contains($value, '@')
-                        ? filter_var($value, FILTER_VALIDATE_EMAIL)
-                        : preg_match('/^[0-9+()\-\s]{6,25}$/', $value);
-
-                    if (! $isValid) {
-                        $fail('Моля, въведете валиден телефон или имейл.');
-                    }
-                },
-            ],
-            'message' => 'required|string|max:5000',
+            'phone' => ['required', 'string', 'max:25', 'regex:/^[0-9+()\-\s]{6,25}$/'],
+            'service' => ['required', 'string', Rule::in(config('creatium.contact_topics'))],
+            'message' => 'nullable|string|max:5000',
             'consent' => 'accepted',
         ], [
             'name.required' => 'Моля, въведете вашето име.',
-            'contact.required' => 'Моля, въведете телефон или имейл за връзка.',
-            'message.required' => 'Моля, разкажете ни малко повече за вашия бизнес.',
+            'phone.required' => 'Моля, въведете телефон, на който да ви се обадим.',
+            'phone.regex' => 'Моля, въведете валиден телефонен номер.',
+            'service.required' => 'Моля, изберете с какво да помогнем.',
+            'service.in' => 'Моля, изберете услуга от списъка.',
             'consent.accepted' => 'Моля, потвърдете, че сте запознати с Политиката за поверителност.',
         ]);
 
         // Honeypot: real visitors never fill this hidden field.
         if ($request->filled('website')) {
-            return back()->with('success', 'Получихме съобщението ви. Ще ви отговорим до един работен ден.');
+            return back()->with('success', 'Получихме запитването ви. Ще ви се обадим до един работен ден.');
         }
 
         $leadCategory = Category::firstOrCreate(
@@ -64,18 +59,17 @@ class HomeController extends Controller
             ['description' => 'Автоматично създадени запитвания от сайта, изчакващи категоризация']
         );
 
-        $isEmail = str_contains($validated['contact'], '@');
         $attribution = $request->session()->get(LeadAttribution::SESSION_KEY);
 
         $lead = Project::create([
             'name' => 'Запитване от ' . $validated['name'],
-            'description' => $validated['message'],
+            'description' => $validated['message'] ?: 'Без съобщение. Тема: ' . $validated['service'] . '.',
             'start_date' => now()->toDateString(),
             'status' => 'Planning',
             'manager' => 'Неразпределен',
             'category_id' => $leadCategory->id,
-            'client_email' => $isEmail ? $validated['contact'] : null,
-            'client_phone' => $isEmail ? null : $validated['contact'],
+            'client_phone' => $validated['phone'],
+            'service' => $validated['service'],
             'source' => 'website',
             'lead_channel' => LeadAttribution::channel($attribution),
             'utm_source' => $attribution['utm_source'] ?? null,
@@ -91,7 +85,7 @@ class HomeController extends Controller
         }
 
         return back()
-            ->with('success', 'Получихме съобщението ви. Ще ви отговорим до един работен ден.')
+            ->with('success', 'Получихме запитването ви. Ще ви се обадим до един работен ден.')
             ->with('lead_created', true);
     }
 

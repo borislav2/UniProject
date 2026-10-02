@@ -3,7 +3,7 @@
     <div class="max-w-3xl mx-auto rounded-2xl bg-brand-950 text-white shadow-2xl ring-1 ring-white/10 p-5 md:flex md:items-center md:gap-6">
         <p class="text-sm text-gray-200 flex-1 leading-relaxed">
             Използваме бисквитки на Meta, за да измерваме ефекта от рекламите си. Зареждат се само с ваше съгласие и можете да го оттеглите по всяко време.
-            <a href="{{ route('privacy') }}#biskvitki" class="underline text-white">Научете повече</a>
+            <a href="{{ route('cookies') }}" class="underline text-white">Научете повече</a>
         </p>
         <div class="mt-4 md:mt-0 flex gap-2 shrink-0">
             <button type="button" data-consent="denied" class="flex-1 md:flex-none px-4 py-2.5 rounded-xl text-sm font-semibold bg-white/10 hover:bg-white/20 transition-colors">Отказвам</button>

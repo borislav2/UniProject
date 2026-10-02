@@ -91,6 +91,12 @@
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Project Information</h3>
             <div class="space-y-3">
+                @if($project->service)
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Услуга</h4>
+                        <p class="text-gray-900 font-semibold">{{ $project->service }}</p>
+                    </div>
+                @endif
                 @if($project->source === 'website')
                     <div>
                         <h4 class="text-sm font-medium text-gray-500">Канал</h4>

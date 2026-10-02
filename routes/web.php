@@ -12,12 +12,14 @@ use Illuminate\Support\Facades\Route;
 // Public site
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/uslugi', [PageController::class, 'services'])->name('services');
+Route::get('/paketi', [PageController::class, 'packages'])->name('packages');
 Route::get('/proekti', [PageController::class, 'portfolio'])->name('portfolio');
 Route::get('/za-nas', [PageController::class, 'about'])->name('about');
 Route::get('/kontakti', [HomeController::class, 'contact'])->name('contact');
 Route::post('/kontakti', [HomeController::class, 'submitContact'])->middleware('throttle:5,10')->name('contact.submit');
 Route::get('/poveritelnost', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/usloviya', [PageController::class, 'terms'])->name('terms');
+Route::get('/biskvitki', [PageController::class, 'cookies'])->name('cookies');
 Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [PageController::class, 'robots'])->name('robots');
 

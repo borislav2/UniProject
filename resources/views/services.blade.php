@@ -1,22 +1,24 @@
 @extends('layouts.public')
 
-@section('title', 'Услуги: уебсайтове и SEO')
-@section('meta_description', 'Изработка на уебсайтове и онлайн магазини и локално SEO, за да ви намират в Google. За български бизнеси.')
+@section('title', 'Услуги: сайтове, SEO и имейл кампании')
+@section('meta_description', 'Изработка и поддръжка на сайтове, мониторинг, локално SEO и видимост в AI търсачки, имейл кампании. За малки и средни фирми в България.')
 
 @section('content')
-@include('partials/page-header', ['heading' => 'Услуги', 'sub' => 'Правим две неща: сайтове и SEO. Ето какво включва всяко от тях.'])
+@include('partials/page-header', ['heading' => 'Услуги', 'sub' => 'Правим сайтове, грижим се да работят и да ги намират в Google, и настройваме имейл кампании. Ето какво включва всяко.'])
 
 <section class="py-16 bg-white">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 divide-y divide-gray-100 [&>*]:py-12 [&>*:first-child]:pt-0">
         @foreach($services as $service)
-            <article id="{{ \Illuminate\Support\Str::slug($service['title'], '-', 'en') ?: 'usluga-'.$loop->iteration }}" class="grid md:grid-cols-3 gap-8 scroll-mt-28 reveal">
+            <article id="{{ $service['slug'] }}" class="grid md:grid-cols-3 gap-8 scroll-mt-28 reveal">
                 <div>
                     <div class="w-12 h-12 rounded-xl bg-brand-gradient flex items-center justify-center mb-4 shadow-lg shadow-brand-900/20">
                         <x-icon :name="$service['icon']" class="text-white" />
                     </div>
                     <h2 class="text-2xl font-extrabold tracking-tight text-brand-950">{{ $service['title'] }}</h2>
+                    <p class="mt-1 text-sm font-semibold text-brand-600">{{ $service['tag'] }}</p>
                 </div>
                 <div class="md:col-span-2">
+                    <p class="text-lg text-gray-900 mb-3">{{ $service['description'] }}</p>
                     <p class="text-gray-600 mb-6">{{ $service['details'] }}</p>
                     <h3 class="font-semibold text-gray-900 mb-3">Какво включва</h3>
                     <ul class="space-y-2">

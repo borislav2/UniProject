@@ -6,12 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A Laravel 12 app that is two things at once:
 
-- **The public site of Creatium Lab** (a two-person agency: websites + SEO for small Bulgarian businesses), live at creatiumlab.com. All public copy is Bulgarian.
+- **The public site of Creatium Lab** (a two-person agency for small Bulgarian businesses: website build and monitoring, GEO/SEO, email campaigns), live at creatiumlab.com. All public copy is Bulgarian.
 - **An internal admin panel** (`/admin`) for managing client projects. It started as a university "project management system", which is why the core model is `Project` with `Category` / `Technology` and roles `admin` / `project-manager` / `developer`.
 
 The two halves meet in one place: **a contact-form submission becomes a `Project`** (`source = 'website'`, status `Planning`, category "Ново запитване"), so leads show up in the admin list next to real client work.
 
-Visual and copy rules live in `DESIGN.md`; read it before touching views or text.
+Visual and copy rules live in `DESIGN.md`; read it before touching views or text. The site follows a technical specification from the marketing partner (Владимир Цончев); its later phases (GTM + Consent Mode, blog/CMS, BG/EN) are not built yet.
 
 ## Commands
 
@@ -33,13 +33,13 @@ CI (`.github/workflows/tests.yml`) runs `php artisan test` on PHP 8.2/8.3/8.4 af
 
 ## Architecture
 
-**Routing** (`routes/web.php`): public pages use Bulgarian slugs (`/uslugi`, `/proekti`, `/za-nas`, `/kontakti`, `/poveritelnost`, `/usloviya`) plus dynamic `/sitemap.xml` and `/robots.txt` (`PageController`). `/about` and `/contact` 301-redirect. There is **no public registration**; accounts come from `creatium:make-admin` or the admin Users screen. Admin routes use `auth` + `admin` (`CheckAdminAccess`: any of the three roles); user management additionally needs `role:admin` (`RequireRole`). Login and the contact POST are throttled.
+**Routing** (`routes/web.php`): public pages use Bulgarian slugs (`/uslugi`, `/paketi`, `/proekti`, `/za-nas`, `/kontakti`, `/poveritelnost`, `/usloviya`, `/biskvitki`) plus dynamic `/sitemap.xml` and `/robots.txt` (`PageController`). `/about` and `/contact` 301-redirect. There is **no public registration**; accounts come from `creatium:make-admin` or the admin Users screen. Admin routes use `auth` + `admin` (`CheckAdminAccess`: any of the three roles); user management additionally needs `role:admin` (`RequireRole`). Login and the contact POST are throttled.
 
-**Site content is data, not markup.** `config/creatium.php` holds contact details, services, process steps, packages/prices, FAQ, team, industries, legal entity data, `meta_pixel_id`, `inline_css` and `notify_email`. Views loop over it; change copy there first. Contact/legal values can be overridden by `CREATIUM_*` env vars. Because production runs `config:cache`, read env only inside config files.
+**Site content is data, not markup.** `config/creatium.php` holds contact details, hero and audience copy, services, `contact_topics` (the form's service dropdown), process steps, packages/prices, FAQ, team, industries, legal entity data, `meta_pixel_id`, `inline_css` and `notify_email`. Views loop over it; change copy there first. Contact/legal values can be overridden by `CREATIUM_*` env vars. Because production runs `config:cache`, read env only inside config files.
 
 **Lead flow** (`HomeController@submitContact`):
-1. Validates name, contact (email *or* phone, checked by a closure), message, and a required `consent` checkbox. A hidden `website` field is a honeypot: if filled, the request fakes success and stores nothing.
-2. Creates the `Project` lead, copying attribution from the session.
+1. Validates name, phone, `service` (must be one of `creatium.contact_topics`), an optional message, and a required `consent` checkbox. A hidden `website` field is a honeypot: if filled, the request fakes success and stores nothing.
+2. Creates the `Project` lead (phone in `client_phone`, topic in `service`), copying attribution from the session.
 3. Sends `App\Mail\NewLeadMail` to `creatium.notify_email`; a mail failure is logged and never loses the lead.
 4. Flashes `success` and `lead_created`. The latter drives the Meta Pixel `Lead` event.
 

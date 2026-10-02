@@ -22,6 +22,7 @@ class Project extends Model
         'client_email',
         'client_phone',
         'source',
+        'service',
         'is_public',
         'lead_channel',
         'utm_source',

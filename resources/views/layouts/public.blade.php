@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>document.documentElement.classList.add('js');</script>
     @php
-        $pageTitle = trim($__env->yieldContent('title', 'Сайтове и SEO за малки фирми'));
+        $pageTitle = trim($__env->yieldContent('title', 'Сайтове и дигитален маркетинг за малки фирми'));
         $pageDescription = trim($__env->yieldContent('meta_description', 'Правим сайтове за малки фирми и се грижим хората да ги намират в Google. Първата консултация е безплатна.'));
     @endphp
     <title>{{ $pageTitle }} | Creatium Lab</title>
@@ -37,8 +37,8 @@
     @php
         $links = [
             ['Услуги', route('services'), request()->routeIs('services')],
+            ['Пакети', route('packages'), request()->routeIs('packages')],
             ['Проекти', route('portfolio'), request()->routeIs('portfolio')],
-            ['Пакети', route('home') . '#paketi', false],
             ['За нас', route('about'), request()->routeIs('about')],
             ['Контакти', route('contact'), request()->routeIs('contact')],
         ];
@@ -111,9 +111,9 @@
             <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
                 <div class="md:col-span-5">
                     <img src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="223px" alt="Creatium Lab" width="445" height="64" class="h-8 w-auto mb-5" loading="lazy" decoding="async">
-                    <p class="text-gray-300 max-w-sm leading-relaxed">Сайтове и SEO за малки фирми в България.</p>
+                    <p class="text-gray-300 max-w-sm leading-relaxed">Сайтове, SEO и имейл кампании за малки и средни фирми в България.</p>
                     <a href="{{ route('contact') }}" class="mt-6 inline-flex items-center gap-2 bg-white text-brand-950 px-5 py-2.5 rounded-xl font-semibold hover:bg-brand-50 transition-colors">
-                        Поискайте оферта <x-icon name="arrow-right" class="text-xs" />
+                        Свържете се с нас <x-icon name="arrow-right" class="text-xs" />
                     </a>
                 </div>
 
@@ -121,8 +121,8 @@
                     <h3 class="text-sm font-semibold uppercase tracking-wider text-brand-300 mb-4">Навигация</h3>
                     <ul class="space-y-2.5">
                         <li><a href="{{ route('services') }}" class="text-gray-300 hover:text-white transition-colors">Услуги</a></li>
+                        <li><a href="{{ route('packages') }}" class="text-gray-300 hover:text-white transition-colors">Пакети</a></li>
                         <li><a href="{{ route('portfolio') }}" class="text-gray-300 hover:text-white transition-colors">Проекти</a></li>
-                        <li><a href="{{ route('home') }}#paketi" class="text-gray-300 hover:text-white transition-colors">Пакети</a></li>
                         <li><a href="{{ route('about') }}" class="text-gray-300 hover:text-white transition-colors">За нас</a></li>
                         <li><a href="{{ route('contact') }}" class="text-gray-300 hover:text-white transition-colors">Контакти</a></li>
                     </ul>
@@ -142,7 +142,8 @@
                 <p>&copy; {{ date('Y') }} Creatium Lab. Всички права запазени.</p>
                 <div class="flex flex-wrap gap-x-6 gap-y-2">
                     <a href="{{ route('privacy') }}" class="hover:text-white">Политика за поверителност</a>
-                    <a href="{{ route('terms') }}" class="hover:text-white">Условия за ползване</a>
+                    <a href="{{ route('terms') }}" class="hover:text-white">Общи условия</a>
+                    <a href="{{ route('cookies') }}" class="hover:text-white">Политика за бисквитките</a>
                     @if(config('creatium.meta_pixel_id'))
                         <a href="#" data-cookie-settings class="hover:text-white">Настройки за бисквитки</a>
                     @endif

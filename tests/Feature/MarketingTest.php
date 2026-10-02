@@ -19,7 +19,7 @@ class MarketingTest extends TestCase
         $request = $attribution ? $this->withSession([LeadAttribution::SESSION_KEY => $attribution]) : $this;
 
         return $request->post('/kontakti', [
-            'name' => 'Мария', 'contact' => 'maria@example.com', 'message' => 'Здравейте', 'consent' => '1',
+            'name' => 'Мария', 'phone' => '0888123456', 'service' => 'GEO & SEO видимост', 'message' => 'Здравейте', 'consent' => '1',
         ]);
     }
 

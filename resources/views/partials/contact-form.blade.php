@@ -21,14 +21,28 @@
                 @error('name')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label for="contact" class="block text-sm font-medium text-gray-700 mb-1">Телефон или имейл</label>
-                <input type="text" id="contact" name="contact" value="{{ old('contact') }}" required autocomplete="email"
-                       class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition">
-                @error('contact')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Телефон</label>
+                <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required autocomplete="tel" inputmode="tel" placeholder="08X XXX XXXX"
+                       class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition placeholder:text-gray-500">
+                @error('phone')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">С какво можем да помогнем?</label>
-                <textarea id="message" name="message" rows="4" required
+                <label for="service" class="block text-sm font-medium text-gray-700 mb-1">С какво да помогнем?</label>
+                <div class="relative">
+                    <select id="service" name="service" required
+                            class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition appearance-none pr-10 {{ old('service') ? '' : 'text-gray-500' }}" onchange="this.classList.remove('text-gray-500')">
+                        <option value="" disabled {{ old('service') ? '' : 'selected' }}>Изберете услуга</option>
+                        @foreach(config('creatium.contact_topics') as $topic)
+                            <option value="{{ $topic }}" class="text-gray-900" @selected(old('service') === $topic)>{{ $topic }}</option>
+                        @endforeach
+                    </select>
+                    <x-icon name="chevron-down" class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-500" />
+                </div>
+                @error('service')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Нещо повече за бизнеса ви <span class="text-gray-500 font-normal">(по желание)</span></label>
+                <textarea id="message" name="message" rows="3"
                           class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition">{{ old('message') }}</textarea>
                 @error('message')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
