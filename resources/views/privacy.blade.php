@@ -6,17 +6,17 @@
 @section('content')
 @include('partials/page-header', ['heading' => 'Политика за поверителност'])
 
-<section class="py-12 bg-white">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 text-gray-700 leading-relaxed">
+<section class="py-12 bg-white dark:bg-ink-950">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 text-gray-700 leading-relaxed dark:text-gray-300">
         <p>Тази политика обяснява как обработваме личните ви данни, когато използвате сайта creatiumlab.com и ни изпращате запитване, в съответствие с Регламент (ЕС) 2016/679 (GDPR) и Закона за защита на личните данни.</p>
 
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2">1. Кой обработва данните ви</h2>
-            <p>Администратор на лични данни е <strong>{{ $legal['company'] }}</strong>, ЕИК {{ $legal['eik'] }}, адрес: {{ $legal['address'] }}. За въпроси относно личните ви данни пишете на <a href="mailto:{{ $contact['email'] }}" class="text-brand-600 underline">{{ $contact['email'] }}</a>.</p>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">1. Кой обработва данните ви</h2>
+            <p>Администратор на лични данни е <strong>{{ $legal['company'] }}</strong>, ЕИК {{ $legal['eik'] }}, адрес: {{ $legal['address'] }}. За въпроси относно личните ви данни пишете на <a href="mailto:{{ $contact['email'] }}" class="text-brand-600 underline dark:text-brand-300">{{ $contact['email'] }}</a>.</p>
         </div>
 
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2">2. Какви данни събираме</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">2. Какви данни събираме</h2>
             <ul class="list-disc pl-6 space-y-1">
                 <li>Данни, които ни изпращате чрез контактната форма: име, телефон, услугата, която ви интересува, и съобщението ви, ако напишете такова.</li>
                 <li>Откъде сте стигнали до сайта (напр. от Google или от реклама), ако сайтът го получи от браузъра или от линка, по който сте влезли. Пазим го заедно със запитването, за да знаем кои канали работят.</li>
@@ -28,7 +28,7 @@
         </div>
 
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2">3. Защо и на какво основание</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">3. Защо и на какво основание</h2>
             <ul class="list-disc pl-6 space-y-1">
                 <li>За да отговорим на запитването ви и да ви направим оферта: на основание вашето съгласие и предприемане на стъпки по ваше искане преди сключване на договор (чл. 6, пар. 1, б. „а“ и „б“ от GDPR).</li>
                 <li>За сигурност и предотвратяване на злоупотреби със сайта: на основание нашия легитимен интерес (чл. 6, пар. 1, б. „е“).</li>
@@ -36,34 +36,34 @@
         </div>
 
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2">4. Колко дълго пазим данните</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">4. Колко дълго пазим данните</h2>
             <p>Запитванията се пазят не повече от 12 месеца след последния контакт, освен ако не сключим договор. Тогава данните се пазят толкова, колкото изискват договорът и счетоводното законодателство. Сървърните логове се пазят ограничено време.</p>
         </div>
 
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2">5. Кой има достъп</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">5. Кой има достъп</h2>
             <p>Не продаваме и не предоставяме данните ви за маркетингови цели на трети лица. Достъп имат само членовете на екипа ни и доставчиците, които ни помагат да работим (хостинг, имейл, а при ваше съгласие и инструментите от т. 6).</p>
         </div>
 
         <div id="biskvitki" class="scroll-mt-28">
-            <h2 class="text-xl font-bold text-gray-900 mb-2">6. Бисквитки и измерване</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">6. Бисквитки и измерване</h2>
             <p>Сайтът използва строго необходими бисквитки (сесия и защита на формите срещу злоупотреби). Те не изискват съгласие.</p>
             @if(config('creatium.gtm_id'))
                 <p class="mt-3">Използваме <strong>Google Tag Manager</strong>, през който се зареждат инструменти за статистика (напр. Google Analytics 4 и Microsoft Clarity) и за измерване на рекламите (напр. Meta Pixel). Те записват бисквитки и изпращат на доставчиците си информация за посещението ви (страници, устройство, приблизително местоположение по IP, изпратено запитване) <strong>само ако ги разрешите</strong> в банера за бисквитки, отделно за аналитичните и за маркетинговите. Основание: вашето съгласие (чл. 6, пар. 1, б. „а“ от GDPR).</p>
                 <p class="mt-3">Google, Microsoft и Meta може да предават данни в САЩ. Те са сертифицирани по Рамката за защита на данните между ЕС и САЩ (EU-US Data Privacy Framework) и прилагат стандартни договорни клаузи.</p>
-                <p class="mt-3">Може да оттеглите или промените съгласието си по всяко време от <a href="#" data-cookie-settings class="text-brand-700 underline">Настройки за бисквитки</a>.</p>
+                <p class="mt-3">Може да оттеглите или промените съгласието си по всяко време от <a href="#" data-cookie-settings class="text-brand-700 underline dark:text-brand-300">Настройки за бисквитки</a>.</p>
             @else
                 <p class="mt-3">Не използваме аналитични или рекламни бисквитки. Ако започнем да ги използваме, ще ви поискаме съгласие и ще обновим политиките си.</p>
             @endif
-            <p class="mt-3">Подробен списък има в <a href="{{ route('cookies') }}" class="text-brand-700 underline">Политиката за бисквитките</a>.</p>
+            <p class="mt-3">Подробен списък има в <a href="{{ route('cookies') }}" class="text-brand-700 underline dark:text-brand-300">Политиката за бисквитките</a>.</p>
         </div>
 
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2">7. Вашите права</h2>
-            <p>Имате право на достъп, коригиране, изтриване, ограничаване на обработването, преносимост и възражение, както и да оттеглите съгласието си по всяко време. Пишете ни на имейла по-горе. Имате право да подадете жалба до Комисията за защита на личните данни (<a href="https://www.cpdp.bg" class="text-brand-600 underline" target="_blank" rel="noopener">www.cpdp.bg</a>).</p>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">7. Вашите права</h2>
+            <p>Имате право на достъп, коригиране, изтриване, ограничаване на обработването, преносимост и възражение, както и да оттеглите съгласието си по всяко време. Пишете ни на имейла по-горе. Имате право да подадете жалба до Комисията за защита на личните данни (<a href="https://www.cpdp.bg" class="text-brand-600 underline dark:text-brand-300" target="_blank" rel="noopener">www.cpdp.bg</a>).</p>
         </div>
 
-        <p class="text-sm text-gray-500">Последна промяна: 02.10.2026</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Последна промяна: 02.10.2026</p>
     </div>
 </section>
 @endsection

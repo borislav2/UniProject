@@ -1,32 +1,32 @@
 {{-- Shown only when GTM is on. The choice is stored in localStorage and sent to GTM as a Consent Mode update (see partials/gtm-head). --}}
 <div id="cookie-banner" class="hidden fixed inset-x-0 bottom-0 z-[60] p-3 sm:p-4" role="dialog" aria-modal="false" aria-labelledby="cookie-banner-title">
-    <div class="max-w-3xl mx-auto rounded-2xl bg-brand-950 text-white shadow-2xl ring-1 ring-white/10 p-5 md:p-6">
-        <h2 id="cookie-banner-title" class="font-bold">Бисквитки</h2>
+    <div class="max-w-3xl mx-auto rounded-2xl bg-brand-950 text-white shadow-2xl ring-1 ring-white/10 p-5 md:p-6 dark:bg-ink-800 dark:ring-white/15">
+        <h2 id="cookie-banner-title" class="font-bold">{{ __('Бисквитки') }}</h2>
         <p class="mt-1 text-sm text-gray-200 leading-relaxed">
-            Използваме бисквитки, за да виждаме как се ползва сайтът и дали рекламите ни работят. Аналитичните и маркетинговите се зареждат само ако ги разрешите.
-            <a href="{{ route('cookies') }}" class="underline text-white">Политика за бисквитките</a>
+            {{ __('Използваме бисквитки, за да виждаме как се ползва сайтът и дали рекламите ни работят. Аналитичните и маркетинговите се зареждат само ако ги разрешите.') }}
+            <a href="{{ lroute('cookies') }}" class="underline text-white">{{ __('Политика за бисквитките') }}</a>
         </p>
 
         <div id="cookie-options" class="hidden mt-4 space-y-2">
             <label class="flex items-start gap-3 rounded-xl bg-white/5 ring-1 ring-white/10 p-3">
                 <input type="checkbox" checked disabled class="mt-1 accent-brand-400">
-                <span class="text-sm"><strong class="block">Необходими</strong><span class="text-gray-300">Сесия и защита на формите. Без тях сайтът не работи, затова са винаги включени.</span></span>
+                <span class="text-sm"><strong class="block">{{ __('Необходими') }}</strong><span class="text-gray-300">{{ __('Сесия и защита на формите. Без тях сайтът не работи, затова са винаги включени.') }}</span></span>
             </label>
             <label class="flex items-start gap-3 rounded-xl bg-white/5 ring-1 ring-white/10 p-3 cursor-pointer">
                 <input type="checkbox" data-category="analytics" class="mt-1 accent-brand-400">
-                <span class="text-sm"><strong class="block">Аналитични</strong><span class="text-gray-300">Google Analytics и Microsoft Clarity: кои страници се четат и кое е неудобно.</span></span>
+                <span class="text-sm"><strong class="block">{{ __('Аналитични') }}</strong><span class="text-gray-300">{{ __('Google Analytics и Microsoft Clarity: кои страници се четат и кое е неудобно.') }}</span></span>
             </label>
             <label class="flex items-start gap-3 rounded-xl bg-white/5 ring-1 ring-white/10 p-3 cursor-pointer">
                 <input type="checkbox" data-category="marketing" class="mt-1 accent-brand-400">
-                <span class="text-sm"><strong class="block">Маркетингови</strong><span class="text-gray-300">Пиксели на рекламните платформи: колко запитвания идват от рекламите ни.</span></span>
+                <span class="text-sm"><strong class="block">{{ __('Маркетингови') }}</strong><span class="text-gray-300">{{ __('Пиксели на рекламните платформи: колко запитвания идват от рекламите ни.') }}</span></span>
             </label>
         </div>
 
         <div class="mt-4 flex flex-col sm:flex-row gap-2">
-            <button type="button" data-consent="settings" class="sm:mr-auto px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/10 transition-colors" aria-controls="cookie-options" aria-expanded="false">Настройки</button>
-            <button type="button" data-consent="save" class="hidden px-4 py-2.5 rounded-xl text-sm font-semibold bg-white/10 hover:bg-white/20 transition-colors">Запазване на избора</button>
-            <button type="button" data-consent="reject" class="px-4 py-2.5 rounded-xl text-sm font-semibold bg-white text-brand-950 hover:bg-brand-50 transition-colors">Отказвам</button>
-            <button type="button" data-consent="accept" class="px-4 py-2.5 rounded-xl text-sm font-semibold bg-white text-brand-950 hover:bg-brand-50 transition-colors">Приемам всички</button>
+            <button type="button" data-consent="settings" class="sm:mr-auto px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-200 hover:text-white hover:bg-white/10 transition-colors" aria-controls="cookie-options" aria-expanded="false">{{ __('Настройки') }}</button>
+            <button type="button" data-consent="save" class="hidden px-4 py-2.5 rounded-xl text-sm font-semibold bg-white/10 hover:bg-white/20 transition-colors">{{ __('Запазване на избора') }}</button>
+            <button type="button" data-consent="reject" class="px-4 py-2.5 rounded-xl text-sm font-semibold bg-white text-brand-950 hover:bg-brand-50 transition-colors">{{ __('Отказвам') }}</button>
+            <button type="button" data-consent="accept" class="px-4 py-2.5 rounded-xl text-sm font-semibold bg-white text-brand-950 hover:bg-brand-50 transition-colors">{{ __('Приемам всички') }}</button>
         </div>
     </div>
 </div>

@@ -10,16 +10,16 @@ class PageController extends Controller
     public function services()
     {
         return view('services', [
-            'services' => config('creatium.services'),
-            'faq' => config('creatium.faq'),
+            'services' => site('services'),
+            'faq' => site('faq'),
         ]);
     }
 
     public function packages()
     {
         return view('packages', [
-            'packages' => config('creatium.packages'),
-            'notes' => config('creatium.package_notes'),
+            'packages' => site('packages'),
+            'notes' => site('package_notes'),
         ]);
     }
 
@@ -36,12 +36,12 @@ class PageController extends Controller
 
     public function about()
     {
-        return view('about', ['team' => config('creatium.team')]);
+        return view('about', ['team' => site('team')]);
     }
 
     public function privacy()
     {
-        return view('privacy', [
+        return view($this->localized('privacy'), [
             'legal' => config('creatium.legal'),
             'contact' => config('creatium.contact'),
         ]);
@@ -49,20 +49,28 @@ class PageController extends Controller
 
     public function terms()
     {
-        return view('terms', ['contact' => config('creatium.contact')]);
+        return view($this->localized('terms'), ['contact' => config('creatium.contact')]);
     }
 
     public function cookies()
     {
-        return view('cookies');
+        return view($this->localized('cookies'));
     }
 
     public function sitemap(): Response
     {
         $pages = ['home', 'services', 'packages', 'portfolio', 'about', 'contact', 'privacy', 'terms', 'cookies'];
+        $urls = [];
+
+        foreach ($pages as $name) {
+            $alternates = ['bg' => lroute($name, [], 'bg'), 'en' => lroute($name, [], 'en')];
+            foreach ($alternates as $url) {
+                $urls[] = ['loc' => $url, 'alternates' => $alternates];
+            }
+        }
 
         return response()
-            ->view('sitemap', ['urls' => array_map(fn ($name) => route($name), $pages)])
+            ->view('sitemap', ['urls' => $urls])
             ->header('Content-Type', 'application/xml');
     }
 
@@ -71,5 +79,11 @@ class PageController extends Controller
         $body = "User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: " . route('sitemap') . "\n";
 
         return response($body)->header('Content-Type', 'text/plain');
+    }
+
+    /** Legal pages are written separately for each language: resources/views/en/* holds the English ones. */
+    private function localized(string $view): string
+    {
+        return app()->getLocale() === 'en' ? "en.$view" : $view;
     }
 }

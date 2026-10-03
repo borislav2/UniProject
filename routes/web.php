@@ -9,17 +9,32 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
-// Public site
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/uslugi', [PageController::class, 'services'])->name('services');
-Route::get('/paketi', [PageController::class, 'packages'])->name('packages');
-Route::get('/proekti', [PageController::class, 'portfolio'])->name('portfolio');
-Route::get('/za-nas', [PageController::class, 'about'])->name('about');
-Route::get('/kontakti', [HomeController::class, 'contact'])->name('contact');
-Route::post('/kontakti', [HomeController::class, 'submitContact'])->middleware('throttle:5,10')->name('contact.submit');
-Route::get('/poveritelnost', [PageController::class, 'privacy'])->name('privacy');
-Route::get('/usloviya', [PageController::class, 'terms'])->name('terms');
-Route::get('/biskvitki', [PageController::class, 'cookies'])->name('cookies');
+// Public site: Bulgarian at the root, English under /en. Route names are the same with an "en." prefix (see lroute()).
+$publicPages = [
+    // name => [Bulgarian path, English path, action]
+    'home' => ['/', '/', [HomeController::class, 'index']],
+    'services' => ['/uslugi', '/services', [PageController::class, 'services']],
+    'packages' => ['/paketi', '/packages', [PageController::class, 'packages']],
+    'portfolio' => ['/proekti', '/projects', [PageController::class, 'portfolio']],
+    'about' => ['/za-nas', '/about', [PageController::class, 'about']],
+    'contact' => ['/kontakti', '/contact', [HomeController::class, 'contact']],
+    'privacy' => ['/poveritelnost', '/privacy', [PageController::class, 'privacy']],
+    'terms' => ['/usloviya', '/terms', [PageController::class, 'terms']],
+    'cookies' => ['/biskvitki', '/cookies', [PageController::class, 'cookies']],
+];
+
+foreach (['bg', 'en'] as $locale) {
+    Route::prefix($locale === 'en' ? 'en' : '')->name($locale === 'en' ? 'en.' : '')->group(function () use ($publicPages, $locale) {
+        foreach ($publicPages as $name => [$bgPath, $enPath, $action]) {
+            Route::get($locale === 'en' ? $enPath : $bgPath, $action)->name($name);
+        }
+
+        Route::post($locale === 'en' ? '/contact' : '/kontakti', [HomeController::class, 'submitContact'])
+            ->middleware('throttle:5,10')
+            ->name('contact.submit');
+    });
+}
+
 Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [PageController::class, 'robots'])->name('robots');
 

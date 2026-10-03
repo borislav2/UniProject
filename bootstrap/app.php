@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\CaptureLeadAttribution;
 use App\Http\Middleware\CheckAdminAccess;
 use App\Http\Middleware\RequireRole;
+use App\Http\Middleware\SetLocale;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RequireRole::class,
         ]);
         $middleware->web(append: [CaptureLeadAttribution::class]);
+        $middleware->append(SetLocale::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

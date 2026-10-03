@@ -97,6 +97,12 @@
                         <p class="text-gray-900 font-semibold">{{ $project->service }}</p>
                     </div>
                 @endif
+                @if($project->locale === 'en')
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Език</h4>
+                        <p class="text-gray-900 font-semibold">Английски (от /en): отговорете на английски</p>
+                    </div>
+                @endif
                 @if($project->source === 'website')
                     <div>
                         <h4 class="text-sm font-medium text-gray-500">Канал</h4>
