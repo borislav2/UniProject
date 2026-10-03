@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel') - Project Management</title>
     <meta name="robots" content="noindex, nofollow">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('head')
 </head>
 <body class="bg-gray-100">
     <div class="flex h-screen">
@@ -34,6 +36,29 @@
                     <x-icon name="users" class="mr-2" /> Users
                 </a>
                 @endif
+
+                <p class="mt-6 px-4 pb-1 text-xs uppercase tracking-wider text-gray-400">Сайт</p>
+                <a href="{{ route('admin.posts.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.posts.*') ? 'bg-gray-700' : '' }}">
+                    <x-icon name="newspaper" class="mr-2" /> Блог
+                </a>
+                <a href="{{ route('admin.post-categories.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.post-categories.*') ? 'bg-gray-700' : '' }}">
+                    <x-icon name="tags" class="mr-2" /> Категории на блога
+                </a>
+                <a href="{{ route('admin.content.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.content.*') ? 'bg-gray-700' : '' }}">
+                    <x-icon name="pen-to-square" class="mr-2" /> Текстове по страниците
+                </a>
+                <a href="{{ route('admin.seo.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.seo.*') ? 'bg-gray-700' : '' }}">
+                    <x-icon name="magnifying-glass" class="mr-2" /> SEO
+                </a>
+
+                <p class="mt-6 px-4 pb-1 text-xs uppercase tracking-wider text-gray-400">Акаунт</p>
+                <a href="{{ route('admin.profile.edit') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.profile.*') ? 'bg-gray-700' : '' }}">
+                    <x-icon name="user-gear" class="mr-2" /> Моят профил
+                </a>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-700"><x-icon name="sign-out-alt" class="mr-2" /> Изход</button>
+                </form>
             </nav>
         </div>
 
@@ -57,6 +82,17 @@
                     </div>
                 @endif
 
+                @if($errors->any() && request()->routeIs('admin.posts.*', 'admin.post-categories.*', 'admin.content.*', 'admin.seo.*', 'admin.profile.*'))
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+                        <p class="font-semibold">Има грешки във формата:</p>
+                        <ul class="list-disc pl-5 mt-1 text-sm">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 @if(session('error'))
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         {{ session('error') }}
@@ -67,5 +103,6 @@
             </main>
         </div>
     </div>
+    @stack('scripts')
 </body>
 </html>

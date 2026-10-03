@@ -22,34 +22,52 @@
     </script>
     @php
         $locale = app()->getLocale();
-        $pageTitle = trim($__env->yieldContent('title', __('Сайтове и дигитален маркетинг за малки фирми')));
-        $pageDescription = trim($__env->yieldContent('meta_description', __('Правим сайтове за малки фирми и се грижим хората да ги намират в Google. Първата консултация е безплатна.')));
-
-        // The same page in both languages, for hreflang and the language switcher.
         $routeName = \Illuminate\Support\Str::after((string) \Illuminate\Support\Facades\Route::currentRouteName(), 'en.');
-        $hasAlternates = request()->isMethod('GET') && \Illuminate\Support\Facades\Route::has($routeName) && \Illuminate\Support\Facades\Route::has('en.' . $routeName) && ! isset($exception);
-        $alternates = $hasAlternates
-            ? ['bg' => lroute($routeName, [], 'bg'), 'en' => lroute($routeName, [], 'en')]
-            : ['bg' => lroute('home', [], 'bg'), 'en' => lroute('home', [], 'en')];
+
+        // SEO: values from the controller (blog posts) or the admin's per-page settings override the view's defaults.
+        $seo = array_filter($seo ?? [], 'filled') ?: app(\App\Support\Content::class)->seo($routeName);
+        $pageTitle = $seo['meta_title'] ?? trim($__env->yieldContent('title', __('Сайтове и дигитален маркетинг за малки фирми'))) . ' | Creatium Lab';
+        $pageDescription = $seo['meta_description'] ?? trim($__env->yieldContent('meta_description', __('Правим сайтове за малки фирми и се грижим хората да ги намират в Google. Първата консултация е безплатна.')));
+        $canonicalUrl = $seo['canonical_url'] ?? ($canonical ?? url()->current());
+        $ogImage = isset($seo['og_image']) ? asset($seo['og_image']) : asset('images/og-image.png');
+
+        // The same page in the other language: for the switcher (always) and hreflang (only real translations).
+        if (isset($pageAlternates)) {
+            $alternates = $pageAlternates;
+            $hreflang = $hreflangAlternates ?? [];
+        } else {
+            $alternates = ['bg' => lroute('home', [], 'bg'), 'en' => lroute('home', [], 'en')];
+            $hreflang = [];
+            if (request()->isMethod('GET') && ! isset($exception) && \Illuminate\Support\Facades\Route::has('en.' . $routeName) && \Illuminate\Support\Facades\Route::has($routeName)) {
+                try {
+                    $alternates = $hreflang = ['bg' => lroute($routeName, [], 'bg'), 'en' => lroute($routeName, [], 'en')];
+                } catch (\Illuminate\Routing\Exceptions\UrlGenerationException) {
+                    // A route with parameters that did not pass $pageAlternates: keep the home page links.
+                }
+            }
+        }
     @endphp
-    <title>{{ $pageTitle }} | Creatium Lab</title>
+    <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDescription }}">
-    <link rel="canonical" href="{{ url()->current() }}">
-    @if($hasAlternates)
-        <link rel="alternate" hreflang="bg" href="{{ $alternates['bg'] }}">
-        <link rel="alternate" hreflang="en" href="{{ $alternates['en'] }}">
-        <link rel="alternate" hreflang="x-default" href="{{ $alternates['bg'] }}">
+    <link rel="canonical" href="{{ $canonicalUrl }}">
+    @if(count($hreflang) > 1)
+        @foreach($hreflang as $lang => $href)
+            <link rel="alternate" hreflang="{{ $lang }}" href="{{ $href }}">
+        @endforeach
+        <link rel="alternate" hreflang="x-default" href="{{ $hreflang['bg'] ?? reset($hreflang) }}">
     @endif
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{{ $ogType ?? 'website' }}">
     <meta property="og:locale" content="{{ $locale === 'en' ? 'en_US' : 'bg_BG' }}">
     <meta property="og:locale:alternate" content="{{ $locale === 'en' ? 'bg_BG' : 'en_US' }}">
     <meta property="og:site_name" content="Creatium Lab">
-    <meta property="og:title" content="{{ $pageTitle }} | Creatium Lab">
-    <meta property="og:description" content="{{ $pageDescription }}">
-    <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="{{ asset('images/og-image.png') }}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
+    <meta property="og:title" content="{{ $seo['og_title'] ?? $pageTitle }}">
+    <meta property="og:description" content="{{ $seo['og_description'] ?? $pageDescription }}">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
+    <meta property="og:image" content="{{ $ogImage }}">
+    @unless(isset($seo['og_image']))
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+    @endunless
     <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#0f1a2b">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
@@ -62,6 +80,7 @@
     @else
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
+    @stack('head')
 </head>
 <body class="bg-white text-gray-900 antialiased dark:bg-ink-950 dark:text-gray-100">
     @if(config('creatium.gtm_id'))
@@ -71,8 +90,9 @@
     @endif
     @php
         $links = [];
-        foreach (['services' => 'Услуги', 'packages' => 'Пакети', 'portfolio' => 'Проекти', 'about' => 'За нас', 'contact' => 'Контакти'] as $name => $label) {
-            $links[] = [__($label), lroute($name), request()->routeIs($name, 'en.' . $name)];
+        foreach (['services' => 'Услуги', 'packages' => 'Пакети', 'portfolio' => 'Проекти', 'blog.index' => 'Блог', 'about' => 'За нас', 'contact' => 'Контакти'] as $name => $label) {
+            $pattern = $name === 'blog.index' ? 'blog.*' : $name;
+            $links[] = [__($label), lroute($name), request()->routeIs($pattern, 'en.' . $pattern)];
         }
         $languages = ['bg' => ['BG', 'Български'], 'en' => ['EN', 'English']];
     @endphp
@@ -102,7 +122,7 @@
                     </div>
 
                     <button type="button" data-theme-toggle class="ml-1 w-9 h-9 inline-flex items-center justify-center rounded-lg text-gray-600 hover:text-brand-950 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-white/5" aria-label="{{ __('Тъмна тема') }}" aria-pressed="false">
-                        <x-icon name="moon" class="dark:hidden" /><x-icon name="sun" class="hidden dark:inline-block" />
+                        <span class="inline-flex dark:hidden"><x-icon name="moon" /></span><span class="hidden dark:inline-flex"><x-icon name="sun" /></span>
                     </button>
 
                     @auth
@@ -117,7 +137,7 @@
                         </form>
                     @endauth
 
-                    <a href="{{ lroute('contact') }}" class="ml-2 inline-flex items-center gap-2 bg-brand-950 text-white px-5 py-2.5 rounded-xl hover:bg-brand-800 transition-colors text-sm font-semibold shadow-sm dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">
+                    <a href="{{ lroute('contact') }}" class="ml-2 hidden xl:inline-flex items-center gap-2 bg-brand-950 text-white px-5 py-2.5 rounded-xl hover:bg-brand-800 transition-colors text-sm font-semibold shadow-sm dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">
                         {{ __('Безплатна консултация') }} <x-icon name="arrow-right" class="text-xs" />
                     </a>
                 </div>
@@ -129,7 +149,7 @@
                         @endif
                     @endforeach
                     <button type="button" data-theme-toggle class="w-10 h-10 inline-flex items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-white/10" aria-label="{{ __('Тъмна тема') }}" aria-pressed="false">
-                        <x-icon name="moon" class="dark:hidden" /><x-icon name="sun" class="hidden dark:inline-block" />
+                        <span class="inline-flex dark:hidden"><x-icon name="moon" /></span><span class="hidden dark:inline-flex"><x-icon name="sun" /></span>
                     </button>
                     <button type="button" class="mobile-menu-button w-10 h-10 inline-flex items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-white/10" aria-label="{{ __('Меню') }}" aria-expanded="false" aria-controls="mobile-menu">
                         <x-icon name="bars" class="text-lg" />
@@ -184,7 +204,7 @@
                     <h2 class="text-sm font-semibold uppercase tracking-wider text-brand-300 mb-4">{{ __('Контакти') }}</h2>
                     <ul class="space-y-3 text-gray-300">
                         <li class="flex items-center gap-3"><x-icon name="envelope" class="w-4 text-brand-300" /><a href="mailto:{{ config('creatium.contact.email') }}" class="hover:text-white">{{ config('creatium.contact.email') }}</a></li>
-                        <li class="flex items-center gap-3"><x-icon name="phone" class="w-4 text-brand-300" />{{ config('creatium.contact.phone') }}</li>
+                        <li class="flex items-start gap-3"><x-icon name="phone" class="w-4 mt-1 text-brand-300" /><span class="flex flex-col">@foreach(config('creatium.contact.phones') as $phone)<a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}" class="hover:text-white">{{ $phone }}</a>@endforeach</span></li>
                         <li class="flex items-center gap-3"><x-icon name="location-dot" class="w-4 text-brand-300" />{{ __(config('creatium.contact.city')) }}, {{ __('България') }}</li>
                     </ul>
                 </div>

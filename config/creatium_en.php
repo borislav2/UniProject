@@ -31,6 +31,25 @@ return [
         'highlight' => 'Be digital.',
         'subtitle' => 'A website Google loves, and marketing that actually sells.',
         'text' => 'We work with small and medium-sized businesses. There are two of us, and you talk directly to the person doing the work.',
+        'image' => null,
+    ],
+
+    'home_sections' => [
+        'services_eyebrow' => 'Services',
+        'services_title' => 'How we can help you stand out',
+        'process_eyebrow' => 'From Concept to Implementation',
+        'process_title' => 'How we work',
+        'contact_title' => "Let's talk.",
+        'contact_text' => 'Leave your name and phone number and pick what you need help with. We will call you within one business day, and the first call is free.',
+    ],
+
+    'about' => [
+        'subtitle' => 'Two people who build websites for small businesses.',
+        'paragraphs' => [
+            'There are two of us. One builds the websites, the other handles marketing and SEO. That is why we think about how people will find you on Google while we are building the site, not after it is done.',
+            'We work with you directly. If you have a question, write or call and you will talk to the person building your site.',
+            'Creatium Lab is new and we are working on our first projects. That means every client gets our full attention.',
+        ],
     ],
 
     'audience' => [

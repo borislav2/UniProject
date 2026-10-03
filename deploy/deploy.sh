@@ -25,6 +25,6 @@ php artisan view:cache
 # PHP-FPM работи като потребителя 'deploy', така че всички файлове са негови и не се сменят групи.
 chmod 640 .env
 chmod -R u+rwX storage bootstrap/cache
-mkdir -p public/uploads/projects
+mkdir -p public/uploads/projects public/uploads/blog public/uploads/content
 
 echo "Деплоят завърши."

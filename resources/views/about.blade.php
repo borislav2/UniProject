@@ -4,13 +4,13 @@
 @section('meta_description', __('Creatium Lab сме двама: единият прави сайтовете, другият се грижи хората да ги намират в Google. Работим с малки фирми в България.'))
 
 @section('content')
-@include('partials/page-header', ['heading' => __('За нас'), 'sub' => __('Двама души, които правят сайтове за малки фирми.')])
+@include('partials/page-header', ['heading' => __('За нас'), 'sub' => $about['subtitle']])
 
 <section class="py-16 bg-white dark:bg-ink-950">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 text-lg text-gray-700 dark:text-gray-200">
-        <p>{{ __('Ние сме двама. Единият прави сайтовете, другият се занимава с маркетинг и SEO. Затова мислим за това как ще ви намират в Google още докато правим сайта, а не след като е готов.') }}</p>
-        <p>{{ __('Работим директно с вас. Ако имате въпрос, пишете или звъннете и ще говорите с човека, който прави сайта ви.') }}</p>
-        <p>{{ __('Creatium Lab е нов и сега правим първите си проекти. Това значи, че всеки клиент получава цялото ни внимание.') }}</p>
+        @foreach($about['paragraphs'] as $paragraph)
+            <p>{{ $paragraph }}</p>
+        @endforeach
     </div>
 </section>
 

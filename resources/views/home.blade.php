@@ -37,6 +37,11 @@
             </ul>
         </div>
 
+        @if(!empty($hero['image']))
+        <div class="relative reveal" style="--reveal-delay: 150ms">
+            <img src="{{ asset($hero['image']) }}" alt="" width="1200" height="900" fetchpriority="high" class="w-full aspect-[4/3] object-cover rounded-2xl shadow-2xl shadow-brand-950/15 ring-1 ring-gray-200/70 dark:ring-white/10 dark:shadow-black/40">
+        </div>
+        @else
         {{-- Illustration: a website with an incoming inquiry --}}
         <div class="relative reveal" style="--reveal-delay: 150ms" aria-hidden="true">
             <div class="relative rounded-2xl bg-white shadow-2xl shadow-brand-950/15 ring-1 ring-gray-200/70 overflow-hidden dark:bg-ink-900 dark:ring-white/10 dark:shadow-black/40">
@@ -89,6 +94,7 @@
                 <span class="text-sm font-semibold leading-tight">{!! __('Дизайн, код<br>и SEO') !!}</span>
             </div>
         </div>
+        @endif
     </div>
 </section>
 
@@ -129,8 +135,8 @@
 <section id="uslugi" class="py-20 md:py-28 bg-brand-50/60 scroll-mt-20 dark:bg-ink-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-2xl reveal">
-            <span class="text-brand-600 text-sm font-bold uppercase tracking-wider dark:text-brand-300">{{ __('Услуги') }}</span>
-            <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ __('С какво можем да ви помогнем да се отличите') }}</h2>
+            <span class="text-brand-600 text-sm font-bold uppercase tracking-wider dark:text-brand-300">{{ $sections['services_eyebrow'] }}</span>
+            <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $sections['services_title'] }}</h2>
         </div>
 
         <div class="mt-14 grid md:grid-cols-2 gap-6 items-start">
@@ -168,8 +174,8 @@
 <section id="proces" class="relative py-20 md:py-28 bg-white scroll-mt-20 overflow-hidden dark:bg-ink-950">
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-2xl reveal">
-            <span class="text-brand-600 text-sm font-bold uppercase tracking-wider dark:text-brand-300">From Concept to Implementation</span>
-            <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ __('Работен процес') }}</h2>
+            <span class="text-brand-600 text-sm font-bold uppercase tracking-wider dark:text-brand-300">{{ $sections['process_eyebrow'] }}</span>
+            <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $sections['process_title'] }}</h2>
         </div>
 
         <ol class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -203,10 +209,8 @@
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
         <div class="reveal">
             <span class="text-brand-300 text-sm font-bold uppercase tracking-wider">{{ __('Контакт') }}</span>
-            <h2 class="mt-3 text-3xl md:text-5xl font-extrabold tracking-tight">{{ __('Да поговорим.') }}</h2>
-            <p class="mt-5 text-lg text-brand-100/90 max-w-md">
-                {{ __('Оставете име и телефон и изберете с какво да помогнем. Ще ви се обадим до един работен ден, а първият разговор е безплатен.') }}
-            </p>
+            <h2 class="mt-3 text-3xl md:text-5xl font-extrabold tracking-tight">{{ $sections['contact_title'] }}</h2>
+            <p class="mt-5 text-lg text-brand-100/90 max-w-md">{{ $sections['contact_text'] }}</p>
             <ul class="mt-8 space-y-4">
                 <li class="flex items-center gap-4">
                     <span class="w-11 h-11 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center"><x-icon name="envelope" class="text-brand-200" /></span>
@@ -214,7 +218,11 @@
                 </li>
                 <li class="flex items-center gap-4">
                     <span class="w-11 h-11 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center"><x-icon name="phone" class="text-brand-200" /></span>
-                    {{ $contact['phone'] }}
+                    <span class="flex flex-col">
+                        @foreach($contact['phones'] as $phone)
+                            <a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}" class="hover:underline">{{ $phone }}</a>
+                        @endforeach
+                    </span>
                 </li>
                 <li class="flex items-center gap-4">
                     <span class="w-11 h-11 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center"><x-icon name="location-dot" class="text-brand-200" /></span>

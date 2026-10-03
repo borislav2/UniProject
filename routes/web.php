@@ -2,9 +2,16 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContentController;
+use App\Http\Controllers\Admin\PostCategoryController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\SeoController;
+use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\TechnologyController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +35,10 @@ foreach (['bg', 'en'] as $locale) {
         foreach ($publicPages as $name => [$bgPath, $enPath, $action]) {
             Route::get($locale === 'en' ? $enPath : $bgPath, $action)->name($name);
         }
+
+        Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+        Route::get($locale === 'en' ? '/blog/category/{slug}' : '/blog/kategoriya/{slug}', [BlogController::class, 'category'])->name('blog.category');
+        Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
         Route::post($locale === 'en' ? '/contact' : '/kontakti', [HomeController::class, 'submitContact'])
             ->middleware('throttle:5,10')
@@ -55,6 +66,21 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('projects', ProjectController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('technologies', TechnologyController::class);
+
+    // Site content: blog, page texts, SEO
+    Route::resource('posts', PostController::class)->except('show');
+    Route::resource('post-categories', PostCategoryController::class)->except(['show', 'create']);
+    Route::get('content', [ContentController::class, 'index'])->name('content.index');
+    Route::get('content/{key}', [ContentController::class, 'edit'])->name('content.edit');
+    Route::put('content/{key}', [ContentController::class, 'update'])->name('content.update');
+    Route::delete('content/{key}', [ContentController::class, 'reset'])->name('content.reset');
+    Route::get('seo', [SeoController::class, 'index'])->name('seo.index');
+    Route::get('seo/{page}', [SeoController::class, 'edit'])->name('seo.edit');
+    Route::put('seo/{page}', [SeoController::class, 'update'])->name('seo.update');
+    Route::post('uploads/image', [UploadController::class, 'image'])->name('uploads.image');
+
+    Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::middleware('role:admin')->group(function () {
         Route::resource('users', UserController::class);

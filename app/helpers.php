@@ -14,14 +14,11 @@ if (! function_exists('lroute')) {
 
 if (! function_exists('site')) {
     /**
-     * Site content in the current language: config/creatium_en.php for English, falling back to config/creatium.php.
+     * Site content in the current language: admin edits first, then config/creatium_en.php for English,
+     * then config/creatium.php. See App\Support\Content.
      */
     function site(string $key): mixed
     {
-        if (app()->getLocale() === 'en' && ($value = config("creatium_en.$key")) !== null) {
-            return $value;
-        }
-
-        return config("creatium.$key");
+        return app(\App\Support\Content::class)->get($key);
     }
 }

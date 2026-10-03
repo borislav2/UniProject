@@ -77,7 +77,7 @@ semanage fcontext -a -t httpd_sys_content_t "$APP_DIR(/.*)?" || true
 for d in storage bootstrap/cache public/uploads; do
     semanage fcontext -a -t httpd_sys_rw_content_t "$APP_DIR/$d(/.*)?" || true
 done
-mkdir -p "$APP_DIR/public/uploads/projects"
+mkdir -p "$APP_DIR/public/uploads/projects" "$APP_DIR/public/uploads/blog" "$APP_DIR/public/uploads/content"
 chown -R "$APP_USER":nginx "$APP_DIR"
 restorecon -R "$APP_DIR"
 

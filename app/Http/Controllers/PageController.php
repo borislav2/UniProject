@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
+use App\Models\PostCategory;
 use App\Models\Project;
 use Illuminate\Http\Response;
 
@@ -36,7 +38,7 @@ class PageController extends Controller
 
     public function about()
     {
-        return view('about', ['team' => site('team')]);
+        return view('about', ['about' => site('about'), 'team' => site('team')]);
     }
 
     public function privacy()
@@ -59,13 +61,34 @@ class PageController extends Controller
 
     public function sitemap(): Response
     {
-        $pages = ['home', 'services', 'packages', 'portfolio', 'about', 'contact', 'privacy', 'terms', 'cookies'];
+        $pages = ['home', 'services', 'packages', 'portfolio', 'blog.index', 'about', 'contact', 'privacy', 'terms', 'cookies'];
         $urls = [];
 
         foreach ($pages as $name) {
             $alternates = ['bg' => lroute($name, [], 'bg'), 'en' => lroute($name, [], 'en')];
             foreach ($alternates as $url) {
                 $urls[] = ['loc' => $url, 'alternates' => $alternates];
+            }
+        }
+
+        // Blog posts and categories: alternates only between languages that really exist.
+        $posts = Post::where('status', 'published')->where('published_at', '<=', now())->latest('published_at')->get();
+        foreach ($posts as $post) {
+            $alternates = collect($post->locales())->mapWithKeys(fn ($l) => [$l => $post->url($l)])->all();
+            foreach ($alternates as $url) {
+                $urls[] = ['loc' => $url, 'alternates' => count($alternates) > 1 ? $alternates : [], 'lastmod' => $post->updated_at];
+            }
+        }
+
+        foreach (PostCategory::whereHas('posts', fn ($q) => $q->where('status', 'published')->where('published_at', '<=', now()))->get() as $category) {
+            $alternates = [];
+            foreach (['bg', 'en'] as $l) {
+                if ($category->tr('slug', $l) && $category->posts()->visible($l)->exists()) {
+                    $alternates[$l] = lroute('blog.category', ['slug' => $category->tr('slug', $l)], $l);
+                }
+            }
+            foreach ($alternates as $url) {
+                $urls[] = ['loc' => $url, 'alternates' => count($alternates) > 1 ? $alternates : []];
             }
         }
 

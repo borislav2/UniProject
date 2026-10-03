@@ -15,7 +15,7 @@
             </div>
             <div class="flex items-start gap-4">
                 <div class="w-12 h-12 bg-white ring-1 ring-brand-100 shadow-sm rounded-xl flex items-center justify-center shrink-0 dark:bg-white/5 dark:ring-white/10"><x-icon name="phone" class="text-brand-600 dark:text-brand-300" /></div>
-                <div><h2 class="font-semibold dark:text-white">{{ __('Телефон') }}</h2><p class="text-gray-600 dark:text-gray-300">{{ $contact['phone'] }}</p></div>
+                <div><h2 class="font-semibold dark:text-white">{{ __('Телефон') }}</h2><p class="flex flex-col text-gray-600 dark:text-gray-300">@foreach($contact['phones'] as $phone)<a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}" class="hover:text-brand-600 dark:hover:text-brand-300">{{ $phone }}</a>@endforeach</p></div>
             </div>
             <div class="flex items-start gap-4">
                 <div class="w-12 h-12 bg-white ring-1 ring-brand-100 shadow-sm rounded-xl flex items-center justify-center shrink-0 dark:bg-white/5 dark:ring-white/10"><x-icon name="location-dot" class="text-brand-600 dark:text-brand-300" /></div>

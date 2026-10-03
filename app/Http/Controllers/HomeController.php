@@ -23,6 +23,7 @@ class HomeController extends Controller
             'services' => site('services'),
             'process' => site('process'),
             'promise' => site('process_promise'),
+            'sections' => site('home_sections'),
             'contact' => config('creatium.contact'),
         ]);
     }
