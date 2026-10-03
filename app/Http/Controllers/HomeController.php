@@ -17,12 +17,13 @@ class HomeController extends Controller
     public function index()
     {
         return view('home', [
-            'hero' => config('creatium.hero'),
-            'audience' => config('creatium.audience'),
-            'industries' => config('creatium.industries'),
-            'services' => config('creatium.services'),
-            'process' => config('creatium.process'),
-            'promise' => config('creatium.process_promise'),
+            'hero' => site('hero'),
+            'audience' => site('audience'),
+            'industries' => site('industries'),
+            'services' => site('services'),
+            'process' => site('process'),
+            'promise' => site('process_promise'),
+            'sections' => site('home_sections'),
             'contact' => config('creatium.contact'),
         ]);
     }
@@ -37,21 +38,25 @@ class HomeController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => ['required', 'string', 'max:25', 'regex:/^[0-9+()\-\s]{6,25}$/'],
-            'service' => ['required', 'string', Rule::in(config('creatium.contact_topics'))],
+            'service' => ['required', 'string', Rule::in(array_keys(config('creatium.contact_topics')))],
             'message' => 'nullable|string|max:5000',
             'consent' => 'accepted',
         ], [
-            'name.required' => 'Моля, въведете вашето име.',
-            'phone.required' => 'Моля, въведете телефон, на който да ви се обадим.',
-            'phone.regex' => 'Моля, въведете валиден телефонен номер.',
-            'service.required' => 'Моля, изберете с какво да помогнем.',
-            'service.in' => 'Моля, изберете услуга от списъка.',
-            'consent.accepted' => 'Моля, потвърдете, че сте запознати с Политиката за поверителност.',
+            'name.required' => __('Моля, въведете вашето име.'),
+            'phone.required' => __('Моля, въведете телефон, на който да ви се обадим.'),
+            'phone.regex' => __('Моля, въведете валиден телефонен номер.'),
+            'service.required' => __('Моля, изберете с какво да помогнем.'),
+            'service.in' => __('Моля, изберете услуга от списъка.'),
+            'consent.accepted' => __('Моля, потвърдете, че сте запознати с Политиката за поверителност.'),
         ]);
+
+        $success = __('Получихме запитването ви. Ще ви се обадим до един работен ден.');
+        // Admin and the notification email are in Bulgarian, so the lead always stores the Bulgarian label.
+        $service = config('creatium.contact_topics')[$validated['service']];
 
         // Honeypot: real visitors never fill this hidden field.
         if ($request->filled('website')) {
-            return back()->with('success', 'Получихме запитването ви. Ще ви се обадим до един работен ден.');
+            return back()->with('success', $success);
         }
 
         $leadCategory = Category::firstOrCreate(
@@ -63,13 +68,14 @@ class HomeController extends Controller
 
         $lead = Project::create([
             'name' => 'Запитване от ' . $validated['name'],
-            'description' => ($validated['message'] ?? null) ?: 'Без съобщение. Тема: ' . $validated['service'] . '.',
+            'description' => ($validated['message'] ?? null) ?: 'Без съобщение. Тема: ' . $service . '.',
             'start_date' => now()->toDateString(),
             'status' => 'Planning',
             'manager' => 'Неразпределен',
             'category_id' => $leadCategory->id,
             'client_phone' => $validated['phone'],
-            'service' => $validated['service'],
+            'service' => $service,
+            'locale' => app()->getLocale(),
             'source' => 'website',
             'lead_channel' => LeadAttribution::channel($attribution),
             'utm_source' => $attribution['utm_source'] ?? null,
@@ -85,9 +91,9 @@ class HomeController extends Controller
         }
 
         return back()
-            ->with('success', 'Получихме запитването ви. Ще ви се обадим до един работен ден.')
+            ->with('success', $success)
             ->with('lead_created', true)
-            ->with('lead_service', $validated['service']);
+            ->with('lead_service', $service);
     }
 
     public function showLoginForm()

@@ -14,6 +14,9 @@
     @if($lead->service)
         <p><strong>Услуга:</strong> {{ $lead->service }}</p>
     @endif
+    @if($lead->locale === 'en')
+        <p><strong>Език:</strong> английски (изпратено от английската версия на сайта)</p>
+    @endif
     <p><strong>Съобщение:</strong></p>
     <p style="white-space: pre-line; background: #f3f4f6; padding: 12px; border-radius: 6px;">{{ $lead->description }}</p>
 

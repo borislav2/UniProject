@@ -78,7 +78,9 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    // Bulgarian is the site's main language. Web requests set it from the URL (SetLocale middleware);
+    // this default applies to console commands and queued mail. Not read from .env on purpose.
+    'locale' => 'bg',
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 

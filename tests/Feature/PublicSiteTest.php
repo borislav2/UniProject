@@ -18,7 +18,7 @@ class PublicSiteTest extends TestCase
         return array_merge([
             'name' => 'Иван Иванов',
             'phone' => '+359 888 123 456',
-            'service' => 'Изработка / Развитие на сайт',
+            'service' => 'website',
             'message' => 'Искам сайт за моя ресторант.',
             'consent' => '1',
         ], $overrides);

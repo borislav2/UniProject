@@ -60,7 +60,7 @@ MAIL_FROM_ADDRESS=hello@creatiumlab.com
 MAIL_FROM_NAME="Creatium Lab"
 
 CREATIUM_EMAIL=hello@creatiumlab.com
-CREATIUM_PHONE="+359 ..."
+CREATIUM_PHONES="+359 895 457 247, +359 877 200 546"
 CREATIUM_NOTIFY_EMAIL=...   # къде да пристигат известията за запитвания
 CREATIUM_COMPANY="..."
 CREATIUM_EIK=...
