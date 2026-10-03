@@ -9,11 +9,20 @@
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
+    <style>
+        body.sidebar-open { overflow: hidden; }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+            body.sidebar-open .sidebar { transform: translateX(0); }
+            .sidebar-overlay { display: none; }
+            body.sidebar-open .sidebar-overlay { display: block; }
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <div class="w-64 shrink-0 bg-gray-800 text-white overflow-y-auto">
+        <div class="sidebar fixed inset-y-0 left-0 z-40 w-64 bg-gray-800 text-white overflow-y-auto md:relative md:transform-none">
             <div class="p-4">
                 <a href="{{ route('admin.dashboard') }}" class="block"><img src="{{ asset('images/logo-white.webp') }}" alt="Creatium Lab" class="h-6 w-auto"></a>
                 <p class="mt-2 text-xs uppercase tracking-wider text-gray-400">Административен панел</p>
@@ -62,20 +71,28 @@
             </nav>
         </div>
 
+        <!-- Sidebar Overlay (Mobile) -->
+        <div class="sidebar-overlay fixed inset-0 bg-black/50 z-30 md:hidden"></div>
+
         <!-- Main Content -->
         <div class="flex-1 min-w-0 flex flex-col overflow-y-auto">
             <!-- Header -->
-            <header class="bg-white shadow-sm border-b">
-                <div class="px-6 py-4 flex justify-between items-center">
-                    <h2 class="text-2xl font-semibold text-gray-800">@yield('title', 'Admin Panel')</h2>
-                    <a href="{{ route('home') }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+            <header class="bg-white shadow-sm border-b sticky top-0 z-20">
+                <div class="px-4 md:px-6 py-4 flex justify-between items-center gap-4">
+                    <button id="menu-toggle" class="md:hidden p-2 hover:bg-gray-100 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <h2 class="text-lg md:text-2xl font-semibold text-gray-800 truncate">@yield('title', 'Admin Panel')</h2>
+                    <a href="{{ route('home') }}" class="hidden sm:flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors whitespace-nowrap text-sm">
                         <x-icon name="home" class="mr-2" />Back to Home
                     </a>
                 </div>
             </header>
 
             <!-- Content -->
-            <main class="flex-1 p-6">
+            <main class="flex-1 p-4 md:p-6">
                 @if(session('success'))
                     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                         {{ session('success') }}
@@ -103,6 +120,24 @@
             </main>
         </div>
     </div>
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+
+        function closeSidebar() {
+            document.body.classList.remove('sidebar-open');
+        }
+
+        menuToggle?.addEventListener('click', () => {
+            document.body.classList.toggle('sidebar-open');
+        });
+
+        overlay?.addEventListener('click', closeSidebar);
+        sidebar?.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeSidebar);
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>
