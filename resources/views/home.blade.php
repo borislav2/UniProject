@@ -125,14 +125,6 @@
                 </div>
             @endforeach
         </div>
-
-        <div class="mt-10 flex flex-wrap gap-2.5 reveal">
-            @foreach($industries as $industry)
-                <span class="inline-flex items-center gap-2 rounded-full bg-gray-50 border border-gray-100 px-3.5 py-1.5 text-sm text-gray-700 dark:bg-white/5 dark:border-white/10 dark:text-gray-200">
-                    <x-icon :name="$industry['icon']" class="text-brand-500 text-xs dark:text-brand-400" />{{ $industry['name'] }}
-                </span>
-            @endforeach
-        </div>
     </div>
 </section>
 
