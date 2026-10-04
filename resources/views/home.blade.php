@@ -107,7 +107,9 @@
         <div class="max-w-2xl reveal">
             <span class="text-brand-600 text-sm font-bold uppercase tracking-wider dark:text-brand-300">{{ __('Подходящо за') }}</span>
             <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $audience['title'] }}</h2>
+            @if(!empty($audience['intro']))
             <p class="mt-4 text-gray-600 leading-relaxed dark:text-gray-300">{{ $audience['intro'] }}</p>
+            @endif
         </div>
 
         <div class="mt-12 grid md:grid-cols-2 gap-6">

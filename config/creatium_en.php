@@ -54,10 +54,10 @@ return [
 
     'audience' => [
         'title' => 'For small and medium-sized businesses that want more inquiries',
-        'intro' => 'A restaurant, a salon, a clinic, a repair shop, a store or a company with a handful of people. It does not matter whether you are starting from scratch or already have a website.',
+        'intro' => '',
         'cards' => [
-            ['icon' => 'store', 'title' => 'You do not have a website yet', 'text' => 'We build the site from scratch, get you listed on Google and Google Maps, and add a form your customers can use to reach you.'],
-            ['icon' => 'screwdriver-wrench', 'title' => 'You have a website, but it brings no customers', 'text' => 'It is slow, it does not show up on Google, the form is broken, or nobody has touched it in years. We fix it and then keep it in shape.'],
+            ['icon' => 'store', 'title' => 'New website from scratch', 'text' => 'We build a modern, fast website optimized for Google and mobile devices. Complete with inquiry forms and full Google Maps integration.'],
+            ['icon' => 'screwdriver-wrench', 'title' => 'Optimize your existing website', 'text' => 'We analyze your site, boost it in Google rankings, fix technical issues, and keep it maintained regularly.'],
         ],
     ],
 
