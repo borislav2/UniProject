@@ -67,9 +67,9 @@ return [
             'icon' => 'heart-pulse',
             'title' => 'Website monitoring & health',
             'tag' => 'Web Health & QA Support',
-            'description' => 'We check your site from the outside, test it and maintain it, so it stays fast and free of errors.',
-            'details' => 'For businesses that already have a website and someone looking after it, but things keep slipping through: the site gets slow, the form stops sending, a page breaks on mobile. We review it independently, tell you what is wrong and fix it quickly.',
-            'includes' => ['Regular checks for errors and speed', 'Testing of forms, buttons and the mobile version', 'Uptime monitoring', 'Quick fixes for the problems we find', 'Updates and backups'],
+            'description' => 'We watch your site, find problems before your customers do, and fix them fast.',
+            'details' => 'Even good websites need regular care. We monitor your site every day: checking if it is fast, if there are any errors, if all forms work correctly. If we find a problem, we fix it right away. You sleep soundly, your site works.',
+            'includes' => ['Daily monitoring of site performance', 'Speed and performance checks', 'Testing of all forms and features', 'Mobile compatibility checks on every page', 'Quick fixes when problems are found', 'Regular data backups'],
         ],
         [
             'slug' => 'geo-seo',
