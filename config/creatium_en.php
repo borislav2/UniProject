@@ -28,9 +28,9 @@ return [
 
     'hero' => [
         'title' => 'Be recognizable.',
-        'highlight' => 'Be digital.',
+        'highlight' => 'Be Digital.',
         'subtitle' => 'A website Google loves, and marketing that actually sells.',
-        'text' => 'We work with small and medium-sized businesses. There are two of us, and you talk directly to the person doing the work.',
+        'text' => '',
         'image' => null,
     ],
 

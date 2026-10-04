@@ -11,7 +11,7 @@
     <div class="absolute -top-40 -right-32 w-[34rem] h-[34rem] rounded-full bg-brand-300/30 blur-3xl dark:bg-brand-600/20" aria-hidden="true"></div>
     <div class="absolute top-40 -left-40 w-[26rem] h-[26rem] rounded-full bg-brand-100/60 blur-3xl dark:bg-brand-800/20" aria-hidden="true"></div>
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-20 md:pt-24 md:pb-28 grid lg:grid-cols-2 gap-14 items-center">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 md:pt-16 md:pb-28 grid lg:grid-cols-2 gap-14 items-center">
         <div class="reveal">
             <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/80 px-4 py-1.5 text-xs font-semibold text-brand-700 shadow-sm dark:border-white/15 dark:bg-white/5 dark:text-brand-200">
                 <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
@@ -21,7 +21,9 @@
                 {{ $hero['title'] }} <span class="text-gradient">{{ $hero['highlight'] }}</span>
             </h1>
             <p class="mt-6 text-xl sm:text-2xl font-semibold text-brand-950 leading-snug max-w-xl dark:text-white">{{ $hero['subtitle'] }}</p>
+            @if(!empty($hero['text']))
             <p class="mt-4 text-lg text-gray-600 leading-relaxed max-w-xl dark:text-gray-300">{{ $hero['text'] }}</p>
+            @endif
             <div class="mt-8 flex flex-col sm:flex-row gap-3">
                 <a href="#kontakt" class="inline-flex items-center justify-center gap-2 bg-brand-950 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-brand-800 transition-colors shadow-lg shadow-brand-950/20 dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100 dark:shadow-none">
                     {{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-sm" />
@@ -30,10 +32,11 @@
                     {{ __('Вижте услугите') }}
                 </a>
             </div>
-            <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-gray-600 dark:text-gray-300">
-                <li class="flex items-center gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400" />{{ __('Първата консултация е безплатна') }}</li>
-                <li class="flex items-center gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400" />{{ __('Отговаряме до един работен ден') }}</li>
-                <li class="flex items-center gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400" />{{ __('Без посредници') }}</li>
+            <ul class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-600 dark:text-gray-300">
+                <li class="flex items-start gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400 shrink-0 mt-0.5" />{{ __('Визия, съобразена с идентичността на бранда') }}</li>
+                <li class="flex items-start gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400 shrink-0 mt-0.5" />{{ __('Естетика и визуално въздействие') }}</li>
+                <li class="flex items-start gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400 shrink-0 mt-0.5" />{{ __('Поддръжка и партньорство') }}</li>
+                <li class="flex items-start gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400 shrink-0 mt-0.5" />{{ __('Ясни показатели за успех (KPI) още от старта') }}</li>
             </ul>
         </div>
 
