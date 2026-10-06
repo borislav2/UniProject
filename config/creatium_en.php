@@ -8,10 +8,11 @@ return [
         [
             'name' => 'Borislav Kostadinov',
             'role' => 'Full-Stack Developer',
-            'description' => 'Scalable web solutions that connect reliable logic behind the scenes with an intuitive interface, streamline your processes and improve your customers\' experience.',
+            'description' => 'Architecture and clean code that turn your idea into a secure, high-quality digital platform.',
             'bio' => [
-                'I build scalable web applications and a solid software foundation with MVC frameworks. My focus is connecting efficient logic behind the scenes with the intuitive interface your customers see. I work with Laravel, Filament and MySQL, build RESTful APIs and create interfaces with HTML, CSS, Bootstrap and jQuery. I work with Agile methodologies, using Git for version control and Postman for working with APIs.',
-                'My foundation is solid: computer programming at MSU Lomonosov, a C# certificate from Software University, and my third year of a Bachelor\'s degree in Software Engineering at St. Cyril and St. Methodius University of Veliko Tarnovo, where I am deepening my knowledge of software architecture, design patterns and engineering best practices. I write clean, maintainable code and focus on solutions that streamline processes and improve the user experience.',
+                'I am responsible for the overall architecture, security and technical implementation of projects at Creatium Lab. My focus is building secure and scalable systems that deliver high performance, stable operation and a pleasant user experience.',
+                'Every web platform is designed from the start with the business in mind — with clean code, ready-made integration for analytics, conversion tracking and search engine optimization.',
+                'I have a degree in Computer Programming from MSU Lomonosov, a C# certificate from Software University, and I am currently in my third year of a Bachelor\'s degree in Software Engineering at St. Cyril and St. Methodius University of Veliko Tarnovo, where I am deepening my knowledge of software architecture and engineering best practices.',
             ],
             'skills' => ['Laravel & Filament', 'MVC Architecture', 'MySQL & RESTful APIs', 'HTML, CSS & Bootstrap', 'jQuery', 'Git & Agile', 'Postman'],
             'image' => 'images/team/borislav-kostadinov.webp',
