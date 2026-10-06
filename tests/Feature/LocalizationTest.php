@@ -14,7 +14,7 @@ class LocalizationTest extends TestCase
     public function test_english_pages_load_in_english(): void
     {
         foreach (['/en', '/en/services', '/en/packages', '/en/projects', '/en/about', '/en/contact', '/en/privacy', '/en/terms', '/en/cookies'] as $url) {
-            $this->get($url)->assertOk()->assertSee('<html lang="en">', false)->assertDontSee('Безплатна консултация');
+            $this->get($url)->assertOk()->assertSee('<html lang="en">', false)->assertDontSee('Свържете се с нас');
         }
 
         $this->get('/en')

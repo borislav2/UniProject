@@ -27,7 +27,7 @@
         // SEO: values from the controller (blog posts) or the admin's per-page settings override the view's defaults.
         $seo = array_filter($seo ?? [], 'filled') ?: app(\App\Support\Content::class)->seo($routeName);
         $pageTitle = $seo['meta_title'] ?? trim($__env->yieldContent('title', __('Сайтове и дигитален маркетинг за малки бизнеси'))) . ' | Creatium Lab';
-        $pageDescription = $seo['meta_description'] ?? trim($__env->yieldContent('meta_description', __('Правим сайтове за малки бизнеси и се грижим хората да ги намират в Google. Първата консултация е безплатна.')));
+        $pageDescription = $seo['meta_description'] ?? trim($__env->yieldContent('meta_description', __('Правим сайтове за малки бизнеси и се грижим хората да ги намират в Google.')));
         $canonicalUrl = $seo['canonical_url'] ?? ($canonical ?? url()->current());
         $ogImage = isset($seo['og_image']) ? asset($seo['og_image']) : asset('images/og-image.png');
 
@@ -138,7 +138,7 @@
                     @endauth
 
                     <a href="{{ lroute('contact') }}" class="ml-2 hidden xl:inline-flex items-center gap-2 bg-brand-950 text-white px-5 py-2.5 rounded-xl hover:bg-brand-800 transition-colors text-sm font-semibold shadow-sm dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">
-                        {{ __('Безплатна консултация') }} <x-icon name="arrow-right" class="text-xs" />
+                        {{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-xs" />
                     </a>
                 </div>
 
@@ -163,7 +163,7 @@
                 @foreach($links as [$label, $href, $active])
                     <a href="{{ $href }}" class="block px-3 py-2.5 rounded-lg font-medium {{ $active ? 'text-brand-700 bg-brand-50 dark:text-brand-300 dark:bg-white/5' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-white/5' }}">{{ $label }}</a>
                 @endforeach
-                <a href="{{ lroute('contact') }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold dark:bg-white dark:text-brand-950">{{ __('Безплатна консултация') }}</a>
+                <a href="{{ lroute('contact') }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold dark:bg-white dark:text-brand-950">{{ __('Свържете се с нас') }}</a>
                 @auth
                     <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-gray-500 dark:text-gray-400">{{ __('Административен панел') }}</a>
                     <form action="{{ route('logout') }}" method="POST">

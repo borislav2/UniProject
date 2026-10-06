@@ -1,10 +1,10 @@
 @extends('layouts.public')
 
 @section('title', __('Контакти'))
-@section('meta_description', __('Пишете или се обадете на Creatium Lab. Първият разговор за вашия сайт е безплатен.'))
+@section('meta_description', __('Пишете или се обадете на Creatium Lab.'))
 
 @section('content')
-@include('partials/page-header', ['heading' => __('Контакти'), 'sub' => __('Пишете или се обадете. Първият разговор е безплатен.')])
+@include('partials/page-header', ['heading' => __('Контакти'), 'sub' => __('Пишете или се обадете.')])
 
 <section class="py-16 md:py-24 bg-brand-50/60 dark:bg-ink-900">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-start">

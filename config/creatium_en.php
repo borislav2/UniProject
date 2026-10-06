@@ -147,7 +147,7 @@ return [
     ],
 
     'package_notes' => [
-        ['icon' => 'phone', 'title' => 'The first call is free', 'text' => 'You tell us what you need, and we tell you which package fits and roughly what it would cost.'],
+        ['icon' => 'phone', 'title' => 'We start with a conversation', 'text' => 'You tell us what you need, and we tell you which package fits and roughly what it would cost.'],
         ['icon' => 'clipboard-list', 'title' => 'A written offer', 'text' => 'Before we start, you get a plan with the exact price, the timeline and what is included.'],
         ['icon' => 'handshake', 'title' => 'Packages are flexible', 'text' => 'You can add or remove things. You pay for what you actually need.'],
     ],
