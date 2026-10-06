@@ -22,7 +22,6 @@ class HomeController extends Controller
             'industries' => site('industries'),
             'services' => site('services'),
             'process' => site('process'),
-            'promise' => site('process_promise'),
             'sections' => site('home_sections'),
             'contact' => config('creatium.contact'),
         ]);
@@ -39,6 +38,7 @@ class HomeController extends Controller
             'name' => 'required|string|max:255',
             'phone' => ['required', 'string', 'max:25', 'regex:/^[0-9+()\-\s]{6,25}$/'],
             'service' => ['required', 'string', Rule::in(array_keys(config('creatium.contact_topics')))],
+            'business_size' => ['nullable', 'string', Rule::in(array_keys(config('creatium.business_sizes')))],
             'message' => 'nullable|string|max:5000',
             'consent' => 'accepted',
         ], [
@@ -47,12 +47,14 @@ class HomeController extends Controller
             'phone.regex' => __('Моля, въведете валиден телефонен номер.'),
             'service.required' => __('Моля, изберете с какво да помогнем.'),
             'service.in' => __('Моля, изберете услуга от списъка.'),
+            'business_size.in' => __('Моля, изберете размер от списъка.'),
             'consent.accepted' => __('Моля, потвърдете, че сте запознати с Политиката за поверителност.'),
         ]);
 
         $success = __('Получихме запитването ви. Ще ви се обадим до един работен ден.');
         // Admin and the notification email are in Bulgarian, so the lead always stores the Bulgarian label.
         $service = config('creatium.contact_topics')[$validated['service']];
+        $businessSize = isset($validated['business_size']) ? config('creatium.business_sizes')[$validated['business_size']] : null;
 
         // Honeypot: real visitors never fill this hidden field.
         if ($request->filled('website')) {
@@ -75,6 +77,7 @@ class HomeController extends Controller
             'category_id' => $leadCategory->id,
             'client_phone' => $validated['phone'],
             'service' => $service,
+            'business_size' => $businessSize,
             'locale' => app()->getLocale(),
             'source' => 'website',
             'lead_channel' => LeadAttribution::channel($attribution),

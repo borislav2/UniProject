@@ -4,7 +4,7 @@
 @section('meta_description', __('Избрани проекти на Creatium Lab: уебсайтове, онлайн магазини и SEO за български бизнеси.'))
 
 @section('content')
-@include('partials/page-header', ['heading' => __('Проекти'), 'sub' => __('Сайтове, които правим.')])
+@include('partials/page-header', ['heading' => __('Проекти'), 'sub' => __('Разгледайте работата ни')])
 
 <section class="py-16 bg-white dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,7 +14,7 @@
                     <x-icon name="rocket" class="text-brand-600 text-xl dark:text-brand-300" />
                 </div>
                 <h2 class="text-2xl font-bold mb-3 dark:text-white">{{ __('Тук скоро ще има проекти') }}</h2>
-                <p class="text-gray-600 mb-6 dark:text-gray-300">{{ __('Сега правим първите си сайтове и ще ги покажем тук, щом са готови и клиентите се съгласят. Ако искате вашият да е сред тях, пишете ни.') }}</p>
+                <p class="text-gray-600 mb-6 dark:text-gray-300">{{ __('Ако искате вашият да е един от тях, пишете ни.') }}</p>
                 <a href="{{ lroute('contact') }}" class="inline-flex items-center gap-2 bg-brand-950 text-white px-6 py-3 rounded-xl font-semibold hover:bg-brand-800 transition-colors dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">{{ __('Пишете ни') }} <x-icon name="arrow-right" class="text-xs" /></a>
             </div>
         @else

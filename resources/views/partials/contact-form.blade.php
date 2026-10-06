@@ -27,18 +27,32 @@
                 @error('phone')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label for="service" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('С какво да помогнем?') }}</label>
+                <label for="service" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Тип услуга') }}</label>
                 <div class="relative">
                     <select id="service" name="service" required
-                            class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 appearance-none pr-10 {{ old('service') ? '' : 'text-gray-500 dark:text-gray-400' }}" onchange="this.classList.remove('text-gray-500', 'dark:text-gray-400')">
-                        <option value="" disabled {{ old('service') ? '' : 'selected' }}>{{ __('Изберете услуга') }}</option>
+                            class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 appearance-none pr-10 dark:[color-scheme:dark] {{ old('service') ? '' : 'text-gray-500 dark:text-gray-400' }}" onchange="this.classList.remove('text-gray-500', 'dark:text-gray-400')">
+                        <option value="" disabled class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" {{ old('service') ? '' : 'selected' }}>{{ __('Изберете услуга') }}</option>
                         @foreach(site('contact_topics') as $key => $topic)
-                            <option value="{{ $key }}" class="text-gray-900 dark:text-white" @selected(old('service') === $key)>{{ $topic }}</option>
+                            <option value="{{ $key }}" class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" @selected(old('service') === $key)>{{ $topic }}</option>
                         @endforeach
                     </select>
                     <x-icon name="chevron-down" class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-500 dark:text-gray-400" />
                 </div>
                 @error('service')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label for="business_size" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Размер на бизнеса') }} <span class="text-gray-500 font-normal dark:text-gray-400">{{ __('(по желание)') }}</span></label>
+                <div class="relative">
+                    <select id="business_size" name="business_size"
+                            class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 appearance-none pr-10 dark:[color-scheme:dark] {{ old('business_size') ? '' : 'text-gray-500 dark:text-gray-400' }}" onchange="this.classList.remove('text-gray-500', 'dark:text-gray-400')">
+                        <option value="" class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" {{ old('business_size') ? '' : 'selected' }}>{{ __('Изберете размер') }}</option>
+                        @foreach(site('business_sizes') as $key => $size)
+                            <option value="{{ $key }}" class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" @selected(old('business_size') === $key)>{{ $size }}</option>
+                        @endforeach
+                    </select>
+                    <x-icon name="chevron-down" class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-500 dark:text-gray-400" />
+                </div>
+                @error('business_size')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label for="message" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Нещо повече за бизнеса ви') }} <span class="text-gray-500 font-normal dark:text-gray-400">{{ __('(по желание)') }}</span></label>

@@ -23,6 +23,7 @@ class Project extends Model
         'client_phone',
         'source',
         'service',
+        'business_size',
         'locale',
         'is_public',
         'lead_channel',

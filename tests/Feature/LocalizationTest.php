@@ -20,7 +20,6 @@ class LocalizationTest extends TestCase
         $this->get('/en')
             ->assertSee('Be recognizable.')
             ->assertSee('How we can help you stand out')
-            ->assertSee('The customer is king')
             ->assertSee('Website monitoring &amp; health', false);
     }
 
@@ -49,7 +48,7 @@ class LocalizationTest extends TestCase
         ])->assertRedirect('/en/contact')->assertSessionHas('success', 'We have received your inquiry. We will call you within one business day.');
 
         $lead = Project::where('source', 'website')->firstOrFail();
-        $this->assertSame('Мониторинг и здраве на сайта', $lead->service);
+        $this->assertSame('Мониторинг', $lead->service);
         $this->assertSame('en', $lead->locale);
     }
 

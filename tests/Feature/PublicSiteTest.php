@@ -77,11 +77,36 @@ class PublicSiteTest extends TestCase
             ->assertSee('Подходящо за')
             ->assertSee('С какво можем да ви помогнем да се отличите')
             ->assertSee('Мониторинг и здраве на сайта')
-            ->assertSee('Имейл кампании')
+            ->assertSee('Имейли и кампании')
             ->assertSee('Вижте повече')
             ->assertSee('Работен процес')
-            ->assertSee('Клиентът е цар')
+            ->assertDontSee('Клиентът е цар')
             ->assertDontSee('id="paketi"', false);
+    }
+
+    public function test_packages_do_not_show_a_price_until_one_is_set(): void
+    {
+        $this->get('/paketi')->assertOk()->assertDontSee('Цена при запитване')->assertSee('Всичко от пакет Старт');
+    }
+
+    public function test_contact_form_offers_service_type_and_business_size(): void
+    {
+        $this->get('/kontakti')
+            ->assertSee('Тип услуга')
+            ->assertSee('Изработка на сайт')
+            ->assertSee('Маркетинг')
+            ->assertSee('Размер на бизнеса')
+            ->assertSee('value="medium"', false);
+    }
+
+    public function test_business_size_is_saved_on_the_lead(): void
+    {
+        Mail::fake();
+
+        $this->post('/kontakti', $this->payload(['business_size' => 'medium']))->assertSessionHasNoErrors();
+        $this->assertSame('Среден', Project::where('source', 'website')->firstOrFail()->business_size);
+
+        $this->post('/kontakti', $this->payload(['business_size' => 'huge']))->assertSessionHasErrors('business_size');
     }
 
     public function test_packages_page_links_to_contact(): void
@@ -103,7 +128,7 @@ class PublicSiteTest extends TestCase
         $lead = Project::where('source', 'website')->firstOrFail();
         $this->assertSame('Запитване от Иван Иванов', $lead->name);
         $this->assertSame('+359 888 123 456', $lead->client_phone);
-        $this->assertSame('Изработка / Развитие на сайт', $lead->service);
+        $this->assertSame('Изработка на сайт', $lead->service);
         $this->assertSame('Искам сайт за моя ресторант.', $lead->description);
         $this->assertSame('Planning', $lead->status);
         $this->assertFalse($lead->is_public);
@@ -118,7 +143,7 @@ class PublicSiteTest extends TestCase
         $this->post('/kontakti', $this->payload(['message' => '']))->assertSessionHasNoErrors();
 
         $lead = Project::where('source', 'website')->firstOrFail();
-        $this->assertStringContainsString('Изработка / Развитие на сайт', $lead->description);
+        $this->assertStringContainsString('Изработка на сайт', $lead->description);
     }
 
     public function test_contact_form_validation(): void

@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', __('Уебсайтове и маркетинг за бизнеса в България'))
-@section('meta_description', __('Сайтове, SEO и имейл кампании за малки и средни фирми в България. Правим нови сайтове, поддържаме съществуващи и се грижим да ви намират в Google. Първата консултация е безплатна.'))
+@section('meta_description', __('Сайтове, SEO и имейл кампании за малки и средни бизнеси в България. Правим нови сайтове, поддържаме съществуващи и се грижим да ви намират в Google. Първата консултация е безплатна.'))
 
 @section('content')
 
@@ -187,15 +187,6 @@
                 </li>
             @endforeach
         </ol>
-
-        <div class="mt-10 reveal relative overflow-hidden rounded-2xl bg-brand-950 text-white p-7 md:p-9 flex flex-col md:flex-row md:items-center gap-5 dark:bg-brand-900/60 dark:ring-1 dark:ring-white/10">
-            <div class="absolute inset-0 bg-grid-light" aria-hidden="true"></div>
-            <span class="relative w-14 h-14 shrink-0 rounded-2xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center"><x-icon name="crown" class="text-2xl text-brand-200" /></span>
-            <div class="relative">
-                <h3 class="text-2xl font-extrabold">{{ $promise['title'] }}</h3>
-                <p class="mt-2 text-gray-300 leading-relaxed max-w-3xl">{{ $promise['text'] }}</p>
-            </div>
-        </div>
     </div>
 </section>
 
@@ -205,8 +196,7 @@
     <div class="absolute -bottom-40 -left-32 w-[30rem] h-[30rem] rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
         <div class="reveal">
-            <span class="text-brand-300 text-sm font-bold uppercase tracking-wider">{{ __('Контакт') }}</span>
-            <h2 class="mt-3 text-3xl md:text-5xl font-extrabold tracking-tight">{{ $sections['contact_title'] }}</h2>
+            <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight">{{ $sections['contact_title'] }}</h2>
             <p class="mt-5 text-lg text-brand-100/90 max-w-md">{{ $sections['contact_text'] }}</p>
             <ul class="mt-8 space-y-4">
                 <li class="flex items-center gap-4">

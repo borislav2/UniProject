@@ -97,6 +97,12 @@
                         <p class="text-gray-900 font-semibold">{{ $project->service }}</p>
                     </div>
                 @endif
+                @if($project->business_size)
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Размер на бизнеса</h4>
+                        <p class="text-gray-900 font-semibold">{{ $project->business_size }}</p>
+                    </div>
+                @endif
                 @if($project->locale === 'en')
                     <div>
                         <h4 class="text-sm font-medium text-gray-500">Език</h4>
