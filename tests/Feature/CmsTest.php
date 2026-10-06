@@ -181,6 +181,24 @@ class CmsTest extends TestCase
         $this->get('/')->assertSee('Бъди разпознаваем.');
     }
 
+    public function test_team_profiles_can_be_edited_in_the_admin(): void
+    {
+        $this->actingAs($this->editor());
+
+        $this->get('/admin/content/team')->assertOk()->assertSee('Разказ за човека')->assertSee('LinkedIn (адрес на профила)');
+
+        $team = config('creatium.team');
+        $team[0]['bio'] = "Първи абзац.\nВтори абзац със буква х.";
+        $team[0]['skills'] = "PHP\nLaravel";
+        $team[1]['bio'] = implode("\n", $team[1]['bio']);
+        $team[1]['skills'] = implode("\n", $team[1]['skills']);
+
+        $this->put('/admin/content/team', ['locale' => 'bg', 'content' => $team])->assertRedirect()->assertSessionHasNoErrors();
+
+        $this->get('/za-nas')->assertSee('Първи абзац.')->assertSee('Втори абзац със буква х.')->assertSee('>PHP<', false)->assertSee('аниматор в BVS')
+            ->assertSee('images/team/borislav-kostadinov.webp')->assertSee('images/team/vladimir-tsonchev.webp');
+    }
+
     public function test_content_lists_can_add_and_remove_items(): void
     {
         $this->actingAs($this->editor());

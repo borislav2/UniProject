@@ -74,5 +74,4 @@
     </div>
 </section>
 
-@include('partials/cta')
 @endsection

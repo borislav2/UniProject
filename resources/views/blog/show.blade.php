@@ -65,5 +65,4 @@
     </section>
 @endif
 
-@include('partials/cta')
 @endsection

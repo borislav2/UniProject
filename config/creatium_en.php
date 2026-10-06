@@ -5,8 +5,35 @@
 
 return [
     'team' => [
-        ['name' => '', 'role' => 'Web development', 'description' => 'Builds the site from the first sketch to the day it goes live. Then looks after it when you want a change or something stops working.'],
-        ['name' => '', 'role' => 'Marketing and SEO', 'description' => 'Makes sure people find you on Google: keywords, your Google Business Profile, page copy. And checks whether that actually brings in calls.'],
+        [
+            'name' => 'Borislav Kostadinov',
+            'role' => 'Web development',
+            'description' => 'I build the site from the first sketch to the day it goes live. Then I look after it when you want a change or something stops working.',
+            'bio' => [
+                'I am a full-stack developer. I build web applications and websites that are fast, reliable and easy to use, connecting the logic behind the scenes with the interface your customers see.',
+                'I work with Laravel, Filament and MySQL on the back end, and HTML, CSS, Bootstrap and jQuery on the front. I use Git, Postman and Agile methods.',
+                'I hold a degree in Computer Programming from MSU Lomonosov, a C# certificate from Software University, and I am currently in my third year of a Bachelor\'s degree in Software Engineering at St. Cyril and St. Methodius University of Veliko Tarnovo.',
+                'What matters most to me is that the solutions are useful: they should make your work easier and give your customers a better experience.',
+            ],
+            'skills' => ['Laravel', 'Filament', 'MySQL', 'REST API', 'HTML and CSS', 'Bootstrap', 'jQuery', 'Git', 'Agile', 'Postman'],
+            'image' => 'images/team/borislav-kostadinov.webp',
+            'linkedin' => 'https://www.linkedin.com/in/borislav-kostadinov-7ba990285/',
+        ],
+        [
+            'name' => 'Vladimir Tsonchev',
+            'role' => 'Marketing and SEO',
+            'description' => 'I make sure people find you on Google: keywords, your Google Business Profile, page copy. And I check whether that actually brings in calls.',
+            'bio' => [
+                'Ever since I was little I wanted to reach great heights. The quickest path for me was sport, and my friends always told me I was the heart of the group and the one who lifted everyone\'s spirits.',
+                'That is why I tried my hand as an animator at BVS. It was my first professional experience, and it gave me motivation, teamwork and critical thinking.',
+                'I have been interested in marketing and computers since childhood and often wondered how to bring them together. I started at the National School of Management, then moved into digital marketing at SoftUni. I earned certificates in Marketing Basics, Content Marketing, Facebook Marketing, Google Ads, Google Analytics and Email Marketing, and I am now finishing the whole course to become a Performance Marketing Expert.',
+                'I believe this is the future, and it is where I see mine. I stay motivated because I love learning, and in this field you learn something new every day.',
+                'I would describe myself as positive, composed, modest and hardworking, and I do not easily give up on the things I love.',
+            ],
+            'skills' => ['Google Ads', 'Google Analytics', 'Facebook marketing', 'Content marketing', 'Email marketing', 'Performance marketing'],
+            'image' => 'images/team/vladimir-tsonchev.webp',
+            'linkedin' => 'https://www.linkedin.com/in/vladimirtsonchev/',
+        ],
     ],
 
     'faq' => [
@@ -134,7 +161,7 @@ return [
             'name' => 'Business',
             'description' => 'When you have more to show: services, prices, photos.',
             'price_note' => '',
-            'features' => ['Everything in Start', 'Up to 5 pages', 'Design made for you', 'SEO setup', 'Google Business Profile'],
+            'features' => ['Everything in Start', 'Up to 5 pages', 'SEO setup', 'Google Business Profile'],
             'highlighted' => true,
         ],
         [
@@ -147,7 +174,7 @@ return [
     ],
 
     'package_notes' => [
-        ['icon' => 'phone', 'title' => 'The first call is free', 'text' => 'You tell us what you need, and we tell you which package fits and roughly what it would cost.'],
+        ['icon' => 'phone', 'title' => 'We start with a conversation', 'text' => 'You tell us what you need, and we tell you which package fits and roughly what it would cost.'],
         ['icon' => 'clipboard-list', 'title' => 'A written offer', 'text' => 'Before we start, you get a plan with the exact price, the timeline and what is included.'],
         ['icon' => 'handshake', 'title' => 'Packages are flexible', 'text' => 'You can add or remove things. You pay for what you actually need.'],
     ],
