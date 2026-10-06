@@ -134,7 +134,7 @@ return [
             'name' => 'Business',
             'description' => 'When you have more to show: services, prices, photos.',
             'price_note' => '',
-            'features' => ['Everything in Start', 'Up to 5 pages', 'Design made for you', 'SEO setup', 'Google Business Profile'],
+            'features' => ['Everything in Start', 'Up to 5 pages', 'SEO setup', 'Google Business Profile'],
             'highlighted' => true,
         ],
         [
