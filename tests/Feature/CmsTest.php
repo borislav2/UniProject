@@ -211,7 +211,7 @@ class CmsTest extends TestCase
 
         $this->put('/admin/content/faq', ['locale' => 'bg', 'content' => $input])->assertSessionHasNoErrors();
 
-        $this->get('/uslugi')->assertSee('Нов въпрос?')->assertDontSee($faq[0]['q']);
+        $this->get('/za-nas')->assertSee('Нов въпрос?')->assertDontSee($faq[0]['q']);
 
         $this->put('/admin/content/packages', ['locale' => 'bg', 'content' => [
             ['name' => 'Старт', 'description' => 'x', 'price_note' => 'от 600 €', 'features' => "Едно\nДве\n\n", 'highlighted' => '0'],

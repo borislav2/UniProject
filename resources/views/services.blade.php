@@ -35,37 +35,4 @@
         @endforeach
     </div>
 </section>
-
-<section class="py-16 md:py-20 bg-brand-50/60 dark:bg-ink-900">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 text-center mb-10 dark:text-white">{{ __('Как започваме') }}</h2>
-        <ol class="grid md:grid-cols-3 gap-6">
-            @foreach($steps as $step)
-                <li class="reveal rounded-2xl border border-gray-200 bg-white p-6 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ $loop->index * 100 }}ms">
-                    <div class="flex items-center justify-between">
-                        <span class="w-11 h-11 rounded-xl bg-brand-50 flex items-center justify-center dark:bg-white/10"><x-icon :name="$step['icon']" class="text-brand-600 dark:text-brand-300" /></span>
-                        <span class="text-3xl font-extrabold text-brand-400" aria-hidden="true">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
-                    </div>
-                    <h3 class="mt-5 text-lg font-bold text-brand-950 dark:text-white"><span class="sr-only">{{ __('Стъпка :n', ['n' => $loop->iteration]) }}: </span>{{ $step['title'] }}</h3>
-                    <p class="mt-2 text-gray-600 leading-relaxed dark:text-gray-300">{{ $step['description'] }}</p>
-                </li>
-            @endforeach
-        </ol>
-    </div>
-</section>
-
-<section class="py-16 md:py-20 bg-white dark:bg-ink-950">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 text-center mb-8 dark:text-white">{{ __('Често задавани въпроси') }}</h2>
-        <div class="space-y-3">
-            @foreach($faq as $item)
-                <details class="group bg-brand-50/60 rounded-xl border border-gray-200 p-5 open:shadow-sm reveal dark:bg-white/[0.03] dark:border-white/10">
-                    <summary class="font-semibold text-brand-950 cursor-pointer list-none flex items-center justify-between gap-4 [&::-webkit-details-marker]:hidden dark:text-white">{{ $item['q'] }}<x-icon name="chevron-down" class="text-xs text-gray-400 transition-transform group-open:rotate-180" /></summary>
-                    <p class="text-gray-600 mt-3 dark:text-gray-300">{{ $item['a'] }}</p>
-                </details>
-            @endforeach
-        </div>
-    </div>
-</section>
-
 @endsection
