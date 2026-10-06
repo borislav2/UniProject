@@ -124,6 +124,8 @@ class PublicSiteTest extends TestCase
     public function test_about_page_introduces_the_team_with_linkedin_links(): void
     {
         $this->get('/za-nas')->assertDontSee('Двама души, които правят сайтове');
+        $this->get('/za-nas')->assertDontSee('Какво можете да очаквате');
+        $this->get('/en/about')->assertDontSee('What you can expect');
         $this->get('/en/about')->assertDontSee('Two people who build websites');
 
         $this->get('/za-nas')
