@@ -63,6 +63,23 @@ class AdminAccessTest extends TestCase
             ->assertSee('Сайт за Вкусотия');
     }
 
+    public function test_admin_can_save_a_project_website_address(): void
+    {
+        $this->seed(CategorySeeder::class);
+        $admin = $this->actingAs($this->userWithRole('admin'));
+        $base = [
+            'name' => 'Сайт на клиент', 'description' => 'Описание.', 'start_date' => '2026-01-01', 'end_date' => '2026-02-01',
+            'status' => 'Completed', 'manager' => 'Екип', 'category_id' => Category::first()->id, 'is_public' => '1',
+        ];
+
+        $admin->get('/admin/projects/create')->assertOk()->assertSee('Адрес на сайта');
+
+        $admin->post('/admin/projects', $base + ['website_url' => 'javascript:alert(1)'])->assertSessionHasErrors('website_url');
+        $admin->post('/admin/projects', $base + ['website_url' => 'https://example.bg'])->assertSessionHasNoErrors();
+
+        $this->assertSame('https://example.bg', Project::where('name', 'Сайт на клиент')->value('website_url'));
+    }
+
     public function test_login_works_and_wrong_password_shows_error(): void
     {
         $user = User::factory()->create(['password' => bcrypt('correct-horse-battery')]);

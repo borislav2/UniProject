@@ -91,6 +91,16 @@
         </div>
 
         <div class="mt-6">
+            <label for="website_url" class="block text-sm font-medium text-gray-700 mb-2">Адрес на сайта</label>
+            <input type="url" name="website_url" id="website_url" placeholder="https://example.bg" value="{{ old('website_url') }}"
+                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <p class="text-xs text-gray-500 mt-1">Показва се като връзка в публичното портфолио (/proekti).</p>
+            @error('website_url')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="mt-6">
             <label for="technologies" class="block text-sm font-medium text-gray-700 mb-2">Technologies</label>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 @foreach($technologies as $technology)

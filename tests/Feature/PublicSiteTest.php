@@ -70,6 +70,18 @@ class PublicSiteTest extends TestCase
         $this->get('/proekti')->assertSee('Тук скоро ще има проекти');
     }
 
+    public function test_public_project_links_to_the_client_site(): void
+    {
+        $category = Category::create(['name' => 'Уебсайт']);
+        Project::create([
+            'name' => 'Сайт с адрес', 'description' => 'Описание.', 'start_date' => now(), 'end_date' => now(), 'status' => 'Completed',
+            'manager' => 'Екип', 'category_id' => $category->id, 'is_public' => true, 'website_url' => 'https://www.example.bg/',
+        ]);
+
+        $this->get('/proekti')->assertSee('href="https://www.example.bg/"', false)->assertSee('Посетете сайта: example.bg');
+        $this->get('/en/projects')->assertSee('Visit the site: example.bg');
+    }
+
     public function test_home_page_follows_the_spec(): void
     {
         $this->get('/')

@@ -39,6 +39,7 @@ class ProjectController extends Controller
             'manager' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'is_public' => 'nullable|boolean',
+            'website_url' => 'nullable|url:http,https|max:255',
             'technologies' => 'nullable|array',
             'technologies.*' => 'exists:technologies,id',
             'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240'
@@ -90,6 +91,7 @@ class ProjectController extends Controller
             'manager' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'is_public' => 'nullable|boolean',
+            'website_url' => 'nullable|url:http,https|max:255',
             'technologies' => 'nullable|array',
             'technologies.*' => 'exists:technologies,id',
             'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240'

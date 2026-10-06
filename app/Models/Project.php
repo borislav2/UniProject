@@ -24,6 +24,7 @@ class Project extends Model
         'source',
         'service',
         'business_size',
+        'website_url',
         'locale',
         'is_public',
         'lead_channel',
