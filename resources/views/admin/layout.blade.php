@@ -31,6 +31,11 @@
                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : '' }}">
                     <x-icon name="tachometer-alt" class="mr-2" /> Dashboard
                 </a>
+                @php($unreadInquiries = \App\Models\Project::where('source', 'website')->whereNull('read_at')->count())
+                <a href="{{ route('admin.inquiries.index') }}" class="flex items-center justify-between px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.inquiries.*') ? 'bg-gray-700' : '' }}">
+                    <span><x-icon name="envelope" class="mr-2" /> Запитвания</span>
+                    @if($unreadInquiries > 0)<span class="rounded-full bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">{{ $unreadInquiries }}</span>@endif
+                </a>
                 <a href="{{ route('admin.projects.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.projects.*') ? 'bg-gray-700' : '' }}">
                     <x-icon name="project-diagram" class="mr-2" /> Projects
                 </a>

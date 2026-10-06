@@ -232,6 +232,17 @@ class PublicSiteTest extends TestCase
         $this->post('/kontakti', $this->payload())->assertSessionHas('success');
 
         $this->assertDatabaseCount('projects', 1);
+        $this->assertNull(Project::first()->email_sent_at);
+    }
+
+    public function test_contact_form_notifies_hello_and_records_that_the_email_was_sent(): void
+    {
+        Mail::fake();
+
+        $this->post('/kontakti', $this->payload())->assertSessionHas('success');
+
+        Mail::assertSent(NewLeadMail::class, fn ($mail) => $mail->hasTo('hello@creatiumlab.com'));
+        $this->assertNotNull(Project::first()->email_sent_at);
     }
 
     public function test_contact_form_is_rate_limited(): void

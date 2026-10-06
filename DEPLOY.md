@@ -84,8 +84,13 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache
 
 ## 4. Имейл
 
-- **Известия за запитвания:** формата изпраща имейл на `CREATIUM_NOTIFY_EMAIL`. Ползвайте доставчик за транзакционни имейли (Brevo, Mailgun, Postmark, Resend) и добавете **SPF, DKIM и DMARC** записи в DNS, иначе писмата ще попадат в спам.
-- Запитването винаги се записва в админ панела, дори имейлът да не успее да се изпрати.
+- **Известия за запитвания:** формата изпраща имейл на `CREATIUM_NOTIFY_EMAIL` (по подразбиране `hello@creatiumlab.com`). `deploy/configure-env.sh` оставя `MAIL_MAILER=log`, т.е. писмата **само се записват в лога и не се изпращат**, докато не настроите SMTP.
+- **Настройка с Google Workspace (препоръчително, ако `hello@creatiumlab.com` е във Workspace):**
+  1. В акаунта на `hello@creatiumlab.com` включете двустепенната проверка и създайте **парола на приложение** (myaccount.google.com → Сигурност → Пароли на приложения). Ако опцията я няма, админът на Workspace трябва да я разреши.
+  2. На сървъра, като потребител `deploy`: `cd /var/www/creatiumlab && bash deploy/configure-mail.sh`. Скриптът пита паролата (скрито), записва `MAIL_*` в `.env`, обновява кеша и праща тестово писмо.
+  3. Проверка по всяко време: `php artisan creatium:test-mail` (или `php artisan creatium:test-mail друг@адрес.bg`).
+  - Друг SMTP доставчик (Brevo, Mailgun, Postmark, Resend): `bash deploy/configure-mail.sh smtp.доставчик.com потребител`; добавете и **SPF, DKIM и DMARC** в DNS, иначе писмата ще попадат в спам.
+- Запитването винаги се записва, дори имейлът да не успее да се изпрати. Всички запитвания са в админ панела, менюто **Запитвания** (с брояч за непрочетените и отбелязано кои имейли не са изпратени).
 - **Фирмена поща** (`hello@creatiumlab.com`): Google Workspace, Zoho Mail или хостингът ви.
 
 ## 5. След пускане: чеклист

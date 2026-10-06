@@ -89,6 +89,7 @@ class HomeController extends Controller
 
         try {
             Mail::to(config('creatium.notify_email'))->send(new NewLeadMail($lead));
+            $lead->forceFill(['email_sent_at' => now()])->save();
         } catch (\Throwable $e) {
             Log::error('Lead notification email failed: ' . $e->getMessage(), ['project_id' => $lead->id]);
         }

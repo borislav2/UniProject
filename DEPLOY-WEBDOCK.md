@@ -75,7 +75,7 @@ sudo bash /var/www/creatiumlab/deploy/update-nginx.sh
 
 ## 6. Имейл от сървъра
 
-Изходящият порт 25 често е блокиран при VPS доставчици. Ползвайте SMTP доставчик (Brevo, Mailgun, Postmark, Resend) на порт **587** и добавете SPF/DKIM/DMARC записите му в DNS. Настройките са в `.env` (`MAIL_*`).
+Изходящият порт 25 често е блокиран при VPS доставчици. Ползвайте SMTP на порт **587** (Google Workspace, Brevo, Mailgun, Postmark, Resend) и добавете SPF/DKIM/DMARC записите му в DNS. След `configure-env.sh` имейлите само се записват в лога (`MAIL_MAILER=log`), затова настройте SMTP веднъж с `bash deploy/configure-mail.sh` (като `deploy`; подробности в DEPLOY.md, раздел „Имейл“) и проверете с `php artisan creatium:test-mail`.
 
 ## 7. Бекъпи
 
