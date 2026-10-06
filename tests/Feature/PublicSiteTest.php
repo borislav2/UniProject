@@ -70,6 +70,26 @@ class PublicSiteTest extends TestCase
         $this->get('/proekti')->assertSee('Тук скоро ще има проекти');
     }
 
+    public function test_services_page_leads_with_the_website_and_points_each_service_to_the_form(): void
+    {
+        $this->get('/uslugi')
+            ->assertSeeInOrder(['Изработка на сайт и поддръжка', 'Мониторинг и здраве на сайта', 'GEO &amp; SEO видимост', 'Имейли и кампании'], false)
+            ->assertSee('Как започваме')
+            ->assertSee('Колко струва?')
+            ->assertSee('Запитване за тази услуга')
+            ->assertSee('/kontakti?service=website', false)
+            ->assertSee('/kontakti?service=monitoring', false)
+            ->assertSee('/kontakti?service=marketing', false);
+
+        $this->get('/en/services')->assertSee('Ask about this service')->assertSee('How we get started')->assertSee('How much does it cost?');
+    }
+
+    public function test_contact_form_preselects_the_service_from_the_link(): void
+    {
+        $this->assertMatchesRegularExpression('/<option value="marketing"[^>]*\sselected/', $this->get('/kontakti?service=marketing')->getContent());
+        $this->assertDoesNotMatchRegularExpression('/<option value="[a-z-]+"[^>]*\sselected/', $this->get('/kontakti?service=nonsense')->getContent());
+    }
+
     public function test_public_project_links_to_the_client_site(): void
     {
         $category = Category::create(['name' => 'Уебсайт']);
