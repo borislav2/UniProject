@@ -14,6 +14,7 @@ class PageController extends Controller
         return view('services', [
             'services' => site('services'),
             'faq' => site('faq'),
+            'steps' => array_slice(site('process'), 0, 3),
         ]);
     }
 

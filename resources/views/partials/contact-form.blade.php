@@ -1,3 +1,4 @@
+@php($selectedService = old('service', in_array(request('service'), array_keys(site('contact_topics')), true) ? request('service') : null))
 <div id="contact-form" class="bg-white rounded-2xl p-6 md:p-8 text-gray-900 dark:bg-ink-900 dark:text-gray-100 dark:ring-1 dark:ring-white/10">
     @if(session('success'))
         <div class="text-center py-8" role="status">
@@ -30,10 +31,10 @@
                 <label for="service" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Тип услуга') }}</label>
                 <div class="relative">
                     <select id="service" name="service" required
-                            class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 appearance-none pr-10 dark:[color-scheme:dark] {{ old('service') ? '' : 'text-gray-500 dark:text-gray-400' }}" onchange="this.classList.remove('text-gray-500', 'dark:text-gray-400')">
-                        <option value="" disabled class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" {{ old('service') ? '' : 'selected' }}>{{ __('Изберете услуга') }}</option>
+                            class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 appearance-none pr-10 dark:[color-scheme:dark] {{ $selectedService ? '' : 'text-gray-500 dark:text-gray-400' }}" onchange="this.classList.remove('text-gray-500', 'dark:text-gray-400')">
+                        <option value="" disabled class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" {{ $selectedService ? '' : 'selected' }}>{{ __('Изберете услуга') }}</option>
                         @foreach(site('contact_topics') as $key => $topic)
-                            <option value="{{ $key }}" class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" @selected(old('service') === $key)>{{ $topic }}</option>
+                            <option value="{{ $key }}" class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" @selected($selectedService === $key)>{{ $topic }}</option>
                         @endforeach
                     </select>
                     <x-icon name="chevron-down" class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-500 dark:text-gray-400" />

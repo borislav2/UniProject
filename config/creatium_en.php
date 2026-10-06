@@ -35,10 +35,13 @@ return [
     ],
 
     'faq' => [
+        ['q' => 'How much does it cost?', 'a' => 'The price depends on how many pages and how much content you need. Tell us what you want and before we start you will get a written offer with the exact price, the timeline and what is included.'],
         ['q' => 'How long does a website take?', 'a' => 'A simple business site is ready in a few weeks. An online shop or a site with many pages takes longer. We give you an exact timeline once we have talked and know what you need.'],
         ['q' => 'What do I need to prepare?', 'a' => 'Nothing special. If you have a logo, photos and text, we will use them. If not, we will help. You can also leave the domain and hosting to us.'],
         ['q' => 'Can I change things on the site myself?', 'a' => 'We agree on this at the start. You can edit text and photos yourself, or just send us a message and we will do it.'],
         ['q' => 'Do you work with businesses outside Sofia?', 'a' => 'Yes, from anywhere in Bulgaria and abroad. Most things are sorted out by phone and email, so we do not need to be in the same city.'],
+        ['q' => 'I have a website, but it brings no customers. Can you help?', 'a' => 'Yes. We look at what is in the way: a slow site, no presence on Google, a form that does not work. We fix it and then keep it in shape.'],
+        ['q' => 'What happens once the site is finished?', 'a' => 'We stay available. If you want a change or something stops working, write to us. We can also keep an eye on the site regularly, so problems are caught early.'],
     ],
 
     'industries' => [
@@ -84,12 +87,21 @@ return [
 
     'services' => [
         [
+            'slug' => 'websites',
+            'icon' => 'code',
+            'title' => 'Website design & maintenance',
+            'tag' => 'New site or improvements',
+            'description' => 'A website that presents you professionally and turns visitors into inquiries. We build a new one from scratch or improve the one you already have.',
+            'details' => 'Most people will open your site on their phone while looking for where to go or whom to call. So we make it fast, clear, and put your phone number and address where people can see them, so they can find you and reach you in seconds. Before we start, we show you a demo version, so you know what you are getting.',
+            'includes' => ['Design with your logo and colors', 'Inquiry form, tap-to-call phone number and a map', 'Google indexing', 'Help with the domain, hosting and email', 'A site audit once it is live', 'Changes and maintenance'],
+        ],
+        [
             'slug' => 'monitoring',
             'icon' => 'heart-pulse',
             'title' => 'Website monitoring & health',
             'tag' => 'Web Health & QA Support',
-            'description' => 'We regularly check that your website works the way it should, so you do not lose customers over something you have not noticed.',
-            'details' => 'A website can stop working without you knowing: the inquiry form does not send messages, a page does not open on a phone, or the site becomes very slow. We check it regularly, test how it works and tell you what is wrong before your customers start complaining.',
+            'description' => 'We keep an eye on your site and tell you what is wrong before you lose customers.',
+            'details' => 'A website can stop working without you knowing: the form does not send inquiries, a page does not open on a phone, or the site becomes very slow. Every one of those problems is a lost customer. We check your site regularly, test how it works and tell you what needs fixing.',
             'includes' => ['Regular checks that the site is online', 'Functionality testing', 'Page speed check', 'Mobile version check', 'Updates and backups'],
         ],
         [
@@ -97,7 +109,7 @@ return [
             'icon' => 'map-location-dot',
             'title' => 'GEO & SEO visibility',
             'tag' => 'Local SEO and AI search',
-            'description' => 'Customers find you when they search on Google, especially in your city.',
+            'description' => 'When people in your city search for what you offer, they find you.',
             'details' => 'When someone searches for "beauty salon Sofia" or "car repair near me", you want to be among the first results. We optimize your website and your Google profile for exactly those searches. More and more people also ask AI assistants like ChatGPT or Gemini for recommendations, so we structure the information about your business so the assistant can find you.',
             'includes' => ['Keyword research for your city', 'Google Business Profile', 'Technical audit and fixes on the site', 'Google Analytics implementation', 'Content optimized for AI and search engines'],
         ],
@@ -109,15 +121,6 @@ return [
             'description' => 'Emails at exactly the right moment, without you writing each one by hand.',
             'details' => 'For example a welcome email for new subscribers, a reminder about a booked appointment, or an offer for a customer who has not bought anything in a few months. We plan the campaign, set it up and make sure the emails reach the right person.',
             'includes' => ['A plan for sending the campaign', 'Setup of the platform and the sign-up form', 'Emails reach the right person', 'Changes and support after launch'],
-        ],
-        [
-            'slug' => 'websites',
-            'icon' => 'code',
-            'title' => 'Website design & maintenance',
-            'tag' => 'New site or improvements',
-            'description' => 'A fast, modern website built from scratch: a demo, a multi-page site or an online shop. Or we develop the site you already have.',
-            'details' => 'Most people will open your site on their phone while looking for where to go or whom to call. So we make it fast, clear, and put your phone number and address where people can see them.',
-            'includes' => ['Design with your logo and colors', 'Inquiry form, tap-to-call phone number and a map', 'Google indexing', 'Help with the domain, hosting and email', 'A site audit once it is live', 'Changes and maintenance'],
         ],
     ],
 
