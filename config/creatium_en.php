@@ -16,7 +16,7 @@ return [
                 'What matters most to me is that the solutions are useful: they should make your work easier and give your customers a better experience.',
             ],
             'skills' => ['Laravel', 'Filament', 'MySQL', 'REST API', 'HTML and CSS', 'Bootstrap', 'jQuery', 'Git', 'Agile', 'Postman'],
-            'image' => null,
+            'image' => 'images/team/borislav-kostadinov.webp',
             'linkedin' => 'https://www.linkedin.com/in/borislav-kostadinov-7ba990285/',
         ],
         [
@@ -31,7 +31,7 @@ return [
                 'I would describe myself as positive, composed, modest and hardworking, and I do not easily give up on the things I love.',
             ],
             'skills' => ['Google Ads', 'Google Analytics', 'Facebook marketing', 'Content marketing', 'Email marketing', 'Performance marketing'],
-            'image' => null,
+            'image' => 'images/team/vladimir-tsonchev.webp',
             'linkedin' => 'https://www.linkedin.com/in/vladimirtsonchev/',
         ],
     ],

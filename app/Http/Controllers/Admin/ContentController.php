@@ -111,7 +111,9 @@ class ContentController extends Controller
 
     private function image(string $path, mixed $current, Request $request): ?string
     {
-        $current = Uploads::isUpload($current) ? $current : null;
+        // Keep admin uploads and the photo that ships with the site config; drop anything else a form sends back.
+        $isDefault = is_string($current) && in_array($current, [data_get(config('creatium'), $path), data_get(config('creatium_en'), $path)], true);
+        $current = Uploads::isUpload($current) || $isDefault ? $current : null;
         $file = $request->file("files.$path");
 
         if ($file) {

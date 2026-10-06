@@ -195,7 +195,8 @@ class CmsTest extends TestCase
 
         $this->put('/admin/content/team', ['locale' => 'bg', 'content' => $team])->assertRedirect()->assertSessionHasNoErrors();
 
-        $this->get('/za-nas')->assertSee('Първи абзац.')->assertSee('Втори абзац със буква х.')->assertSee('>PHP<', false)->assertSee('аниматор в BVS');
+        $this->get('/za-nas')->assertSee('Първи абзац.')->assertSee('Втори абзац със буква х.')->assertSee('>PHP<', false)->assertSee('аниматор в BVS')
+            ->assertSee('images/team/borislav-kostadinov.webp')->assertSee('images/team/vladimir-tsonchev.webp');
     }
 
     public function test_content_lists_can_add_and_remove_items(): void

@@ -64,7 +64,7 @@ return [
                 'Най-важното за мен е решенията да са полезни: да улесняват работата ви и да правят живота на клиентите ви по-лесен.',
             ],
             'skills' => ['Laravel', 'Filament', 'MySQL', 'REST API', 'HTML и CSS', 'Bootstrap', 'jQuery', 'Git', 'Agile', 'Postman'],
-            'image' => null,
+            'image' => 'images/team/borislav-kostadinov.webp',
             'linkedin' => 'https://www.linkedin.com/in/borislav-kostadinov-7ba990285/',
         ],
         [
@@ -79,7 +79,7 @@ return [
                 'Бих се описал като позитивен, спокоен, скромен и трудолюбив човек, който не се отказва лесно от нещата, които обича и които му носят радост.',
             ],
             'skills' => ['Google Ads', 'Google Analytics', 'Facebook маркетинг', 'Content маркетинг', 'Email маркетинг', 'Performance маркетинг'],
-            'image' => null,
+            'image' => 'images/team/vladimir-tsonchev.webp',
             'linkedin' => 'https://www.linkedin.com/in/vladimirtsonchev/',
         ],
     ],

@@ -27,9 +27,9 @@
                     @if(!empty($member['name']))
                         <div class="flex items-center gap-4 mb-4">
                             @if(!empty($member['image']))
-                                <img src="{{ asset($member['image']) }}" alt="{{ $member['name'] }}" width="72" height="72" loading="lazy" class="w-[4.5rem] h-[4.5rem] shrink-0 rounded-full object-cover ring-2 ring-brand-100 dark:ring-white/15">
+                                <img src="{{ asset($member['image']) }}" alt="{{ $member['name'] }}" width="96" height="96" loading="lazy" class="w-24 h-24 shrink-0 rounded-full object-cover ring-2 ring-brand-100 dark:ring-white/15">
                             @else
-                                <span class="w-[4.5rem] h-[4.5rem] shrink-0 rounded-full bg-brand-gradient flex items-center justify-center text-2xl font-extrabold text-white shadow-lg shadow-brand-900/20" aria-hidden="true">{{ $initials }}</span>
+                                <span class="w-24 h-24 shrink-0 rounded-full bg-brand-gradient flex items-center justify-center text-2xl font-extrabold text-white shadow-lg shadow-brand-900/20" aria-hidden="true">{{ $initials }}</span>
                             @endif
                             <div>
                                 <h3 class="text-xl font-bold dark:text-white">{{ $member['name'] }}</h3>
