@@ -5,8 +5,8 @@
 
 return [
     'team' => [
-        ['name' => '', 'role' => 'Web development', 'description' => 'Builds the site from the first sketch to the day it goes live. Then looks after it when you want a change or something stops working.'],
-        ['name' => '', 'role' => 'Marketing and SEO', 'description' => 'Makes sure people find you on Google: keywords, your Google Business Profile, page copy. And checks whether that actually brings in calls.'],
+        ['name' => 'Borislav Kostadinov', 'role' => 'Web development', 'description' => 'Builds the site from the first sketch to the day it goes live. Then looks after it when you want a change or something stops working.', 'image' => null, 'linkedin' => 'https://www.linkedin.com/in/borislav-kostadinov-7ba990285/'],
+        ['name' => 'Vladimir Tsonchev', 'role' => 'Marketing and SEO', 'description' => 'Makes sure people find you on Google: keywords, your Google Business Profile, page copy. And checks whether that actually brings in calls.', 'image' => null, 'linkedin' => 'https://www.linkedin.com/in/vladimirtsonchev/'],
     ],
 
     'faq' => [

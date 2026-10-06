@@ -19,14 +19,32 @@
         <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 text-center mb-10 dark:text-white">{{ __('Екипът') }}</h2>
         <div class="grid md:grid-cols-2 gap-8">
             @foreach($team as $member)
+                @php
+                    $initials = collect(preg_split('/\s+/u', trim((string) ($member['name'] ?? '')), -1, PREG_SPLIT_NO_EMPTY))->take(2)->map(fn ($w) => mb_strtoupper(mb_substr($w, 0, 1)))->implode('');
+                    $linkedin = str_starts_with((string) ($member['linkedin'] ?? ''), 'https://') ? $member['linkedin'] : null;
+                @endphp
                 <div class="bg-white rounded-2xl border border-gray-200 p-7 card-hover reveal dark:bg-white/[0.03] dark:border-white/10">
                     @if(!empty($member['name']))
-                        <h3 class="text-xl font-bold dark:text-white">{{ $member['name'] }}</h3>
-                        <p class="text-brand-600 font-semibold mb-3 dark:text-brand-300">{{ $member['role'] }}</p>
+                        <div class="flex items-center gap-4 mb-4">
+                            @if(!empty($member['image']))
+                                <img src="{{ asset($member['image']) }}" alt="{{ $member['name'] }}" width="72" height="72" loading="lazy" class="w-[4.5rem] h-[4.5rem] shrink-0 rounded-full object-cover ring-2 ring-brand-100 dark:ring-white/15">
+                            @else
+                                <span class="w-[4.5rem] h-[4.5rem] shrink-0 rounded-full bg-brand-gradient flex items-center justify-center text-2xl font-extrabold text-white shadow-lg shadow-brand-900/20" aria-hidden="true">{{ $initials }}</span>
+                            @endif
+                            <div>
+                                <h3 class="text-xl font-bold dark:text-white">{{ $member['name'] }}</h3>
+                                <p class="text-brand-600 font-semibold dark:text-brand-300">{{ $member['role'] }}</p>
+                            </div>
+                        </div>
                     @else
                         <h3 class="text-xl font-bold text-brand-600 mb-3 dark:text-brand-300">{{ $member['role'] }}</h3>
                     @endif
                     <p class="text-gray-600 dark:text-gray-300">{{ $member['description'] }}</p>
+                    @if($linkedin)
+                        <a href="{{ $linkedin }}" target="_blank" rel="noopener" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">
+                            {{ __('Профил в LinkedIn') }} <x-icon name="arrow-up-right-from-square" class="text-xs" />
+                        </a>
+                    @endif
                 </div>
             @endforeach
         </div>

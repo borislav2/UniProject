@@ -109,6 +109,16 @@ class PublicSiteTest extends TestCase
         $this->post('/kontakti', $this->payload(['business_size' => 'huge']))->assertSessionHasErrors('business_size');
     }
 
+    public function test_about_page_introduces_the_team_with_linkedin_links(): void
+    {
+        $this->get('/za-nas')
+            ->assertSee('Борислав Костадинов')
+            ->assertSee('Владимир Цончев')
+            ->assertSee('href="https://www.linkedin.com/in/vladimirtsonchev/"', false);
+
+        $this->get('/en/about')->assertSee('Borislav Kostadinov')->assertSee('LinkedIn profile');
+    }
+
     public function test_packages_page_links_to_contact(): void
     {
         $this->get('/paketi')->assertOk()->assertSee('Свържете се с нас')->assertSee(route('contact'), false);
