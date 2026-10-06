@@ -22,7 +22,6 @@
     "Град": "City",
     "Дизайн, код<br>и SEO": "Design, code<br>and SEO",
     "Език": "Language",
-    "Екипът": "The team",
     "За нас": "About us",
     "Запазване на избора": "Save my choice",
     "Изберете услуга": "Choose a service",
@@ -33,7 +32,6 @@
     "Изход": "Log out",
     "Име": "Name",
     "Имейл": "Email",
-    "Как се договаряме": "How we agree on the work",
     "Какво включва": "What is included",
     "Категории": "Categories",
     "Контакти": "Contact",
@@ -65,7 +63,6 @@
     "Пакети": "Packages",
     "Пакети за изработка на сайт и SEO за малки бизнеси: Старт, Бизнес и Растеж. Разберете какво включва всеки и поискайте точна оферта.": "Website and SEO packages for small businesses: Start, Business and Growth. See what each includes and ask for an exact quote.",
     "Пакети и цени": "Packages and pricing",
-    "Пакетите са за сайт и SEO. За :monitoring и :email правим отделна оферта според нуждите ви.": "The packages cover the website and SEO. For :monitoring and :email we make a separate offer based on what you need.",
     "Пиксели на рекламните платформи: колко запитвания идват от рекламите ни.": "Ad platform pixels: how many inquiries come from our ads.",
     "Пишете или се обадете на Creatium Lab.": "Write to or call Creatium Lab.",
     "Пишете или се обадете.": "Write or call.",
@@ -108,8 +105,6 @@
     "Формата е стояла отворена твърде дълго. Върнете се назад, презаредете страницата и опитайте отново.": "The form was open for too long. Go back, reload the page and try again.",
     "Цената зависи от това колко страници и какво съдържание ви трябва. Кажете ни и ще ви дадем точна оферта.": "The price depends on how many pages and how much content you need. Tell us and we will give you an exact quote.",
     "Често задавани въпроси": "Frequently asked questions",
-    "имейл кампании": "email campaigns",
-    "мониторинг на сайта": "website monitoring",
     "от контактната форма": "from the contact form",
     "Визия, съобразена с идентичността на бранда": "Vision aligned with brand identity",
     "Естетика и визуално въздействие": "Aesthetics and visual impact",
@@ -125,6 +120,5 @@
     "Профил в LinkedIn": "LinkedIn profile",
     "Посетете сайта": "Visit the site",
     "Сайт, който работи, клиенти, които ви намират, и грижа и след старта. Всичко с ясна оферта, преди да започнем.": "A website that works, customers who find you, and care after launch. Everything with a clear offer before we start.",
-    "Запитване за тази услуга": "Ask about this service",
-    "Как започваме": "How we get started"
+    "Запитване за тази услуга": "Ask about this service"
 }

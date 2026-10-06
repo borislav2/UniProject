@@ -13,8 +13,6 @@ class PageController extends Controller
     {
         return view('services', [
             'services' => site('services'),
-            'faq' => site('faq'),
-            'steps' => array_slice(site('process'), 0, 3),
         ]);
     }
 
@@ -22,7 +20,6 @@ class PageController extends Controller
     {
         return view('packages', [
             'packages' => site('packages'),
-            'notes' => site('package_notes'),
         ]);
     }
 
@@ -39,7 +36,7 @@ class PageController extends Controller
 
     public function about()
     {
-        return view('about', ['about' => site('about'), 'team' => site('team')]);
+        return view('about', ['about' => site('about'), 'team' => site('team'), 'faq' => site('faq')]);
     }
 
     public function privacy()

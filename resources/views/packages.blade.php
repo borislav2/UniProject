@@ -54,24 +54,4 @@
         </div>
     </div>
 </section>
-
-<section class="py-16 md:py-20 bg-brand-50/60 dark:bg-ink-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 reveal dark:text-white">{{ __('Как се договаряме') }}</h2>
-        <div class="mt-10 grid md:grid-cols-3 gap-6">
-            @foreach($notes as $note)
-                <div class="reveal rounded-2xl border border-gray-200 bg-white p-7 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ $loop->index * 100 }}ms">
-                    <span class="w-11 h-11 rounded-xl bg-brand-50 flex items-center justify-center dark:bg-white/10"><x-icon :name="$note['icon']" class="text-brand-600 dark:text-brand-300" /></span>
-                    <h3 class="mt-5 text-lg font-bold text-brand-950 dark:text-white">{{ $note['title'] }}</h3>
-                    <p class="mt-2 text-gray-600 leading-relaxed dark:text-gray-300">{{ $note['text'] }}</p>
-                </div>
-            @endforeach
-        </div>
-        <p class="mt-8 text-gray-600 reveal dark:text-gray-300">{!! __('Пакетите са за сайт и SEO. За :monitoring и :email правим отделна оферта според нуждите ви.', [
-            'monitoring' => '<a href="' . e(lroute('services')) . '#monitoring" class="text-brand-700 underline dark:text-brand-300">' . e(__('мониторинг на сайта')) . '</a>',
-            'email' => '<a href="' . e(lroute('services')) . '#email" class="text-brand-700 underline dark:text-brand-300">' . e(__('имейл кампании')) . '</a>',
-        ]) !!}</p>
-    </div>
-</section>
-
 @endsection

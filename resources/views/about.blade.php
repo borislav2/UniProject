@@ -18,7 +18,6 @@
 
 <section class="py-16 md:py-20 bg-brand-50/60 dark:bg-ink-900">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 text-center mb-10 dark:text-white">{{ __('Екипът') }}</h2>
         <div class="grid md:grid-cols-2 gap-8">
             @foreach($team as $member)
                 @php
@@ -62,6 +61,20 @@
                         </a>
                     @endif
                 </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<section class="py-16 md:py-20 bg-white dark:bg-ink-950">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 text-center mb-8 dark:text-white">{{ __('Често задавани въпроси') }}</h2>
+        <div class="space-y-3">
+            @foreach($faq as $item)
+                <details class="group bg-brand-50/60 rounded-xl border border-gray-200 p-5 open:shadow-sm reveal dark:bg-white/[0.03] dark:border-white/10">
+                    <summary class="font-semibold text-brand-950 cursor-pointer list-none flex items-center justify-between gap-4 [&::-webkit-details-marker]:hidden dark:text-white">{{ $item['q'] }}<x-icon name="chevron-down" class="text-xs text-gray-400 transition-transform group-open:rotate-180" /></summary>
+                    <p class="text-gray-600 mt-3 dark:text-gray-300">{{ $item['a'] }}</p>
+                </details>
             @endforeach
         </div>
     </div>

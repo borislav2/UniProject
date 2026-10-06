@@ -74,14 +74,14 @@ class PublicSiteTest extends TestCase
     {
         $this->get('/uslugi')
             ->assertSeeInOrder(['Изработка на сайт и поддръжка', 'Мониторинг и здраве на сайта', 'GEO &amp; SEO видимост', 'Имейли и кампании'], false)
-            ->assertSee('Как започваме')
-            ->assertSee('Колко струва?')
+            ->assertDontSee('Как започваме')
+            ->assertDontSee('Често задавани въпроси')
             ->assertSee('Запитване за тази услуга')
             ->assertSee('/kontakti?service=website', false)
             ->assertSee('/kontakti?service=monitoring', false)
             ->assertSee('/kontakti?service=marketing', false);
 
-        $this->get('/en/services')->assertSee('Ask about this service')->assertSee('How we get started')->assertSee('How much does it cost?');
+        $this->get('/en/services')->assertSee('Ask about this service')->assertDontSee('How we get started');
     }
 
     public function test_contact_form_preselects_the_service_from_the_link(): void
@@ -156,6 +156,16 @@ class PublicSiteTest extends TestCase
             ->assertSee('href="https://www.linkedin.com/in/vladimirtsonchev/"', false);
 
         $this->get('/en/about')->assertSee('Borislav Kostadinov')->assertSee('LinkedIn profile')->assertSee('Performance Marketing Expert');
+    }
+
+    public function test_faq_lives_on_the_about_page_and_packages_have_no_agreement_section(): void
+    {
+        $this->get('/za-nas')->assertSee('Често задавани въпроси')->assertSee('Колко струва?');
+        $this->get('/en/about')->assertSee('Frequently asked questions')->assertSee('How much does it cost?');
+        $this->get('/uslugi')->assertDontSee('Колко струва?');
+
+        $this->get('/paketi')->assertOk()->assertDontSee('Как се договаряме')->assertDontSee('Оферта в писмен вид');
+        $this->get('/en/packages')->assertOk()->assertDontSee('How we agree on the work');
     }
 
     public function test_packages_page_links_to_contact(): void

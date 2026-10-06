@@ -7,15 +7,14 @@ return [
     'team' => [
         [
             'name' => 'Borislav Kostadinov',
-            'role' => 'Web development',
-            'description' => 'I build the site from the first sketch to the day it goes live. Then I look after it when you want a change or something stops working.',
+            'role' => 'Full-Stack Developer',
+            'description' => 'Architecture and clean code that turn your idea into a secure, high-quality digital platform.',
             'bio' => [
-                'I am a full-stack developer. I build web applications and websites that are fast, reliable and easy to use, connecting the logic behind the scenes with the interface your customers see.',
-                'I work with Laravel, Filament and MySQL on the back end, and HTML, CSS, Bootstrap and jQuery on the front. I use Git, Postman and Agile methods.',
-                'I hold a degree in Computer Programming from MSU Lomonosov, a C# certificate from Software University, and I am currently in my third year of a Bachelor\'s degree in Software Engineering at St. Cyril and St. Methodius University of Veliko Tarnovo.',
-                'What matters most to me is that the solutions are useful: they should make your work easier and give your customers a better experience.',
+                'I am responsible for the overall architecture, security and technical implementation of projects at Creatium Lab. My focus is building secure and scalable systems that deliver high performance, stable operation and a pleasant user experience.',
+                'Every web platform is designed from the start with the business in mind — with clean code, ready-made integration for analytics, conversion tracking and search engine optimization.',
+                'I have a degree in Computer Programming from MSU Lomonosov, a C# certificate from Software University, and I am currently in my third year of a Bachelor\'s degree in Software Engineering at St. Cyril and St. Methodius University of Veliko Tarnovo, where I am deepening my knowledge of software architecture and engineering best practices.',
             ],
-            'skills' => ['Laravel', 'Filament', 'MySQL', 'REST API', 'HTML and CSS', 'Bootstrap', 'jQuery', 'Git', 'Agile', 'Postman'],
+            'skills' => ['Laravel & Filament', 'MVC Architecture', 'MySQL & RESTful APIs', 'HTML, CSS & Bootstrap', 'jQuery', 'Git & Agile', 'Postman'],
             'image' => 'images/team/borislav-kostadinov.webp',
             'linkedin' => 'https://www.linkedin.com/in/borislav-kostadinov-7ba990285/',
         ],
@@ -168,12 +167,6 @@ return [
             'features' => ['Everything in Business', 'Monthly SEO work', 'New copy for the site', 'Ranking tracking on Google', 'A short monthly report'],
             'highlighted' => false,
         ],
-    ],
-
-    'package_notes' => [
-        ['icon' => 'phone', 'title' => 'We start with a conversation', 'text' => 'You tell us what you need, and we tell you which package fits and roughly what it would cost.'],
-        ['icon' => 'clipboard-list', 'title' => 'A written offer', 'text' => 'Before we start, you get a plan with the exact price, the timeline and what is included.'],
-        ['icon' => 'handshake', 'title' => 'Packages are flexible', 'text' => 'You can add or remove things. You pay for what you actually need.'],
     ],
 
     'cookies' => [
