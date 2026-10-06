@@ -18,7 +18,6 @@
 
 <section class="py-16 md:py-20 bg-brand-50/60 dark:bg-ink-900">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 text-center mb-10 dark:text-white">{{ __('Екипът') }}</h2>
         <div class="grid md:grid-cols-2 gap-8">
             @foreach($team as $member)
                 @php

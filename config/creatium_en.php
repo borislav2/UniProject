@@ -10,10 +10,9 @@ return [
             'role' => 'Web development',
             'description' => 'I build the site from the first sketch to the day it goes live. Then I look after it when you want a change or something stops working.',
             'bio' => [
-                'I am a full-stack developer. I build web applications and websites that are fast, reliable and easy to use, connecting the logic behind the scenes with the interface your customers see.',
-                'I work with Laravel, Filament and MySQL on the back end, and HTML, CSS, Bootstrap and jQuery on the front. I use Git, Postman and Agile methods.',
-                'I hold a degree in Computer Programming from MSU Lomonosov, a C# certificate from Software University, and I am currently in my third year of a Bachelor\'s degree in Software Engineering at St. Cyril and St. Methodius University of Veliko Tarnovo.',
-                'What matters most to me is that the solutions are useful: they should make your work easier and give your customers a better experience.',
+                'I am a full-stack developer and I build scalable web applications and a solid software foundation with MVC frameworks such as Laravel. What excites me most is connecting fast, reliable logic behind the scenes with the intuitive interface your customers see.',
+                'My education is the foundation of what I do: computer programming at MSU Lomonosov, a C# certificate from Software University, and now my third year of a Bachelor\'s degree in Software Engineering at St. Cyril and St. Methodius University of Veliko Tarnovo, where I am deepening my knowledge of software architecture, design patterns and engineering best practices.',
+                'I write clean, maintainable code and I care that solutions are genuinely useful: they should streamline your processes and make working with your website easier and more pleasant for your customers. I am always happy to talk about web development and new technology solutions.',
             ],
             'skills' => ['Laravel', 'Filament', 'MySQL', 'REST API', 'HTML and CSS', 'Bootstrap', 'jQuery', 'Git', 'Agile', 'Postman'],
             'image' => 'images/team/borislav-kostadinov.webp',
