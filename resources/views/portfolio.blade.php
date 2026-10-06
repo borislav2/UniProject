@@ -24,6 +24,11 @@
                         <span class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-300">{{ $project->category->name }}</span>
                         <h2 class="text-xl font-bold text-brand-950 mt-2 mb-2 dark:text-white">{{ $project->name }}</h2>
                         <p class="text-gray-600 mb-4 dark:text-gray-300">{{ $project->description }}</p>
+                        @if($project->website_url)
+                            <a href="{{ $project->website_url }}" target="_blank" rel="noopener" class="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">
+                                {{ __('Посетете сайта') }}: {{ preg_replace('/^www\./', '', (string) parse_url($project->website_url, PHP_URL_HOST)) }} <x-icon name="arrow-up-right-from-square" class="text-xs" />
+                            </a>
+                        @endif
                         @if($project->technologies->isNotEmpty())
                             <div class="flex flex-wrap gap-1">
                                 @foreach($project->technologies as $technology)
