@@ -14,6 +14,9 @@
     @if($lead->service)
         <p><strong>Услуга:</strong> {{ $lead->service }}</p>
     @endif
+    @if($lead->business_size)
+        <p><strong>Размер на бизнеса:</strong> {{ $lead->business_size }}</p>
+    @endif
     @if($lead->locale === 'en')
         <p><strong>Език:</strong> английски (изпратено от английската версия на сайта)</p>
     @endif

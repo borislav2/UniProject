@@ -1,10 +1,10 @@
 @extends('layouts.public')
 
 @section('title', $category ? __('Блог: :category', ['category' => $category->trOrBg('name')]) : __('Блог'))
-@section('meta_description', __('Статии за сайтове, SEO, Google Business и имейл кампании за малки и средни фирми. Пишем просто и с примери.'))
+@section('meta_description', __('Статии за сайтове, SEO, Google Business и имейл кампании за малки и средни бизнеси. Пишем просто и с примери.'))
 
 @section('content')
-@include('partials/page-header', ['eyebrow' => $category ? __('Блог') : null, 'heading' => $category ? $category->trOrBg('name') : __('Блог'), 'sub' => __('Полезни неща за сайтове, SEO и онлайн маркетинг за малки фирми.')])
+@include('partials/page-header', ['eyebrow' => $category ? __('Блог') : null, 'heading' => $category ? $category->trOrBg('name') : __('Блог'), 'sub' => __('Тук ще има полезни неща за сайтове и онлайн маркетинг.')])
 
 <section class="py-16 md:py-20 bg-white dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

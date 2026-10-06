@@ -28,9 +28,9 @@ return [
 
     'hero' => [
         'title' => 'Be recognizable.',
-        'highlight' => 'Be digital.',
+        'highlight' => 'Be Digital.',
         'subtitle' => 'A website Google loves, and marketing that actually sells.',
-        'text' => 'We work with small and medium-sized businesses. There are two of us, and you talk directly to the person doing the work.',
+        'text' => '',
         'image' => null,
     ],
 
@@ -40,7 +40,7 @@ return [
         'process_eyebrow' => 'From Concept to Implementation',
         'process_title' => 'How we work',
         'contact_title' => "Let's talk.",
-        'contact_text' => 'Leave your name and phone number and pick what you need help with. We will call you within one business day, and the first call is free.',
+        'contact_text' => 'Tell us about your business and what we can help with.',
     ],
 
     'about' => [
@@ -54,10 +54,10 @@ return [
 
     'audience' => [
         'title' => 'For small and medium-sized businesses that want more inquiries',
-        'intro' => 'A restaurant, a salon, a clinic, a repair shop, a store or a company with a handful of people. It does not matter whether you are starting from scratch or already have a website.',
+        'intro' => '',
         'cards' => [
-            ['icon' => 'store', 'title' => 'You do not have a website yet', 'text' => 'We build the site from scratch, get you listed on Google and Google Maps, and add a form your customers can use to reach you.'],
-            ['icon' => 'screwdriver-wrench', 'title' => 'You have a website, but it brings no customers', 'text' => 'It is slow, it does not show up on Google, the form is broken, or nobody has touched it in years. We fix it and then keep it in shape.'],
+            ['icon' => 'store', 'title' => 'New website from scratch', 'text' => 'We build a modern, fast website optimized for Google and mobile devices. Complete with inquiry forms and full Google Maps integration.'],
+            ['icon' => 'screwdriver-wrench', 'title' => 'Optimize your existing website', 'text' => 'We analyze your site, boost it in Google rankings, fix technical issues, and keep it maintained regularly.'],
         ],
     ],
 
@@ -67,9 +67,9 @@ return [
             'icon' => 'heart-pulse',
             'title' => 'Website monitoring & health',
             'tag' => 'Web Health & QA Support',
-            'description' => 'We check your site from the outside, test it and maintain it, so it stays fast and free of errors.',
-            'details' => 'For businesses that already have a website and someone looking after it, but things keep slipping through: the site gets slow, the form stops sending, a page breaks on mobile. We review it independently, tell you what is wrong and fix it quickly.',
-            'includes' => ['Regular checks for errors and speed', 'Testing of forms, buttons and the mobile version', 'Uptime monitoring', 'Quick fixes for the problems we find', 'Updates and backups'],
+            'description' => 'We regularly check that your website works the way it should, so you do not lose customers over something you have not noticed.',
+            'details' => 'A website can stop working without you knowing: the inquiry form does not send messages, a page does not open on a phone, or the site becomes very slow. We check it regularly, test how it works and tell you what is wrong before your customers start complaining.',
+            'includes' => ['Regular checks that the site is online', 'Functionality testing', 'Page speed check', 'Mobile version check', 'Updates and backups'],
         ],
         [
             'slug' => 'geo-seo',
@@ -77,69 +77,70 @@ return [
             'title' => 'GEO & SEO visibility',
             'tag' => 'Local SEO and AI search',
             'description' => 'Customers find you when they search on Google, especially in your city.',
-            'details' => 'When someone searches for "beauty salon Sofia" or "car repair near me", you want to be near the top. We optimize your website and your Google profile for exactly those searches. More and more people also ask ChatGPT or Gemini for recommendations, so we structure the information about your business in a way AI assistants understand too.',
-            'includes' => ['Keyword research for your city', 'Google Business Profile and Google Maps', 'Technical audit and fixes on the site', 'Search-optimized content', 'Visibility in AI search engines and assistants', 'Ranking tracking'],
+            'details' => 'When someone searches for "beauty salon Sofia" or "car repair near me", you want to be among the first results. We optimize your website and your Google profile for exactly those searches. More and more people also ask AI assistants like ChatGPT or Gemini for recommendations, so we structure the information about your business so the assistant can find you.',
+            'includes' => ['Keyword research for your city', 'Google Business Profile', 'Technical audit and fixes on the site', 'Google Analytics implementation', 'Content optimized for AI and search engines'],
         ],
         [
             'slug' => 'email',
             'icon' => 'envelope-open-text',
-            'title' => 'Email campaigns',
+            'title' => 'Emails & campaigns',
             'tag' => 'Automated emails',
-            'description' => 'Emails that go out on their own at the right moment, without you writing each one by hand.',
-            'details' => 'For example a welcome email for new subscribers, a reminder about a booked appointment, or an offer for a customer who has not bought anything in a few months. We plan the sequence, set it up and make sure the emails land in the inbox, not in spam.',
-            'includes' => ['A plan for which emails go out and when', 'Setup of the platform and the sign-up form', 'Domain setup so emails do not end up in spam', 'Changes and support after launch'],
+            'description' => 'Emails at exactly the right moment, without you writing each one by hand.',
+            'details' => 'For example a welcome email for new subscribers, a reminder about a booked appointment, or an offer for a customer who has not bought anything in a few months. We plan the campaign, set it up and make sure the emails reach the right person.',
+            'includes' => ['A plan for sending the campaign', 'Setup of the platform and the sign-up form', 'Emails reach the right person', 'Changes and support after launch'],
         ],
         [
             'slug' => 'websites',
             'icon' => 'code',
-            'title' => 'Website design & development',
+            'title' => 'Website design & maintenance',
             'tag' => 'New site or improvements',
-            'description' => 'A fast, modern website built from scratch: a business card site, a multi-page site or an online shop. Or we improve the site you already have.',
-            'details' => 'Most people will open your site on their phone while looking for where to go or whom to call. So we make it fast, clear, and put your phone number and address where people can see them. It works for a restaurant, a salon, a clinic, a repair shop or a small store.',
-            'includes' => ['Design with your logo and colors', 'Inquiry form, tap-to-call phone number and a map', 'Basic Google setup', 'Help with the domain, hosting and email', 'Changes and support after the site goes live'],
+            'description' => 'A fast, modern website built from scratch: a demo, a multi-page site or an online shop. Or we develop the site you already have.',
+            'details' => 'Most people will open your site on their phone while looking for where to go or whom to call. So we make it fast, clear, and put your phone number and address where people can see them.',
+            'includes' => ['Design with your logo and colors', 'Inquiry form, tap-to-call phone number and a map', 'Google indexing', 'Help with the domain, hosting and email', 'A site audit once it is live', 'Changes and maintenance'],
         ],
     ],
 
     // Labels only: the keys must match config/creatium.php.
     'contact_topics' => [
-        'website' => 'Website design & development',
-        'monitoring' => 'Website monitoring & health',
-        'geo-seo' => 'GEO & SEO visibility',
+        'website' => 'Website design',
+        'monitoring' => 'Monitoring',
+        'marketing' => 'Marketing',
+    ],
+
+    'business_sizes' => [
+        'small' => 'Small',
+        'medium' => 'Medium',
+        'large' => 'Large',
     ],
 
     'process' => [
-        ['icon' => 'envelope', 'title' => 'Inquiry', 'description' => 'Send us the form. Your name, phone number and what you need help with are enough.'],
-        ['icon' => 'phone', 'title' => 'Phone call', 'description' => 'We call you back within one business day and ask about your business, your customers and what exactly you want.'],
-        ['icon' => 'clipboard-list', 'title' => 'Plan', 'description' => 'We write down what we will do, how long it will take and what it will cost, and send it to you.'],
-        ['icon' => 'handshake', 'title' => 'Agreement', 'description' => 'We go through the plan together and change it as much as needed. We only start once you say yes.'],
+        ['icon' => 'envelope', 'title' => 'Inquiry', 'description' => 'Send us an email and tell us what you need help with.'],
+        ['icon' => 'phone', 'title' => 'Phone call', 'description' => 'We call you back within one business day and ask about your business, your customers and what you are struggling with.'],
+        ['icon' => 'clipboard-list', 'title' => 'Offer', 'description' => 'We describe what we will do, how long it will take and what it will cost, and show you a demo version.'],
+        ['icon' => 'handshake', 'title' => 'Agreement', 'description' => 'We go through the offer together and change it as much as needed. We only start once you say yes.'],
         ['icon' => 'code', 'title' => 'Build', 'description' => 'We do what we agreed on and show you how it is going before it is finished.'],
-        ['icon' => 'rocket', 'title' => 'Launch', 'description' => 'We launch the site or campaign, check that everything works, and stay available for changes.'],
-    ],
-
-    'process_promise' => [
-        'title' => 'The customer is king',
-        'text' => 'We reply quickly, you always know where things stand, and we do exactly what we agreed on. No surprises, no going off script.',
+        ['icon' => 'rocket', 'title' => 'Launch', 'description' => 'We launch your product (site or campaign), monitor it and keep developing it together with you.'],
     ],
 
     'packages' => [
         [
             'name' => 'Start',
-            'description' => 'When you simply need to be online.',
-            'price_note' => 'Price on request',
+            'description' => 'A web presence for your business.',
+            'price_note' => '',
             'features' => ['One page with the essentials', 'Works on mobile', 'Inquiry form', 'Basic Google setup'],
             'highlighted' => false,
         ],
         [
             'name' => 'Business',
             'description' => 'When you have more to show: services, prices, photos.',
-            'price_note' => 'Price on request',
-            'features' => ['Up to 5 pages', 'Design made for you', 'SEO setup', 'Google Business Profile'],
+            'price_note' => '',
+            'features' => ['Everything in Start', 'Up to 5 pages', 'Design made for you', 'SEO setup', 'Google Business Profile'],
             'highlighted' => true,
         ],
         [
             'name' => 'Growth',
             'description' => 'A website plus monthly work to climb in Google.',
-            'price_note' => 'Price on request / month',
+            'price_note' => '',
             'features' => ['Everything in Business', 'Monthly SEO work', 'New copy for the site', 'Ranking tracking on Google', 'A short monthly report'],
             'highlighted' => false,
         ],

@@ -26,8 +26,8 @@
 
         // SEO: values from the controller (blog posts) or the admin's per-page settings override the view's defaults.
         $seo = array_filter($seo ?? [], 'filled') ?: app(\App\Support\Content::class)->seo($routeName);
-        $pageTitle = $seo['meta_title'] ?? trim($__env->yieldContent('title', __('Сайтове и дигитален маркетинг за малки фирми'))) . ' | Creatium Lab';
-        $pageDescription = $seo['meta_description'] ?? trim($__env->yieldContent('meta_description', __('Правим сайтове за малки фирми и се грижим хората да ги намират в Google. Първата консултация е безплатна.')));
+        $pageTitle = $seo['meta_title'] ?? trim($__env->yieldContent('title', __('Сайтове и дигитален маркетинг за малки бизнеси'))) . ' | Creatium Lab';
+        $pageDescription = $seo['meta_description'] ?? trim($__env->yieldContent('meta_description', __('Правим сайтове за малки бизнеси и се грижим хората да ги намират в Google. Първата консултация е безплатна.')));
         $canonicalUrl = $seo['canonical_url'] ?? ($canonical ?? url()->current());
         $ogImage = isset($seo['og_image']) ? asset($seo['og_image']) : asset('images/og-image.png');
 
@@ -185,7 +185,7 @@
             <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
                 <div class="md:col-span-5">
                     <img src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="223px" alt="Creatium Lab" width="445" height="64" class="h-8 w-auto mb-5" loading="lazy" decoding="async">
-                    <p class="text-gray-300 max-w-sm leading-relaxed">{{ __('Сайтове, SEO и имейл кампании за малки и средни фирми в България.') }}</p>
+                    <p class="max-w-sm text-2xl font-extrabold leading-tight tracking-tight">{{ site('hero')['title'] }} <span class="text-brand-300">{{ site('hero')['highlight'] }}</span></p>
                     <a href="{{ lroute('contact') }}" class="mt-6 inline-flex items-center gap-2 bg-white text-brand-950 px-5 py-2.5 rounded-xl font-semibold hover:bg-brand-50 transition-colors">
                         {{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-xs" />
                     </a>

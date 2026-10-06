@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', __('Уебсайтове и маркетинг за бизнеса в България'))
-@section('meta_description', __('Сайтове, SEO и имейл кампании за малки и средни фирми в България. Правим нови сайтове, поддържаме съществуващи и се грижим да ви намират в Google. Първата консултация е безплатна.'))
+@section('meta_description', __('Сайтове, SEO и имейл кампании за малки и средни бизнеси в България. Правим нови сайтове, поддържаме съществуващи и се грижим да ви намират в Google. Първата консултация е безплатна.'))
 
 @section('content')
 
@@ -11,7 +11,7 @@
     <div class="absolute -top-40 -right-32 w-[34rem] h-[34rem] rounded-full bg-brand-300/30 blur-3xl dark:bg-brand-600/20" aria-hidden="true"></div>
     <div class="absolute top-40 -left-40 w-[26rem] h-[26rem] rounded-full bg-brand-100/60 blur-3xl dark:bg-brand-800/20" aria-hidden="true"></div>
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-20 md:pt-24 md:pb-28 grid lg:grid-cols-2 gap-14 items-center">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 md:pt-16 md:pb-28 grid lg:grid-cols-2 gap-14 items-center">
         <div class="reveal">
             <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/80 px-4 py-1.5 text-xs font-semibold text-brand-700 shadow-sm dark:border-white/15 dark:bg-white/5 dark:text-brand-200">
                 <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
@@ -21,7 +21,9 @@
                 {{ $hero['title'] }} <span class="text-gradient">{{ $hero['highlight'] }}</span>
             </h1>
             <p class="mt-6 text-xl sm:text-2xl font-semibold text-brand-950 leading-snug max-w-xl dark:text-white">{{ $hero['subtitle'] }}</p>
+            @if(!empty($hero['text']))
             <p class="mt-4 text-lg text-gray-600 leading-relaxed max-w-xl dark:text-gray-300">{{ $hero['text'] }}</p>
+            @endif
             <div class="mt-8 flex flex-col sm:flex-row gap-3">
                 <a href="#kontakt" class="inline-flex items-center justify-center gap-2 bg-brand-950 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-brand-800 transition-colors shadow-lg shadow-brand-950/20 dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100 dark:shadow-none">
                     {{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-sm" />
@@ -30,10 +32,11 @@
                     {{ __('Вижте услугите') }}
                 </a>
             </div>
-            <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-gray-600 dark:text-gray-300">
-                <li class="flex items-center gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400" />{{ __('Първата консултация е безплатна') }}</li>
-                <li class="flex items-center gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400" />{{ __('Отговаряме до един работен ден') }}</li>
-                <li class="flex items-center gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400" />{{ __('Без посредници') }}</li>
+            <ul class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-600 dark:text-gray-300">
+                <li class="flex items-start gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400 shrink-0 mt-0.5" />{{ __('Визия, съобразена с идентичността на бранда') }}</li>
+                <li class="flex items-start gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400 shrink-0 mt-0.5" />{{ __('Естетика и визуално въздействие') }}</li>
+                <li class="flex items-start gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400 shrink-0 mt-0.5" />{{ __('Поддръжка и партньорство') }}</li>
+                <li class="flex items-start gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400 shrink-0 mt-0.5" />{{ __('Ясни показатели за успех (KPI) още от старта') }}</li>
             </ul>
         </div>
 
@@ -104,7 +107,9 @@
         <div class="max-w-2xl reveal">
             <span class="text-brand-600 text-sm font-bold uppercase tracking-wider dark:text-brand-300">{{ __('Подходящо за') }}</span>
             <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $audience['title'] }}</h2>
+            @if(!empty($audience['intro']))
             <p class="mt-4 text-gray-600 leading-relaxed dark:text-gray-300">{{ $audience['intro'] }}</p>
+            @endif
         </div>
 
         <div class="mt-12 grid md:grid-cols-2 gap-6">
@@ -118,14 +123,6 @@
                         <p class="mt-2 text-gray-600 leading-relaxed dark:text-gray-300">{{ $card['text'] }}</p>
                     </div>
                 </div>
-            @endforeach
-        </div>
-
-        <div class="mt-10 flex flex-wrap gap-2.5 reveal">
-            @foreach($industries as $industry)
-                <span class="inline-flex items-center gap-2 rounded-full bg-gray-50 border border-gray-100 px-3.5 py-1.5 text-sm text-gray-700 dark:bg-white/5 dark:border-white/10 dark:text-gray-200">
-                    <x-icon :name="$industry['icon']" class="text-brand-500 text-xs dark:text-brand-400" />{{ $industry['name'] }}
-                </span>
             @endforeach
         </div>
     </div>
@@ -190,15 +187,6 @@
                 </li>
             @endforeach
         </ol>
-
-        <div class="mt-10 reveal relative overflow-hidden rounded-2xl bg-brand-950 text-white p-7 md:p-9 flex flex-col md:flex-row md:items-center gap-5 dark:bg-brand-900/60 dark:ring-1 dark:ring-white/10">
-            <div class="absolute inset-0 bg-grid-light" aria-hidden="true"></div>
-            <span class="relative w-14 h-14 shrink-0 rounded-2xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center"><x-icon name="crown" class="text-2xl text-brand-200" /></span>
-            <div class="relative">
-                <h3 class="text-2xl font-extrabold">{{ $promise['title'] }}</h3>
-                <p class="mt-2 text-gray-300 leading-relaxed max-w-3xl">{{ $promise['text'] }}</p>
-            </div>
-        </div>
     </div>
 </section>
 
@@ -208,8 +196,7 @@
     <div class="absolute -bottom-40 -left-32 w-[30rem] h-[30rem] rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
         <div class="reveal">
-            <span class="text-brand-300 text-sm font-bold uppercase tracking-wider">{{ __('Контакт') }}</span>
-            <h2 class="mt-3 text-3xl md:text-5xl font-extrabold tracking-tight">{{ $sections['contact_title'] }}</h2>
+            <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight">{{ $sections['contact_title'] }}</h2>
             <p class="mt-5 text-lg text-brand-100/90 max-w-md">{{ $sections['contact_text'] }}</p>
             <ul class="mt-8 space-y-4">
                 <li class="flex items-center gap-4">

@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', __('Пакети и цени'))
-@section('meta_description', __('Пакети за изработка на сайт и SEO за малки фирми: Старт, Бизнес и Растеж. Разберете какво включва всеки и поискайте точна оферта.'))
+@section('meta_description', __('Пакети за изработка на сайт и SEO за малки бизнеси: Старт, Бизнес и Растеж. Разберете какво включва всеки и поискайте точна оферта.'))
 
 @section('content')
 @include('partials/page-header', ['eyebrow' => __('Пакети'), 'heading' => __('Откъде да започнете'), 'sub' => __('Цената зависи от това колко страници и какво съдържание ви трябва. Кажете ни и ще ви дадем точна оферта.')])
@@ -20,7 +20,9 @@
                                 <span class="rounded-full bg-brand-500/20 text-brand-200 text-xs font-semibold px-3 py-1 ring-1 ring-brand-400/30">{{ __('Препоръчан') }}</span>
                             </div>
                             <p class="mt-2 text-gray-300">{{ $package['description'] }}</p>
+                            @if(!empty($package['price_note']))
                             <p class="mt-6 text-2xl font-extrabold">{{ $package['price_note'] }}</p>
+                            @endif
                             <ul class="mt-6 space-y-3 flex-1">
                                 @foreach($package['features'] as $feature)
                                     <li class="text-sm flex items-center gap-3 text-gray-200">
@@ -35,7 +37,9 @@
                     <div class="reveal card-hover rounded-2xl border border-gray-200 bg-white p-8 flex flex-col dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ $loop->index * 100 }}ms">
                         <h2 class="text-xl font-bold text-brand-950 dark:text-white">{{ $package['name'] }}</h2>
                         <p class="mt-2 text-gray-600 dark:text-gray-300">{{ $package['description'] }}</p>
+                        @if(!empty($package['price_note']))
                         <p class="mt-6 text-2xl font-extrabold text-brand-950 dark:text-white">{{ $package['price_note'] }}</p>
+                        @endif
                         <ul class="mt-6 space-y-3 flex-1">
                             @foreach($package['features'] as $feature)
                                 <li class="text-sm flex items-center gap-3 text-gray-700 dark:text-gray-200">

@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', __('За нас'))
-@section('meta_description', __('Creatium Lab сме двама: единият прави сайтовете, другият се грижи хората да ги намират в Google. Работим с малки фирми в България.'))
+@section('meta_description', __('Creatium Lab сме двама: единият прави сайтовете, другият се грижи хората да ги намират в Google. Работим с малки бизнеси в България.'))
 
 @section('content')
 @include('partials/page-header', ['heading' => __('За нас'), 'sub' => $about['subtitle']])
