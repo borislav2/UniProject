@@ -7,14 +7,13 @@ return [
     'team' => [
         [
             'name' => 'Borislav Kostadinov',
-            'role' => 'Web development',
-            'description' => 'I build the site from the first sketch to the day it goes live. Then I look after it when you want a change or something stops working.',
+            'role' => 'Full-Stack Developer',
+            'description' => 'Scalable web solutions that connect reliable logic behind the scenes with an intuitive interface, streamline your processes and improve your customers\' experience.',
             'bio' => [
-                'I am a full-stack developer and I build scalable web applications and a solid software foundation with MVC frameworks such as Laravel. What excites me most is connecting fast, reliable logic behind the scenes with the intuitive interface your customers see.',
-                'My education is the foundation of what I do: computer programming at MSU Lomonosov, a C# certificate from Software University, and now my third year of a Bachelor\'s degree in Software Engineering at St. Cyril and St. Methodius University of Veliko Tarnovo, where I am deepening my knowledge of software architecture, design patterns and engineering best practices.',
-                'I write clean, maintainable code and I care that solutions are genuinely useful: they should streamline your processes and make working with your website easier and more pleasant for your customers. I am always happy to talk about web development and new technology solutions.',
+                'I build scalable web applications and a solid software foundation with MVC frameworks. My focus is connecting efficient logic behind the scenes with the intuitive interface your customers see. I work with Laravel, Filament and MySQL, build RESTful APIs and create interfaces with HTML, CSS, Bootstrap and jQuery. I work with Agile methodologies, using Git for version control and Postman for working with APIs.',
+                'My foundation is solid: computer programming at MSU Lomonosov, a C# certificate from Software University, and my third year of a Bachelor\'s degree in Software Engineering at St. Cyril and St. Methodius University of Veliko Tarnovo, where I am deepening my knowledge of software architecture, design patterns and engineering best practices. I write clean, maintainable code and focus on solutions that streamline processes and improve the user experience.',
             ],
-            'skills' => ['Laravel', 'Filament', 'MySQL', 'REST API', 'HTML and CSS', 'Bootstrap', 'jQuery', 'Git', 'Agile', 'Postman'],
+            'skills' => ['Laravel & Filament', 'MVC Architecture', 'MySQL & RESTful APIs', 'HTML, CSS & Bootstrap', 'jQuery', 'Git & Agile', 'Postman'],
             'image' => 'images/team/borislav-kostadinov.webp',
             'linkedin' => 'https://www.linkedin.com/in/borislav-kostadinov-7ba990285/',
         ],
