@@ -6,8 +6,8 @@
             <span class="text-brand-300 text-sm font-bold uppercase tracking-wider">{{ $eyebrow }}</span>
         @endisset
         <h1 class="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight">{{ $heading }}</h1>
-        @isset($sub)
+        @if(filled($sub ?? null))
             <p class="mt-5 text-lg md:text-xl text-brand-100/90 max-w-2xl mx-auto">{{ $sub }}</p>
-        @endisset
+        @endif
     </div>
 </section>

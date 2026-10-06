@@ -69,7 +69,7 @@ return [
     ],
 
     'about' => [
-        'subtitle' => 'Two people who build websites for small businesses.',
+        'subtitle' => '',
         'paragraphs' => [],
     ],
 
