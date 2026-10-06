@@ -23,7 +23,7 @@
                     $initials = collect(preg_split('/\s+/u', trim((string) ($member['name'] ?? '')), -1, PREG_SPLIT_NO_EMPTY))->take(2)->map(fn ($w) => mb_strtoupper(mb_substr($w, 0, 1)))->implode('');
                     $linkedin = str_starts_with((string) ($member['linkedin'] ?? ''), 'https://') ? $member['linkedin'] : null;
                 @endphp
-                <div class="bg-white rounded-2xl border border-gray-200 p-7 card-hover reveal dark:bg-white/[0.03] dark:border-white/10">
+                <div class="flex flex-col bg-white rounded-2xl border border-gray-200 p-7 card-hover reveal dark:bg-white/[0.03] dark:border-white/10">
                     @if(!empty($member['name']))
                         <div class="flex items-center gap-4 mb-4">
                             @if(!empty($member['image']))
@@ -39,9 +39,23 @@
                     @else
                         <h3 class="text-xl font-bold text-brand-600 mb-3 dark:text-brand-300">{{ $member['role'] }}</h3>
                     @endif
-                    <p class="text-gray-600 dark:text-gray-300">{{ $member['description'] }}</p>
+                    <p class="font-medium text-brand-950 dark:text-white">{{ $member['description'] }}</p>
+                    @if(!empty($member['bio']))
+                        <div class="mt-4 space-y-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                            @foreach((array) $member['bio'] as $paragraph)
+                                <p>{{ $paragraph }}</p>
+                            @endforeach
+                        </div>
+                    @endif
+                    @if(!empty($member['skills']))
+                        <ul class="mt-5 flex flex-wrap gap-2">
+                            @foreach((array) $member['skills'] as $skill)
+                                <li class="rounded-full border border-gray-100 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700 dark:border-white/10 dark:bg-white/5 dark:text-gray-200">{{ $skill }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
                     @if($linkedin)
-                        <a href="{{ $linkedin }}" target="_blank" rel="noopener" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">
+                        <a href="{{ $linkedin }}" target="_blank" rel="noopener" class="mt-auto pt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">
                             {{ __('Профил в LinkedIn') }} <x-icon name="arrow-up-right-from-square" class="text-xs" />
                         </a>
                     @endif

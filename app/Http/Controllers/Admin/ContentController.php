@@ -71,7 +71,7 @@ class ContentController extends Controller
 
         if (is_array($template) && array_is_list($template)) {
             if ($template === [] || ! is_array($template[0])) {
-                return array_values(array_filter(array_map('trim', preg_split('/\R/', (string) $input)), 'strlen'));
+                return array_values(array_filter(array_map('trim', preg_split('/\R/u', (string) $input)), 'strlen'));
             }
 
             $items = [];
