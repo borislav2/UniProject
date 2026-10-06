@@ -38,7 +38,4 @@
     </div>
 </section>
 
-@if($projects->isNotEmpty())
-    @include('partials/cta')
-@endif
 @endsection
