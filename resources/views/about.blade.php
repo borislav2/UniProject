@@ -6,6 +6,7 @@
 @section('content')
 @include('partials/page-header', ['heading' => __('За нас'), 'sub' => $about['subtitle']])
 
+@if(!empty($about['paragraphs']))
 <section class="py-16 bg-white dark:bg-ink-950">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 text-lg text-gray-700 dark:text-gray-200">
         @foreach($about['paragraphs'] as $paragraph)
@@ -13,6 +14,7 @@
         @endforeach
     </div>
 </section>
+@endif
 
 <section class="py-16 md:py-20 bg-brand-50/60 dark:bg-ink-900">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

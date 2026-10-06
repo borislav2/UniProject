@@ -24,8 +24,6 @@ return [
             'role' => 'Marketing and SEO',
             'description' => 'I make sure people find you on Google: keywords, your Google Business Profile, page copy. And I check whether that actually brings in calls.',
             'bio' => [
-                'Ever since I was little I wanted to reach great heights. The quickest path for me was sport, and my friends always told me I was the heart of the group and the one who lifted everyone\'s spirits.',
-                'That is why I tried my hand as an animator at BVS. It was my first professional experience, and it gave me motivation, teamwork and critical thinking.',
                 'I have been interested in marketing and computers since childhood and often wondered how to bring them together. I started at the National School of Management, then moved into digital marketing at SoftUni. I earned certificates in Marketing Basics, Content Marketing, Facebook Marketing, Google Ads, Google Analytics and Email Marketing, and I am now finishing the whole course to become a Performance Marketing Expert.',
                 'I believe this is the future, and it is where I see mine. I stay motivated because I love learning, and in this field you learn something new every day.',
                 'I would describe myself as positive, composed, modest and hardworking, and I do not easily give up on the things I love.',
@@ -72,11 +70,7 @@ return [
 
     'about' => [
         'subtitle' => 'Two people who build websites for small businesses.',
-        'paragraphs' => [
-            'There are two of us. One builds the websites, the other handles marketing and SEO. That is why we think about how people will find you on Google while we are building the site, not after it is done.',
-            'We work with you directly. If you have a question, write or call and you will talk to the person building your site.',
-            'Creatium Lab is new and we are working on our first projects. That means every client gets our full attention.',
-        ],
+        'paragraphs' => [],
     ],
 
     'audience' => [
