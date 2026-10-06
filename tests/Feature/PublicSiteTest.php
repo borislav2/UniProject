@@ -114,11 +114,11 @@ class PublicSiteTest extends TestCase
         $this->get('/za-nas')
             ->assertSee('Борислав Костадинов')
             ->assertSee('Владимир Цончев')
-            ->assertSee('аниматор в BVS')
+            ->assertSee('Performance Marketing Expert')
             ->assertSee('Laravel')
             ->assertSee('href="https://www.linkedin.com/in/vladimirtsonchev/"', false);
 
-        $this->get('/en/about')->assertSee('Borislav Kostadinov')->assertSee('LinkedIn profile')->assertSee('animator at BVS');
+        $this->get('/en/about')->assertSee('Borislav Kostadinov')->assertSee('LinkedIn profile')->assertSee('Performance Marketing Expert');
     }
 
     public function test_packages_page_links_to_contact(): void
