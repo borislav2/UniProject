@@ -34,6 +34,17 @@ class TestMail extends Command
         } catch (\Throwable $e) {
             $this->error('Неуспех: ' . $e->getMessage());
 
+            if (str_contains($e->getMessage(), '535') || str_contains($e->getMessage(), 'BadCredentials')) {
+                $this->newLine();
+                $this->warn('Google не приема входа. Най-честите причини:');
+                $this->line(' 1. Грешна парола. Нужна е ПАРОЛА НА ПРИЛОЖЕНИЕ (16 малки букви), не паролата на акаунта.');
+                $this->line('    Пишете я внимателно: телефонната клавиатура слага главна буква или поправя думи.');
+                $this->line(' 2. Паролата е създадена за друг акаунт. Трябва да е за същия акаунт, с който влизате (MAIL_USERNAME).');
+                $this->line(' 3. Няма двустепенна проверка или админът на Workspace не разрешава пароли на приложения.');
+                $this->line(' 4. hello@ е псевдоним/група, а не потребител. Влезте с истински акаунт, а hello@ задайте за подател:');
+                $this->line('    bash deploy/configure-mail.sh smtp.gmail.com акаунт@creatiumlab.com hello@creatiumlab.com');
+            }
+
             return self::FAILURE;
         }
 

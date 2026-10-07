@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # Настройва изпращането на имейли (SMTP) в съществуващия .env и праща тестово писмо.
 # Пуска се като потребител 'deploy' в папката на приложението:
-#   bash deploy/configure-mail.sh [smtp-хост] [акаунт за изпращане]
-# По подразбиране: smtp.gmail.com и hello@creatiumlab.com (Google Workspace).
+#   bash deploy/configure-mail.sh [smtp-хост] [акаунт за вход] [адрес на подателя]
+# По подразбиране: smtp.gmail.com, вход и подател hello@creatiumlab.com (Google Workspace).
+# Ако hello@ е само псевдоним (alias) и няма собствен вход, влезте с истински акаунт:
+#   bash deploy/configure-mail.sh smtp.gmail.com vladi@creatiumlab.com hello@creatiumlab.com
+# (в Gmail на този акаунт hello@ трябва да е добавен в „Изпращане като“).
 # Паролата се пита скрито и се записва само в .env. Не я пращайте в чат или имейл.
 # Порт 587 е по подразбиране; за 465: MAIL_PORT_OVERRIDE=465 bash deploy/configure-mail.sh
 set -euo pipefail
@@ -12,6 +15,7 @@ cd "$(dirname "$0")/.."
 
 HOST="${1:-smtp.gmail.com}"
 ACCOUNT="${2:-hello@creatiumlab.com}"
+FROM_ADDRESS="${3:-$ACCOUNT}"
 PORT="${MAIL_PORT_OVERRIDE:-587}"
 NOTIFY="${CREATIUM_NOTIFY_OVERRIDE:-hello@creatiumlab.com}"
 
@@ -36,7 +40,7 @@ set_env MAIL_PORT "$PORT"
 set_env MAIL_SCHEME "$([ "$PORT" = "465" ] && echo smtps || echo smtp)"
 set_env MAIL_USERNAME "$ACCOUNT"
 set_env MAIL_PASSWORD "$PASS"
-set_env MAIL_FROM_ADDRESS "$ACCOUNT"
+set_env MAIL_FROM_ADDRESS "$FROM_ADDRESS"
 set_env MAIL_FROM_NAME "Creatium Lab"
 set_env CREATIUM_NOTIFY_EMAIL "$NOTIFY"
 

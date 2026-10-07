@@ -129,4 +129,14 @@ class InquiryInboxTest extends TestCase
         Mail::shouldReceive('to')->andThrow(new \RuntimeException('smtp down'));
         $this->artisan('creatium:test-mail')->assertFailed();
     }
+
+    public function test_test_mail_command_explains_a_rejected_google_login(): void
+    {
+        Mail::shouldReceive('to')->andThrow(new \RuntimeException('Expected response code "235" but got code "535", with message "535-5.7.8 Username and Password not accepted"'));
+
+        $this->artisan('creatium:test-mail')
+            ->expectsOutputToContain('ПАРОЛА НА ПРИЛОЖЕНИЕ')
+            ->expectsOutputToContain('псевдоним')
+            ->assertFailed();
+    }
 }

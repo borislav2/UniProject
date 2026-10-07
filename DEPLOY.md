@@ -89,6 +89,7 @@ php artisan config:cache && php artisan route:cache && php artisan view:cache
   1. В акаунта на `hello@creatiumlab.com` включете двустепенната проверка и създайте **парола на приложение** (myaccount.google.com → Сигурност → Пароли на приложения). Ако опцията я няма, админът на Workspace трябва да я разреши.
   2. На сървъра, като потребител `deploy`: `cd /var/www/creatiumlab && bash deploy/configure-mail.sh`. Скриптът пита паролата (скрито), записва `MAIL_*` в `.env`, обновява кеша и праща тестово писмо.
   3. Проверка по всяко време: `php artisan creatium:test-mail` (или `php artisan creatium:test-mail друг@адрес.bg`).
+  - Ако Google върне `535 … Username and Password not accepted`: паролата не е парола на приложение за точно този акаунт (или е сгрешена; на телефон клавиатурата променя главни букви), няма двустепенна проверка, или `hello@` е псевдоним. Тогава влезте с истински акаунт: `bash deploy/configure-mail.sh smtp.gmail.com акаунт@creatiumlab.com hello@creatiumlab.com` (в Gmail на този акаунт добавете `hello@` в „Изпращане като“).
   - Друг SMTP доставчик (Brevo, Mailgun, Postmark, Resend): `bash deploy/configure-mail.sh smtp.доставчик.com потребител`; добавете и **SPF, DKIM и DMARC** в DNS, иначе писмата ще попадат в спам.
 - Запитването винаги се записва, дори имейлът да не успее да се изпрати. Всички запитвания са в админ панела, менюто **Запитвания** (с брояч за непрочетените и отбелязано кои имейли не са изпратени).
 - **Фирмена поща** (`hello@creatiumlab.com`): Google Workspace, Zoho Mail или хостингът ви.
