@@ -168,6 +168,22 @@ class PublicSiteTest extends TestCase
         $this->get('/en/packages')->assertOk()->assertDontSee('How we agree on the work');
     }
 
+    public function test_privacy_page_shows_no_placeholder_company_details(): void
+    {
+        foreach (['/poveritelnost', '/en/privacy'] as $url) {
+            $this->get($url)->assertOk()->assertDontSee('[ЕИК]')->assertDontSee('[адрес на управление]')->assertDontSee('ЕИК ,')->assertDontSee('адрес:');
+        }
+        $this->get('/poveritelnost')->assertSee('Администратор на лични данни е')->assertSee('Creatium Lab</strong>. За въпроси', false);
+    }
+
+    public function test_privacy_page_shows_eik_and_address_once_they_are_set(): void
+    {
+        config(['creatium.legal.eik' => '123456789', 'creatium.legal.address' => 'гр. София, ул. Примерна 1']);
+
+        $this->get('/poveritelnost')->assertSee('ЕИК 123456789')->assertSee('адрес: гр. София, ул. Примерна 1');
+        $this->get('/en/privacy')->assertSee('company ID (EIK) 123456789');
+    }
+
     public function test_packages_page_links_to_contact(): void
     {
         $this->get('/paketi')->assertOk()->assertSee('Свържете се с нас')->assertSee(route('contact'), false);

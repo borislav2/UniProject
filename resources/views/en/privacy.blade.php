@@ -12,7 +12,8 @@
 
         <div>
             <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">1. Who processes your data</h2>
-            <p>The data controller is <strong>{{ $legal['company'] }}</strong>, company ID (EIK) {{ $legal['eik'] }}, address: {{ $legal['address'] }}. For questions about your personal data, write to <a href="mailto:{{ $contact['email'] }}" class="text-brand-600 underline dark:text-brand-300">{{ $contact['email'] }}</a>.</p>
+            @php($details = array_filter([! empty($legal['eik']) ? 'company ID (EIK) ' . $legal['eik'] : null, ! empty($legal['address']) ? 'address: ' . $legal['address'] : null]))
+            <p>The data controller is <strong>{{ $legal['company'] }}</strong>@if($details), {{ implode(', ', $details) }}@endif. For questions about your personal data, write to <a href="mailto:{{ $contact['email'] }}" class="text-brand-600 underline dark:text-brand-300">{{ $contact['email'] }}</a>.</p>
         </div>
 
         <div>

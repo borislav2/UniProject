@@ -52,11 +52,11 @@ return [
     'notify_email' => env('CREATIUM_NOTIFY_EMAIL', env('CREATIUM_EMAIL', 'hello@creatiumlab.com')),
 
     // Данни на администратора на лични данни (показват се в Политиката за поверителност).
+    // ЕИК и адрес се показват само ако са зададени (CREATIUM_EIK, CREATIUM_ADDRESS в .env); празно = не се показват.
     'legal' => [
-        // TODO: попълнете реалните данни на фирмата/ЕТ преди launch
         'company' => env('CREATIUM_COMPANY', 'Creatium Lab'),
-        'eik' => env('CREATIUM_EIK', '[ЕИК]'),
-        'address' => env('CREATIUM_ADDRESS', '[адрес на управление]'),
+        'eik' => env('CREATIUM_EIK') ?: null,
+        'address' => env('CREATIUM_ADDRESS') ?: null,
     ],
 
     // Хората зад Creatium Lab. Името е по желание: ако е празно, показва се само ролята.
