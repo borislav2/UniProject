@@ -9,6 +9,9 @@
     @if(config('creatium.google_site_verification'))
         <meta name="google-site-verification" content="{{ config('creatium.google_site_verification') }}">
     @endif
+    @if(config('creatium.bing_site_verification'))
+        <meta name="msvalidate.01" content="{{ config('creatium.bing_site_verification') }}">
+    @endif
     {{-- Runs before the CSS so there is no flash: saved choice first, otherwise the device setting. --}}
     <script>
         document.documentElement.classList.add('js');

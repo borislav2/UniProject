@@ -147,4 +147,16 @@ class MarketingTest extends TestCase
 
         $this->get('/')->assertSee('<meta name="google-site-verification" content="abcDEF123_-xyz">', false);
     }
+
+    public function test_bing_verification_tag_is_on_the_home_page_and_other_pages(): void
+    {
+        $tag = '<meta name="msvalidate.01" content="A903648D9DC376E5148713950DAF4D25">';
+
+        $this->get('/')->assertSee($tag, false);
+        $this->get('/en')->assertSee($tag, false);
+        $this->get('/uslugi')->assertSee($tag, false);
+
+        config(['creatium.bing_site_verification' => null]);
+        $this->get('/')->assertDontSee('msvalidate.01', false);
+    }
 }
