@@ -24,6 +24,14 @@ return [
     // Код за потвърждение в Google Search Console (метод „HTML tag“). Не е нужен, ако домейнът е потвърден през DNS.
     'google_site_verification' => preg_match('/^[A-Za-z0-9_-]{10,100}$/', (string) env('GOOGLE_SITE_VERIFICATION')) ? (string) env('GOOGLE_SITE_VERIFICATION') : null,
 
+    // Код за потвърждение в Bing Webmaster Tools (метод „HTML Meta Tag“). Не махайте тага, иначе потвърждението пада.
+    // BING_SITE_VERIFICATION= (празно) го изключва.
+    'bing_site_verification' => (function () {
+        $code = (string) env('BING_SITE_VERIFICATION', 'A903648D9DC376E5148713950DAF4D25');
+
+        return preg_match('/^[A-Fa-f0-9]{32}$/', $code) ? $code : null;
+    })(),
+
     // Бисквитките по категории, които се зареждат през GTM след съгласие. Показват се в Политиката за бисквитките.
     // Ако добавите или махнете инструмент в GTM, обновете списъка тук.
     'cookies' => [
