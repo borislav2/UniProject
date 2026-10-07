@@ -25,6 +25,8 @@ class Project extends Model
         'service',
         'business_size',
         'website_url',
+        'read_at',
+        'email_sent_at',
         'locale',
         'is_public',
         'lead_channel',
@@ -38,6 +40,8 @@ class Project extends Model
         'start_date' => 'date',
         'end_date' => 'date',
         'is_public' => 'boolean',
+        'read_at' => 'datetime',
+        'email_sent_at' => 'datetime',
     ];
     
     public function category()

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContentController;
+use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -61,6 +62,12 @@ Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
 // Admin panel
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+
+    // Messages from the website contact form (stored as projects with source = website)
+    Route::get('inquiries', [InquiryController::class, 'index'])->name('inquiries.index');
+    Route::post('inquiries/read-all', [InquiryController::class, 'readAll'])->name('inquiries.read-all');
+    Route::post('inquiries/{project}/read', [InquiryController::class, 'read'])->name('inquiries.read');
+    Route::post('inquiries/{project}/unread', [InquiryController::class, 'unread'])->name('inquiries.unread');
 
     Route::get('projects/search', [ProjectController::class, 'search'])->name('projects.search');
     Route::resource('projects', ProjectController::class);

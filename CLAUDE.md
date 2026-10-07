@@ -42,7 +42,7 @@ CI (`.github/workflows/tests.yml`) runs `php artisan test` on PHP 8.2/8.3/8.4 af
 **Lead flow** (`HomeController@submitContact`):
 1. Validates name, phone, `service` (must be one of `creatium.contact_topics`), an optional message, and a required `consent` checkbox. A hidden `website` field is a honeypot: if filled, the request fakes success and stores nothing.
 2. Creates the `Project` lead (phone in `client_phone`, topic in `service`), copying attribution from the session.
-3. Sends `App\Mail\NewLeadMail` to `creatium.notify_email`; a mail failure is logged and never loses the lead.
+3. Sends `App\Mail\NewLeadMail` to `creatium.notify_email` (default `hello@creatiumlab.com`) and stamps `email_sent_at`; a mail failure is logged, leaves `email_sent_at` empty and never loses the lead. Production `.env` starts with `MAIL_MAILER=log`: run `bash deploy/configure-mail.sh` once to switch to SMTP and `php artisan creatium:test-mail` to verify. The admin menu **Запитвания** (`Admin\InquiryController`) lists website leads with full messages, unread state (`read_at`) and a warning while the mailer is `log`/`array`.
 4. Flashes `success`, `lead_created` and `lead_service`; the next page pushes `{event: 'generate_lead', lead_service}` to the GTM dataLayer.
 
 **Attribution**: `CaptureLeadAttribution` (appended to the `web` group in `bootstrap/app.php`) stores UTM params, `gclid`/`fbclid` and the external referrer host in the session on GET requests (skipping admin/login). `App\Support\LeadAttribution::channel()` maps that to a channel label saved on the lead; the admin dashboard aggregates leads by channel for the last 30 days.
