@@ -12,7 +12,8 @@
 
         <div>
             <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">1. Кой обработва данните ви</h2>
-            <p>Администратор на лични данни е <strong>{{ $legal['company'] }}</strong>, ЕИК {{ $legal['eik'] }}, адрес: {{ $legal['address'] }}. За въпроси относно личните ви данни пишете на <a href="mailto:{{ $contact['email'] }}" class="text-brand-600 underline dark:text-brand-300">{{ $contact['email'] }}</a>.</p>
+            @php($details = array_filter([! empty($legal['eik']) ? 'ЕИК ' . $legal['eik'] : null, ! empty($legal['address']) ? 'адрес: ' . $legal['address'] : null]))
+            <p>Администратор на лични данни е <strong>{{ $legal['company'] }}</strong>@if($details), {{ implode(', ', $details) }}@endif. За въпроси относно личните ви данни пишете на <a href="mailto:{{ $contact['email'] }}" class="text-brand-600 underline dark:text-brand-300">{{ $contact['email'] }}</a>.</p>
         </div>
 
         <div>
