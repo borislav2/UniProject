@@ -11,7 +11,7 @@
     <div class="absolute -top-40 -right-32 w-[34rem] h-[34rem] rounded-full bg-brand-300/30 blur-3xl dark:bg-brand-600/20" aria-hidden="true"></div>
     <div class="absolute top-40 -left-40 w-[26rem] h-[26rem] rounded-full bg-brand-100/60 blur-3xl dark:bg-brand-800/20" aria-hidden="true"></div>
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 md:pt-16 md:pb-28 grid lg:grid-cols-2 gap-14 items-center">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 md:pt-12 md:pb-16 grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
         <div class="reveal">
             <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/80 px-4 py-1.5 text-xs font-semibold text-brand-700 shadow-sm dark:border-white/15 dark:bg-white/5 dark:text-brand-200">
                 <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
@@ -32,7 +32,7 @@
                     {{ __('Вижте услугите') }}
                 </a>
             </div>
-            <ul class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-600 dark:text-gray-300">
+            <ul class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-600 dark:text-gray-300">
                 <li class="flex items-start gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400 shrink-0 mt-0.5" />{{ __('Визия, съобразена с идентичността на бранда') }}</li>
                 <li class="flex items-start gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400 shrink-0 mt-0.5" />{{ __('Естетика и визуално въздействие') }}</li>
                 <li class="flex items-start gap-2"><x-icon name="circle-check" class="text-brand-500 dark:text-brand-400 shrink-0 mt-0.5" />{{ __('Поддръжка и партньорство') }}</li>
@@ -102,7 +102,7 @@
 </section>
 
 {{-- Audience --}}
-<section id="podhodyashto-za" class="py-20 md:py-28 bg-white scroll-mt-20 dark:bg-ink-950">
+<section id="podhodyashto-za" class="py-12 md:py-16 bg-white scroll-mt-20 dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-2xl reveal">
             <span class="text-brand-600 text-sm font-bold uppercase tracking-wider dark:text-brand-300">{{ __('Подходящо за') }}</span>
@@ -112,7 +112,7 @@
             @endif
         </div>
 
-        <div class="mt-12 grid md:grid-cols-2 gap-6">
+        <div class="mt-8 grid md:grid-cols-2 gap-6">
             @foreach($audience['cards'] as $card)
                 <div class="reveal card-hover rounded-2xl border border-gray-200 bg-white p-7 flex gap-5 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ $loop->index * 100 }}ms">
                     <div class="w-12 h-12 shrink-0 rounded-xl bg-brand-gradient flex items-center justify-center shadow-lg shadow-brand-900/20">
@@ -129,14 +129,14 @@
 </section>
 
 {{-- Services --}}
-<section id="uslugi" class="py-20 md:py-28 bg-brand-50/60 scroll-mt-20 dark:bg-ink-900">
+<section id="uslugi" class="py-12 md:py-16 bg-brand-50/60 scroll-mt-20 dark:bg-ink-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-2xl reveal">
             <span class="text-brand-600 text-sm font-bold uppercase tracking-wider dark:text-brand-300">{{ $sections['services_eyebrow'] }}</span>
             <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $sections['services_title'] }}</h2>
         </div>
 
-        <div class="mt-14 grid md:grid-cols-2 gap-6 items-start">
+        <div class="mt-8 grid md:grid-cols-2 gap-6 items-start">
             @foreach($services as $service)
                 <article class="reveal card-hover rounded-2xl border border-gray-200 bg-white p-7 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ ($loop->index % 2) * 100 }}ms">
                     <div class="flex items-start gap-5">
@@ -168,14 +168,14 @@
 </section>
 
 {{-- Process --}}
-<section id="proces" class="relative py-20 md:py-28 bg-white scroll-mt-20 overflow-hidden dark:bg-ink-950">
+<section id="proces" class="relative py-12 md:py-16 bg-white scroll-mt-20 overflow-hidden dark:bg-ink-950">
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-2xl reveal">
             <span class="text-brand-600 text-sm font-bold uppercase tracking-wider dark:text-brand-300">{{ $sections['process_eyebrow'] }}</span>
             <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $sections['process_title'] }}</h2>
         </div>
 
-        <ol class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ol class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($process as $step)
                 <li class="reveal relative rounded-2xl border border-gray-200 bg-white p-6 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ ($loop->index % 3) * 100 }}ms">
                     <div class="flex items-center justify-between">
@@ -191,7 +191,7 @@
 </section>
 
 {{-- Contact --}}
-<section id="kontakt" class="relative py-20 md:py-28 bg-brand-gradient text-white scroll-mt-20 overflow-hidden">
+<section id="kontakt" class="relative py-12 md:py-16 bg-brand-gradient text-white scroll-mt-20 overflow-hidden">
     <div class="absolute inset-0 bg-grid-light" aria-hidden="true"></div>
     <div class="absolute -bottom-40 -left-32 w-[30rem] h-[30rem] rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
