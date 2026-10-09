@@ -120,6 +120,7 @@ class CmsTest extends TestCase
 
     public function test_public_blog_shows_only_visible_posts_per_language(): void
     {
+        config(['creatium.blog_enabled' => true]);
         $this->makePost();
         $this->makePost(['title' => ['bg' => 'Само на български'], 'slug' => ['bg' => 'samo-bg'], 'body' => []]);
         $this->makePost(['title' => ['bg' => 'Чернова'], 'slug' => ['bg' => 'chernova'], 'status' => 'draft']);
@@ -133,6 +134,7 @@ class CmsTest extends TestCase
 
     public function test_post_page_renders_markdown_safely_with_seo_and_alternates(): void
     {
+        config(['creatium.blog_enabled' => true]);
         $post = $this->makePost([
             'meta_title' => ['bg' => 'Домейн за фирма: кратко ръководство'],
             'meta_description' => ['bg' => 'Как да изберете домейн, без да сгрешите.'],
@@ -153,6 +155,7 @@ class CmsTest extends TestCase
 
     public function test_category_pages_and_sitemap(): void
     {
+        config(['creatium.blog_enabled' => true]);
         $category = PostCategory::create(['name' => ['bg' => 'SEO съвети', 'en' => 'SEO tips'], 'slug' => ['bg' => 'seo-saveti', 'en' => 'seo-tips']]);
         $this->makePost(['post_category_id' => $category->id]);
 
@@ -164,6 +167,19 @@ class CmsTest extends TestCase
             ->assertSee('<loc>' . url('/blog/kak-da-izberete-domeyn') . '</loc>', false)
             ->assertSee('<loc>' . url('/en/blog/category/seo-tips') . '</loc>', false)
             ->assertSee('<loc>' . url('/en/blog') . '</loc>', false);
+    }
+
+    public function test_blog_is_hidden_while_disabled(): void
+    {
+        config(['creatium.blog_enabled' => false]);
+        $this->makePost();
+
+        $this->get('/blog')->assertNotFound();
+        $this->get('/en/blog')->assertNotFound();
+        $this->get('/blog/kak-da-izberete-domeyn')->assertNotFound();
+        $this->get('/')->assertOk()->assertDontSee('href="' . url('/blog') . '"', false);
+        $this->get('/sitemap.xml')->assertOk()->assertDontSee('/blog', false);
+        $this->actingAs($this->editor())->get('/admin/posts')->assertOk();
     }
 
     public function test_editing_page_content_changes_the_site_and_can_be_reset(): void

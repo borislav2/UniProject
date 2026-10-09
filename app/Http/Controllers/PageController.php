@@ -59,7 +59,8 @@ class PageController extends Controller
 
     public function sitemap(): Response
     {
-        $pages = ['home', 'services', 'packages', 'portfolio', 'blog.index', 'about', 'contact', 'privacy', 'terms', 'cookies'];
+        $blog = config('creatium.blog_enabled');
+        $pages = array_values(array_filter(['home', 'services', 'packages', 'portfolio', 'blog.index', 'about', 'contact', 'privacy', 'terms', 'cookies'], fn ($name) => $blog || $name !== 'blog.index'));
         $urls = [];
 
         foreach ($pages as $name) {
@@ -70,7 +71,7 @@ class PageController extends Controller
         }
 
         // Blog posts and categories: alternates only between languages that really exist.
-        $posts = Post::where('status', 'published')->where('published_at', '<=', now())->latest('published_at')->get();
+        $posts = ! $blog ? collect() : Post::where('status', 'published')->where('published_at', '<=', now())->latest('published_at')->get();
         foreach ($posts as $post) {
             $alternates = collect($post->locales())->mapWithKeys(fn ($l) => [$l => $post->url($l)])->all();
             foreach ($alternates as $url) {
@@ -78,7 +79,7 @@ class PageController extends Controller
             }
         }
 
-        foreach (PostCategory::whereHas('posts', fn ($q) => $q->where('status', 'published')->where('published_at', '<=', now()))->get() as $category) {
+        foreach (! $blog ? [] : PostCategory::whereHas('posts', fn ($q) => $q->where('status', 'published')->where('published_at', '<=', now()))->get() as $category) {
             $alternates = [];
             foreach (['bg', 'en'] as $l) {
                 if ($category->tr('slug', $l) && $category->posts()->visible($l)->exists()) {

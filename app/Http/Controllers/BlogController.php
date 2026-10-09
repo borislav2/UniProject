@@ -9,11 +9,14 @@ class BlogController extends Controller
 {
     public function index()
     {
+        $this->ensureEnabled();
+
         return $this->listing(null);
     }
 
     public function category(string $slug)
     {
+        $this->ensureEnabled();
         $category = PostCategory::findBySlug($slug);
         abort_unless($category, 404);
 
@@ -22,6 +25,7 @@ class BlogController extends Controller
 
     public function show(string $slug)
     {
+        $this->ensureEnabled();
         $locale = app()->getLocale();
         $post = Post::with('category')->where("slug->$locale", $slug)->first();
         abort_unless($post && $post->isVisible(), 404);
@@ -88,5 +92,11 @@ class BlogController extends Controller
     private function indexUrls(): array
     {
         return ['bg' => lroute('blog.index', [], 'bg'), 'en' => lroute('blog.index', [], 'en')];
+    }
+
+    /** The public blog is hidden (404) until creatium.blog_enabled is turned on. */
+    private function ensureEnabled(): void
+    {
+        abort_unless(config('creatium.blog_enabled'), 404);
     }
 }
