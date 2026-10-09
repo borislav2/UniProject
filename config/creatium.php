@@ -45,6 +45,9 @@ return [
         ],
     ],
 
+    // Публичен блог (/blog, линк в менюто, sitemap). Изключен, докато няма статии; админът работи и така.
+    'blog_enabled' => (bool) env('BLOG_ENABLED', false),
+
     // Вграден CSS в HTML-а (по-бързо първо зареждане). По подразбиране само в production.
     'inline_css' => (bool) env('INLINE_CSS', env('APP_ENV') === 'production'),
 

@@ -94,6 +94,9 @@
     @php
         $links = [];
         foreach (['services' => 'Услуги', 'packages' => 'Пакети', 'portfolio' => 'Проекти', 'blog.index' => 'Блог', 'about' => 'За нас', 'contact' => 'Контакти'] as $name => $label) {
+            if ($name === 'blog.index' && ! config('creatium.blog_enabled')) {
+                continue;
+            }
             $pattern = $name === 'blog.index' ? 'blog.*' : $name;
             $links[] = [__($label), lroute($name), request()->routeIs($pattern, 'en.' . $pattern)];
         }
