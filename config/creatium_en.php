@@ -123,6 +123,16 @@ return [
         ],
     ],
 
+    // Card texts for the demo sites (same slugs as config/creatium.php; the demo pages themselves are in Bulgarian).
+    'demos' => [
+        ['slug' => 'restorant', 'name' => 'Lozata Restaurant', 'industry' => 'Restaurant', 'description' => 'A restaurant website with a menu, table booking and opening hours where people can see them.'],
+        ['slug' => 'salon', 'name' => 'Lavandula Studio', 'industry' => 'Beauty salon', 'description' => 'An elegant salon website with services, prices and appointment booking.'],
+        ['slug' => 'dentalen-centar', 'name' => 'Byala Usmivka Dental Centre', 'industry' => 'Dental clinic', 'description' => 'A calm, trustworthy clinic website with services, the team and a check-up request form.'],
+        ['slug' => 'avtoservis', 'name' => 'Motor Pro Car Service', 'industry' => 'Car repair shop', 'description' => 'A car service website with services, diagnostics prices and a quick call to action.'],
+        ['slug' => 'pokrivi', 'name' => 'Zdrav Pokriv', 'industry' => 'Construction and roofing', 'description' => 'A construction company website with services, guarantees and a free on-site inspection.'],
+        ['slug' => 'onlain-magazin', 'name' => 'Medena Pita', 'industry' => 'Online shop', 'description' => 'A small online shop for honey products with a catalogue and a basket.'],
+    ],
+
     // Labels only: the keys must match config/creatium.php.
     'contact_topics' => [
         'website' => 'Website design',

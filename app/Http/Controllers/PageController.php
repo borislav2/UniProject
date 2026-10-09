@@ -31,7 +31,7 @@ class PageController extends Controller
             ->orderByDesc('end_date')
             ->get();
 
-        return view('portfolio', compact('projects'));
+        return view('portfolio', ['projects' => $projects, 'demos' => site('demos') ?? []]);
     }
 
     public function about()

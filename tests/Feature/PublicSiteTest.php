@@ -65,8 +65,10 @@ class PublicSiteTest extends TestCase
         $this->get('/proekti')->assertSee('Видим проект')->assertDontSee('Скрит проект')->assertDontSee('Незавършен проект');
     }
 
-    public function test_empty_portfolio_shows_coming_soon(): void
+    public function test_empty_portfolio_shows_coming_soon_when_there_are_no_demos(): void
     {
+        config(['creatium.demos' => []]);
+
         $this->get('/proekti')->assertSee('Тук скоро ще има проекти');
     }
 
