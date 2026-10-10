@@ -39,7 +39,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-2xl">
             <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ __('Демо проекти') }}</h2>
-            <p class="mt-3 text-gray-600 dark:text-gray-300">{{ __('Примерни сайтове, които показват как може да изглежда вашият. Бизнесите са измислени.') }}@if(app()->getLocale() === 'en') {{ __('Демото е на български.') }}@endif</p>
+            <p class="mt-3 text-gray-600 dark:text-gray-300">{{ __('Примерни сайтове, които показват как може да изглежда вашият.') }}@if(app()->getLocale() === 'en') {{ __('Демото е на български.') }}@endif</p>
         </div>
         <div class="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($demos as $demo)

@@ -226,7 +226,7 @@
                         <a href="#" data-cookie-settings class="hover:text-white">{{ __('Настройки за бисквитки') }}</a>
                     @endif
                     @guest
-                        <a href="{{ route('login') }}" class="hover:text-white">{{ __('Вход за екипа') }}</a>
+                        <a href="{{ route('login') }}" rel="nofollow" class="hover:text-white">{{ __('Вход за екипа') }}</a>
                     @endguest
                 </div>
             </div>

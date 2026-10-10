@@ -67,6 +67,7 @@ printf 'DB_DATABASE=%s\nDB_USERNAME=%s\nDB_PASSWORD=%s\n' "$DB_NAME" "$DB_USER" 
 
 echo "==> Nginx"
 install -m 644 "$(dirname "$0")/nginx-static.conf" /etc/nginx/creatium-static.conf
+install -m 644 "$(dirname "$0")/nginx-security.conf" /etc/nginx/creatium-security.conf
 sed "s/__DOMAIN__/$DOMAIN/g; s#__APP_DIR__#$APP_DIR#g" "$(dirname "$0")/nginx.conf" > /etc/nginx/conf.d/creatiumlab.conf
 nginx -t
 

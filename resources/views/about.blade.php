@@ -33,12 +33,12 @@
                                 <span class="w-24 h-24 shrink-0 rounded-full bg-brand-gradient flex items-center justify-center text-2xl font-extrabold text-white shadow-lg shadow-brand-900/20" aria-hidden="true">{{ $initials }}</span>
                             @endif
                             <div>
-                                <h3 class="text-xl font-bold dark:text-white">{{ $member['name'] }}</h3>
+                                <h2 class="text-xl font-bold dark:text-white">{{ $member['name'] }}</h2>
                                 <p class="text-brand-600 font-semibold dark:text-brand-300">{{ $member['role'] }}</p>
                             </div>
                         </div>
                     @else
-                        <h3 class="text-xl font-bold text-brand-600 mb-3 dark:text-brand-300">{{ $member['role'] }}</h3>
+                        <p class="text-xl font-bold text-brand-600 mb-3 dark:text-brand-300">{{ $member['role'] }}</p>
                     @endif
                     <p class="font-medium text-brand-950 dark:text-white">{{ $member['description'] }}</p>
                     @if(!empty($member['bio']))

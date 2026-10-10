@@ -27,7 +27,7 @@
                         @endforeach
                     </ul>
                     @php($topic = ['websites' => 'website', 'monitoring' => 'monitoring', 'geo-seo' => 'marketing', 'email' => 'marketing'][$service['slug']] ?? null)
-                    <a href="{{ lroute('contact') }}{{ $topic ? '?service=' . $topic : '' }}" class="mt-6 inline-flex items-center gap-2 rounded-xl bg-brand-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-800 transition-colors dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">
+                    <a href="{{ lroute('contact') }}{{ $topic ? '#service-' . $topic : '' }}" class="mt-6 inline-flex items-center gap-2 rounded-xl bg-brand-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-800 transition-colors dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">
                         {{ __('Запитване за тази услуга') }} <x-icon name="arrow-right" class="text-xs" />
                     </a>
                 </div>
