@@ -14,7 +14,7 @@ class DemoSitesTest extends TestCase
         foreach (config('creatium.demos') as $demo) {
             $this->get('/demo/' . $demo['slug'])
                 ->assertOk()
-                ->assertSee('<meta name="robots" content="noindex, nofollow">', false)
+                ->assertSee('<meta name="robots" content="noindex">', false)
                 ->assertSee('Примерен сайт от Creatium Lab. Бизнесът е измислен.')
                 ->assertSee('data-demo-form', false);
         }

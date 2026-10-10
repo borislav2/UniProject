@@ -71,7 +71,7 @@ Production is a Webdock VPS (AlmaLinux 9, Nginx, PHP-FPM, MariaDB, SELinux enfor
 - `almalinux-setup.sh`: one-time setup; safe to rerun.
 - `configure-env.sh`: writes the production `.env` from the DB credentials in `/root/creatium-db.txt`.
 - `deploy.sh`: pull, composer, npm build, migrate, seed, caches. Run it as the `deploy` user.
-- `update-nginx.sh`: static-file caching.
+- `update-nginx.sh`: static-file caching plus security headers (`nginx-security.conf`: HSTS, a CSP that does not restrict scripts because GTM loads the marketing tags, X-Frame-Options, nosniff, Referrer-Policy). Nginx drops server-level `add_header` in any `location` with its own `add_header`, so the snippet is included at server level and in `/build/` and the static-file location. Run as root after pulling; it is not part of `deploy.sh`.
 - `backup.sh`: DB + uploads backup.
 
 PHP-FPM runs as the `deploy` user, so app files belong to `deploy`; don't reintroduce `chgrp`/group-based permissions. Run git and artisan on the server as `deploy`.

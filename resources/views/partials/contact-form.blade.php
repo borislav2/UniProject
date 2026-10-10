@@ -74,6 +74,16 @@
         </form>
     @endif
 </div>
+{{-- Links like /kontakti#service-website preselect the service without creating a separate URL (no ?service= duplicate for crawlers). --}}
+<script>
+    (function () {
+        var m = location.hash.match(/^#service-([a-z-]+)$/), s = document.getElementById('service');
+        if (!m || !s || s.value || !s.querySelector('option[value="' + m[1] + '"]')) return;
+        s.value = m[1];
+        s.classList.remove('text-gray-500', 'dark:text-gray-400');
+        document.getElementById('contact-form').scrollIntoView({ block: 'center' });
+    })();
+</script>
 @if(session('success') || $errors->any())
     <script>document.getElementById('contact-form').scrollIntoView({ block: 'center' });</script>
 @endif

@@ -79,9 +79,10 @@ class PublicSiteTest extends TestCase
             ->assertDontSee('Как започваме')
             ->assertDontSee('Често задавани въпроси')
             ->assertSee('Запитване за тази услуга')
-            ->assertSee('/kontakti?service=website', false)
-            ->assertSee('/kontakti?service=monitoring', false)
-            ->assertSee('/kontakti?service=marketing', false);
+            ->assertSee('/kontakti#service-website', false)
+            ->assertSee('/kontakti#service-monitoring', false)
+            ->assertSee('/kontakti#service-marketing', false)
+            ->assertDontSee('?service=', false);
 
         $this->get('/en/services')->assertSee('Ask about this service')->assertDontSee('How we get started');
     }
