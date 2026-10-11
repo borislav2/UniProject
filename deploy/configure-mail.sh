@@ -2,10 +2,10 @@
 # Настройва изпращането на имейли (SMTP) в съществуващия .env и праща тестово писмо.
 # Пуска се като потребител 'deploy' в папката на приложението:
 #   bash deploy/configure-mail.sh [smtp-хост] [акаунт за вход] [адрес на подателя]
-# По подразбиране: smtp.gmail.com, вход и подател hello@creatiumlab.com (Google Workspace).
-# Ако hello@ е само псевдоним (alias) и няма собствен вход, влезте с истински акаунт:
-#   bash deploy/configure-mail.sh smtp.gmail.com vladi@creatiumlab.com hello@creatiumlab.com
-# (в Gmail на този акаунт hello@ трябва да е добавен в „Изпращане като“).
+# По подразбиране: smtp.gmail.com, вход и подател info@creatiumlab.com (Google Workspace).
+# Ако info@ е само псевдоним (alias) и няма собствен вход, влезте с истински акаунт:
+#   bash deploy/configure-mail.sh smtp.gmail.com vladi@creatiumlab.com info@creatiumlab.com
+# (в Gmail на този акаунт info@ трябва да е добавен в „Изпращане като“).
 # Паролата се пита скрито и се записва само в .env. Не я пращайте в чат или имейл.
 # Порт 587 е по подразбиране; за 465: MAIL_PORT_OVERRIDE=465 bash deploy/configure-mail.sh
 set -euo pipefail
@@ -14,10 +14,10 @@ cd "$(dirname "$0")/.."
 [ -f .env ] || { echo "Липсва .env в $(pwd)."; exit 1; }
 
 HOST="${1:-smtp.gmail.com}"
-ACCOUNT="${2:-hello@creatiumlab.com}"
+ACCOUNT="${2:-info@creatiumlab.com}"
 FROM_ADDRESS="${3:-$ACCOUNT}"
 PORT="${MAIL_PORT_OVERRIDE:-587}"
-NOTIFY="${CREATIUM_NOTIFY_OVERRIDE:-hello@creatiumlab.com}"
+NOTIFY="${CREATIUM_NOTIFY_OVERRIDE:-info@creatiumlab.com}"
 
 read -r -s -p "Парола на приложение за ${ACCOUNT} (не се показва): " PASS
 echo

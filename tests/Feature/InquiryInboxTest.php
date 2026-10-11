@@ -98,7 +98,7 @@ class InquiryInboxTest extends TestCase
         $this->lead(['name' => 'Запитване от Иван', 'email_sent_at' => now()]);
 
         $this->actingAs($this->admin())->get('/admin/inquiries')
-            ->assertSee('Имейлът до hello@creatiumlab.com не е изпратен')
+            ->assertSee('Имейлът до info@creatiumlab.com не е изпратен')
             ->assertSee('изпратен ' . now()->format('d.m.Y'));
     }
 
@@ -119,7 +119,7 @@ class InquiryInboxTest extends TestCase
 
         $this->artisan('creatium:test-mail')->assertSuccessful();
 
-        Mail::assertSent(MailTestMail::class, fn ($mail) => $mail->hasTo('hello@creatiumlab.com'));
+        Mail::assertSent(MailTestMail::class, fn ($mail) => $mail->hasTo('info@creatiumlab.com'));
     }
 
     public function test_test_mail_command_rejects_a_bad_address_and_reports_failures(): void
