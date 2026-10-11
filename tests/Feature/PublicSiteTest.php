@@ -260,7 +260,7 @@ class PublicSiteTest extends TestCase
 
         $this->post('/kontakti', $this->payload())->assertSessionHas('success');
 
-        Mail::assertSent(NewLeadMail::class, fn ($mail) => $mail->hasTo('hello@creatiumlab.com'));
+        Mail::assertSent(NewLeadMail::class, fn ($mail) => $mail->hasTo('info@creatiumlab.com'));
         $this->assertNotNull(Project::first()->email_sent_at);
     }
 

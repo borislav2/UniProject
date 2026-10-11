@@ -7,7 +7,7 @@
 return [
     'contact' => [
         // TODO: сменете с реалните данни на бизнеса (или задайте в .env)
-        'email' => env('CREATIUM_EMAIL', 'hello@creatiumlab.com'),
+        'email' => env('CREATIUM_EMAIL', 'info@creatiumlab.com'),
         // Телефони за връзка (CREATIUM_PHONES в .env, разделени със запетая, ги заменя).
         'phones' => array_values(array_filter(array_map('trim', explode(',', (string) env('CREATIUM_PHONES', '+359 895 457 247, +359 877 200 546'))))),
         'city' => env('CREATIUM_CITY', 'София'),
@@ -52,7 +52,7 @@ return [
     'inline_css' => (bool) env('INLINE_CSS', env('APP_ENV') === 'production'),
 
     // Къде пристигат известията за нови запитвания от сайта.
-    'notify_email' => env('CREATIUM_NOTIFY_EMAIL', env('CREATIUM_EMAIL', 'hello@creatiumlab.com')),
+    'notify_email' => env('CREATIUM_NOTIFY_EMAIL', env('CREATIUM_EMAIL', 'info@creatiumlab.com')),
 
     // Данни на администратора на лични данни (показват се в Политиката за поверителност).
     // ЕИК и адрес се показват само ако са зададени (CREATIUM_EIK, CREATIUM_ADDRESS в .env); празно = не се показват.
