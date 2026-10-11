@@ -1,0 +1,57 @@
+name: Deploy
+
+# Деплой на creatiumlab.com след всеки push в main, но само ако тестовете са минали.
+# Може да се пусне и ръчно: Actions -> Deploy -> Run workflow.
+# Настройка (еднократно): DEPLOY-WEBDOCK.md, раздел „Автоматичен деплой“.
+on:
+  workflow_run:
+    workflows: [Tests]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Един деплой наведнъж; нов push изчаква текущия вместо да го прекъсне по средата.
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Само при push (не при нощното пускане на тестовете) и само ако всички тестове са зелени.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Deploy over SSH
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          PORT: ${{ secrets.DEPLOY_PORT }}
+          LOGIN: ${{ secrets.DEPLOY_USER }}
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          HOST_KEY: ${{ secrets.DEPLOY_HOST_KEY }}
+        run: |
+          if [ -z "$HOST" ] || [ -z "$SSH_KEY" ] || [ -z "$HOST_KEY" ]; then
+            echo "::warning::Автоматичният деплой не е настроен (липсват DEPLOY_HOST, DEPLOY_SSH_KEY или DEPLOY_HOST_KEY). Пропускам."
+            exit 0
+          fi
+          PORT="${PORT:-22}"
+          LOGIN="${LOGIN:-deploy}"
+
+          mkdir -p "$HOME/.ssh" && chmod 700 "$HOME/.ssh"
+          printf '%s\n' "$SSH_KEY" > "$HOME/.ssh/deploy_key" && chmod 600 "$HOME/.ssh/deploy_key"
+          if [ "$PORT" = "22" ]; then TARGET="$HOST"; else TARGET="[$HOST]:$PORT"; fi
+          # Ключът на сървъра е фиксиран в тайните, така че връзка към друг сървър се отказва.
+          printf '%s %s\n' "$TARGET" "$HOST_KEY" > "$HOME/.ssh/known_hosts"
+
+          # Ключът на сървъра е ограничен (command= в authorized_keys) да пуска само deploy/deploy.sh,
+          # така че командата тук не се изпълнява; сървърът винаги прави деплой.
+          ssh -i "$HOME/.ssh/deploy_key" -p "$PORT" \
+              -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$HOME/.ssh/known_hosts" \
+              -o ConnectTimeout=20 -o ServerAliveInterval=30 -o BatchMode=yes \
+              "$LOGIN@$HOST" deploy
