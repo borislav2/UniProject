@@ -68,6 +68,7 @@
                     @endif
                 </p>
                 <div class="flex items-center gap-3">
+                    <a href="{{ route('admin.client-emails.index', ['project' => $inquiry->id]) }}" class="inline-flex items-center gap-1.5 rounded-lg bg-brand-950 px-3 py-1.5 font-semibold text-white hover:bg-brand-800"><x-icon name="paper-plane" class="text-xs" /> Изпрати имейл</a>
                     <a href="{{ route('admin.projects.show', $inquiry) }}" class="text-blue-600 hover:underline">Отвори като проект</a>
                     <form action="{{ route($inquiry->read_at ? 'admin.inquiries.unread' : 'admin.inquiries.read', $inquiry) }}" method="POST">
                         @csrf
