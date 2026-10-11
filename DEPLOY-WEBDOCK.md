@@ -91,11 +91,36 @@ sudo crontab -e
 
 ## 8. Нови версии
 
+След като е настроен автоматичният деплой (по-долу), всеки merge в `main` се качва сам, щом тестовете минат. Ръчно:
+
 ```bash
 sudo -iu deploy
 cd /var/www/creatiumlab
 bash deploy/deploy.sh
 ```
+
+### Автоматичен деплой (GitHub Actions)
+
+`.github/workflows/deploy.yml` пуска `deploy/deploy.sh` на сървъра по SSH след всеки push в `main`, но само ако workflow-ът **Tests** е минал. Нощното пускане на тестовете не деплойва. Докато тайните по-долу липсват, workflow-ът само пише предупреждение и не прави нищо.
+
+1. На сървъра, като `deploy` (еднократно, безопасно е и повторно):
+
+   ```bash
+   sudo -iu deploy
+   bash /var/www/creatiumlab/deploy/setup-auto-deploy.sh
+   ```
+
+   Скриптът създава отделен SSH ключ само за GitHub. В `~/.ssh/authorized_keys` той е ограничен (`restrict,command=...`): с него може да се пусне единствено `deploy/deploy.sh`, без shell и без пренасочване на портове. Ако `git pull` иска парола, скриптът предупреждава.
+2. В GitHub: хранилището → **Settings → Secrets and variables → Actions → New repository secret**. Добавете стойностите, които скриптът показва:
+   - `DEPLOY_HOST`: IP адресът на сървъра (или домейнът, ако DNS сочи директно към сървъра, а не през прокси като Cloudflare);
+   - `DEPLOY_HOST_KEY`: ключът на сървъра (`ssh-ed25519 AAAA...`); връзка към сървър с друг ключ се отказва;
+   - `DEPLOY_SSH_KEY`: частният ключ, целият, с редовете `BEGIN`/`END`;
+   - по желание `DEPLOY_PORT` (ако SSH не е на 22) и `DEPLOY_USER` (по подразбиране `deploy`).
+3. Проверка: **Actions → Deploy → Run workflow**. Логът показва изхода на `deploy.sh` и завършва с „Деплоят завърши.“
+
+Ако деплоят се провали (напр. composer или миграция), workflow-ът е червен и GitHub праща имейл. Поправете проблема и пуснете отново (Run workflow или ръчно с `deploy.sh`), защото сайтът може да е останал между двете версии. `update-nginx.sh` (root) остава ръчен.
+
+За да спрете автоматичния деплой: изтрийте тайната `DEPLOY_SSH_KEY` или реда `github-actions-deploy` от `/home/deploy/.ssh/authorized_keys`.
 
 Обновявайте системата редовно: `sudo dnf -y update` (веднъж месечно, при нужда `sudo reboot`).
 

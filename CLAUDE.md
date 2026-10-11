@@ -70,7 +70,8 @@ Production is a Webdock VPS (AlmaLinux 9, Nginx, PHP-FPM, MariaDB, SELinux enfor
 
 - `almalinux-setup.sh`: one-time setup; safe to rerun.
 - `configure-env.sh`: writes the production `.env` from the DB credentials in `/root/creatium-db.txt`.
-- `deploy.sh`: pull, composer, npm build, migrate, seed, caches. Run it as the `deploy` user.
+- `deploy.sh`: pull, composer, npm build, migrate, seed, caches. Run it as the `deploy` user. It also runs automatically: `.github/workflows/deploy.yml` SSHes in after the **Tests** workflow passes on a push to `main` (not on the nightly run; it only warns and skips while the `DEPLOY_HOST` / `DEPLOY_SSH_KEY` / `DEPLOY_HOST_KEY` secrets are missing).
+- `setup-auto-deploy.sh`: one-time, as `deploy`. It creates the GitHub SSH key, restricted in `authorized_keys` to running only `deploy.sh` (`restrict,command=`), and prints the secrets to add.
 - `update-nginx.sh`: static-file caching plus security headers (`nginx-security.conf`: HSTS, a CSP that does not restrict scripts because GTM loads the marketing tags, X-Frame-Options, nosniff, Referrer-Policy). Nginx drops server-level `add_header` in any `location` with its own `add_header`, so the snippet is included at server level and in `/build/` and the static-file location. Run as root after pulling; it is not part of `deploy.sh`.
 - `backup.sh`: DB + uploads backup.
 
