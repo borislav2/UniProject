@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ClientEmailController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\PostCategoryController;
@@ -72,6 +73,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('inquiries/read-all', [InquiryController::class, 'readAll'])->name('inquiries.read-all');
     Route::post('inquiries/{project}/read', [InquiryController::class, 'read'])->name('inquiries.read');
     Route::post('inquiries/{project}/unread', [InquiryController::class, 'unread'])->name('inquiries.unread');
+
+    // Emails to clients from templates (App\Support\ClientEmails)
+    Route::get('emails', [ClientEmailController::class, 'index'])->name('client-emails.index');
+    Route::get('emails/{template}', [ClientEmailController::class, 'create'])->name('client-emails.create');
+    Route::post('emails/{template}/preview', [ClientEmailController::class, 'preview'])->name('client-emails.preview');
+    Route::post('emails/{template}', [ClientEmailController::class, 'store'])->middleware('throttle:20,1')->name('client-emails.store');
 
     Route::get('projects/search', [ProjectController::class, 'search'])->name('projects.search');
     Route::resource('projects', ProjectController::class);

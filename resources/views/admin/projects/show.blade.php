@@ -11,6 +11,9 @@
         @endif
     </h2>
     <div class="flex space-x-4">
+        <a href="{{ route('admin.client-emails.index', ['project' => $project->id]) }}" class="px-4 py-2 bg-brand-950 text-white rounded hover:bg-brand-800">
+            <x-icon name="paper-plane" class="mr-2" />Изпрати имейл
+        </a>
         <a href="{{ route('admin.projects.edit', $project) }}" class="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600">
             <x-icon name="edit" class="mr-2" />Edit Project
         </a>

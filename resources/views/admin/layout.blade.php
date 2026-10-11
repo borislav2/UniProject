@@ -36,6 +36,9 @@
                     <span><x-icon name="envelope" class="mr-2" /> Запитвания</span>
                     @if($unreadInquiries > 0)<span class="rounded-full bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">{{ $unreadInquiries }}</span>@endif
                 </a>
+                <a href="{{ route('admin.client-emails.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.client-emails.*') ? 'bg-gray-700' : '' }}">
+                    <x-icon name="paper-plane" class="mr-2" /> Имейли до клиенти
+                </a>
                 <a href="{{ route('admin.projects.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.projects.*') ? 'bg-gray-700' : '' }}">
                     <x-icon name="project-diagram" class="mr-2" /> Projects
                 </a>
@@ -104,7 +107,7 @@
                     </div>
                 @endif
 
-                @if($errors->any() && request()->routeIs('admin.posts.*', 'admin.post-categories.*', 'admin.content.*', 'admin.seo.*', 'admin.profile.*'))
+                @if($errors->any() && request()->routeIs('admin.posts.*', 'admin.post-categories.*', 'admin.content.*', 'admin.seo.*', 'admin.profile.*', 'admin.client-emails.*'))
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
                         <p class="font-semibold">Има грешки във формата:</p>
                         <ul class="list-disc pl-5 mt-1 text-sm">
