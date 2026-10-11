@@ -31,6 +31,9 @@
 <tr><td style="padding:22px 36px 30px;{{ $f }}font-size:14px;line-height:1.6;color:#1f2a3a;">
 Поздрави,<br><strong style="color:#0f1a2b;">{{ $data['sender'] ?? 'Екипът на Creatium Lab' }}</strong><br><span style="color:#64748b;">Creatium Lab</span>
 </td></tr>
+@hasSection('ps')
+<tr><td style="padding:0 36px 30px;{{ $f }}font-size:14px;line-height:1.6;color:#475569;"><strong style="color:#0f1a2b;">P.S.</strong> @yield('ps')</td></tr>
+@endif
 
 <tr><td bgcolor="#0f1a2b" style="background:#0f1a2b;padding:22px 36px;{{ $f }}font-size:13px;line-height:1.7;color:#9fb3cc;">
 <strong style="color:#ffffff;">Creatium Lab</strong> · Сайтове и дигитален маркетинг за малки бизнеси<br>

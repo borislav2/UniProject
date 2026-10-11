@@ -39,9 +39,13 @@
                 @php($required = $field['required'] ?? true)
                 <div>
                     <label for="f-{{ $name }}" class="block text-sm font-semibold text-gray-700 mb-1">{{ $field['label'] }} @if($required)<span class="text-red-500">*</span>@else<span class="font-normal text-gray-400">(по желание)</span>@endif</label>
-                    <input id="f-{{ $name }}" name="data[{{ $name }}]" type="{{ ($field['type'] ?? 'text') === 'date' ? 'date' : 'text' }}"
-                           value="{{ old('data.' . $name, $defaults[$name] ?? '') }}" @if($required) required @endif
-                           @if(($field['type'] ?? 'text') === 'date') min="{{ now()->toDateString() }}" @else maxlength="255" @endif class="{{ $input }}">
+                    @if(($field['type'] ?? 'text') === 'textarea')
+                        <textarea id="f-{{ $name }}" name="data[{{ $name }}]" rows="3" maxlength="1000" @if($required) required @endif class="{{ $input }}">{{ old('data.' . $name, $defaults[$name] ?? '') }}</textarea>
+                    @else
+                        <input id="f-{{ $name }}" name="data[{{ $name }}]" type="{{ ($field['type'] ?? 'text') === 'date' ? 'date' : 'text' }}"
+                               value="{{ old('data.' . $name, $defaults[$name] ?? '') }}" @if($required) required @endif
+                               @if(($field['type'] ?? 'text') === 'date') min="{{ now()->toDateString() }}" @else maxlength="255" @endif class="{{ $input }}">
+                    @endif
                     @if(! empty($field['help']))<p class="mt-1 text-xs text-gray-500">{{ $field['help'] }}</p>@endif
                 </div>
             @endforeach

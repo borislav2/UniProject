@@ -25,27 +25,35 @@ class ClientEmails
             'sender' => ['label' => 'Подпис', 'help' => 'Кой подписва имейла', 'required' => true],
         ];
 
+        // FOMO полетата са по желание и се показват само ако са попълнени: пишете ги само когато са верни.
+        $slots = ['slots' => ['label' => 'Свободни места (FOMO)', 'required' => false, 'help' => 'Само ако е вярно, напр. „Имаме място за още 2 нови проекта през ноември.“ Празно = не се показва.']];
+
         $offer = fn (array $extra) => $common + [
+            'heard' => ['label' => 'Какво чухме от клиента', 'type' => 'textarea', 'required' => false, 'help' => '1–3 изречения от разговора, с неговите думи: какво иска и какво го спира. Това показва, че сме слушали. Силно препоръчително.'],
             'price' => ['label' => 'Цена за изработка (€)', 'required' => true, 'help' => 'Само числото, напр. 450'],
         ] + $extra + [
             'deadline' => ['label' => 'Срок за изработка', 'required' => true, 'default' => '2 седмици'],
             'advance' => ['label' => 'Аванс (€)', 'required' => true, 'help' => 'Сумата във фактурата за аванс'],
             'valid_until' => ['label' => 'Офертата е валидна до', 'type' => 'date', 'required' => true],
             'extra_included' => ['label' => 'Допълнително включено', 'required' => false, 'help' => 'Ако сте договорили нещо извън пакета. Празно = не се показва.'],
+        ] + $slots + [
+            'bonus' => ['label' => 'Бонус при потвърждение до датата', 'required' => false, 'help' => 'По желание, напр. „първият месец поддръжка без допълнително заплащане“. Празно = не се показва.'],
         ];
 
         return [
             'inquiry-reply' => [
                 'label' => 'Отговор на запитване за сайт',
-                'description' => 'Първи отговор: 7 въпроса към клиента, трите пакета и как продължаваме.',
-                'subject' => 'Вашият сайт с Creatium Lab: следващи стъпки',
+                'description' => 'Първи отговор: лична бележка, въпроси към клиента, трите пакета и как продължаваме.',
+                'subject' => 'Получихме запитването ви: ето как продължаваме',
                 'view' => 'emails.client.inquiry-reply',
-                'fields' => $common,
+                'fields' => $common + [
+                    'personal_note' => ['label' => 'Лична бележка', 'type' => 'textarea', 'required' => false, 'help' => 'По желание, но прави най-силно впечатление: какво забелязахте за бизнеса им, напр. „Разгледахме профила ви в Google и видяхме, че…“'],
+                ] + $slots,
             ],
             'offer-start' => [
                 'label' => 'Оферта: пакет Старт',
                 'description' => 'Една страница, работи на телефон, форма за запитвания, основна настройка за Google.',
-                'subject' => 'Оферта за вашия сайт: пакет Старт',
+                'subject' => 'Вашата оферта е готова: пакет Старт',
                 'view' => 'emails.client.offer',
                 'package' => 'start',
                 'fields' => $offer([
@@ -57,7 +65,7 @@ class ClientEmails
             'offer-biznes' => [
                 'label' => 'Оферта: пакет Бизнес',
                 'description' => 'До 5 страници, SEO настройка и профил в Google Business.',
-                'subject' => 'Оферта за вашия сайт: пакет Бизнес',
+                'subject' => 'Вашата оферта е готова: пакет Бизнес',
                 'view' => 'emails.client.offer',
                 'package' => 'biznes',
                 'fields' => $offer([
@@ -70,7 +78,7 @@ class ClientEmails
             'offer-rastezh' => [
                 'label' => 'Оферта: пакет Растеж',
                 'description' => 'Сайт плюс SEO работа, нови текстове и отчет всеки месец.',
-                'subject' => 'Оферта за вашия сайт: пакет Растеж',
+                'subject' => 'Вашата оферта е готова: пакет Растеж',
                 'view' => 'emails.client.offer',
                 'package' => 'rastezh',
                 'fields' => $offer([
@@ -93,7 +101,7 @@ class ClientEmails
         return $template ? $template + ['key' => $key] : null;
     }
 
-    /** Валидиращи правила за полетата на шаблона (всички са текст до 255 знака, датите са дати). */
+    /** Валидиращи правила: текст до 255 знака, дълъг текст (textarea) до 1000, датите са дати от днес нататък. */
     public static function rules(array $template): array
     {
         $rules = [];
@@ -102,7 +110,7 @@ class ClientEmails
             $rules["data.$name"] = array_filter([
                 ($field['required'] ?? true) ? 'required' : 'nullable',
                 $type === 'date' ? 'date' : 'string',
-                $type === 'date' ? 'after_or_equal:today' : 'max:255',
+                match ($type) { 'date' => 'after_or_equal:today', 'textarea' => 'max:1000', default => 'max:255' },
             ]);
         }
 
