@@ -128,13 +128,18 @@
 
 /* Fine film grain on dark surfaces (tiny inline SVG, no request) */
 .grain::after {
-    content: '';
+    content: none;
     position: absolute;
     inset: 0;
     pointer-events: none;
     opacity: 0.07;
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* The grain is a full-screen blended layer: only worth its paint cost on larger screens */
+@media (width >= 48rem) {
+    .grain::after { content: ''; }
 }
 
 /* Hairline gradient edge, lighter at the top-left like light hitting glass */
@@ -287,6 +292,17 @@
 
 .rise-in {
     animation: rise-in 0.8s var(--ease-out-soft) both;
+    animation-delay: var(--d, 0ms);
+}
+
+/* Main hero/page-header text: only slides, never starts invisible, so it counts as painted immediately (LCP, Speed Index) */
+@keyframes rise-text {
+    from { transform: translateY(14px); }
+    to { transform: none; }
+}
+
+.rise-text {
+    animation: rise-text 0.7s var(--ease-out-soft) both;
     animation-delay: var(--d, 0ms);
 }
 
@@ -516,7 +532,7 @@
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .js .reveal { opacity: 1; transform: none; filter: none; transition: none; }
-    .animate-float, .rise-in, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .sheen::after, .draw-line, .bg-animated { animation: none; }
+    .animate-float, .rise-in, .rise-text, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .sheen::after, .draw-line, .bg-animated { animation: none; }
     .draw-line { stroke-dashoffset: 0; }
     .card-hover:hover, .card-hover:hover .icon-pop, .tilt { transform: none; }
     .btn-shine::after, .scroll-progress { display: none; }

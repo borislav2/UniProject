@@ -8,8 +8,8 @@
 {{-- Hero: dark in both themes --}}
 <section class="relative overflow-hidden surface-night grain on-dark text-white">
     <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_top,black_25%,transparent_72%)]" aria-hidden="true"></div>
-    <div class="aurora-a absolute -top-48 right-[-10rem] w-[40rem] h-[40rem] rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true"></div>
-    <div class="aurora-b absolute top-1/3 -left-48 w-[30rem] h-[30rem] rounded-full bg-brand-700/30 blur-3xl" aria-hidden="true"></div>
+    <div class="hidden md:block aurora-a absolute -top-48 right-[-10rem] w-[40rem] h-[40rem] rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true"></div>
+    <div class="hidden md:block aurora-b absolute top-1/3 -left-48 w-[30rem] h-[30rem] rounded-full bg-brand-700/30 blur-3xl" aria-hidden="true"></div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-header pb-28 md:pb-36 grid lg:grid-cols-12 gap-14 lg:gap-10 items-center">
         <div class="lg:col-span-6">
@@ -17,14 +17,14 @@
                 <span class="relative flex w-2 h-2"><span class="absolute inset-0 rounded-full bg-brand-300 animate-ping motion-reduce:animate-none"></span><span class="relative w-2 h-2 rounded-full bg-brand-300"></span></span>
                 {{ __('Уебсайтове и дигитален маркетинг') }}
             </span>
-            <h1 class="display rise-in mt-7 text-5xl sm:text-6xl xl:text-7xl" style="--d: 80ms">
+            <h1 class="display rise-text mt-7 text-5xl sm:text-6xl xl:text-7xl" style="--d: 80ms">
                 {{ $hero['title'] }} <span class="text-shimmer">{{ $hero['highlight'] }}</span>
             </h1>
-            <p class="rise-in mt-7 text-xl sm:text-2xl font-semibold text-white/90 leading-snug max-w-xl text-pretty" style="--d: 180ms">{{ $hero['subtitle'] }}</p>
+            <p class="rise-text mt-7 text-xl sm:text-2xl font-semibold text-white/90 leading-snug max-w-xl text-pretty" style="--d: 180ms">{{ $hero['subtitle'] }}</p>
             @if(!empty($hero['text']))
-            <p class="rise-in mt-4 text-lg text-gray-400 leading-relaxed max-w-xl" style="--d: 240ms">{{ $hero['text'] }}</p>
+            <p class="rise-text mt-4 text-lg text-gray-400 leading-relaxed max-w-xl" style="--d: 240ms">{{ $hero['text'] }}</p>
             @endif
-            <div class="rise-in mt-10 flex flex-col sm:flex-row gap-3" style="--d: 320ms">
+            <div class="rise-text mt-10 flex flex-col sm:flex-row gap-3" style="--d: 320ms">
                 <a href="#kontakt" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
                     {{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-sm" />
                 </a>
@@ -32,7 +32,7 @@
                     {{ __('Вижте услугите') }}
                 </a>
             </div>
-            <ul class="rise-in mt-10 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-300" style="--d: 400ms">
+            <ul class="rise-text mt-10 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-300" style="--d: 400ms">
                 <li class="flex items-start gap-2.5"><x-icon name="circle-check" class="text-brand-300 shrink-0 mt-0.5" />{{ __('Визия, съобразена с идентичността на бранда') }}</li>
                 <li class="flex items-start gap-2.5"><x-icon name="circle-check" class="text-brand-300 shrink-0 mt-0.5" />{{ __('Естетика и визуално въздействие') }}</li>
                 <li class="flex items-start gap-2.5"><x-icon name="circle-check" class="text-brand-300 shrink-0 mt-0.5" />{{ __('Поддръжка и партньорство') }}</li>
