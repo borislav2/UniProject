@@ -23,9 +23,9 @@
 
 @section('content')
 <article>
-    <header class="relative overflow-hidden bg-brand-gradient text-white dark:border-b dark:border-white/10">
+    <header class="relative overflow-hidden surface-night grain on-dark text-white">
         <div class="absolute inset-0 bg-grid-light" aria-hidden="true"></div>
-        <div class="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
+        <div class="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-header pb-14 md:pb-20">
             <a href="{{ lroute('blog.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-200 hover:text-white"><x-icon name="arrow-left" class="text-xs" /> {{ __('Блог') }}</a>
             <h1 class="mt-5 text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">{{ $post->tr('title') }}</h1>
             <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-brand-100/90">

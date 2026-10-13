@@ -4,7 +4,7 @@
 
     @section('content')
     <!-- Hero Section -->
-    <section class="hero-gradient text-white py-20">
+    <section class="surface-night grain relative text-white pt-header pb-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h1 class="text-4xl md:text-6xl font-bold mb-6">Вход в системата</h1>

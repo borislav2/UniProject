@@ -1,13 +1,14 @@
-<section class="relative overflow-hidden bg-brand-gradient text-white dark:border-b dark:border-white/10">
-    <div class="absolute inset-0 bg-grid-light" aria-hidden="true"></div>
-    <div class="absolute -top-32 -right-24 w-[28rem] h-[28rem] rounded-full bg-brand-500/30 blur-3xl" aria-hidden="true"></div>
-    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 text-center">
+<section class="relative overflow-hidden surface-night grain on-dark text-white">
+    <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_top,black_25%,transparent_70%)]" aria-hidden="true"></div>
+    <div class="aurora-a absolute -top-40 -right-24 w-[30rem] h-[30rem] rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true"></div>
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-header pb-16 md:pb-24 text-center">
         @isset($eyebrow)
-            <span class="text-brand-300 text-sm font-bold uppercase tracking-wider">{{ $eyebrow }}</span>
+            <span class="eyebrow rise-in">{{ $eyebrow }}</span>
         @endisset
-        <h1 class="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight">{{ $heading }}</h1>
+        <h1 class="display rise-in mt-4 text-4xl sm:text-5xl md:text-6xl" style="--d: 80ms">{{ $heading }}</h1>
         @if(filled($sub ?? null))
-            <p class="mt-5 text-lg md:text-xl text-brand-100/90 max-w-2xl mx-auto">{{ $sub }}</p>
+            <p class="rise-in mt-6 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed text-pretty" style="--d: 160ms">{{ $sub }}</p>
         @endif
     </div>
+    <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand-400/50 to-transparent" aria-hidden="true"></div>
 </section>

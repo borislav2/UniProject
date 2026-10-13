@@ -52,12 +52,18 @@
 
 Секциите с `bg-brand-gradient` (контакт, CTA, заглавие на страница) са тъмни и в двете теми и не се пипат. В тъмна тема се показва белият вариант на логото. Контрастът се проверява и в двете теми.
 
+## Премиум визия („Midnight Lab“)
+
+- **Тъмни сцени:** hero, заглавието на всяка вътрешна страница (`partials/page-header`), контактът и footer-ът са тъмни и в двете теми: `surface-night grain on-dark text-white`. Секциите между тях са светли (`bg-white` / `bg-brand-50/60`), с тъмни варианти по таблицата по-долу.
+- **Плаващо меню:** header-ът е „хапче“ със стъкло, което стои над първата секция. Затова първата секция на всяка страница започва с `pt-header` вместо обичайния горен отстъп.
+- **Заглавия:** `display` (плътно, `letter-spacing: -0.035em`, балансирани редове). H1 в hero е `text-5xl sm:text-6xl xl:text-7xl`, H2 на секция е `text-4xl md:text-5xl`. Надзаглавието е `<span class="eyebrow">`.
+- **Стъкло и кант:** върху тъмен фон `edge glass` (заедно с `relative` или `absolute`) дава матово стъкло с тънък светъл кант. Основният бутон върху тъмен фон е бял с `btn-glow`.
+- **Карти:** `rounded-3xl` (секции) или `rounded-2xl` (списъци), винаги с `card-hover`. Услугите на началната страница са bento мрежа: всяка 1-ва и 4-та карта е широка (`lg:col-span-4`).
+
 ## Типография
 
 - Шрифт **Manrope** (variable), self-hosted чрез `@fontsource-variable/manrope`. Поддържа кирилица. Не се добавят Google Fonts и други външни шрифтове.
-- Заглавия: `font-extrabold tracking-tight text-brand-950`.
-  - H1 в hero: `text-4xl sm:text-5xl lg:text-6xl`
-  - H2 на секция: `text-3xl md:text-4xl`
+- Заглавия: клас `display` (вижте „Премиум визия“), цвят `text-brand-950` върху светло.
 - Надзаглавие над H2: `text-brand-600 text-sm font-bold uppercase tracking-wider`. Върху тъмен фон е `text-brand-300`.
 - Основен текст: `text-gray-600 leading-relaxed`, а в hero е `text-lg`.
 
