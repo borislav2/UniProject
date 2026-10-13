@@ -103,7 +103,8 @@
         $languages = ['bg' => ['BG', 'Български'], 'en' => ['EN', 'English']];
     @endphp
 
-    <header class="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-gray-100 dark:bg-ink-950/85 dark:border-white/10">
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <header data-header class="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-gray-100 dark:bg-ink-950/85 dark:border-white/10">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="{{ __('Основна навигация') }}">
             <div class="flex justify-between items-center h-16 md:h-20">
                 <a href="{{ lroute('home') }}" class="flex items-center shrink-0" aria-label="{{ __('Creatium Lab - начало') }}">
