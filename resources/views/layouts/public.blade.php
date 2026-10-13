@@ -76,6 +76,18 @@
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link rel="icon" type="image/png" href="{{ asset('favicon-64.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+    @unless(\Illuminate\Support\Facades\Vite::isRunningHot())
+        {{-- Start downloading the font with the HTML instead of after the CSS (removes the request chain PageSpeed flags) --}}
+        @php
+            $fonts = [];
+            foreach (['cyrillic', 'latin'] as $subset) {
+                $fonts[] = rescue(fn () => \Illuminate\Support\Facades\Vite::asset("node_modules/@fontsource-variable/manrope/files/manrope-{$subset}-wght-normal.woff2"), '', false);
+            }
+        @endphp
+        @foreach(array_filter($fonts) as $font)
+            <link rel="preload" href="{{ $font }}" as="font" type="font/woff2" crossorigin>
+        @endforeach
+    @endunless
     @if(config('creatium.inline_css') && ! \Illuminate\Support\Facades\Vite::isRunningHot())
         {{-- Inline CSS (~10 KB gzip) saves a render-blocking request on first load --}}
         <style>{!! \Illuminate\Support\Facades\Vite::content('resources/css/app.css') !!}</style>
