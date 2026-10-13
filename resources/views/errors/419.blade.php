@@ -3,7 +3,7 @@
 @section('title', __('Сесията е изтекла'))
 
 @section('content')
-<section class="py-24 text-center bg-white dark:bg-ink-950">
+<section class="pt-header pb-24 text-center bg-white dark:bg-ink-950">
     <div class="max-w-xl mx-auto px-4">
         <h1 class="text-2xl font-bold mb-3 dark:text-white">{{ __('Сесията е изтекла') }}</h1>
         <p class="text-gray-600 mb-8 dark:text-gray-300">{{ __('Формата е стояла отворена твърде дълго. Върнете се назад, презаредете страницата и опитайте отново.') }}</p>

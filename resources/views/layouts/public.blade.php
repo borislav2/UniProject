@@ -104,9 +104,10 @@
     @endphp
 
     <div class="scroll-progress" aria-hidden="true"></div>
-    <header data-header class="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-gray-100 dark:bg-ink-950/85 dark:border-white/10">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="{{ __('Основна навигация') }}">
-            <div class="flex justify-between items-center h-16 md:h-20">
+    <header data-header class="sticky top-0 z-50 px-3 pt-3 md:px-4 md:pt-4 -mb-[4.25rem] md:-mb-20">
+      <div class="mx-auto max-w-7xl rounded-2xl border border-white/60 bg-white/90 shadow-[0_10px_30px_-14px_rgb(15_26_43/0.3)] backdrop-blur-xl backdrop-saturate-150 dark:border-white/10 dark:bg-ink-900/70 dark:shadow-[0_10px_30px_-14px_rgb(0_0_0/0.8)]">
+        <nav class="px-4 sm:px-5" aria-label="{{ __('Основна навигация') }}">
+            <div class="flex justify-between items-center h-14 md:h-16">
                 <a href="{{ lroute('home') }}" class="flex items-center shrink-0" aria-label="{{ __('Creatium Lab - начало') }}">
                     <img src="{{ asset('images/logo.webp') }}" srcset="{{ asset('images/logo-224.webp') }} 224w, {{ asset('images/logo-352.webp') }} 352w, {{ asset('images/logo.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" fetchpriority="high" class="h-7 md:h-8 w-auto dark:hidden">
                     <img src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" loading="lazy" class="hidden h-7 md:h-8 w-auto dark:block">
@@ -165,7 +166,7 @@
             </div>
         </nav>
 
-        <div id="mobile-menu" class="mobile-menu hidden lg:hidden border-t border-gray-100 bg-white dark:bg-ink-950 dark:border-white/10">
+        <div id="mobile-menu" class="mobile-menu hidden lg:hidden border-t border-gray-200/70 dark:border-white/10">
             <div class="px-4 py-3 space-y-1">
                 @foreach($links as [$label, $href, $active])
                     <a href="{{ $href }}" class="block px-3 py-2.5 rounded-lg font-medium {{ $active ? 'text-brand-700 bg-brand-50 dark:text-brand-300 dark:bg-white/5' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-white/5' }}">{{ $label }}</a>
@@ -180,27 +181,40 @@
                 @endauth
             </div>
         </div>
+      </div>
     </header>
 
     <main>
         @yield('content')
     </main>
 
-    <footer class="relative bg-brand-950 text-white overflow-hidden dark:bg-ink-900 dark:border-t dark:border-white/10">
-        <div class="absolute inset-0 bg-grid-light opacity-60" aria-hidden="true"></div>
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
-                <div class="md:col-span-5">
-                    <img src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="223px" alt="Creatium Lab" width="445" height="64" class="h-8 w-auto mb-5" loading="lazy" decoding="async">
-                    <p class="max-w-sm text-2xl font-extrabold leading-tight tracking-tight">{{ site('hero')['title'] }} <span class="text-brand-300">{{ site('hero')['highlight'] }}</span></p>
-                    <a href="{{ lroute('contact') }}" class="mt-6 inline-flex items-center gap-2 bg-white text-brand-950 px-5 py-2.5 rounded-xl font-semibold hover:bg-brand-50 transition-colors">
-                        {{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-xs" />
+    <footer class="relative surface-night grain on-dark text-white overflow-hidden">
+        <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_70%)]" aria-hidden="true"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-28">
+            <div class="grid lg:grid-cols-12 gap-10 items-end pb-14 border-b border-white/10">
+                <div class="lg:col-span-7">
+                    <span class="eyebrow">{{ __('Следваща стъпка') }}</span>
+                    <p class="display mt-5 text-4xl sm:text-5xl md:text-6xl">{{ site('hero')['title'] }} <span class="text-shimmer">{{ site('hero')['highlight'] }}</span></p>
+                </div>
+                <div class="lg:col-span-5 flex flex-col sm:flex-row lg:justify-end gap-3">
+                    <a href="{{ lroute('contact') }}" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
+                        {{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-sm" />
                     </a>
+                    <a href="mailto:{{ config('creatium.contact.email') }}" class="relative edge glass inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-semibold text-white hover:bg-white/10 transition-colors">
+                        <x-icon name="envelope" class="text-sm text-brand-300" /> {{ config('creatium.contact.email') }}
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-10 py-14">
+                <div class="md:col-span-5">
+                    <img src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="223px" alt="Creatium Lab" width="445" height="64" class="h-8 w-auto" loading="lazy" decoding="async">
+                    <p class="mt-5 max-w-sm text-gray-400 leading-relaxed">{{ __('Правим сайтове за малки бизнеси и се грижим хората да ги намират в Google.') }}</p>
                 </div>
 
                 <div class="md:col-span-3">
-                    <h2 class="text-sm font-semibold uppercase tracking-wider text-brand-300 mb-4">{{ __('Навигация') }}</h2>
-                    <ul class="space-y-2.5">
+                    <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-brand-300 mb-5">{{ __('Навигация') }}</h2>
+                    <ul class="space-y-3">
                         @foreach($links as [$label, $href])
                             <li><a href="{{ $href }}" class="text-gray-300 hover:text-white transition-colors">{{ $label }}</a></li>
                         @endforeach
@@ -208,8 +222,8 @@
                 </div>
 
                 <div class="md:col-span-4">
-                    <h2 class="text-sm font-semibold uppercase tracking-wider text-brand-300 mb-4">{{ __('Контакти') }}</h2>
-                    <ul class="space-y-3 text-gray-300">
+                    <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-brand-300 mb-5">{{ __('Контакти') }}</h2>
+                    <ul class="space-y-3.5 text-gray-300">
                         <li class="flex items-center gap-3"><x-icon name="envelope" class="w-4 text-brand-300" /><a href="mailto:{{ config('creatium.contact.email') }}" class="hover:text-white">{{ config('creatium.contact.email') }}</a></li>
                         <li class="flex items-start gap-3"><x-icon name="phone" class="w-4 mt-1 text-brand-300" /><span class="flex flex-col">@foreach(config('creatium.contact.phones') as $phone)<a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}" class="hover:text-white">{{ $phone }}</a>@endforeach</span></li>
                         <li class="flex items-center gap-3"><x-icon name="location-dot" class="w-4 text-brand-300" />{{ __(config('creatium.contact.city')) }}, {{ __('България') }}</li>
@@ -217,7 +231,7 @@
                 </div>
             </div>
 
-            <div class="border-t border-white/10 mt-12 pt-6 flex flex-col md:flex-row justify-between gap-4 text-gray-400 text-sm">
+            <div class="border-t border-white/10 py-6 flex flex-col md:flex-row justify-between gap-4 text-gray-400 text-sm">
                 <p>&copy; {{ date('Y') }} Creatium Lab. {{ __('Всички права запазени.') }}</p>
                 <div class="flex flex-wrap gap-x-6 gap-y-2">
                     <a href="{{ lroute('privacy') }}" class="hover:text-white">{{ __('Политика за поверителност') }}</a>
@@ -232,6 +246,7 @@
                 </div>
             </div>
         </div>
+        <div class="wordmark relative text-center whitespace-nowrap text-[15vw] -mb-[2.5vw] pt-2" aria-hidden="true">Creatium Lab</div>
     </footer>
 
     @if(config('creatium.gtm_id'))
