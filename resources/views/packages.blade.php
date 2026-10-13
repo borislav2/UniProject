@@ -30,7 +30,7 @@
                                     </li>
                                 @endforeach
                             </ul>
-                            <a href="{{ lroute('contact') }}" class="mt-8 text-center px-6 py-3.5 rounded-xl font-semibold bg-white text-brand-950 hover:bg-brand-50 transition-colors">{{ __('Свържете се с нас') }}</a>
+                            <a href="{{ lroute('contact') }}" class="btn-shine mt-8 text-center px-6 py-3.5 rounded-xl font-semibold bg-white text-brand-950 hover:bg-brand-50 transition-colors">{{ __('Свържете се с нас') }}</a>
                         </div>
                     </div>
                 @else
@@ -47,7 +47,7 @@
                                 </li>
                             @endforeach
                         </ul>
-                        <a href="{{ lroute('contact') }}" class="mt-8 text-center px-6 py-3.5 rounded-xl font-semibold border border-gray-200 text-brand-950 hover:border-brand-400 hover:text-brand-700 transition-colors dark:border-white/15 dark:text-white dark:hover:border-brand-400 dark:hover:text-white">{{ __('Свържете се с нас') }}</a>
+                        <a href="{{ lroute('contact') }}" class="btn-shine mt-8 text-center px-6 py-3.5 rounded-xl font-semibold border border-gray-200 text-brand-950 hover:border-brand-400 hover:text-brand-700 transition-colors dark:border-white/15 dark:text-white dark:hover:border-brand-400 dark:hover:text-white">{{ __('Свържете се с нас') }}</a>
                     </div>
                 @endif
             @endforeach

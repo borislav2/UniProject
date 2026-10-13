@@ -111,14 +111,244 @@
 /* Scroll reveal: only hidden when JS is running, so content never disappears without it */
 .js .reveal {
     opacity: 0;
-    transform: translateY(18px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateY(24px) scale(0.98);
+    filter: blur(4px);
+    transition: opacity 0.7s var(--ease-out-soft), transform 0.7s var(--ease-out-soft), filter 0.7s var(--ease-out-soft);
     transition-delay: var(--reveal-delay, 0ms);
 }
 
 .js .reveal.is-visible {
     opacity: 1;
     transform: none;
+    filter: none;
+}
+
+:root {
+    --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ---- Motion ("wow" layer). Only transform/opacity are animated, so it stays fast; all of it stops for prefers-reduced-motion. ---- */
+
+/* Hero entrance: pure CSS, plays on load with or without JS. --d = delay. */
+@keyframes rise-in {
+    from { opacity: 0; transform: translateY(22px); filter: blur(6px); }
+    to { opacity: 1; transform: none; filter: none; }
+}
+
+.rise-in {
+    animation: rise-in 0.8s var(--ease-out-soft) both;
+    animation-delay: var(--d, 0ms);
+}
+
+@keyframes pop-in {
+    0% { opacity: 0; transform: translateY(12px) scale(0.85); }
+    70% { opacity: 1; transform: translateY(-2px) scale(1.03); }
+    100% { opacity: 1; transform: none; }
+}
+
+.pop-in {
+    animation: pop-in 0.7s var(--ease-out-soft) both;
+    animation-delay: var(--d, 0ms);
+}
+
+/* Slowly drifting light blobs behind the hero */
+@keyframes aurora-a {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50% { transform: translate3d(-8%, 10%, 0) scale(1.15); }
+}
+
+@keyframes aurora-b {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50% { transform: translate3d(10%, -8%, 0) scale(1.1); }
+}
+
+.aurora-a { animation: aurora-a 18s ease-in-out infinite; will-change: transform; }
+.aurora-b { animation: aurora-b 22s ease-in-out infinite; will-change: transform; }
+
+/* Gradient text that slowly flows (the highlighted word in the hero) */
+@keyframes shimmer {
+    to { background-position: 200% center; }
+}
+
+.text-shimmer {
+    background-image: linear-gradient(90deg, var(--color-brand-700), var(--color-brand-500), var(--color-brand-300), var(--color-brand-500), var(--color-brand-700));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 6s linear infinite;
+}
+
+.dark .text-shimmer {
+    background-image: linear-gradient(90deg, var(--color-brand-300), var(--color-brand-400), var(--color-brand-100), var(--color-brand-400), var(--color-brand-300));
+}
+
+/* Light sweep over buttons on hover */
+.btn-shine {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.btn-shine::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.8s var(--ease-out-soft);
+    pointer-events: none;
+}
+
+.dark .btn-shine::after {
+    background: linear-gradient(115deg, transparent 30%, rgb(59 119 189 / 0.25) 50%, transparent 70%);
+}
+
+.btn-shine:hover::after {
+    transform: translateX(120%);
+}
+
+/* Cards: a soft light and a glowing edge follow the cursor (JS sets --mx/--my) */
+.card-hover {
+    position: relative;
+    isolation: isolate;
+}
+
+.card-hover::before,
+.card-hover::after {
+    content: '';
+    position: absolute;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+}
+
+.card-hover::before {
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgb(59 119 189 / 0.10), transparent 45%);
+}
+
+.card-hover::after {
+    inset: -1px;
+    padding: 1px;
+    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), var(--color-brand-400), transparent 60%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+.dark .card-hover::before {
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgb(93 145 205 / 0.14), transparent 45%);
+}
+
+.card-hover:hover::before,
+.card-hover:hover::after {
+    opacity: 1;
+}
+
+.icon-pop {
+    transition: transform 0.35s var(--ease-out-soft);
+}
+
+.card-hover:hover .icon-pop {
+    transform: translateY(-3px) scale(1.08);
+}
+
+/* 3D tilt of the hero mock-up (JS sets --rx/--ry from the pointer) */
+.tilt {
+    transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.4s var(--ease-out-soft);
+    transform-style: preserve-3d;
+}
+
+/* A light sheen that passes over the mock-up's hero block every few seconds */
+@keyframes sheen {
+    0%, 60% { transform: translateX(-120%); }
+    100% { transform: translateX(120%); }
+}
+
+.sheen {
+    position: relative;
+    overflow: hidden;
+}
+
+.sheen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 35%, rgb(255 255 255 / 0.22) 50%, transparent 65%);
+    animation: sheen 5s ease-in-out infinite;
+}
+
+/* Sparkline that draws itself */
+@keyframes draw {
+    to { stroke-dashoffset: 0; }
+}
+
+.draw-line {
+    stroke-dasharray: 120;
+    stroke-dashoffset: 120;
+    animation: draw 1.6s var(--ease-out-soft) 0.9s forwards;
+}
+
+/* Process steps: a bar fills in when the step scrolls into view */
+.js .step-bar {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1s var(--ease-out-soft) calc(var(--reveal-delay, 0ms) + 250ms);
+}
+
+.js .is-visible .step-bar {
+    transform: scaleX(1);
+}
+
+/* Slowly moving gradient (contact section) */
+@keyframes gradient-pan {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.bg-animated {
+    background-size: 200% 200%;
+    animation: gradient-pan 16s ease infinite;
+}
+
+/* Header gets a shadow once the page is scrolled (JS adds .is-scrolled) */
+[data-header] {
+    transition: box-shadow 0.3s ease;
+}
+
+[data-header].is-scrolled {
+    box-shadow: 0 10px 30px -14px rgb(15 26 43 / 0.25);
+}
+
+.dark [data-header].is-scrolled {
+    box-shadow: 0 10px 30px -14px rgb(0 0 0 / 0.8);
+}
+
+/* Reading progress at the very top: CSS scroll-driven animation, invisible where unsupported */
+.scroll-progress {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 3px;
+    z-index: 60;
+    transform: scaleX(0);
+    transform-origin: left;
+    background: linear-gradient(90deg, var(--color-brand-600), var(--color-brand-400), var(--color-brand-300));
+    pointer-events: none;
+}
+
+@supports (animation-timeline: scroll()) {
+    .scroll-progress {
+        animation: scroll-progress linear both;
+        animation-timeline: scroll(root);
+    }
+}
+
+@keyframes scroll-progress {
+    to { transform: scaleX(1); }
 }
 
 @keyframes float {
@@ -132,7 +362,10 @@
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .js .reveal { opacity: 1; transform: none; transition: none; }
-    .animate-float { animation: none; }
-    .card-hover:hover { transform: none; }
+    .js .reveal { opacity: 1; transform: none; filter: none; transition: none; }
+    .animate-float, .rise-in, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .sheen::after, .draw-line, .bg-animated { animation: none; }
+    .draw-line { stroke-dashoffset: 0; }
+    .card-hover:hover, .card-hover:hover .icon-pop, .tilt { transform: none; }
+    .btn-shine::after, .scroll-progress { display: none; }
+    .js .step-bar { transform: none; transition: none; }
 }
