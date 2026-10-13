@@ -108,27 +108,6 @@
     </div>
 </section>
 
-{{-- Industries: endless strip (static and wrapped when the visitor prefers less motion) --}}
-@php($industries = site('industries'))
-@if(!empty($industries))
-<section aria-label="{{ __('Браншове, за които правим сайтове') }}" class="border-y border-gray-100 bg-white py-5 dark:border-white/10 dark:bg-ink-950">
-    <div class="marquee overflow-hidden">
-        <div class="marquee-track">
-            @foreach([false, true] as $dup)
-                <ul class="flex shrink-0 items-center gap-10 pr-10 {{ $dup ? 'marquee-dup' : '' }}" @if($dup) aria-hidden="true" @endif>
-                    @foreach(array_merge($industries, $industries) as $industry)
-                        <li class="flex items-center gap-3 whitespace-nowrap text-sm font-semibold text-gray-600 dark:text-gray-300 @if(! $dup && $loop->index >= count($industries)) marquee-dup @endif" @if(! $dup && $loop->index >= count($industries)) aria-hidden="true" @endif>
-                            <span class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center dark:bg-white/10"><x-icon :name="$industry['icon']" class="text-brand-600 text-sm dark:text-brand-300" /></span>
-                            {{ $industry['name'] }}
-                        </li>
-                    @endforeach
-                </ul>
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
-
 {{-- Audience --}}
 <section id="podhodyashto-za" class="py-12 md:py-16 bg-white scroll-mt-20 dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
