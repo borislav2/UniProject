@@ -105,7 +105,7 @@
     @endif
     @php
         $links = [];
-        foreach (['services' => 'Услуги', 'packages' => 'Пакети', 'portfolio' => 'Проекти', 'blog.index' => 'Блог', 'about' => 'За нас', 'contact' => 'Контакти'] as $name => $label) {
+        foreach (['services' => 'Услуги', 'site-check' => 'Проверка на сайт', 'packages' => 'Пакети', 'portfolio' => 'Проекти', 'blog.index' => 'Блог', 'about' => 'За нас', 'contact' => 'Контакти'] as $name => $label) {
             if ($name === 'blog.index' && ! config('creatium.blog_enabled')) {
                 continue;
             }
@@ -125,12 +125,12 @@
                     <img src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" loading="lazy" class="hidden h-7 md:h-8 w-auto dark:block">
                 </a>
 
-                <div class="hidden lg:flex items-center gap-1">
+                <div class="hidden lg:flex items-center gap-0.5 xl:gap-1">
                     @foreach($links as [$label, $href, $active])
-                        <a href="{{ $href }}" class="relative px-3 py-2 text-sm font-semibold rounded-lg transition-colors {{ $active ? 'text-brand-700 dark:text-brand-300' : 'text-gray-600 hover:text-brand-950 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-white/5' }}" @if($active) aria-current="page" @endif>
+                        <a href="{{ $href }}" class="relative whitespace-nowrap px-2 xl:px-3 py-2 text-sm font-semibold rounded-lg transition-colors {{ $active ? 'text-brand-700 dark:text-brand-300' : 'text-gray-600 hover:text-brand-950 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-white/5' }}" @if($active) aria-current="page" @endif>
                             {{ $label }}
                             @if($active)
-                                <span class="absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full bg-brand-500"></span>
+                                <span class="absolute left-2 right-2 xl:left-3 xl:right-3 -bottom-0.5 h-0.5 rounded-full bg-brand-500"></span>
                             @endif
                         </a>
                     @endforeach

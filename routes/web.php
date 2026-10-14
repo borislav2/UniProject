@@ -17,6 +17,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\SiteCheckController;
 use Illuminate\Support\Facades\Route;
 
 // Public site: Bulgarian at the root, English under /en. Route names are the same with an "en." prefix (see lroute()).
@@ -26,6 +27,7 @@ $publicPages = [
     'services' => ['/uslugi', '/services', [PageController::class, 'services']],
     'packages' => ['/paketi', '/packages', [PageController::class, 'packages']],
     'portfolio' => ['/proekti', '/projects', [PageController::class, 'portfolio']],
+    'site-check' => ['/proverka-na-sait', '/website-check', [SiteCheckController::class, 'show']],
     'about' => ['/za-nas', '/about', [PageController::class, 'about']],
     'contact' => ['/kontakti', '/contact', [HomeController::class, 'contact']],
     'privacy' => ['/poveritelnost', '/privacy', [PageController::class, 'privacy']],
@@ -46,6 +48,10 @@ foreach (['bg', 'en'] as $locale) {
         Route::post($locale === 'en' ? '/contact' : '/kontakti', [HomeController::class, 'submitContact'])
             ->middleware('throttle:5,10')
             ->name('contact.submit');
+
+        Route::post($locale === 'en' ? '/website-check' : '/proverka-na-sait', [SiteCheckController::class, 'submit'])
+            ->middleware('throttle:5,10')
+            ->name('site-check.submit');
     });
 }
 

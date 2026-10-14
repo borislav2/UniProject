@@ -11,6 +11,9 @@
     @if($lead->client_phone)
         <p><strong>Телефон:</strong> <a href="tel:{{ preg_replace('/[^0-9+]/', '', $lead->client_phone) }}">{{ $lead->client_phone }}</a></p>
     @endif
+    @if($lead->website_url)
+        <p><strong>Сайт:</strong> <a href="{{ $lead->website_url }}">{{ $lead->website_url }}</a></p>
+    @endif
     @if($lead->service)
         <p><strong>Услуга:</strong> {{ $lead->service }}</p>
     @endif
