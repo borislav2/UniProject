@@ -157,9 +157,6 @@
                         </form>
                     @endauth
 
-                    <a href="{{ lroute('contact') }}" class="ml-2 hidden xl:inline-flex items-center gap-2 bg-brand-950 text-white px-5 py-2.5 rounded-xl hover:bg-brand-800 transition-colors text-sm font-semibold shadow-sm dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">
-                        {{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-xs" />
-                    </a>
                 </div>
 
                 <div class="flex items-center gap-1 lg:hidden">
@@ -203,17 +200,6 @@
     <footer class="relative surface-night grain on-dark text-white overflow-hidden">
         <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_70%)]" aria-hidden="true"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 md:pt-20">
-            <div class="pb-14 border-b border-white/10">
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <a href="{{ lroute('contact') }}" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 whitespace-nowrap bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
-                        {{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-sm" />
-                    </a>
-                    <a href="mailto:{{ config('creatium.contact.email') }}" class="relative edge glass inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-semibold text-white hover:bg-white/10 transition-colors">
-                        <x-icon name="envelope" class="text-sm text-brand-300" /> {{ config('creatium.contact.email') }}
-                    </a>
-                </div>
-            </div>
-
             <div class="grid grid-cols-1 md:grid-cols-12 gap-10 py-14">
                 <div class="md:col-span-5">
                     <img src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="223px" alt="Creatium Lab" width="445" height="64" class="h-8 w-auto" loading="lazy" decoding="async">
