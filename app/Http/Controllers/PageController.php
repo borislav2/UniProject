@@ -60,7 +60,7 @@ class PageController extends Controller
     public function sitemap(): Response
     {
         $blog = config('creatium.blog_enabled');
-        $pages = array_values(array_filter(['home', 'services', 'packages', 'portfolio', 'blog.index', 'about', 'contact', 'privacy', 'terms', 'cookies'], fn ($name) => $blog || $name !== 'blog.index'));
+        $pages = array_values(array_filter(['home', 'services', 'site-check', 'packages', 'portfolio', 'blog.index', 'about', 'contact', 'privacy', 'terms', 'cookies'], fn ($name) => $blog || $name !== 'blog.index'));
         $urls = [];
 
         foreach ($pages as $name) {

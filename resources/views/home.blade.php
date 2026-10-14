@@ -3,6 +3,26 @@
 @section('title', __('Уебсайтове и маркетинг за бизнеса в България'))
 @section('meta_description', __('Сайтове, SEO и имейл кампании за малки и средни бизнеси в България. Правим нови сайтове, поддържаме съществуващи и се грижим да ви намират в Google.'))
 
+@push('head')
+@php
+    $contact = config('creatium.contact');
+    $ld = [
+        '@context' => 'https://schema.org',
+        '@type' => 'ProfessionalService',
+        'name' => 'Creatium Lab',
+        'url' => lroute('home'),
+        'logo' => asset('images/logo.webp'),
+        'image' => asset('images/og-image.png'),
+        'description' => __('Правим сайтове за малки бизнеси и се грижим хората да ги намират в Google.'),
+        'email' => $contact['email'],
+        'telephone' => $contact['phones'][0] ?? null,
+        'address' => ['@type' => 'PostalAddress', 'addressLocality' => __($contact['city']), 'addressCountry' => 'BG'],
+        'areaServed' => ['@type' => 'Country', 'name' => __('България')],
+    ];
+@endphp
+<script type="application/ld+json">{!! json_encode(array_filter($ld), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
+@endpush
+
 @section('content')
 
 {{-- Hero: dark in both themes --}}

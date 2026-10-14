@@ -30,6 +30,7 @@ class Content
     public const SEO_PAGES = [
         'home' => 'Начало',
         'services' => 'Услуги',
+        'site-check' => 'Проверка на сайт',
         'packages' => 'Пакети',
         'portfolio' => 'Проекти',
         'blog.index' => 'Блог',

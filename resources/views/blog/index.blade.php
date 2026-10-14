@@ -4,7 +4,7 @@
 @section('meta_description', __('Статии за сайтове, SEO, Google Business и имейл кампании за малки и средни бизнеси. Пишем просто и с примери.'))
 
 @section('content')
-@include('partials/page-header', ['eyebrow' => $category ? __('Блог') : null, 'heading' => $category ? $category->trOrBg('name') : __('Блог'), 'sub' => __('Тук ще има полезни неща за сайтове и онлайн маркетинг.')])
+@include('partials/page-header', ['eyebrow' => $category ? __('Блог') : null, 'heading' => $category ? $category->trOrBg('name') : __('Блог'), 'sub' => __('Статии за сайтове, Google и имейл кампании. Пишем просто и с примери.')])
 
 <section class="py-16 md:py-20 bg-white dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,8 +23,13 @@
                 <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-brand-50 flex items-center justify-center dark:bg-white/10">
                     <x-icon name="file" class="text-brand-600 text-xl dark:text-brand-300" />
                 </div>
-                <h2 class="text-2xl font-bold mb-3 dark:text-white">{{ __('Скоро ще публикуваме първите статии') }}</h2>
-                <p class="text-gray-600 dark:text-gray-300">{{ __('Междувременно, ако имате въпрос за сайта или за Google, пишете ни.') }}</p>
+                @if(app()->getLocale() === 'en' && ! $category)
+                    <h2 class="text-2xl font-bold mb-3 dark:text-white">Our articles are in Bulgarian for now</h2>
+                    <p class="text-gray-600 dark:text-gray-300">Read them on the <a href="{{ lroute('blog.index', [], 'bg') }}" hreflang="bg" class="font-semibold text-brand-700 underline dark:text-brand-300">Bulgarian blog</a>, or write to us if you have a question about your website or Google.</p>
+                @else
+                    <h2 class="text-2xl font-bold mb-3 dark:text-white">{{ __('Скоро ще публикуваме първите статии') }}</h2>
+                    <p class="text-gray-600 dark:text-gray-300">{{ __('Междувременно, ако имате въпрос за сайта или за Google, пишете ни.') }}</p>
+                @endif
             </div>
         @else
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

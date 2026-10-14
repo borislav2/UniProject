@@ -6,7 +6,7 @@
     $tel = fn ($p) => preg_replace('/[^0-9+]/', '', $p);
 @endphp
 <!doctype html>
-<html lang="bg">
+<html lang="{{ app()->getLocale() }}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,16 +29,16 @@
 
 <tr><td style="padding:0 36px;"><div style="border-top:1px solid #e2e8f0;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
 <tr><td style="padding:22px 36px 30px;{{ $f }}font-size:14px;line-height:1.6;color:#1f2a3a;">
-Поздрави,<br><strong style="color:#0f1a2b;">{{ $data['sender'] ?? 'Екипът на Creatium Lab' }}</strong><br><span style="color:#64748b;">Creatium Lab</span>
+{{ __('Поздрави,') }}<br><strong style="color:#0f1a2b;">{{ $data['sender'] ?? __('Екипът на Creatium Lab') }}</strong><br><span style="color:#64748b;">Creatium Lab</span>
 </td></tr>
 @hasSection('ps')
 <tr><td style="padding:0 36px 30px;{{ $f }}font-size:14px;line-height:1.6;color:#475569;"><strong style="color:#0f1a2b;">P.S.</strong> @yield('ps')</td></tr>
 @endif
 
 <tr><td bgcolor="#0f1a2b" style="background:#0f1a2b;padding:22px 36px;{{ $f }}font-size:13px;line-height:1.7;color:#9fb3cc;">
-<strong style="color:#ffffff;">Creatium Lab</strong> · Сайтове и дигитален маркетинг за малки бизнеси<br>
+<strong style="color:#ffffff;">Creatium Lab</strong> · {{ __('Сайтове и дигитален маркетинг за малки бизнеси') }}<br>
 @foreach($phones as $phone)<a href="tel:{{ $tel($phone) }}" style="color:#9cc0eb;text-decoration:none;">{{ $phone }}</a>@unless($loop->last) &nbsp;·&nbsp; @endunless @endforeach<br>
-<a href="mailto:{{ $contact['email'] }}" style="color:#9cc0eb;text-decoration:none;">{{ $contact['email'] }}</a> &nbsp;·&nbsp; <a href="{{ url('/') }}" style="color:#9cc0eb;text-decoration:none;">{{ parse_url(url('/'), PHP_URL_HOST) }}</a>
+<a href="mailto:{{ $contact['email'] }}" style="color:#9cc0eb;text-decoration:none;">{{ $contact['email'] }}</a> &nbsp;·&nbsp; <a href="{{ lroute('home') }}" style="color:#9cc0eb;text-decoration:none;">{{ parse_url(url('/'), PHP_URL_HOST) }}</a>
 </td></tr>
 
 </table>
