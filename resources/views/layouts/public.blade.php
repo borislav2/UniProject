@@ -202,14 +202,10 @@
 
     <footer class="relative surface-night grain on-dark text-white overflow-hidden">
         <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_70%)]" aria-hidden="true"></div>
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-28">
-            <div class="grid lg:grid-cols-12 gap-10 items-end pb-14 border-b border-white/10">
-                <div class="lg:col-span-7">
-                    <span class="eyebrow">{{ __('Следваща стъпка') }}</span>
-                    <p class="display mt-5 text-4xl sm:text-5xl md:text-6xl">{{ site('hero')['title'] }} <span class="text-shimmer">{{ site('hero')['highlight'] }}</span></p>
-                </div>
-                <div class="lg:col-span-5 flex flex-col sm:flex-row lg:justify-end gap-3">
-                    <a href="{{ lroute('contact') }}" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 md:pt-20">
+            <div class="pb-14 border-b border-white/10">
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <a href="{{ lroute('contact') }}" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 whitespace-nowrap bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
                         {{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-sm" />
                     </a>
                     <a href="mailto:{{ config('creatium.contact.email') }}" class="relative edge glass inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-semibold text-white hover:bg-white/10 transition-colors">
@@ -258,7 +254,7 @@
                 </div>
             </div>
         </div>
-        <div class="wordmark relative text-center whitespace-nowrap text-[15vw] -mb-[2.5vw] pt-2" aria-hidden="true">Creatium Lab</div>
+        <div class="wordmark relative pointer-events-none text-center whitespace-nowrap text-[15vw] -mb-[2.5vw] pt-2" aria-hidden="true">Creatium Lab</div>
     </footer>
 
     @if(config('creatium.gtm_id'))
