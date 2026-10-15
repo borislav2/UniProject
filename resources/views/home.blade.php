@@ -54,81 +54,8 @@
             </div>
         </div>
 
-        <div class="lg:col-span-5 relative rise-in" style="--d: 260ms" aria-hidden="true">
-            <div class="absolute -inset-10 rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true"></div>
-            <div class="tilt" data-tilt>
-                {{-- Illustration: a client's website with its marketing working around it --}}
-                <div class="edge glass relative rounded-[1.75rem] p-2 shadow-[0_40px_120px_-30px_rgb(0_0_0/0.85)]">
-                    <div class="rounded-[1.35rem] bg-ink-900/95 overflow-hidden ring-1 ring-white/5">
-                        <div class="flex items-center gap-3 px-4 py-3 border-b border-white/5">
-                            <div class="flex gap-1.5">
-                                <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f57]/80"></span>
-                                <span class="w-2.5 h-2.5 rounded-full bg-[#febc2e]/80"></span>
-                                <span class="w-2.5 h-2.5 rounded-full bg-[#28c840]/80"></span>
-                            </div>
-                            <div class="flex-1 flex items-center justify-center gap-2 rounded-lg bg-white/5 px-3 py-1.5 text-[11px] text-gray-400">
-                                <x-icon name="lock" class="text-[9px] text-emerald-400" /> {{ __('vashiat-biznes.bg') }}
-                            </div>
-                        </div>
-
-                        <div class="p-4 space-y-3">
-                            <div class="sheen relative overflow-hidden rounded-2xl bg-brand-gradient p-5 ring-1 ring-white/10">
-                                <div class="absolute inset-0 bg-grid-light opacity-60" aria-hidden="true"></div>
-                                <div class="relative flex items-center justify-between">
-                                    <span class="flex items-center gap-1.5 text-[11px] font-bold text-white"><span class="w-4 h-4 rounded-md bg-white/90"></span>{{ __('Вашият бизнес') }}</span>
-                                    <span class="flex gap-2"><span class="h-1.5 w-7 rounded-full bg-white/30"></span><span class="h-1.5 w-7 rounded-full bg-white/30"></span><span class="h-1.5 w-7 rounded-full bg-white/30"></span></span>
-                                </div>
-                                <p class="relative mt-5 text-lg font-extrabold leading-tight text-white">{{ __('Сайт, който носи клиенти') }}</p>
-                                <div class="relative mt-2 h-1.5 w-3/4 rounded-full bg-white/35"></div>
-                                <div class="relative mt-1.5 h-1.5 w-1/2 rounded-full bg-white/25"></div>
-                                <div class="relative mt-4 flex gap-2">
-                                    <span class="rounded-lg bg-white px-3 py-1.5 text-[11px] font-bold text-brand-950">{{ __('Запитване') }}</span>
-                                    <span class="rounded-lg bg-white/15 px-3 py-1.5 text-[11px] font-bold text-white ring-1 ring-white/20">{{ __('Обадете се') }}</span>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-5 gap-3">
-                                <div class="col-span-3 rounded-xl bg-white/[0.04] ring-1 ring-white/5 p-3">
-                                    <div class="flex items-center justify-between text-[10px] font-semibold text-gray-400">
-                                        <span>{{ __('Посещения') }}</span><x-icon name="chart-line" class="text-brand-300" />
-                                    </div>
-                                    <div class="mt-3 flex h-16 items-end gap-1.5">
-                                        @foreach([30, 42, 38, 55, 50, 68, 74, 92] as $h)
-                                            <span class="grow-bar flex-1 rounded-t-[3px] bg-gradient-to-t from-brand-600 to-brand-300" style="height: {{ $h }}%; --d: {{ 500 + $loop->index * 70 }}ms"></span>
-                                        @endforeach
-                                    </div>
-                                </div>
-                                <div class="col-span-2 space-y-2">
-                                    @foreach([['magnifying-glass', __('Google')], ['robot', __('AI търсене')], ['envelope-open-text', __('Имейли')]] as [$icon, $label])
-                                        <div class="flex items-center gap-2 rounded-lg bg-white/[0.04] ring-1 ring-white/5 px-2.5 py-2">
-                                            <span class="w-5 h-5 rounded-md bg-brand-500/20 flex items-center justify-center"><x-icon :name="$icon" class="text-[9px] text-brand-200" /></span>
-                                            <span class="text-[10px] font-semibold text-gray-300">{{ $label }}</span>
-                                            <span class="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="pop-in absolute -top-6 -right-2 sm:-right-8" style="--d: 1100ms">
-                    <div class="relative animate-float edge glass rounded-2xl bg-ink-900/90 px-4 py-3 flex items-center gap-3 shadow-[0_20px_50px_-20px_rgb(0_0_0/0.8)]">
-                        <span class="relative flex w-9 h-9 rounded-full bg-emerald-400/15 items-center justify-center">
-                            <x-icon name="bell" class="text-emerald-400 text-sm" />
-                            <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-400 animate-ping motion-reduce:animate-none"></span>
-                            <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-ink-900"></span>
-                        </span>
-                        <span class="text-sm leading-tight"><strong class="block text-white">{{ __('Ново запитване') }}</strong><span class="text-gray-400 text-xs">{{ __('от формата на сайта') }}</span></span>
-                    </div>
-                </div>
-
-                <div class="pop-in edge glass absolute -bottom-7 -left-2 sm:-left-10 rounded-2xl bg-ink-900/90 px-4 py-3 flex items-center gap-3 shadow-[0_20px_50px_-20px_rgb(0_0_0/0.8)]" style="--d: 1300ms">
-                    <span class="w-9 h-9 rounded-xl bg-brand-500/20 flex items-center justify-center"><x-icon name="calendar" class="text-brand-200 text-sm" /></span>
-                    <span class="text-sm leading-tight"><strong class="block text-white">{{ __('Консултация') }}</strong><span class="text-gray-400 text-xs">{{ __('записана за утре, 11:00') }}</span></span>
-                    <svg viewBox="0 0 64 28" class="hidden sm:block w-14 h-6 ml-1" fill="none"><path class="draw-line" d="M2 24 L14 18 L24 21 L36 11 L46 14 L62 3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-brand-300)"/></svg>
-                </div>
-            </div>
+        <div class="lg:col-span-5 2xl:-mr-16 rise-in" style="--d: 260ms">
+            @include('partials/hero-visual')
         </div>
     </div>
 </section>
