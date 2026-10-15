@@ -123,7 +123,7 @@
                     </div>
                 </div>
 
-                <div class="pop-in edge glass absolute -bottom-7 -left-2 sm:-left-10 rounded-2xl bg-ink-900/70 px-4 py-3 flex items-center gap-3 shadow-[0_20px_50px_-20px_rgb(0_0_0/0.8)]" style="--d: 1300ms">
+                <div class="pop-in edge glass absolute -bottom-7 -left-2 sm:-left-10 rounded-2xl bg-ink-900/90 px-4 py-3 flex items-center gap-3 shadow-[0_20px_50px_-20px_rgb(0_0_0/0.8)]" style="--d: 1300ms">
                     <span class="w-9 h-9 rounded-xl bg-brand-500/20 flex items-center justify-center"><x-icon name="calendar" class="text-brand-200 text-sm" /></span>
                     <span class="text-sm leading-tight"><strong class="block text-white">{{ __('Консултация') }}</strong><span class="text-gray-400 text-xs">{{ __('записана за утре, 11:00') }}</span></span>
                     <svg viewBox="0 0 64 28" class="hidden sm:block w-14 h-6 ml-1" fill="none"><path class="draw-line" d="M2 24 L14 18 L24 21 L36 11 L46 14 L62 3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-brand-300)"/></svg>
