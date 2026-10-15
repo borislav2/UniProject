@@ -473,6 +473,35 @@
     animation-delay: calc(var(--i, 0) * 4s);
 }
 
+/* Laptop screen: the marketing layer is revealed from the left (JS sets --reveal from 0% to 100%) */
+[data-reveal] { --reveal: 0%; }
+
+.reveal-layer {
+    clip-path: inset(0 calc(100% - var(--reveal)) 0 0);
+}
+
+.reveal-handle {
+    left: var(--reveal);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+[data-reveal].is-revealing .reveal-handle { opacity: 1; }
+
+[data-reveal].is-easing .reveal-layer { transition: clip-path 0.7s var(--ease-out-soft); }
+[data-reveal].is-easing .reveal-handle { transition: left 0.7s var(--ease-out-soft), opacity 0.2s; }
+
+.phone-wrap { transition: opacity 0.5s var(--ease-out-soft), transform 0.5s var(--ease-out-soft); }
+.marketing-on .phone-wrap { opacity: 0; transform: translate(20%, 8%) rotate(4deg); pointer-events: none; }
+
+@keyframes hint-nudge {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(4px); }
+}
+
+.hint-arrows { animation: hint-nudge 1.4s ease-in-out infinite; }
+.hint-arrows:first-child { animation-direction: reverse; }
+
 /* The phone scrolls down the demo shop and back */
 @keyframes phone-scroll {
     0%, 12% { transform: translateY(0); }
@@ -580,7 +609,7 @@
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .js .reveal { opacity: 1; transform: none; filter: none; transition: none; }
-    .animate-float, .rise-in, .rise-text, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .bg-animated, .halo-spin, .slide, .slide-zoom, .slide-toast, .phone-scroll, .ai-typing, .ai-answer, .typing-dot { animation: none; }
+    .animate-float, .rise-in, .rise-text, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .bg-animated, .halo-spin, .hint-arrows, .slide, .slide-zoom, .slide-toast, .phone-scroll, .ai-typing, .ai-answer, .typing-dot { animation: none; }
     .ai-typing { display: none; }
     .slide[style*="--i: 0"], .slide-toast[style*="--i: 0"] { opacity: 1; }
     .card-hover:hover, .card-hover:hover .icon-pop, .tilt { transform: none; }

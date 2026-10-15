@@ -50,6 +50,46 @@ if (motionOk && finePointer) {
     });
 }
 
+// Hero laptop: moving the pointer left to right over the screen reveals the marketing behind the site;
+// a click or tap switches all the way. Without interaction it shows a short hint once.
+document.querySelectorAll('[data-reveal]').forEach((screen) => {
+    let pinned = false;
+    let touched = false;
+    const stage = screen.closest('[data-tilt]');
+    const set = (percent, ease = false) => {
+        screen.classList.toggle('is-easing', ease);
+        screen.classList.toggle('is-revealing', percent > 0 && percent < 100);
+        screen.style.setProperty('--reveal', `${percent}%`);
+        stage?.classList.toggle('marketing-on', percent > 25);
+    };
+    const fromPointer = (event) => {
+        const box = screen.getBoundingClientRect();
+        return Math.max(0, Math.min(100, ((event.clientX - box.left) / box.width) * 100));
+    };
+
+    screen.addEventListener('pointermove', (event) => {
+        if (event.pointerType !== 'mouse' || pinned) return;
+        touched = true;
+        set(fromPointer(event));
+    });
+    screen.addEventListener('pointerleave', (event) => {
+        if (event.pointerType === 'mouse' && !pinned) set(0, true);
+    });
+    screen.addEventListener('click', () => {
+        touched = true;
+        pinned = !pinned;
+        set(pinned ? 100 : 0, true);
+    });
+
+    if (motionOk) {
+        setTimeout(() => {
+            if (touched) return;
+            set(42, true);
+            setTimeout(() => { if (!touched) set(0, true); }, 1400);
+        }, 3200);
+    }
+});
+
 // Header shadow once the page is scrolled
 const header = document.querySelector('[data-header]');
 if (header) {
