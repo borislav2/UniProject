@@ -430,34 +430,83 @@
     transform-style: preserve-3d;
 }
 
-/* A light sheen that passes over the mock-up's hero block every few seconds */
-@keyframes sheen {
-    0%, 60% { transform: translateX(-120%); }
-    100% { transform: translateX(120%); }
+/* Hero illustration loop (7 s): cursor clicks the button, a new inquiry arrives, the AI assistant answers */
+.halo-spin {
+    background: conic-gradient(from var(--angle), rgb(45 99 163 / 0.55), rgb(52 211 153 / 0.25), rgb(156 192 235 / 0.45), rgb(45 99 163 / 0.55));
+    animation: spin-angle 14s linear infinite;
 }
 
-.sheen {
-    position: relative;
-    overflow: hidden;
+/* Showcase: three demo sites take turns on the laptop (4 s each), each with its own notification */
+@keyframes slide-cycle {
+    0% { opacity: 0; }
+    4%, 31% { opacity: 1; }
+    35%, 100% { opacity: 0; }
 }
 
-.sheen::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(110deg, transparent 35%, rgb(255 255 255 / 0.22) 50%, transparent 65%);
-    animation: sheen 5s ease-in-out infinite;
+.slide {
+    opacity: 0;
+    animation: slide-cycle 12s linear infinite;
+    animation-delay: calc(var(--i, 0) * 4s);
 }
 
-/* Sparkline that draws itself */
-@keyframes draw {
-    to { stroke-dashoffset: 0; }
+@keyframes slide-zoom {
+    from { transform: scale(1.06); }
+    to { transform: scale(1); }
 }
 
-.draw-line {
-    stroke-dasharray: 120;
-    stroke-dashoffset: 120;
-    animation: draw 1.6s var(--ease-out-soft) 0.9s forwards;
+.slide-zoom {
+    animation-name: slide-cycle, slide-zoom;
+    animation-duration: 12s, 12s;
+    animation-timing-function: linear, var(--ease-out-soft);
+    animation-iteration-count: infinite;
+}
+
+@keyframes toast-cycle {
+    0%, 9% { opacity: 0; transform: translateY(12px) scale(0.95); }
+    13%, 30% { opacity: 1; transform: none; }
+    34%, 100% { opacity: 0; transform: translateY(-6px); }
+}
+
+.slide-toast {
+    opacity: 0;
+    animation: toast-cycle 12s var(--ease-out-soft) infinite;
+    animation-delay: calc(var(--i, 0) * 4s);
+}
+
+/* The phone scrolls down the demo shop and back */
+@keyframes phone-scroll {
+    0%, 12% { transform: translateY(0); }
+    48%, 60% { transform: translateY(-48%); }
+    100% { transform: translateY(0); }
+}
+
+.phone-scroll { animation: phone-scroll 14s ease-in-out infinite; }
+
+@keyframes ai-typing {
+    0%, 40% { opacity: 1; }
+    44%, 100% { opacity: 0; }
+}
+
+@keyframes ai-answer {
+    0%, 42% { opacity: 0; transform: translateY(6px); }
+    48%, 94% { opacity: 1; transform: none; }
+    100% { opacity: 0; }
+}
+
+.ai-typing { animation: ai-typing 7s linear infinite; }
+.ai-answer { animation: ai-answer 7s var(--ease-out-soft) infinite; }
+
+@keyframes typing-dot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-3px); opacity: 1; }
+}
+
+.typing-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 9999px;
+    background: #fff;
+    animation: typing-dot 1s ease-in-out infinite;
 }
 
 /* Process steps: a bar fills in when the step scrolls into view */
@@ -531,8 +580,9 @@
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .js .reveal { opacity: 1; transform: none; filter: none; transition: none; }
-    .animate-float, .rise-in, .rise-text, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .sheen::after, .draw-line, .bg-animated { animation: none; }
-    .draw-line { stroke-dashoffset: 0; }
+    .animate-float, .rise-in, .rise-text, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .bg-animated, .halo-spin, .slide, .slide-zoom, .slide-toast, .phone-scroll, .ai-typing, .ai-answer, .typing-dot { animation: none; }
+    .ai-typing { display: none; }
+    .slide[style*="--i: 0"], .slide-toast[style*="--i: 0"] { opacity: 1; }
     .card-hover:hover, .card-hover:hover .icon-pop, .tilt { transform: none; }
     .btn-shine::after, .scroll-progress { display: none; }
     .js .step-bar { transform: none; transition: none; }

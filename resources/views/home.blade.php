@@ -54,18 +54,8 @@
             </div>
         </div>
 
-        <div class="lg:col-span-5 rise-in" style="--d: 260ms">
-            <div class="relative edge glass rounded-[1.75rem] p-6 md:p-8 shadow-[0_40px_120px_-30px_rgb(0_0_0/0.8)]">
-                <p class="eyebrow">{{ $hero['standards_title'] }}</p>
-                <ul class="mt-6 space-y-6">
-                    @foreach($hero['standards'] as $item)
-                        <li class="flex items-start gap-4">
-                            <span class="w-11 h-11 shrink-0 rounded-xl bg-brand-500/20 flex items-center justify-center"><x-icon :name="['project-diagram', 'cogs', 'file-contract'][$loop->index % 3]" class="text-brand-200" /></span>
-                            <span><span class="block font-bold text-white">{{ $item['title'] }}</span><span class="mt-1 block text-sm text-gray-300 leading-relaxed">{{ $item['text'] }}</span></span>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
+        <div class="lg:col-span-5 2xl:-mr-16 rise-in" style="--d: 260ms">
+            @include('partials/hero-visual')
         </div>
     </div>
 </section>
