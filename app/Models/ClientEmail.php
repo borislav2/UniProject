@@ -27,6 +27,6 @@ class ClientEmail extends Model
 
     public function templateLabel(): string
     {
-        return ClientEmails::find($this->template)['label'] ?? $this->template;
+        return ClientEmails::label($this->template);
     }
 }

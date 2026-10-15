@@ -188,7 +188,6 @@
     "Искам подробен одит": "I want a detailed audit",
     "Ако имате въпрос за някой от резултатите, отговорете на този имейл или ни звъннете на": "If you have a question about any of the results, reply to this email or call us on",
     "Ако имате въпрос за някой от резултатите, просто отговорете на този имейл.": "If you have a question about any of the results, just reply to this email.",
-    "Поздрави,": "Best regards,",
     "Екипът на Creatium Lab": "The Creatium Lab team",
     "Сайтът не се отваря": "The website doesn't open",
     "Сървърът отговори с код :code вместо със страницата. Посетителите вероятно виждат грешка.": "The server answered with code :code instead of the page. Visitors probably see an error.",
@@ -290,5 +289,6 @@
     "Моля, изберете статус на проекта.": "Please choose the project status.",
     "Моля, изберете статус от списъка.": "Please choose a status from the list.",
     "Получихме запитването ви. Ще ви се обадим на :time за консултацията.": "We have received your enquiry. We will call you on :time for the consultation.",
-    "Консултация с Creatium Lab: :time": "Consultation with Creatium Lab: :time"
+    "Консултация с Creatium Lab: :time": "Consultation with Creatium Lab: :time",
+    "С уважение,": "Kind regards,"
 }

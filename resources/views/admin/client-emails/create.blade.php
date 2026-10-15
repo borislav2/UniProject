@@ -32,6 +32,7 @@
         <div>
             <label for="subject" class="block text-sm font-semibold text-gray-700 mb-1">Тема <span class="text-red-500">*</span></label>
             <input id="subject" name="subject" value="{{ old('subject', $tpl['subject']) }}" required maxlength="255" class="{{ $input }}">
+            <p class="mt-1 text-xs text-gray-500">{client_name} и {business} се попълват автоматично от полетата по-долу.</p>
         </div>
 
         <div class="border-t border-gray-200 pt-4 space-y-4">
