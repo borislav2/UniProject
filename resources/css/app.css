@@ -430,87 +430,66 @@
     transform-style: preserve-3d;
 }
 
-/* A light sheen that passes over the mock-up's hero block every few seconds */
-@keyframes sheen {
-    0%, 60% { transform: translateX(-120%); }
-    100% { transform: translateX(120%); }
-}
-
-.sheen {
-    position: relative;
-    overflow: hidden;
-}
-
-.sheen::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(110deg, transparent 35%, rgb(255 255 255 / 0.22) 50%, transparent 65%);
-    animation: sheen 5s ease-in-out infinite;
-}
-
-/* Sparkline that draws itself */
-@keyframes draw {
-    to { stroke-dashoffset: 0; }
-}
-
-.draw-line {
-    stroke-dasharray: 120;
-    stroke-dashoffset: 120;
-    animation: draw 1.6s var(--ease-out-soft) 0.9s forwards;
-}
-
-/* Hero mock-up: chart bars grow in one after another */
-@keyframes grow-bar {
-    from { transform: scaleY(0.15); }
-}
-
-.grow-bar {
-    transform-origin: bottom;
-    animation: grow-bar 0.9s var(--ease-out-soft) var(--d, 0ms) both;
-}
-
 /* Hero illustration loop (7 s): cursor clicks the button, a new inquiry arrives, the AI assistant answers */
 .halo-spin {
     background: conic-gradient(from var(--angle), rgb(45 99 163 / 0.55), rgb(52 211 153 / 0.25), rgb(156 192 235 / 0.45), rgb(45 99 163 / 0.55));
     animation: spin-angle 14s linear infinite;
 }
 
-@keyframes cursor-move {
-    0%, 6% { transform: translate(90px, 70px); opacity: 0; }
-    12% { opacity: 1; }
-    32% { transform: translate(0, 0); }
-    36% { transform: translate(0, 0) scale(0.82); }
-    40%, 82% { transform: translate(0, 0) scale(1); opacity: 1; }
-    90%, 100% { transform: translate(0, 0); opacity: 0; }
+/* Showcase: three demo sites take turns on the laptop (4 s each), each with its own notification */
+@keyframes slide-cycle {
+    0% { opacity: 0; }
+    4%, 31% { opacity: 1; }
+    35%, 100% { opacity: 0; }
 }
 
-.hero-cursor { animation: cursor-move 7s var(--ease-out-soft) infinite; }
-
-@keyframes click-ring {
-    0%, 35% { transform: scale(0.3); opacity: 0; }
-    37% { opacity: 0.9; }
-    50%, 100% { transform: scale(2.4); opacity: 0; }
+.slide {
+    opacity: 0;
+    animation: slide-cycle 12s linear infinite;
+    animation-delay: calc(var(--i, 0) * 4s);
 }
 
-.click-ring { animation: click-ring 7s ease-out infinite; }
-
-@keyframes toast-loop {
-    0%, 40% { opacity: 0; transform: translateY(12px) scale(0.95); }
-    46%, 88% { opacity: 1; transform: none; }
-    96%, 100% { opacity: 0; transform: translateY(-6px); }
+@keyframes slide-zoom {
+    from { transform: scale(1.06); }
+    to { transform: scale(1); }
 }
 
-.toast-loop { animation: toast-loop 7s var(--ease-out-soft) infinite; }
+.slide-zoom {
+    animation-name: slide-cycle, slide-zoom;
+    animation-duration: 12s, 12s;
+    animation-timing-function: linear, var(--ease-out-soft);
+    animation-iteration-count: infinite;
+}
+
+@keyframes toast-cycle {
+    0%, 9% { opacity: 0; transform: translateY(12px) scale(0.95); }
+    13%, 30% { opacity: 1; transform: none; }
+    34%, 100% { opacity: 0; transform: translateY(-6px); }
+}
+
+.slide-toast {
+    opacity: 0;
+    animation: toast-cycle 12s var(--ease-out-soft) infinite;
+    animation-delay: calc(var(--i, 0) * 4s);
+}
+
+/* The phone scrolls down the demo shop and back */
+@keyframes phone-scroll {
+    0%, 12% { transform: translateY(0); }
+    48%, 60% { transform: translateY(-48%); }
+    100% { transform: translateY(0); }
+}
+
+.phone-scroll { animation: phone-scroll 14s ease-in-out infinite; }
 
 @keyframes ai-typing {
-    0%, 52% { opacity: 1; }
-    56%, 100% { opacity: 0; }
+    0%, 40% { opacity: 1; }
+    44%, 100% { opacity: 0; }
 }
 
 @keyframes ai-answer {
-    0%, 54% { opacity: 0; transform: translateY(6px); }
-    60%, 94% { opacity: 1; transform: none; }
+    0%, 42% { opacity: 0; transform: translateY(6px); }
+    48%, 94% { opacity: 1; transform: none; }
     100% { opacity: 0; }
 }
 
@@ -601,9 +580,9 @@
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .js .reveal { opacity: 1; transform: none; filter: none; transition: none; }
-    .animate-float, .rise-in, .rise-text, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .sheen::after, .draw-line, .grow-bar, .bg-animated, .halo-spin, .hero-cursor, .click-ring, .toast-loop, .ai-typing, .ai-answer, .typing-dot { animation: none; }
-    .hero-cursor, .click-ring, .ai-typing { display: none; }
-    .draw-line { stroke-dashoffset: 0; }
+    .animate-float, .rise-in, .rise-text, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .bg-animated, .halo-spin, .slide, .slide-zoom, .slide-toast, .phone-scroll, .ai-typing, .ai-answer, .typing-dot { animation: none; }
+    .ai-typing { display: none; }
+    .slide[style*="--i: 0"], .slide-toast[style*="--i: 0"] { opacity: 1; }
     .card-hover:hover, .card-hover:hover .icon-pop, .tilt { transform: none; }
     .btn-shine::after, .scroll-progress { display: none; }
     .js .step-bar { transform: none; transition: none; }
