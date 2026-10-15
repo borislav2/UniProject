@@ -72,6 +72,8 @@ return [
             ['title' => 'Speed and security', 'text' => 'Modern web architecture, built for mobile devices and protected against outages.'],
             ['title' => 'Commerce integrations', 'text' => 'Modern payment methods (Stripe, myPOS, Apple Pay, Google Pay) and easy sign-in.'],
             ['title' => '24/7 monitoring and support', 'text' => 'Ongoing technical care and system updates so your processes never stop.'],
+            ['title' => 'Hosting, domain and business email', 'text' => 'We set up and look after your hosting, domain and email addresses on your domain, so everything runs in one place.'],
+            ['title' => 'Easy content management', 'text' => 'An admin panel where you change prices, texts and photos yourself, without waiting for anyone.'],
         ],
         'growth_title' => 'Marketing, analytics and positioning',
         'growth_tag' => 'The growth',
