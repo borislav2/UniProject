@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ClientEmail extends Model
 {
-    protected $fillable = ['project_id', 'user_id', 'template', 'to_email', 'subject', 'data', 'sent_at', 'error'];
+    protected $fillable = ['project_id', 'outreach_prospect_id', 'user_id', 'template', 'to_email', 'subject', 'data', 'sent_at', 'error'];
 
     protected $casts = [
         'data' => 'array',
@@ -18,6 +18,11 @@ class ClientEmail extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function outreachProspect(): BelongsTo
+    {
+        return $this->belongsTo(OutreachProspect::class);
     }
 
     public function user(): BelongsTo
