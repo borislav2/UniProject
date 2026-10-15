@@ -52,12 +52,6 @@ return [
         'title' => 'A website that sells. Marketing that brings customers.',
         'highlight' => 'Your whole digital engine – in one working system.',
         'subtitle' => 'Most businesses make a fundamental mistake: they invest in a website with one team and then look for an outside agency to rescue it with marketing. We design the technology platform and the marketing strategy fully integrated, so your business can generate results from day one.',
-        'standards_title' => 'How we work',
-        'standards' => [
-            ['title' => 'Integrated approach', 'text' => 'The website is built around the marketing strategy, not the other way round.'],
-            ['title' => 'Central control', 'text' => 'Code, analytics, SEO/GEO/AEO optimisation and content are managed under one roof.'],
-            ['title' => 'Transparent frameworks', 'text' => 'A fixed budget, a clearly defined scope and full predictability.'],
-        ],
         'button' => 'Book a consultation',
     ],
 

@@ -190,7 +190,7 @@ class CmsTest extends TestCase
         $hero = config('creatium.home_hero');
         $this->put('/admin/content/home_hero', ['locale' => 'bg', 'content' => ['title' => 'Нов заглавен текст.'] + $hero])->assertRedirect()->assertSessionHasNoErrors();
 
-        $this->get('/')->assertSee('Нов заглавен текст.')->assertSee($hero['standards'][0]['title']);
+        $this->get('/')->assertSee('Нов заглавен текст.')->assertSee($hero['highlight']);
         $this->get('/en')->assertSee('A website that sells.');
 
         $this->delete('/admin/content/home_hero', ['locale' => 'bg']);

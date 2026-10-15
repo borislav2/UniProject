@@ -460,6 +460,16 @@
     animation: draw 1.6s var(--ease-out-soft) 0.9s forwards;
 }
 
+/* Hero mock-up: chart bars grow in one after another */
+@keyframes grow-bar {
+    from { transform: scaleY(0.15); }
+}
+
+.grow-bar {
+    transform-origin: bottom;
+    animation: grow-bar 0.9s var(--ease-out-soft) var(--d, 0ms) both;
+}
+
 /* Process steps: a bar fills in when the step scrolls into view */
 .js .step-bar {
     transform: scaleX(0);
@@ -531,7 +541,7 @@
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .js .reveal { opacity: 1; transform: none; filter: none; transition: none; }
-    .animate-float, .rise-in, .rise-text, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .sheen::after, .draw-line, .bg-animated { animation: none; }
+    .animate-float, .rise-in, .rise-text, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .sheen::after, .draw-line, .grow-bar, .bg-animated { animation: none; }
     .draw-line { stroke-dashoffset: 0; }
     .card-hover:hover, .card-hover:hover .icon-pop, .tilt { transform: none; }
     .btn-shine::after, .scroll-progress { display: none; }
