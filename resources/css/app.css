@@ -488,12 +488,11 @@
 }
 
 [data-header].is-scrolled > div {
-    background-color: rgb(255 255 255 / 0.9);
+    background-color: #fff;
     box-shadow: 0 14px 40px -16px rgb(15 26 43 / 0.35);
 }
 
 .dark [data-header].is-scrolled > div {
-    background-color: rgb(11 20 36 / 0.88);
     box-shadow: 0 14px 40px -16px rgb(0 0 0 / 0.9);
 }
 

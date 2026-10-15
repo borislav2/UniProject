@@ -71,7 +71,8 @@ class CmsTest extends TestCase
         $category = PostCategory::create(['name' => ['bg' => 'SEO'], 'slug' => ['bg' => 'seo']]);
 
         foreach (['/admin/posts', '/admin/posts/create', "/admin/posts/{$post->id}/edit", '/admin/post-categories', "/admin/post-categories/{$category->id}/edit",
-                  '/admin/content', '/admin/content/hero', '/admin/content/services?lang=en', '/admin/content/packages', '/admin/content/faq',
+                  '/admin/content', '/admin/content/home_hero', '/admin/content/home_problem', '/admin/content/home_engine', '/admin/content/home_process', '/admin/content/home_contact',
+                  '/admin/content/services_page?lang=en', '/admin/content/plans', '/admin/content/questions',
                   '/admin/seo', '/admin/seo/home', '/admin/seo/blog.index', '/admin/profile'] as $url) {
             $this->get($url)->assertOk();
         }
@@ -186,15 +187,14 @@ class CmsTest extends TestCase
     {
         $this->actingAs($this->editor());
 
-        $this->put('/admin/content/hero', ['locale' => 'bg', 'content' => [
-            'title' => 'Нов заглавен текст.', 'highlight' => 'Ново.', 'subtitle' => 'Подзаглавие', 'text' => 'Текст',
-        ]])->assertRedirect()->assertSessionHasNoErrors();
+        $hero = config('creatium.home_hero');
+        $this->put('/admin/content/home_hero', ['locale' => 'bg', 'content' => ['title' => 'Нов заглавен текст.'] + $hero])->assertRedirect()->assertSessionHasNoErrors();
 
-        $this->get('/')->assertSee('Нов заглавен текст.');
-        $this->get('/en')->assertSee('Be recognizable.');
+        $this->get('/')->assertSee('Нов заглавен текст.')->assertSee($hero['standards'][0]['title']);
+        $this->get('/en')->assertSee('A website that sells.');
 
-        $this->delete('/admin/content/hero', ['locale' => 'bg']);
-        $this->get('/')->assertSee('Бъди разпознаваем.');
+        $this->delete('/admin/content/home_hero', ['locale' => 'bg']);
+        $this->get('/')->assertSee('Сайт, който продава.');
     }
 
     public function test_team_profiles_can_be_edited_in_the_admin(): void
@@ -218,22 +218,23 @@ class CmsTest extends TestCase
     public function test_content_lists_can_add_and_remove_items(): void
     {
         $this->actingAs($this->editor());
-        $faq = config('creatium.faq');
+        $faq = config('creatium.questions');
         $input = [];
         foreach ($faq as $i => $item) {
             $input[$i] = $item + ($i === 0 ? ['_remove' => '1'] : []);
         }
         $input['new0'] = ['q' => 'Нов въпрос?', 'a' => 'Нов отговор.'];
 
-        $this->put('/admin/content/faq', ['locale' => 'bg', 'content' => $input])->assertSessionHasNoErrors();
+        $this->put('/admin/content/questions', ['locale' => 'bg', 'content' => $input])->assertSessionHasNoErrors();
 
         $this->get('/za-nas')->assertSee('Нов въпрос?')->assertDontSee($faq[0]['q']);
 
-        $this->put('/admin/content/packages', ['locale' => 'bg', 'content' => [
-            ['name' => 'Старт', 'description' => 'x', 'price_note' => 'от 600 €', 'features' => "Едно\nДве\n\n", 'highlighted' => '0'],
-        ]])->assertSessionHasNoErrors();
-        $this->get('/paketi')->assertSee('от 600 €');
-        $this->assertSame(['Едно', 'Две'], site('packages')[0]['features']);
+        $plans = config('creatium.plans');
+        $plans['items'] = [['name' => 'Старт', 'badge' => '', 'highlighted' => '0', 'audience' => 'x', 'prices' => "€600 веднъж\n\n",
+            'build_title' => 'Включва', 'build_items' => "Едно: първо\nДве\n\n", 'monthly_title' => '', 'monthly_items' => '']];
+        $this->put('/admin/content/plans', ['locale' => 'bg', 'content' => $plans])->assertSessionHasNoErrors();
+        $this->get('/paketi')->assertSee('€600')->assertSee('<strong class="text-brand-950 dark:text-white">Едно:</strong>', false);
+        $this->assertSame(['Едно: първо', 'Две'], site('plans')['items'][0]['build_items']);
     }
 
     public function test_page_seo_overrides(): void

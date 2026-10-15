@@ -33,41 +33,14 @@ return [
         ],
     ],
 
-    'faq' => [
-        ['q' => 'How much does it cost?', 'a' => 'The price depends on how many pages and how much content you need. Tell us what you want and before we start you will get a written offer with the exact price, the timeline and what is included.'],
-        ['q' => 'How long does a website take?', 'a' => 'A simple business site is ready in a few weeks. An online shop or a site with many pages takes longer. We give you an exact timeline once we have talked and know what you need.'],
-        ['q' => 'What do I need to prepare?', 'a' => 'Nothing special. If you have a logo, photos and text, we will use them. If not, we will help. You can also leave the domain and hosting to us.'],
-        ['q' => 'Can I change things on the site myself?', 'a' => 'We agree on this at the start. You can edit text and photos yourself, or just send us a message and we will do it.'],
-        ['q' => 'Do you work with businesses outside Sofia?', 'a' => 'Yes, from anywhere in Bulgaria and abroad. Most things are sorted out by phone and email, so we do not need to be in the same city.'],
-        ['q' => 'I have a website, but it brings no customers. Can you help?', 'a' => 'Yes. We look at what is in the way: a slow site, no presence on Google, a form that does not work. We fix it and then keep it in shape.'],
-        ['q' => 'What happens once the site is finished?', 'a' => 'We stay available. If you want a change or something stops working, write to us. We can also keep an eye on the site regularly, so problems are caught early.'],
-    ],
-
-    'industries' => [
-        ['name' => 'Restaurants', 'icon' => 'fa-utensils'],
-        ['name' => 'Beauty salons', 'icon' => 'fa-spa'],
-        ['name' => 'Online shops', 'icon' => 'fa-bag-shopping'],
-        ['name' => 'Craftspeople', 'icon' => 'fa-hammer'],
-        ['name' => 'Medical practices', 'icon' => 'fa-stethoscope'],
-        ['name' => 'Construction companies', 'icon' => 'fa-helmet-safety'],
-        ['name' => 'Car repair shops', 'icon' => 'fa-car'],
-    ],
-
-    'hero' => [
-        'title' => 'Be recognizable.',
-        'highlight' => 'Be Digital.',
-        'subtitle' => 'A website Google loves, and marketing that actually sells.',
-        'text' => '',
-        'image' => null,
-    ],
-
-    'home_sections' => [
-        'services_eyebrow' => 'Services',
-        'services_title' => 'How we can help you stand out',
-        'process_eyebrow' => 'From Concept to Implementation',
-        'process_title' => 'How we work',
-        'contact_title' => "Let's talk.",
-        'contact_text' => 'Tell us about your business and what we can help with.',
+    'questions' => [
+        ['q' => 'How is the project budget set?', 'a' => 'We work with fixed price frameworks, starting from €450 for a starter website and €850 for a complete system for active marketing and online sales. All parameters, features and deadlines are described in our proposal in advance, so you have full visibility of your budget before the official start.'],
+        ['q' => 'What is the monthly subscription for?', 'a' => 'To bring real results, a website needs systematic support and development, not just to sit there as a static business card. The monthly subscription covers round-the-clock technical security, hosting, regular backups and system updates, as well as the active marketing work – tracking metrics in Google Analytics, keeping your positions in Google Maps and AI search engines (ChatGPT, Gemini), email communication and ongoing changes.'],
+        ['q' => 'Why are the website and the marketing done together?', 'a' => 'When the website and the marketing go to different contractors, communication often slows down and things do not line up – the marketing strategy runs into technical limits of the platform, and the website lacks tracking codes and the right structure. When they are designed together, the website is built with analytics, email funnels and SEO architecture in place from the very start.'],
+        ['q' => 'How long does a project take?', 'a' => 'The standard time to build the platform, set up the analytics and prepare the initial marketing processes is between 2 and 4 weeks. The schedule is agreed at the start and followed strictly.'],
+        ['q' => 'Do we need ready texts and visuals?', 'a' => 'Not necessarily. As part of the marketing service we structure and write professional, selling texts and articles for your business. For visuals we work with your real photos or choose suitable licensed images.'],
+        ['q' => 'Can we make changes to the content ourselves?', 'a' => 'Yes. Websites come with an easy-to-use admin panel. On top of that, your subscription includes our regular support – so when you need to change prices, offers or texts, we can quickly do it for you.'],
+        ['q' => 'How does payment work?', 'a' => 'The project starts with a 50% advance payment when the contract is signed and the scope is set. The remaining 50% is paid after you review the finished demo, the final corrections are made and you fully approve the product, before it goes live.'],
     ],
 
     'about' => [
@@ -75,52 +48,99 @@ return [
         'paragraphs' => [],
     ],
 
-    'audience' => [
-        'title' => 'For small and medium-sized businesses that want more inquiries',
-        'intro' => '',
-        'cards' => [
-            ['icon' => 'store', 'title' => 'New website from scratch', 'text' => 'We build a modern, fast website optimized for Google and mobile devices. Complete with inquiry forms and full Google Maps integration.'],
-            ['icon' => 'screwdriver-wrench', 'title' => 'Optimize your existing website', 'text' => 'We analyze your site, boost it in Google rankings, fix technical issues, and keep it maintained regularly.'],
+    'home_hero' => [
+        'title' => 'A website that sells. Marketing that brings customers.',
+        'highlight' => 'Your whole digital engine – in one working system.',
+        'subtitle' => 'Most businesses make a fundamental mistake: they invest in a website with one team and then look for an outside agency to rescue it with marketing. We design the technology platform and the marketing strategy fully integrated, so your business can generate results from day one.',
+        'standards_title' => 'How we work',
+        'standards' => [
+            ['title' => 'Integrated approach', 'text' => 'The website is built around the marketing strategy, not the other way round.'],
+            ['title' => 'Central control', 'text' => 'Code, analytics, SEO/GEO/AEO optimisation and content are managed under one roof.'],
+            ['title' => 'Transparent frameworks', 'text' => 'A fixed budget, a clearly defined scope and full predictability.'],
+        ],
+        'button' => 'Book a consultation',
+    ],
+
+    'home_problem' => [
+        'title' => 'Why do fragmented digital services waste resources?',
+        'scenarios' => [
+            ['label' => 'Scenario A', 'title' => 'You have a website but no marketing infrastructure', 'text' => 'You have a presentable digital shop window that stays completely invisible to the market. There are no analytics, Google does not index it properly, and potential customers leave without making an enquiry.'],
+            ['label' => 'Scenario B', 'title' => 'You invest in marketing, but the website stops the sales', 'text' => 'You send paid traffic and resources to a platform that loads slowly, has no properly configured tracking (Google Analytics 4, Bing Webmaster Tools) and breaks the user journey.'],
+            ['label' => 'The solution', 'title' => 'One system for digital growth', 'text' => 'We combine the technical build, high speed and security with precise analytics, email automation, brand content and optimisation for Google and AI search engines. Technology provides stability; marketing provides growth.'],
         ],
     ],
 
-    'services' => [
-        [
-            'slug' => 'websites',
-            'icon' => 'code',
-            'title' => 'Website design & maintenance',
-            'tag' => 'New site or improvements',
-            'description' => 'A website that presents you professionally and turns visitors into inquiries. We build a new one from scratch or improve the one you already have.',
-            'details' => 'Most people will open your site on their phone while looking for where to go or whom to call. So we make it fast, clear, and put your phone number and address where people can see them, so they can find you and reach you in seconds. Before we start, we show you a demo version, so you know what you are getting.',
-            'includes' => ['Design with your logo and colors', 'Inquiry form, tap-to-call phone number and a map', 'Google indexing', 'Help with the domain, hosting and email', 'A site audit once it is live', 'Changes and maintenance'],
+    'home_engine' => [
+        'title' => 'The components of your digital engine',
+        'tech_title' => 'Technology infrastructure',
+        'tech_tag' => 'The web platform',
+        'tech_items' => [
+            ['title' => 'Speed and security', 'text' => 'Modern web architecture, built for mobile devices and protected against outages.'],
+            ['title' => 'Commerce integrations', 'text' => 'Modern payment methods (Stripe, myPOS, Apple Pay, Google Pay) and easy sign-in.'],
+            ['title' => '24/7 monitoring and support', 'text' => 'Ongoing technical care and system updates so your processes never stop.'],
         ],
-        [
-            'slug' => 'monitoring',
-            'icon' => 'heart-pulse',
-            'title' => 'Website monitoring & health',
-            'tag' => 'Web Health & QA Support',
-            'description' => 'We keep an eye on your site and tell you what is wrong before you lose customers.',
-            'details' => 'A website can stop working without you knowing: the form does not send inquiries, a page does not open on a phone, or the site becomes very slow. Every one of those problems is a lost customer. We check your site regularly, test how it works and tell you what needs fixing.',
-            'includes' => ['Regular checks that the site is online', 'Functionality testing', 'Page speed check', 'Mobile version check', 'Updates and backups'],
+        'growth_title' => 'Marketing, analytics and positioning',
+        'growth_tag' => 'The growth',
+        'growth_items' => [
+            ['title' => 'Google Analytics & metrics', 'text' => 'Business analytics that track every traffic source and conversion.'],
+            ['title' => 'GEO, SEO & AI optimisation (AIO)', 'text' => 'Structuring your data so your brand is the first choice both in Google Maps and in AI assistants (ChatGPT, Gemini and others).'],
+            ['title' => 'Automated email marketing', 'text' => 'Automated communication sequences that retain and convert your users.'],
+            ['title' => 'Brand content and expert blogs', 'text' => 'Targeted texts that build authority in your niche and put your business ahead of the competition.'],
         ],
-        [
-            'slug' => 'geo-seo',
-            'icon' => 'map-location-dot',
-            'title' => 'GEO & SEO visibility',
-            'tag' => 'Local SEO and AI search',
-            'description' => 'When people in your city search for what you offer, they find you.',
-            'details' => 'When someone searches for "beauty salon Sofia" or "car repair near me", you want to be among the first results. We optimize your website and your Google profile for exactly those searches. More and more people also ask AI assistants like ChatGPT or Gemini for recommendations, so we structure the information about your business so the assistant can find you.',
-            'includes' => ['Keyword research for your city', 'Google Business Profile', 'Technical audit and fixes on the site', 'Google Analytics implementation', 'Content optimized for AI and search engines'],
+    ],
+
+    'home_process' => [
+        'title' => 'A managed, structured path from concept to market launch',
+        'steps' => [
+            ['title' => 'Strategic analysis', 'text' => 'A deep dive into the business model, the target audience and the competitive positioning.'],
+            ['title' => 'Architecture and marketing plan', 'text' => 'Designing the website structure, the marketing funnels and the analytics points in parallel.'],
+            ['title' => 'Demo and approval', 'text' => 'Reviewing an interactive prototype and approving the concept before the technical build.'],
+            ['title' => 'Development and integration', 'text' => 'Coding the platform, configuring security and setting up analytics, SEO parameters and email platforms.'],
+            ['title' => 'Technical tests and launch', 'text' => 'Checking system stability, mobile compatibility and integrations before the official launch.'],
+            ['title' => 'Regular support and growth', 'text' => 'Daily care for technical health and steady scaling of your marketing presence.'],
         ],
-        [
-            'slug' => 'email',
-            'icon' => 'envelope-open-text',
-            'title' => 'Emails & campaigns',
-            'tag' => 'Automated emails',
-            'description' => 'Emails at exactly the right moment, without you writing each one by hand.',
-            'details' => 'For example a welcome email for new subscribers, a reminder about a booked appointment, or an offer for a customer who has not bought anything in a few months. We plan the campaign, set it up and make sure the emails reach the right person.',
-            'includes' => ['A plan for sending the campaign', 'Setup of the platform and the sign-up form', 'Emails reach the right person', 'Changes and support after launch'],
+    ],
+
+    'home_contact' => [
+        'title' => 'Ready for a digital system that works for your sales?',
+        'text' => 'Tell us about your business goals. We will get back to you within one working day.',
+    ],
+
+    'services_page' => [
+        'title' => 'The architecture of your digital success',
+        'intro' => 'We do not sell fragmented services. We put in place the 4 essential elements that turn your online presence into a working sales channel.',
+        'cards' => [
+            [
+                'slug' => 'websites', 'icon' => 'code', 'label' => 'Development and design (the web foundation)',
+                'title' => 'A web platform designed to sell',
+                'tag' => 'Speed, looks and mobile compatibility without compromise.',
+                'description' => 'We build modern websites shaped around how your buyers behave. Lightning-fast loading, intuitive design and easy one-click payment.',
+                'includes' => ['Online payment integrations (Stripe, myPOS, Apple Pay)', 'One-click sign-in with Google and Facebook', 'Mobile optimisation for maximum conversion'],
+            ],
+            [
+                'slug' => 'geo-seo', 'icon' => 'magnifying-glass', 'label' => 'Analytics and SEO (visibility and discoverability)',
+                'title' => 'GEO, SEO and AI positioning',
+                'tag' => 'Be the first choice in Google and the new AI search engines.',
+                'description' => 'Search is changing. We structure your website so it is easy to find locally (Google Maps) and recommended by AI assistants (ChatGPT, Gemini).',
+                'includes' => ['Google Analytics setup and full traffic tracking', 'Local SEO and a Google Business profile', 'Optimisation for AI-driven search (AIO)'],
+            ],
+            [
+                'slug' => 'email', 'icon' => 'envelope-open-text', 'label' => 'Email marketing (retention and sales)',
+                'title' => 'Sales automation',
+                'tag' => 'Turn one-time visitors into loyal customers.',
+                'description' => 'We build smart email systems that talk to your customers at the moments that matter – automatically, without manual work from you.',
+                'includes' => ['Automated email funnels after an enquiry or purchase', 'Setup of leading platforms (Klaviyo, Mailchimp, Brevo)', 'Guaranteed deliverability straight to the inbox'],
+            ],
+            [
+                'slug' => 'monitoring', 'icon' => 'shield-halved', 'label' => 'Monitoring and security (support)',
+                'title' => '24/7 technical care and security',
+                'tag' => 'Peace of mind that your website works flawlessly every day.',
+                'description' => 'We take care of the full technical health of your platform, so you do not lose customers and revenue to outages, slow speed or hacker attacks.',
+                'includes' => ['24/7 uptime monitoring and immediate response', 'Regular backups and spam protection', 'Ongoing updates and speed optimisation'],
+            ],
         ],
+        'cta_title' => 'Do you need the complete system or a single component?',
+        'cta_button' => 'Discuss your project with us',
     ],
 
     // Card texts for the demo sites (same slugs as config/creatium.php; the demo pages themselves are in Bulgarian).
@@ -135,9 +155,9 @@ return [
 
     // Labels only: the keys must match config/creatium.php.
     'contact_topics' => [
-        'website' => 'Website design',
-        'monitoring' => 'Monitoring',
-        'marketing' => 'Marketing',
+        'new-system' => 'Building a new digital system (website + marketing)',
+        'modernization' => 'Modernising an existing website and marketing optimisation',
+        'support' => 'Technical support, analytics and digital growth',
     ],
 
     'business_sizes' => [
@@ -146,37 +166,66 @@ return [
         'large' => 'Large',
     ],
 
-    'process' => [
-        ['icon' => 'envelope', 'title' => 'Inquiry', 'description' => 'Send us an email and tell us what you need help with.'],
-        ['icon' => 'phone', 'title' => 'Phone call', 'description' => 'We call you back within one business day and ask about your business, your customers and what you are struggling with.'],
-        ['icon' => 'clipboard-list', 'title' => 'Offer', 'description' => 'We describe what we will do, how long it will take and what it will cost, and show you a demo version.'],
-        ['icon' => 'handshake', 'title' => 'Agreement', 'description' => 'We go through the offer together and change it as much as needed. We only start once you say yes.'],
-        ['icon' => 'code', 'title' => 'Build', 'description' => 'We do what we agreed on and show you how it is going before it is finished.'],
-        ['icon' => 'rocket', 'title' => 'Launch', 'description' => 'We launch your product (site or campaign), monitor it and keep developing it together with you.'],
-    ],
-
-    'packages' => [
-        [
-            'name' => 'Start',
-            'description' => 'A web presence for your business.',
-            'price_note' => '',
-            'features' => ['One page with the essentials', 'Works on mobile', 'Inquiry form', 'Basic Google setup'],
-            'highlighted' => false,
+    'plans' => [
+        'intro' => 'You are not just buying a "website". You get a full marketing department and technical team that grow your business every day.',
+        'items' => [
+            [
+                'name' => 'Starter Engine',
+                'badge' => '',
+                'highlighted' => false,
+                'audience' => 'For businesses that want a clean, modern look, perfect technical health and a secure foundation for attracting their first customers.',
+                'prices' => ['€450 initial investment (website build and structure)', '€150 / month (support, security and basic marketing oversight)'],
+                'build_title' => 'Initial build',
+                'build_items' => [
+                    'A fast website that sells: Modern UI/UX design, optimised for mobile devices and instant loading.',
+                    'Sales elements: Enquiry forms, quick-contact buttons, Google Maps integration and business email addresses.',
+                    'Demo review: We make corrections and launch only after your full approval.',
+                ],
+                'monthly_title' => 'Every month after that we take care of',
+                'monthly_items' => [
+                    'Technical security: 24/7 monitoring, protection against hacker attacks, daily backups and fast response.',
+                    'Content updates: Regular changes to prices, offers, photos and texts are included.',
+                    'Results tracking: Analysis of incoming traffic and a monthly report on visitor behaviour.',
+                ],
+            ],
+            [
+                'name' => 'Active Marketing & Growth',
+                'badge' => 'Most popular',
+                'highlighted' => true,
+                'audience' => 'For businesses ready to win their market. A full marketing strategy, automation, content and online sales.',
+                'prices' => ['€850 first month (website build + launch of the complete marketing machine)', '€400 / month (active marketing management, positioning and support)'],
+                'build_title' => 'In the first month we build and launch',
+                'build_items' => [
+                    'A high-conversion website: Everything in Package 1 + card payment integrations (Stripe / myPOS), Apple Pay, Google Pay and online booking systems.',
+                    'Marketing architecture: Tracking pixels, Google Analytics, conversion funnels and retargeting preparation.',
+                    'GEO & AI positioning: Optimisation for Google Maps and the new AI search engines (ChatGPT, Gemini), so they recommend you first.',
+                ],
+                'monthly_title' => 'Every month after that we do for your business',
+                'monthly_items' => [
+                    'Marketing strategy & branding: Campaign planning, building authority and developing your brand identity.',
+                    'Content & copywriting: Strong sales texts, blogs and articles that attract customers ready to buy.',
+                    'Automated email marketing: Building and sending automated email sequences that keep existing customers and win new ones.',
+                    'Local SEO & AI growth: Keeping your leading positions in Google and AI assistants.',
+                    'Full technical care: Round-the-clock monitoring, security, priority updates and lightning-fast response when needed.',
+                ],
+            ],
+            [
+                'name' => 'Custom Marketing Scale',
+                'badge' => '',
+                'highlighted' => false,
+                'audience' => 'For companies with specific business processes, complex software integrations and a need for large-scale marketing resources.',
+                'prices' => ['A custom quote for the build + a subscription based on scale'],
+                'build_title' => 'Includes',
+                'build_items' => [
+                    'Custom web architecture: Coded entirely around your processes (CRM, warehouse systems, ERP).',
+                    'Complete marketing expertise: Full sales funnels, content, visual strategy, real-time analytics and email systems.',
+                    'Priority team: Round-the-clock monitoring, regular strategy meetings and a guaranteed priority contact channel.',
+                ],
+                'monthly_title' => '',
+                'monthly_items' => [],
+            ],
         ],
-        [
-            'name' => 'Business',
-            'description' => 'When you have more to show: services, prices, photos.',
-            'price_note' => '',
-            'features' => ['Everything in Start', 'Up to 5 pages', 'SEO setup', 'Google Business Profile'],
-            'highlighted' => true,
-        ],
-        [
-            'name' => 'Growth',
-            'description' => 'A website plus monthly work to climb in Google.',
-            'price_note' => '',
-            'features' => ['Everything in Business', 'Monthly SEO work', 'New copy for the site', 'Ranking tracking on Google', 'A short monthly report'],
-            'highlighted' => false,
-        ],
+        'button' => 'Request a quote for this package',
     ],
 
     'cookies' => [

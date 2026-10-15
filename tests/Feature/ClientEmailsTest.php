@@ -43,9 +43,9 @@ class ClientEmailsTest extends TestCase
     private function offerData(array $overrides = []): array
     {
         return array_merge([
-            'client_name' => 'Мария', 'business' => 'козметичния ви салон в София', 'sender' => 'Борислав Костадинов',
-            'price' => '450', 'deadline' => '2 седмици', 'advance' => '225', 'valid_until' => now()->addWeek()->toDateString(),
-            'payment' => '50% аванс, 50% при пускане', 'pages' => 'Начало, Услуги, Контакти', 'not_included' => 'хостинг и домейн',
+            'client_name' => 'Мария', 'business' => 'Студио Лавандула', 'sender' => 'Екипът на Creatium Lab',
+            'price' => '850', 'monthly_price' => '400', 'deadline' => '2 до 3 седмици', 'valid_until' => now()->addWeek()->toDateString(),
+            'payment' => '50% авансово при старт на проекта и 50% след одобрение на готовата демо версия.',
         ], $overrides);
     }
 
@@ -58,8 +58,9 @@ class ClientEmailsTest extends TestCase
     public function test_index_lists_every_template_and_is_in_the_menu(): void
     {
         $this->actingAs($this->admin())->get('/admin/emails')->assertOk()
-            ->assertSee('Отговор на запитване за сайт')
-            ->assertSee('Оферта: пакет Старт')->assertSee('Оферта: пакет Бизнес')->assertSee('Оферта: пакет Растеж')
+            ->assertSee('Отговор на запитване')
+            ->assertSee('Оферта: Стартов двигател')->assertSee('Оферта: Активен Маркетинг &amp; Растеж', false)
+            ->assertDontSee('пакет Бизнес')
             ->assertSee('Имейли до клиенти')
             ->assertSee('Още няма изпратени имейли.');
     }
@@ -69,14 +70,16 @@ class ClientEmailsTest extends TestCase
         $user = $this->admin();
         $lead = $this->lead(['client_email' => 'maria@salon.bg']);
 
-        $this->actingAs($user)->get('/admin/emails/offer-biznes?project=' . $lead->id)->assertOk()
+        $this->actingAs($user)->get('/admin/emails/offer-active?project=' . $lead->id)->assertOk()
             ->assertSee('value="maria@salon.bg"', false)
             ->assertSee('value="Мария Петрова"', false)
-            ->assertSee('value="Борислав Костадинов"', false)
-            ->assertSee('value="Вашата оферта е готова: пакет Бизнес"', false)
-            ->assertSee('value="Начало, Услуги, Цени, За нас, Контакти"', false);
+            ->assertSee('value="Екипът на Creatium Lab"', false)
+            ->assertSee('value="Проектно предложение: Дигитален растеж и маркетинг за {business} | Creatium Lab"', false)
+            ->assertSee('value="850"', false)->assertSee('value="400"', false)
+            ->assertSee('value="' . now()->addDays(7)->toDateString() . '"', false);
 
         $this->actingAs($user)->get('/admin/emails/nyama')->assertNotFound();
+        $this->actingAs($user)->get('/admin/emails/offer-biznes')->assertNotFound();
         $this->actingAs($user)->get('/admin/inquiries')->assertSee('/admin/emails?project=' . $lead->id, false);
     }
 
@@ -92,42 +95,28 @@ class ClientEmailsTest extends TestCase
                 ->assertSee('Creatium Lab');
         }
 
-        $this->actingAs($user)->post('/admin/emails/offer-rastezh/preview', ['data' => $this->offerData(['monthly_price' => '150', 'min_term' => '6 месеца', 'texts_per_month' => '2'])])
-            ->assertSee('Оферта · пакет Растеж')->assertSee('150 €/месец')->assertSee('Нови текстове за сайта: 2 на месец')
-            ->assertSee('Не обещаваме конкретна позиция в Google');
-        $this->actingAs($user)->post('/admin/emails/offer-start/preview', ['data' => []])->assertSee('[Цена за изработка (€)] €');
-        $this->actingAs($user)->post('/admin/emails/inquiry-reply/preview', ['data' => []])->assertSee('Старт')->assertSee('Растеж')->assertSee('Няколко въпроса към вас')->assertSee('Директно с нас двамата');
+        $this->actingAs($user)->post('/admin/emails/offer-active/preview', ['data' => $this->offerData()])
+            ->assertSee('Активен Маркетинг &amp; Растеж за Студио Лавандула', false)
+            ->assertSee('€850 (еднократно)')->assertSee('€400 / месец')
+            ->assertSee('Онлайн разплащания &amp; Резервации', false)
+            ->assertSee('Ограничен прием на проекти')
+            ->assertSee('валидни до ' . now()->addWeek()->format('d.m.Y') . ' г.')
+            ->assertSee('Ако искате да уточним конкретен детайл');
+        $this->actingAs($user)->post('/admin/emails/offer-start/preview', ['data' => ['business' => 'Мотор Про', 'price' => '450', 'monthly_price' => '150']])
+            ->assertSee('Целенасочена архитектура')->assertSee('€450 (еднократно)')->assertSee('€150 / месец')
+            ->assertSee('Мотор Про')->assertDontSee('валидни до')->assertDontSee('Ако искате да уточним');
+        $this->actingAs($user)->post('/admin/emails/inquiry-reply/preview', ['data' => []])
+            ->assertSee('С какво се отличава нашият подход')->assertSee('Стартов двигател')->assertSee('Индивидуално Партньорство')
+            ->assertSee('ПРЕПОРЪЧАН')->assertSee('В какъв времеви рамков период планирате старта на проекта?')
+            ->assertSee('С уважение,');
     }
 
-    public function test_personal_and_fomo_fields_show_only_when_filled(): void
+    public function test_personal_note_shows_only_when_filled(): void
     {
         $user = $this->admin();
-        $empty = $this->actingAs($user)->post('/admin/emails/offer-start/preview', ['data' => $this->offerData()])->getContent();
-        $this->assertStringNotContainsString('Какво чухме от вас', $empty);
-        $this->assertStringNotContainsString('Бонус, ако потвърдите', $empty);
-        $this->assertStringContainsString('Предлагаме ви пакет', $empty);
-
-        $this->actingAs($user)->post('/admin/emails/offer-start/preview', ['data' => $this->offerData([
-            'heard' => 'Искате повече записвания през седмицата.',
-            'slots' => 'Имаме място за още 2 нови проекта през ноември.',
-            'bonus' => 'първият месец поддръжка без допълнително заплащане',
-        ])])
-            ->assertSee('Какво чухме от вас')->assertSee('Искате повече записвания през седмицата.')
-            ->assertSee('Затова ви предлагаме пакет')
-            ->assertSee('Имаме място за още 2 нови проекта през ноември.')
-            ->assertSee('Бонус, ако потвърдите до ' . now()->addWeek()->format('d.m.Y'))
-            ->assertSee('бонусът важи до');
-
+        $this->actingAs($user)->post('/admin/emails/inquiry-reply/preview', ['data' => ['client_name' => 'Мария']])->assertDontSee('Какво забелязахме');
         $this->actingAs($user)->post('/admin/emails/inquiry-reply/preview', ['data' => ['client_name' => 'Мария', 'personal_note' => 'Видяхме профила ви в Google.']])
             ->assertSee('Какво забелязахме')->assertSee('Видяхме профила ви в Google.');
-
-        // Без измислени факти и забранени фрази от DESIGN.md.
-        foreach (['inquiry-reply', 'offer-start', 'offer-biznes', 'offer-rastezh'] as $key) {
-            $html = $this->actingAs($user)->post("/admin/emails/$key/preview", ['data' => $this->offerData()])->getContent();
-            foreach (['гаранц', 'Не просто сайт', 'най-добри', 'години опит'] as $banned) {
-                $this->assertStringNotContainsStringIgnoringCase($banned, $html, "$key: $banned");
-            }
-        }
     }
 
     public function test_sending_an_offer_mails_the_client_logs_it_and_saves_the_email_on_the_inquiry(): void
@@ -136,8 +125,8 @@ class ClientEmailsTest extends TestCase
         $user = $this->admin();
         $lead = $this->lead();
 
-        $this->actingAs($user)->post('/admin/emails/offer-biznes', [
-            'to' => 'maria@salon.bg', 'subject' => 'Вашата оферта е готова: пакет Бизнес', 'project_id' => $lead->id, 'data' => $this->offerData(),
+        $this->actingAs($user)->post('/admin/emails/offer-active', [
+            'to' => 'maria@salon.bg', 'subject' => ClientEmails::find('offer-active')['subject'], 'project_id' => $lead->id, 'data' => $this->offerData(),
         ])->assertRedirect('/admin/emails')->assertSessionHas('success');
 
         Mail::assertSent(ClientTemplateMail::class, function (ClientTemplateMail $mail) {
@@ -145,16 +134,16 @@ class ClientEmailsTest extends TestCase
 
             return $mail->hasTo('maria@salon.bg')
                 && $mail->hasReplyTo(config('creatium.contact.email'))
-                && $mail->hasSubject('Вашата оферта е готова: пакет Бизнес')
+                && $mail->hasSubject('Проектно предложение: Дигитален растеж и маркетинг за Студио Лавандула | Creatium Lab')
                 && str_contains($html, 'Здравейте, Мария')
-                && str_contains($html, '450 €')
-                && str_contains($html, 'До 5 страници: Начало, Услуги, Контакти')
-                && str_contains($html, 'Цената и срокът са запазени до ' . now()->addWeek()->format('d.m.Y'))
+                && str_contains($html, '€850')
+                && str_contains($html, 'валидни до ' . now()->addWeek()->format('d.m.Y'))
                 && ! str_contains($html, '[');
         });
 
         $log = ClientEmail::sole();
-        $this->assertSame('offer-biznes', $log->template);
+        $this->assertSame('offer-active', $log->template);
+        $this->assertSame('Проектно предложение: Дигитален растеж и маркетинг за Студио Лавандула | Creatium Lab', $log->subject);
         $this->assertNotNull($log->sent_at);
         $this->assertSame($user->id, $log->user_id);
         $this->assertSame('maria@salon.bg', $lead->fresh()->client_email);
@@ -180,7 +169,7 @@ class ClientEmailsTest extends TestCase
         Mail::fake();
         $user = $this->admin();
 
-        $this->actingAs($user)->post('/admin/emails/offer-start', [
+        $this->actingAs($user)->post('/admin/emails/offer-active', [
             'to' => 'not-an-email', 'subject' => 'Оферта',
             'data' => $this->offerData(['price' => '', 'valid_until' => now()->subDay()->toDateString()]),
         ])->assertSessionHasErrors(['to', 'data.price', 'data.valid_until']);

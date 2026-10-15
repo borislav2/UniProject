@@ -12,14 +12,14 @@ class PageController extends Controller
     public function services()
     {
         return view('services', [
-            'services' => site('services'),
+            'page' => site('services_page'),
         ]);
     }
 
     public function packages()
     {
         return view('packages', [
-            'packages' => site('packages'),
+            'plans' => site('plans'),
         ]);
     }
 
@@ -36,7 +36,7 @@ class PageController extends Controller
 
     public function about()
     {
-        return view('about', ['about' => site('about'), 'team' => site('team'), 'faq' => site('faq')]);
+        return view('about', ['about' => site('about'), 'team' => site('team'), 'faq' => site('questions')]);
     }
 
     public function privacy()

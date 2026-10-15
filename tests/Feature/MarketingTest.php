@@ -19,7 +19,7 @@ class MarketingTest extends TestCase
         $request = $attribution ? $this->withSession([LeadAttribution::SESSION_KEY => $attribution]) : $this;
 
         return $request->post('/kontakti', [
-            'name' => 'Мария', 'phone' => '0888123456', 'service' => 'marketing', 'message' => 'Здравейте', 'consent' => '1',
+            'name' => 'Мария', 'phone' => '0888123456', 'email' => 'maria@example.bg', 'service' => 'modernization', 'message' => 'Здравейте', 'consent' => '1',
         ]);
     }
 
@@ -119,8 +119,8 @@ class MarketingTest extends TestCase
         config(['creatium.gtm_id' => 'GTM-5QRGW6DP']);
 
         $this->followingRedirects()->post('/kontakti', [
-            'name' => 'Мария', 'phone' => '0888123456', 'service' => 'marketing', 'consent' => '1',
-        ])->assertSee("event: 'generate_lead'", false)->assertSee(json_encode('Маркетинг'), false);
+            'name' => 'Мария', 'phone' => '0888123456', 'email' => 'maria@example.bg', 'service' => 'modernization', 'consent' => '1',
+        ])->assertSee("event: 'generate_lead'", false)->assertSee(json_encode('Модернизация на съществуващ сайт и маркетингова оптимизация'), false);
 
         $this->get('/')->assertDontSee('generate_lead');
     }

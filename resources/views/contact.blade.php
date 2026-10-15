@@ -24,7 +24,7 @@
             <p class="text-gray-600 dark:text-gray-300">{{ __('Отговаряме до един работен ден. Ако е спешно, обадете се.') }}</p>
         </div>
 
-        <div class="shadow-2xl shadow-brand-950/10 rounded-2xl ring-1 ring-gray-100 reveal dark:ring-white/10 dark:shadow-black/40">
+        <div class="min-w-0 shadow-2xl shadow-brand-950/10 rounded-2xl ring-1 ring-gray-100 reveal dark:ring-white/10 dark:shadow-black/40">
             @include('partials/contact-form')
         </div>
     </div>

@@ -30,7 +30,6 @@ class ClientEmailController extends Controller
         $project = $this->project($request);
 
         $defaults = collect($tpl['fields'])->map(fn ($field) => $field['default'] ?? '')->all();
-        $defaults['sender'] = $request->user()->name;
         if (array_key_exists('valid_until', $defaults)) {
             $defaults['valid_until'] = now()->addDays(7)->toDateString();
         }
@@ -66,7 +65,7 @@ class ClientEmailController extends Controller
         return view($tpl['view'], [
             'data' => $data,
             'package' => $tpl['package'] ?? null,
-            'subject' => $request->input('subject') ?: $tpl['subject'],
+            'subject' => ClientEmails::subject($request->input('subject') ?: $tpl['subject'], $data),
         ]);
     }
 
@@ -84,6 +83,7 @@ class ClientEmailController extends Controller
         ], collect($tpl['fields'])->mapWithKeys(fn ($f, $name) => ["data.$name" => '„' . $f['label'] . '“'])->all());
 
         $data = array_map(fn ($v) => is_string($v) ? trim($v) : $v, $validated['data']);
+        $validated['subject'] = ClientEmails::subject($validated['subject'], $data);
 
         $log = ClientEmail::create([
             'project_id' => $validated['project_id'] ?? null,

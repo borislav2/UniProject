@@ -15,24 +15,29 @@
                 <label for="website">{{ __('Не попълвайте това поле') }}</label>
                 <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
             </div>
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Име') }}</label>
-                <input type="text" id="name" name="name" value="{{ old('name') }}" required autocomplete="name"
-                       class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30">
-                @error('name')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
+            <div class="grid sm:grid-cols-2 gap-4">
+                <div class="sm:col-span-2">
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Име и фамилия') }}</label>
+                    <input type="text" id="name" name="name" value="{{ old('name') }}" required autocomplete="name" class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30">
+                    @error('name')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Телефон за връзка') }}</label>
+                    <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required autocomplete="tel" inputmode="tel" placeholder="{{ __('08X XXX XXXX') }}" class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 placeholder:text-gray-500 dark:placeholder:text-gray-400">
+                    @error('phone')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Имейл') }}</label>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" required autocomplete="email" class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30">
+                    @error('email')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
+                </div>
             </div>
             <div>
-                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Телефон') }}</label>
-                <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required autocomplete="tel" inputmode="tel" placeholder="{{ __('08X XXX XXXX') }}"
-                       class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 placeholder:text-gray-500 dark:placeholder:text-gray-400">
-                @error('phone')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <label for="service" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Тип услуга') }}</label>
+                <label for="service" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Настоящ статус на проекта') }}</label>
                 <div class="relative">
                     <select id="service" name="service" required
                             class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 appearance-none pr-10 dark:[color-scheme:dark] {{ $selectedService ? '' : 'text-gray-500 dark:text-gray-400' }}" onchange="this.classList.remove('text-gray-500', 'dark:text-gray-400')">
-                        <option value="" disabled class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" {{ $selectedService ? '' : 'selected' }}>{{ __('Изберете услуга') }}</option>
+                        <option value="" disabled class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" {{ $selectedService ? '' : 'selected' }}>{{ __('Изберете') }}</option>
                         @foreach(site('contact_topics') as $key => $topic)
                             <option value="{{ $key }}" class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" @selected($selectedService === $key)>{{ $topic }}</option>
                         @endforeach
@@ -41,35 +46,23 @@
                 </div>
                 @error('service')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
             </div>
+
+            @include('partials/booking')
+
             <div>
-                <label for="business_size" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Размер на бизнеса') }} <span class="text-gray-500 font-normal dark:text-gray-400">{{ __('(по желание)') }}</span></label>
-                <div class="relative">
-                    <select id="business_size" name="business_size"
-                            class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 appearance-none pr-10 dark:[color-scheme:dark] {{ old('business_size') ? '' : 'text-gray-500 dark:text-gray-400' }}" onchange="this.classList.remove('text-gray-500', 'dark:text-gray-400')">
-                        <option value="" class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" {{ old('business_size') ? '' : 'selected' }}>{{ __('Изберете размер') }}</option>
-                        @foreach(site('business_sizes') as $key => $size)
-                            <option value="{{ $key }}" class="bg-white text-gray-900 dark:bg-ink-900 dark:text-white" @selected(old('business_size') === $key)>{{ $size }}</option>
-                        @endforeach
-                    </select>
-                    <x-icon name="chevron-down" class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-500 dark:text-gray-400" />
-                </div>
-                @error('business_size')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <label for="message" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Нещо повече за бизнеса ви') }} <span class="text-gray-500 font-normal dark:text-gray-400">{{ __('(по желание)') }}</span></label>
-                <textarea id="message" name="message" rows="3"
-                          class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30">{{ old('message') }}</textarea>
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Описание на бизнес целите') }} <span class="text-gray-500 font-normal dark:text-gray-400">{{ __('(по избор)') }}</span></label>
+                <textarea id="message" name="message" rows="3" class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30">{{ old('message') }}</textarea>
                 @error('message')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
                     <input type="checkbox" name="consent" value="1" class="mt-1 accent-brand-600" {{ old('consent') ? 'checked' : '' }}>
-                    <span>{!! __('Съгласен/на съм да използвате данните ми, за да ми отговорите. Прочетох :link.', ['link' => '<a href="' . e(lroute('privacy')) . '" target="_blank" class="text-brand-700 underline dark:text-brand-300">' . e(__('Политиката за поверителност')) . '</a>']) !!}</span>
+                    <span>{!! __('Запознат/а съм с :link.', ['link' => '<a href="' . e(lroute('privacy')) . '" target="_blank" class="text-brand-700 underline dark:text-brand-300">' . e(__('Политиката за поверителност')) . '</a>']) !!}</span>
                 </label>
                 @error('consent')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
             </div>
-            <button type="submit" class="btn-shine w-full inline-flex items-center justify-center gap-2 bg-brand-950 text-white py-3.5 px-6 rounded-xl font-semibold hover:bg-brand-800 transition-colors dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">
-                {{ __('Изпратете запитване') }} <x-icon name="paper-plane" class="text-sm" />
+            <button type="submit" class="btn-shine w-full inline-flex items-center justify-center gap-2 bg-brand-950 text-white py-3.5 px-6 rounded-xl font-semibold uppercase tracking-wide hover:bg-brand-800 transition-colors dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">
+                {{ __('Стартирайте вашия проект') }} <x-icon name="paper-plane" class="text-sm" />
             </button>
         </form>
     @endif

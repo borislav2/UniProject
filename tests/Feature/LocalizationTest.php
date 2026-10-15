@@ -18,14 +18,15 @@ class LocalizationTest extends TestCase
         }
 
         $this->get('/en')
-            ->assertSee('Be recognizable.')
-            ->assertSee('How we can help you stand out')
-            ->assertSee('Website monitoring &amp; health', false);
+            ->assertSee('A website that sells.')
+            ->assertSee('The components of your digital engine')
+            ->assertSee('Book a consultation')
+            ->assertSee('Start your project');
     }
 
     public function test_bulgarian_stays_the_default(): void
     {
-        $this->get('/')->assertSee('<html lang="bg">', false)->assertSee('Бъди разпознаваем.');
+        $this->get('/')->assertSee('<html lang="bg">', false)->assertSee('Сайт, който продава.');
     }
 
     public function test_pages_link_to_their_other_language(): void
@@ -44,11 +45,11 @@ class LocalizationTest extends TestCase
         Mail::fake();
 
         $this->from('/en/contact')->post('/en/contact', [
-            'name' => 'John Smith', 'phone' => '+44 20 7946 0958', 'service' => 'monitoring', 'consent' => '1',
+            'name' => 'John Smith', 'phone' => '+44 20 7946 0958', 'email' => 'john@example.com', 'service' => 'support', 'consent' => '1',
         ])->assertRedirect('/en/contact')->assertSessionHas('success', 'We have received your inquiry. We will call you within one business day.');
 
         $lead = Project::where('source', 'website')->firstOrFail();
-        $this->assertSame('Мониторинг', $lead->service);
+        $this->assertSame('Техническа поддръжка, аналитика и дигитално развитие', $lead->service);
         $this->assertSame('en', $lead->locale);
     }
 

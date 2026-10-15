@@ -29,7 +29,8 @@
 
 <tr><td style="padding:0 36px;"><div style="border-top:1px solid #e2e8f0;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
 <tr><td style="padding:22px 36px 30px;{{ $f }}font-size:14px;line-height:1.6;color:#1f2a3a;">
-{{ __('Поздрави,') }}<br><strong style="color:#0f1a2b;">{{ $data['sender'] ?? __('Екипът на Creatium Lab') }}</strong><br><span style="color:#64748b;">Creatium Lab</span>
+@php($signature = $data['sender'] ?? __('Екипът на Creatium Lab'))
+{{ __('С уважение,') }}<br><strong style="color:#0f1a2b;">{{ $signature }}</strong>@unless(str_contains($signature, 'Creatium Lab'))<br><span style="color:#64748b;">Creatium Lab</span>@endunless
 </td></tr>
 @hasSection('ps')
 <tr><td style="padding:0 36px 30px;{{ $f }}font-size:14px;line-height:1.6;color:#475569;"><strong style="color:#0f1a2b;">P.S.</strong> @yield('ps')</td></tr>
