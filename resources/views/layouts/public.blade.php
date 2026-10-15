@@ -117,17 +117,16 @@
 
     <div class="scroll-progress" aria-hidden="true"></div>
     <header data-header class="sticky top-0 z-50 px-3 pt-3 md:px-4 md:pt-4 -mb-[4.25rem] md:-mb-20">
-      <div class="mx-auto max-w-7xl rounded-2xl border border-white/60 bg-white/90 shadow-[0_10px_30px_-14px_rgb(15_26_43/0.3)] backdrop-blur-xl backdrop-saturate-150 dark:border-white/10 dark:bg-ink-900/70 dark:shadow-[0_10px_30px_-14px_rgb(0_0_0/0.8)]">
+      <div class="mx-auto max-w-7xl rounded-2xl border border-white/60 bg-white shadow-[0_10px_30px_-14px_rgb(15_26_43/0.3)] backdrop-blur-xl backdrop-saturate-150">
         <nav class="px-4 sm:px-5" aria-label="{{ __('Основна навигация') }}">
             <div class="flex justify-between items-center h-14 md:h-16">
                 <a href="{{ lroute('home') }}" class="flex items-center shrink-0" aria-label="{{ __('Creatium Lab - начало') }}">
-                    <img src="{{ asset('images/logo.webp') }}" srcset="{{ asset('images/logo-224.webp') }} 224w, {{ asset('images/logo-352.webp') }} 352w, {{ asset('images/logo.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" fetchpriority="high" class="h-7 md:h-8 w-auto dark:hidden">
-                    <img src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" loading="lazy" class="hidden h-7 md:h-8 w-auto dark:block">
+                    <img src="{{ asset('images/logo.webp') }}" srcset="{{ asset('images/logo-224.webp') }} 224w, {{ asset('images/logo-352.webp') }} 352w, {{ asset('images/logo.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" fetchpriority="high" class="h-7 md:h-8 w-auto">
                 </a>
 
                 <div class="hidden lg:flex items-center gap-0.5 xl:gap-1">
                     @foreach($links as [$label, $href, $active])
-                        <a href="{{ $href }}" class="relative whitespace-nowrap px-2 xl:px-3 py-2 text-sm font-semibold rounded-lg transition-colors {{ $active ? 'text-brand-700 dark:text-brand-300' : 'text-gray-600 hover:text-brand-950 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-white/5' }}" @if($active) aria-current="page" @endif>
+                        <a href="{{ $href }}" class="relative whitespace-nowrap px-2 xl:px-3 py-2 text-sm font-semibold rounded-lg transition-colors {{ $active ? 'text-brand-700' : 'text-gray-600 hover:text-brand-950 hover:bg-gray-50' }}" @if($active) aria-current="page" @endif>
                             {{ $label }}
                             @if($active)
                                 <span class="absolute left-2 right-2 xl:left-3 xl:right-3 -bottom-0.5 h-0.5 rounded-full bg-brand-500"></span>
@@ -135,23 +134,23 @@
                         </a>
                     @endforeach
 
-                    <div class="ml-3 flex items-center rounded-lg border border-gray-200 p-0.5 text-xs font-bold dark:border-white/15" role="group" aria-label="{{ __('Език') }}">
+                    <div class="ml-3 flex items-center rounded-lg border border-gray-200 p-0.5 text-xs font-bold" role="group" aria-label="{{ __('Език') }}">
                         @foreach($languages as $code => [$short, $name])
-                            <a href="{{ $alternates[$code] }}" hreflang="{{ $code }}" lang="{{ $code }}" title="{{ $name }}" class="px-2 py-1 rounded-md transition-colors {{ $locale === $code ? 'bg-brand-950 text-white dark:bg-white dark:text-brand-950' : 'text-gray-600 hover:text-brand-950 dark:text-gray-300 dark:hover:text-white' }}" @if($locale === $code) aria-current="true" @endif>{{ $short }}</a>
+                            <a href="{{ $alternates[$code] }}" hreflang="{{ $code }}" lang="{{ $code }}" title="{{ $name }}" class="px-2 py-1 rounded-md transition-colors {{ $locale === $code ? 'bg-brand-950 text-white' : 'text-gray-600 hover:text-brand-950' }}" @if($locale === $code) aria-current="true" @endif>{{ $short }}</a>
                         @endforeach
                     </div>
 
-                    <button type="button" data-theme-toggle class="ml-1 w-9 h-9 inline-flex items-center justify-center rounded-lg text-gray-600 hover:text-brand-950 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-white/5" aria-label="{{ __('Тъмна тема') }}" aria-pressed="false">
+                    <button type="button" data-theme-toggle class="ml-1 w-9 h-9 inline-flex items-center justify-center rounded-lg text-gray-600 hover:text-brand-950 hover:bg-gray-50" aria-label="{{ __('Тъмна тема') }}" aria-pressed="false">
                         <span class="inline-flex dark:hidden"><x-icon name="moon" /></span><span class="hidden dark:inline-flex"><x-icon name="sun" /></span>
                     </button>
 
                     @auth
-                        <a href="{{ route('admin.dashboard') }}" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-gray-500 hover:text-brand-700 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/5" title="{{ __('Административен панел') }}" aria-label="{{ __('Административен панел') }}">
+                        <a href="{{ route('admin.dashboard') }}" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-gray-500 hover:text-brand-700 hover:bg-gray-50" title="{{ __('Административен панел') }}" aria-label="{{ __('Административен панел') }}">
                             <x-icon name="user-gear" />
                         </a>
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-gray-500 hover:text-brand-700 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/5" title="{{ __('Изход') }}" aria-label="{{ __('Изход') }}">
+                            <button type="submit" class="w-9 h-9 inline-flex items-center justify-center rounded-lg text-gray-500 hover:text-brand-700 hover:bg-gray-50" title="{{ __('Изход') }}" aria-label="{{ __('Изход') }}">
                                 <x-icon name="sign-out-alt" />
                             </button>
                         </form>
@@ -162,30 +161,30 @@
                 <div class="flex items-center gap-1 lg:hidden">
                     @foreach($languages as $code => [$short, $name])
                         @if($code !== $locale)
-                            <a href="{{ $alternates[$code] }}" hreflang="{{ $code }}" lang="{{ $code }}" class="h-10 px-2.5 inline-flex items-center rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-white/10" title="{{ $name }}">{{ $short }}</a>
+                            <a href="{{ $alternates[$code] }}" hreflang="{{ $code }}" lang="{{ $code }}" class="h-10 px-2.5 inline-flex items-center rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-100" title="{{ $name }}">{{ $short }}</a>
                         @endif
                     @endforeach
-                    <button type="button" data-theme-toggle class="w-10 h-10 inline-flex items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-white/10" aria-label="{{ __('Тъмна тема') }}" aria-pressed="false">
+                    <button type="button" data-theme-toggle class="w-10 h-10 inline-flex items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100" aria-label="{{ __('Тъмна тема') }}" aria-pressed="false">
                         <span class="inline-flex dark:hidden"><x-icon name="moon" /></span><span class="hidden dark:inline-flex"><x-icon name="sun" /></span>
                     </button>
-                    <button type="button" class="mobile-menu-button w-10 h-10 inline-flex items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-white/10" aria-label="{{ __('Меню') }}" aria-expanded="false" aria-controls="mobile-menu">
+                    <button type="button" class="mobile-menu-button w-10 h-10 inline-flex items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100" aria-label="{{ __('Меню') }}" aria-expanded="false" aria-controls="mobile-menu">
                         <x-icon name="bars" class="text-lg" />
                     </button>
                 </div>
             </div>
         </nav>
 
-        <div id="mobile-menu" class="mobile-menu hidden lg:hidden border-t border-gray-200/70 dark:border-white/10">
+        <div id="mobile-menu" class="mobile-menu hidden lg:hidden border-t border-gray-200/70">
             <div class="px-4 py-3 space-y-1">
                 @foreach($links as [$label, $href, $active])
-                    <a href="{{ $href }}" class="block px-3 py-2.5 rounded-lg font-medium {{ $active ? 'text-brand-700 bg-brand-50 dark:text-brand-300 dark:bg-white/5' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-white/5' }}">{{ $label }}</a>
+                    <a href="{{ $href }}" class="block px-3 py-2.5 rounded-lg font-medium {{ $active ? 'text-brand-700 bg-brand-50' : 'text-gray-700 hover:bg-gray-50' }}">{{ $label }}</a>
                 @endforeach
-                <a href="{{ lroute('contact') }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold dark:bg-white dark:text-brand-950">{{ __('Свържете се с нас') }}</a>
+                <a href="{{ lroute('contact') }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold">{{ __('Свържете се с нас') }}</a>
                 @auth
-                    <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-gray-500 dark:text-gray-400">{{ __('Административен панел') }}</a>
+                    <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-gray-500">{{ __('Административен панел') }}</a>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="block w-full text-left px-3 py-2 text-gray-500 dark:text-gray-400">{{ __('Изход') }}</button>
+                        <button type="submit" class="block w-full text-left px-3 py-2 text-gray-500">{{ __('Изход') }}</button>
                     </form>
                 @endauth
             </div>
