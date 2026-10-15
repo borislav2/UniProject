@@ -17,6 +17,10 @@
     @if($lead->service)
         <p><strong>Услуга:</strong> {{ $lead->service }}</p>
     @endif
+    @if($lead->consultation_at)
+        <p><strong>Консултация:</strong> {{ \App\Support\Booking::label($lead->consultation_at) }}
+            (<a href="{{ \App\Support\Booking::googleCalendarUrl($lead->consultation_at, 'Консултация: ' . str_replace('Запитване от ', '', $lead->name), 'Телефон: ' . $lead->client_phone . "\n" . route('admin.projects.show', $lead)) }}">добави в Google Календар</a>)</p>
+    @endif
     @if($lead->business_size)
         <p><strong>Размер на бизнеса:</strong> {{ $lead->business_size }}</p>
     @endif

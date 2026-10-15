@@ -14,14 +14,14 @@ class Content
 {
     /** Content keys editable in the admin panel, in menu order. */
     public const BLOCKS = [
-        'hero' => 'Начална страница: горна част',
-        'audience' => 'Начална страница: „Подходящо за“',
-        'industries' => 'Начална страница: браншове',
-        'home_sections' => 'Начална страница: заглавия на секциите',
-        'services' => 'Услуги',
-        'process' => 'Работен процес: стъпки',
-        'packages' => 'Пакети и цени',
-        'faq' => 'Често задавани въпроси',
+        'home_hero' => 'Начална страница: горна част',
+        'home_problem' => 'Начална страница: „Проблемът vs. Синергията“',
+        'home_engine' => 'Начална страница: „Двигателят“',
+        'home_process' => 'Начална страница: работен процес',
+        'home_contact' => 'Начална страница: контакти',
+        'services_page' => 'Услуги',
+        'plans' => 'Пакети и цени',
+        'questions' => 'Често задавани въпроси (За нас)',
         'about' => 'За нас: текст',
         'team' => 'За нас: екипът',
     ];
@@ -50,12 +50,13 @@ class Content
         'description' => 'Кратко описание', 'details' => 'Подробно (при „Вижте повече“)', 'includes' => 'Какво включва (по едно на ред)',
         'name' => 'Име', 'price_note' => 'Цена', 'features' => 'Какво включва (по едно на ред)', 'highlighted' => 'Препоръчан (тъмна карта)',
         'q' => 'Въпрос', 'a' => 'Отговор', 'role' => 'Роля', 'image' => 'Снимка', 'linkedin' => 'LinkedIn (адрес на профила)', 'bio' => 'Разказ за човека (по един абзац на ред)', 'skills' => 'Умения (по едно на ред)', 'paragraphs' => 'Абзаци (по един на ред)',
-        'services_eyebrow' => 'Услуги: надзаглавие', 'services_title' => 'Услуги: заглавие', 'process_eyebrow' => 'Работен процес: надзаглавие',
-        'process_title' => 'Работен процес: заглавие', 'contact_title' => 'Контакт: заглавие', 'contact_text' => 'Контакт: текст',
+        'standards_title' => 'Стандарти: заглавие', 'standards' => 'Стандарти на работа', 'button' => 'Текст на бутона', 'scenarios' => 'Сценарии', 'label' => 'Етикет',
+        'tech_title' => 'Блок 1: заглавие', 'tech_tag' => 'Блок 1: етикет', 'tech_items' => 'Блок 1: елементи', 'growth_title' => 'Блок 2: заглавие', 'growth_tag' => 'Блок 2: етикет', 'growth_items' => 'Блок 2: елементи', 'steps' => 'Стъпки', 'cta_title' => 'Призив: заглавие', 'cta_button' => 'Призив: бутон',
+        'items' => 'Пакети', 'badge' => 'Етикет (напр. „Най-предпочитан“)', 'audience' => 'За кого е', 'prices' => 'Цени (по една на ред)', 'build_title' => 'Първа част: заглавие', 'build_items' => 'Първа част (по един на ред, „Заглавие: текст“)', 'monthly_title' => 'Месечна част: заглавие', 'monthly_items' => 'Месечна част (по един на ред, „Заглавие: текст“)',
     ];
 
     /** Fields shown as a multi-line text box. */
-    public const LONG_FIELDS = ['text', 'intro', 'description', 'details', 'a', 'contact_text'];
+    public const LONG_FIELDS = ['text', 'intro', 'description', 'details', 'a', 'subtitle'];
 
     /** An empty copy of a config structure, used for "add item" in the admin form. */
     public static function blank(mixed $template): mixed

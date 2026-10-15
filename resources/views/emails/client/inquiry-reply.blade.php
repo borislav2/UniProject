@@ -58,11 +58,12 @@
 </td></tr>
 <tr><td style="padding:12px 36px 0;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="{{ $f }}">
-@foreach(site('packages') as $package)
+@foreach(site('plans')['items'] as $package)
     @php($dark = ! empty($package['highlighted']))
     <tr><td @if($dark) bgcolor="#0f1a2b" @endif style="{{ $dark ? 'background:#0f1a2b;' : 'border:1px solid #dde3ec;' }}border-radius:12px;padding:18px 20px;">
-    <div style="font-size:16px;font-weight:bold;color:{{ $dark ? '#ffffff' : '#0f1a2b' }};">{{ $package['name'] }}@if($dark) <span style="display:inline-block;margin-left:6px;padding:2px 8px;border-radius:10px;background:#2d63a3;color:#ffffff;font-size:11px;font-weight:bold;letter-spacing:0.5px;vertical-align:middle;">ПРЕПОРЪЧАН</span>@endif</div>
-    <div style="font-size:14px;line-height:1.55;color:{{ $dark ? '#d6e3f5' : '#475569' }};padding-top:4px;">{{ $package['description'] }}<br>{{ implode(' · ', $package['features'] ?? []) }}</div>
+    <div style="font-size:16px;font-weight:bold;color:{{ $dark ? '#ffffff' : '#0f1a2b' }};">{{ $package['name'] }}@if(filled($package['badge'] ?? null)) <span style="display:inline-block;margin-left:6px;padding:2px 8px;border-radius:10px;background:#2d63a3;color:#ffffff;font-size:11px;font-weight:bold;letter-spacing:0.5px;vertical-align:middle;">{{ mb_strtoupper($package['badge']) }}</span>@endif</div>
+    <div style="font-size:14px;line-height:1.55;color:{{ $dark ? '#d6e3f5' : '#475569' }};padding-top:4px;">{{ $package['audience'] }}</div>
+    <div style="font-size:14px;line-height:1.55;font-weight:bold;color:{{ $dark ? '#ffffff' : '#0f1a2b' }};padding-top:6px;">{!! collect($package['prices'])->map(fn ($p) => e($p))->implode('<br>') !!}</div>
     </td></tr>
     @unless($loop->last)<tr><td style="height:10px;line-height:10px;font-size:0;">&nbsp;</td></tr>@endunless
 @endforeach

@@ -27,6 +27,7 @@ class Project extends Model
         'website_url',
         'read_at',
         'email_sent_at',
+        'consultation_at',
         'locale',
         'is_public',
         'lead_channel',
@@ -42,6 +43,7 @@ class Project extends Model
         'is_public' => 'boolean',
         'read_at' => 'datetime',
         'email_sent_at' => 'datetime',
+        'consultation_at' => 'datetime',
     ];
     
     public function category()

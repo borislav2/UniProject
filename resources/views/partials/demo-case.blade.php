@@ -1,6 +1,6 @@
 {{-- Под всяко демо: трудностите на бранша, какво прави сайтът за тях, подходящ пакет и въпроси (данните са в creatium.demos). --}}
 @php
-    $package = $demo['package']['name'] ? collect(site('packages'))->firstWhere('name', $demo['package']['name']) : null;
+    $package = $demo['package']['name'] ? collect(site('plans')['items'])->firstWhere('name', $demo['package']['name']) : null;
 @endphp
 <section id="za-bransha" class="scroll-mt-20 bg-[#f5f8fc] text-gray-900 border-t border-gray-200 font-sans">
     <div class="max-w-6xl mx-auto px-4 py-16 md:py-20">
@@ -32,17 +32,19 @@
         <div class="mt-6 rounded-2xl bg-[#0f1a2b] text-white p-6 md:p-10 grid md:grid-cols-12 gap-8 items-center">
             <div class="md:col-span-7">
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-[#9cc0eb]">Подходящ пакет</p>
-                <h3 class="mt-3 text-2xl md:text-3xl font-extrabold">{{ $package ? 'Пакет ' . $package['name'] : 'Индивидуална оферта' }}</h3>
+                <h3 class="mt-3 text-2xl md:text-3xl font-extrabold">{{ $package ? $package['name'] : 'Индивидуална оферта' }}</h3>
                 <p class="mt-3 text-[#d6e3f5] leading-relaxed">{{ $demo['package']['why'] }}</p>
-                @if($package && ! empty($package['price_note']))
-                    <p class="mt-3 font-semibold">{{ $package['price_note'] }}</p>
+                @if($package)
+                    <ul class="mt-4 space-y-1 text-sm font-semibold">
+                        @foreach($package['prices'] as $price)<li>{{ $price }}</li>@endforeach
+                    </ul>
                 @endif
             </div>
             <div class="md:col-span-5">
                 @if($package)
                     <ul class="space-y-2.5">
-                        @foreach($package['features'] as $feature)
-                            <li class="flex items-start gap-3 text-[#d6e3f5]"><x-icon name="check" class="mt-1 text-xs text-[#9cc0eb]" />{{ $feature }}</li>
+                        @foreach(array_merge($package['build_items'], $package['monthly_items']) as $line)
+                            <li class="flex items-start gap-3 text-[#d6e3f5]"><x-icon name="check" class="mt-1 text-xs text-[#9cc0eb]" />{{ \Illuminate\Support\Str::before($line, ':') }}</li>
                         @endforeach
                     </ul>
                 @endif

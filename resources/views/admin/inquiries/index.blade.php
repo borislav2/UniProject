@@ -52,6 +52,13 @@
                 @if($inquiry->client_email)
                     <div><dt class="text-gray-500">Имейл</dt><dd class="font-semibold"><a href="mailto:{{ $inquiry->client_email }}" class="text-blue-600 hover:underline">{{ $inquiry->client_email }}</a></dd></div>
                 @endif
+                @if($inquiry->website_url)
+                    <div><dt class="text-gray-500">Сайт</dt><dd class="font-semibold"><a href="{{ $inquiry->website_url }}" target="_blank" rel="noopener" class="text-blue-600 hover:underline">{{ $inquiry->website_url }}</a></dd></div>
+                @endif
+                @if($inquiry->consultation_at)
+                    <div class="sm:col-span-2 rounded-md bg-amber-50 px-3 py-2"><dt class="text-amber-800">Консултация</dt><dd class="font-semibold text-gray-900">{{ \App\Support\Booking::label($inquiry->consultation_at) }}
+                        <a href="{{ \App\Support\Booking::googleCalendarUrl($inquiry->consultation_at, 'Консултация: ' . $customer, 'Телефон: ' . $inquiry->client_phone) }}" target="_blank" rel="noopener" class="ml-2 text-sm font-normal text-blue-600 hover:underline">добави в Google Календар</a></dd></div>
+                @endif
             </dl>
 
             <div class="mt-4">

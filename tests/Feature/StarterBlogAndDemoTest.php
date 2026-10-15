@@ -77,7 +77,7 @@ class StarterBlogAndDemoTest extends TestCase
 
     public function test_every_demo_explains_the_industry_problems_package_and_faq(): void
     {
-        $packages = collect(config('creatium.packages'))->pluck('name')->all();
+        $packages = collect(config('creatium.plans.items'))->pluck('name')->all();
 
         foreach (config('creatium.demos') as $demo) {
             $page = $this->get('/demo/' . $demo['slug'])->assertOk()
@@ -97,7 +97,7 @@ class StarterBlogAndDemoTest extends TestCase
             $package = $demo['package']['name'];
             if ($package) {
                 $this->assertContains($package, $packages, $demo['slug']);
-                $page->assertSee('Пакет ' . $package);
+                $page->assertSee($package);
             } else {
                 $page->assertSee('Индивидуална оферта');
             }
