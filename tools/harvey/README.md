@@ -6,15 +6,19 @@
 ## 1. Инсталация на Windows (веднъж)
 
 Нужни са Python 3.11 или по-нов (`py --version`), Git и Claude Code с вход в абонамента (`claude login`).
+Командите са за Command Prompt (cmd). Не пишете `py pip ...` и не задавайте версия като `py -3.12`: `py` избира инсталирания Python.
 
-```powershell
+```bat
 git clone https://github.com/ethanplusai/harvey.git
 cd harvey
-py -3.12 -m venv .venv
+py -m venv .venv
 .venv\Scripts\activate
-pip install -e .
+python -m pip install -e .
 copy .env.example .env
 ```
+
+След `activate` в началото на реда пише `(.venv)`. При всеки нов прозорец влезте в папката `harvey` и пуснете пак `.venv\Scripts\activate`.
+В PowerShell, ако `activate` е блокиран: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, после `.venv\Scripts\Activate.ps1`.
 
 Копирайте `harvey.local.yaml` от тази папка в папката `harvey`, а `product_knowledge.md` в `harvey\skills\`.
 
@@ -23,13 +27,13 @@ copy .env.example .env
 
 ## 2. Какво да търси (веднъж)
 
-```powershell
+```bat
 harvey signals --confirm free
 ```
 
 ## 3. Намиране на бизнеси
 
-```powershell
+```bat
 harvey discover --estimate     # показва цената (OpenStreetMap е безплатен)
 harvey discover                # намира бизнеси по градовете от harvey.local.yaml
 harvey run                     # чете сайтовете, намира и проверява имейли; спрете с Ctrl+C
