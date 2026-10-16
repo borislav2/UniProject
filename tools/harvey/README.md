@@ -25,6 +25,8 @@ copy .env.example .env
 В `.env` добавете поне един ключ за проверка на имейли (без него адресите остават „guess“ и не стават за писане):
 `REOON_API_KEY=` (600 безплатни проверки на месец, reoon.com). По желание `HUNTER_API_KEY=`.
 
+Ако Harvey гръмне с „'charmap' codec can't decode“, Python чете кирилицата грешно. Веднъж пуснете `setx PYTHONUTF8 1` и отворете нов прозорец (в текущия PowerShell: `$env:PYTHONUTF8 = "1"`).
+
 ## 2. Какво да търси (веднъж)
 
 ```bat
@@ -35,7 +37,7 @@ harvey signals --confirm free
 
 ```bat
 harvey discover --estimate     # показва цената (OpenStreetMap е безплатен)
-harvey discover                # намира бизнеси по градовете от harvey.local.yaml
+harvey discover                # намира бизнеси в София, Пловдив, Варна, Бургас, Велико Търново и Русе
 harvey run                     # чете сайтовете, намира и проверява имейли; спрете с Ctrl+C
 harvey export                  # записва prospects.csv само с проверени адреси
 ```
