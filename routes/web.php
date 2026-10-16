@@ -94,6 +94,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Потенциални клиенти: бизнеси от Harvey и първо писмо до тях
     Route::get('outreach', [OutreachController::class, 'index'])->name('outreach.index');
     Route::post('outreach/import', [OutreachController::class, 'import'])->name('outreach.import');
+    Route::post('outreach/import-server', [OutreachController::class, 'importServer'])->name('outreach.import-server');
     Route::get('outreach/{prospect}', [OutreachController::class, 'compose'])->name('outreach.compose');
     Route::post('outreach/{prospect}/preview', [OutreachController::class, 'preview'])->name('outreach.preview');
     Route::post('outreach/{prospect}/send', [OutreachController::class, 'send'])->middleware('throttle:20,1')->name('outreach.send');

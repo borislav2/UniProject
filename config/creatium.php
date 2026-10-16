@@ -60,6 +60,8 @@ return [
         'from_address' => env('OUTREACH_MAIL_FROM'),
         'from_name' => env('OUTREACH_MAIL_FROM_NAME', 'Creatium Lab'),
         'daily_limit' => (int) env('OUTREACH_DAILY_LIMIT', 20),
+        // Списъкът, който Harvey на сървъра изнася всеки ден (deploy/harvey/install-harvey.sh).
+        'harvey_csv' => env('OUTREACH_HARVEY_CSV', storage_path('app/harvey/prospects.csv')),
     ],
 
     // Безплатна проверка на сайт (/proverka-na-sait). audit_price_note е текстът за цената на подробния одит в имейла

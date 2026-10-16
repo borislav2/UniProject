@@ -170,6 +170,25 @@ class OutreachTest extends TestCase
         $this->assertFalse($prospect->fresh()->canBeEmailed());
     }
 
+    public function test_admin_imports_the_list_harvey_exported_on_the_server(): void
+    {
+        $user = $this->admin();
+        $path = tempnam(sys_get_temp_dir(), 'harvey');
+        config(['creatium.outreach.harvey_csv' => $path . '.missing']);
+        $this->actingAs($user)->get('/admin/outreach')->assertDontSee('Внеси от сървъра');
+        $this->actingAs($user)->post('/admin/outreach/import-server')->assertSessionHas('send_error');
+
+        file_put_contents($path, self::CSV);
+        config(['creatium.outreach.harvey_csv' => $path]);
+        $this->actingAs($user)->get('/admin/outreach')->assertSee('Внеси от сървъра');
+        $this->actingAs($user)->post('/admin/outreach/import-server')->assertSessionHas('success', 'От сървъра: 3 нови, 1 обновени, 1 пропуснати.');
+        $this->assertSame(3, OutreachProspect::count());
+
+        $this->artisan('creatium:outreach-import', ['path' => $path])->expectsOutputToContain('Нищо не е изпратено.')->assertSuccessful();
+        $this->artisan('creatium:outreach-import', ['path' => $path . '.missing'])->assertFailed();
+        unlink($path);
+    }
+
     private function import2(User $user): void
     {
         $file = UploadedFile::fake()->createWithContent('prospects.csv', self::CSV);

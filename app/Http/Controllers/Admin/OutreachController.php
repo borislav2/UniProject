@@ -30,6 +30,7 @@ class OutreachController extends Controller
             'status' => $status,
             'configured' => Outreach::configured(),
             'remaining' => Outreach::remainingToday(),
+            'serverCsv' => is_readable($path = config('creatium.outreach.harvey_csv')) ? \Illuminate\Support\Carbon::createFromTimestamp(filemtime($path)) : null,
         ]);
     }
 
@@ -40,6 +41,19 @@ class OutreachController extends Controller
         $result = Outreach::import($request->file('file')->getRealPath());
 
         return redirect()->route('admin.outreach.index')->with('success', "Внесени: {$result['added']} нови, {$result['updated']} обновени, {$result['skipped']} пропуснати (невалидни, повтарящи се или отписани).");
+    }
+
+    /** Внася последния списък, изнесен от Harvey на сървъра (без качване на файл). */
+    public function importServer()
+    {
+        $path = config('creatium.outreach.harvey_csv');
+        if (! is_readable($path)) {
+            return redirect()->route('admin.outreach.index')->with('send_error', 'Няма списък от Harvey на сървъра (' . $path . '). Изнася се всеки ден в 06:30.');
+        }
+
+        $result = Outreach::import($path);
+
+        return redirect()->route('admin.outreach.index')->with('success', "От сървъра: {$result['added']} нови, {$result['updated']} обновени, {$result['skipped']} пропуснати.");
     }
 
     public function compose(Request $request, OutreachProspect $prospect)

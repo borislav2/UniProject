@@ -26,6 +26,13 @@
             <button class="inline-flex items-center gap-2 rounded-lg bg-brand-950 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800"><x-icon name="plus" /> Внеси</button>
         </form>
         @error('file')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
+        @if($serverCsv)
+            <form action="{{ route('admin.outreach.import-server') }}" method="POST" class="mt-4 flex flex-wrap items-center gap-3 border-t border-gray-100 pt-4">
+                @csrf
+                <button class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-50"><x-icon name="rotate-left" /> Внеси от сървъра</button>
+                <span class="text-sm text-gray-600">Harvey на сървъра изнесе списък на {{ $serverCsv->timezone('Europe/Sofia')->format('d.m.Y H:i') }}.</span>
+            </form>
+        @endif
     </div>
     <div class="rounded-lg bg-white p-5 shadow text-sm text-gray-700 space-y-1">
         <h3 class="font-bold text-gray-900">Правила</h3>
