@@ -30,6 +30,8 @@ copy .env.example .env
 
 Копирайте `harvey.local.yaml` от тази папка в папката `harvey`, а `product_knowledge.md` в `harvey\skills\`.
 
+Безплатният източник (OpenStreetMap) в Harvey познава само няколко американски занаята и отказва „restaurant“ или „beauty salon“. Копирайте и `osm_categories.py` в папката `harvey` и пуснете `python osm_categories.py .` Пускайте го и след всяко обновяване на Harvey; ако `git pull` откаже, първо `git checkout -- harvey/collectors/discover.py`.
+
 В `.env` добавете поне един ключ за проверка на имейли (без него адресите остават „guess“ и не стават за писане):
 `REOON_API_KEY=` (600 безплатни проверки на месец, reoon.com). По желание `HUNTER_API_KEY=`.
 
