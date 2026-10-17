@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ClientEmailController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\InquiryController;
+use App\Http\Controllers\Admin\OutreachController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OutreachUnsubscribeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SiteCheckController;
 use Illuminate\Support\Facades\Route;
@@ -58,6 +60,9 @@ foreach (['bg', 'en'] as $locale) {
 // Demo sites shown on the Projects page (Bulgarian only, not indexed)
 Route::get('/demo/{slug}', [DemoController::class, 'show'])->where('slug', '[a-z-]+')->name('demo.show');
 
+// Отписване от първите писма до бизнеси (линк в писмото + one-click от пощенския клиент)
+Route::match(['get', 'post'], '/otpisvane/{prospect}', OutreachUnsubscribeController::class)->middleware('signed')->name('outreach.unsubscribe');
+
 Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [PageController::class, 'robots'])->name('robots');
 
@@ -85,6 +90,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('emails/{template}', [ClientEmailController::class, 'create'])->name('client-emails.create');
     Route::post('emails/{template}/preview', [ClientEmailController::class, 'preview'])->name('client-emails.preview');
     Route::post('emails/{template}', [ClientEmailController::class, 'store'])->middleware('throttle:20,1')->name('client-emails.store');
+
+    // Потенциални клиенти: бизнеси от Harvey и първо писмо до тях
+    Route::get('outreach', [OutreachController::class, 'index'])->name('outreach.index');
+    Route::post('outreach/import', [OutreachController::class, 'import'])->name('outreach.import');
+    Route::post('outreach/import-server', [OutreachController::class, 'importServer'])->name('outreach.import-server');
+    Route::get('outreach/{prospect}', [OutreachController::class, 'compose'])->name('outreach.compose');
+    Route::post('outreach/{prospect}/preview', [OutreachController::class, 'preview'])->name('outreach.preview');
+    Route::post('outreach/{prospect}/send', [OutreachController::class, 'send'])->middleware('throttle:20,1')->name('outreach.send');
+    Route::patch('outreach/{prospect}', [OutreachController::class, 'update'])->name('outreach.update');
 
     Route::get('projects/search', [ProjectController::class, 'search'])->name('projects.search');
     Route::resource('projects', ProjectController::class);

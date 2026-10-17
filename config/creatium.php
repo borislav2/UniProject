@@ -54,6 +54,16 @@ return [
         'timezone' => 'Europe/Sofia',
     ],
 
+    // Първи писма до бизнеси, намерени от Harvey (админ: „Потенциални клиенти“). Пращат се през пощенския
+    // профил 'outreach' (config/mail.php) от отделен домейн; без него изпращането е спряно.
+    'outreach' => [
+        'from_address' => env('OUTREACH_MAIL_FROM'),
+        'from_name' => env('OUTREACH_MAIL_FROM_NAME', 'Creatium Lab'),
+        'daily_limit' => (int) env('OUTREACH_DAILY_LIMIT', 20),
+        // Списъкът, който Harvey на сървъра изнася всеки ден (deploy/harvey/install-harvey.sh).
+        'harvey_csv' => env('OUTREACH_HARVEY_CSV', storage_path('app/harvey/prospects.csv')),
+    ],
+
     // Безплатна проверка на сайт (/proverka-na-sait). audit_price_note е текстът за цената на подробния одит в имейла
     // с отчета, напр. „Подробният одит струва 90 €.“ Празно = „Цената зависи от големината на сайта…“.
     'site_check' => [

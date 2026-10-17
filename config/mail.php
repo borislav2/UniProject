@@ -49,6 +49,18 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 
+        // Отделна поща за първи писма до нови бизнеси (Потенциални клиенти), на отделен домейн,
+        // за да не рискуваме репутацията на основния. Настройва се с deploy/configure-outreach-mail.sh.
+        'outreach' => [
+            'transport' => 'smtp',
+            'scheme' => env('OUTREACH_MAIL_SCHEME'),
+            'host' => env('OUTREACH_MAIL_HOST'),
+            'port' => env('OUTREACH_MAIL_PORT', 587),
+            'username' => env('OUTREACH_MAIL_USERNAME'),
+            'password' => env('OUTREACH_MAIL_PASSWORD'),
+            'timeout' => 20,
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],
