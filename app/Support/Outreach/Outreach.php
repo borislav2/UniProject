@@ -3,6 +3,7 @@
 namespace App\Support\Outreach;
 
 use App\Models\ClientEmail;
+use App\Models\OutreachCall;
 use App\Models\OutreachProspect;
 use App\Models\OutreachSuppression;
 
@@ -34,19 +35,8 @@ class Outreach
     public static function import(string $path): array
     {
         $result = ['added' => 0, 'updated' => 0, 'skipped' => 0];
-        $file = new \SplFileObject($path);
-        $file->setFlags(\SplFileObject::READ_CSV | \SplFileObject::SKIP_EMPTY | \SplFileObject::READ_AHEAD | \SplFileObject::DROP_NEW_LINE);
 
-        $header = null;
-        foreach ($file as $row) {
-            if ($row === [null] || $row === false) {
-                continue;
-            }
-            if ($header === null) {
-                $header = array_map(fn ($h) => strtolower(trim(preg_replace('/^\xEF\xBB\xBF/', '', (string) $h))), $row);
-                continue;
-            }
-            $data = array_combine($header, array_pad(array_slice($row, 0, count($header)), count($header), ''));
+        foreach (self::rows($path) as $data) {
             $email = mb_strtolower(trim((string) ($data['email'] ?? '')));
 
             if (! filter_var($email, FILTER_VALIDATE_EMAIL) || OutreachSuppression::where('email', $email)->exists()) {
@@ -83,6 +73,61 @@ class Outreach
         }
 
         return $result;
+    }
+
+    /**
+     * Внася бизнесите без сайт (CSV от tools/harvey/export_no_website.py: external_id, name, phone, industry,
+     * location, source_url) в списъка за обаждане. Статусът и бележките на вече внесените не се пипат.
+     *
+     * @return array{added: int, updated: int, skipped: int}
+     */
+    public static function importCalls(string $path): array
+    {
+        $result = ['added' => 0, 'updated' => 0, 'skipped' => 0];
+
+        foreach (self::rows($path) as $data) {
+            $id = self::clean($data['external_id'] ?? null);
+            $name = self::clean($data['name'] ?? null);
+            if ($id === null || $name === null) {
+                $result['skipped']++;
+                continue;
+            }
+
+            $sourceUrl = self::clean($data['source_url'] ?? null);
+            $values = [
+                'name' => $name,
+                'phone' => self::clean($data['phone'] ?? null, 100),
+                'industry' => self::clean($data['industry'] ?? null),
+                'city' => OutreachCall::cityName(self::clean($data['location'] ?? null)),
+                'source_url' => $sourceUrl && preg_match('#^https://#i', $sourceUrl) ? $sourceUrl : null,
+            ];
+
+            $call = OutreachCall::firstOrNew(['external_id' => $id]);
+            $result[$call->exists ? 'updated' : 'added']++;
+            $call->fill($values)->save();
+        }
+
+        return $result;
+    }
+
+    /** Редовете на CSV файл като масиви по заглавията (малки букви, без BOM). */
+    private static function rows(string $path): \Generator
+    {
+        $file = new \SplFileObject($path);
+        $file->setFlags(\SplFileObject::READ_CSV | \SplFileObject::SKIP_EMPTY | \SplFileObject::READ_AHEAD | \SplFileObject::DROP_NEW_LINE);
+
+        $header = null;
+        foreach ($file as $row) {
+            if ($row === [null] || $row === false) {
+                continue;
+            }
+            if ($header === null) {
+                $header = array_map(fn ($h) => strtolower(trim(preg_replace('/^\xEF\xBB\xBF/', '', (string) $h))), $row);
+                continue;
+            }
+
+            yield array_combine($header, array_pad(array_slice($row, 0, count($header)), count($header), ''));
+        }
     }
 
     private static function clean(?string $value, int $max = 255): ?string

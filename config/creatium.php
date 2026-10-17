@@ -62,6 +62,8 @@ return [
         'daily_limit' => (int) env('OUTREACH_DAILY_LIMIT', 20),
         // Списъкът, който Harvey на сървъра изнася всеки ден (deploy/harvey/install-harvey.sh).
         'harvey_csv' => env('OUTREACH_HARVEY_CSV', storage_path('app/harvey/prospects.csv')),
+        // Бизнесите без сайт с телефон, за обаждане (tools/harvey/export_no_website.py).
+        'harvey_no_website_csv' => env('OUTREACH_HARVEY_NO_WEBSITE_CSV', storage_path('app/harvey/no-website.csv')),
     ],
 
     // Безплатна проверка на сайт (/proverka-na-sait). audit_price_note е текстът за цената на подробния одит в имейла

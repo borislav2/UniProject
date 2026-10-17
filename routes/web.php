@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ClientEmailController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\InquiryController;
+use App\Http\Controllers\Admin\OutreachCallController;
 use App\Http\Controllers\Admin\OutreachController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
@@ -92,6 +93,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('emails/{template}', [ClientEmailController::class, 'store'])->middleware('throttle:20,1')->name('client-emails.store');
 
     // Потенциални клиенти: бизнеси от Harvey и първо писмо до тях
+    Route::get('outreach-calls', [OutreachCallController::class, 'index'])->name('outreach.calls.index');
+    Route::post('outreach-calls/import', [OutreachCallController::class, 'import'])->name('outreach.calls.import');
+    Route::patch('outreach-calls/{call}', [OutreachCallController::class, 'update'])->name('outreach.calls.update');
     Route::get('outreach', [OutreachController::class, 'index'])->name('outreach.index');
     Route::post('outreach/import', [OutreachController::class, 'import'])->name('outreach.import');
     Route::post('outreach/import-server', [OutreachController::class, 'importServer'])->name('outreach.import-server');

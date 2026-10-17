@@ -3,6 +3,7 @@
 @section('title', 'Потенциални клиенти')
 
 @section('content')
+@include('admin.outreach._tabs')
 @if(session('success'))
     <div class="mb-6 rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-sm text-green-800" role="status">{{ session('success') }}</div>
 @endif
