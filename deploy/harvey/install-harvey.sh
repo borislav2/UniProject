@@ -25,6 +25,8 @@ chmod 700 "$HHOME"
 
 echo "== Harvey"
 if [ -d "$HDIR/.git" ]; then
+    # Махаме нашата добавка, за да мине обновяването; слага се отново по-долу.
+    runuser -u "$HUSER" -- git -C "$HDIR" checkout -- harvey/collectors/discover.py
     runuser -u "$HUSER" -- git -C "$HDIR" pull --ff-only
 else
     runuser -u "$HUSER" -- git clone https://github.com/ethanplusai/harvey.git "$HDIR"
@@ -32,6 +34,9 @@ fi
 runuser -u "$HUSER" -- bash -c "cd '$HDIR' && { [ -d .venv ] || python3.12 -m venv .venv; } && .venv/bin/pip install -q --upgrade pip && .venv/bin/pip install -q -e ."
 install -o "$HUSER" -g "$HUSER" -m 644 "$APP_DIR/tools/harvey/harvey.local.yaml" "$HDIR/harvey.local.yaml"
 install -o "$HUSER" -g "$HUSER" -m 644 "$APP_DIR/tools/harvey/product_knowledge.md" "$HDIR/skills/product_knowledge.md"
+# Безплатният източник (OpenStreetMap) да познава ресторанти, салони, хотели, автосервизи и др.
+install -o "$HUSER" -g "$HUSER" -m 644 "$APP_DIR/tools/harvey/osm_categories.py" "$HHOME/osm_categories.py"
+runuser -u "$HUSER" -- python3.12 "$HHOME/osm_categories.py" "$HDIR"
 [ -f "$HDIR/.env" ] || install -o "$HUSER" -g "$HUSER" -m 600 "$HDIR/.env.example" "$HDIR/.env"
 
 echo "== Claude Code за $HUSER"
