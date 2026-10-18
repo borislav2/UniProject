@@ -48,49 +48,36 @@
     <button class="rounded-lg border border-gray-300 px-3 py-1.5 font-semibold text-gray-800 hover:bg-gray-50">Филтрирай</button>
 </form>
 
-<div class="overflow-x-auto rounded-lg bg-white shadow">
-    <table class="min-w-full text-sm">
-        <thead class="bg-gray-50 text-left text-gray-600">
-            <tr>
-                <th class="px-4 py-3 font-semibold">Бизнес</th>
-                <th class="px-4 py-3 font-semibold">Телефон</th>
-                <th class="px-4 py-3 font-semibold">Град</th>
-                <th class="px-4 py-3 font-semibold">Статус и бележка</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100">
-            @forelse($calls as $call)
-                <tr class="align-top">
-                    <td class="px-4 py-3">
-                        <span class="font-semibold text-gray-900">{{ $call->name }}</span>
-                        @if($call->industry)<span class="block text-xs text-gray-500">{{ $call->industryLabel() }}</span>@endif
-                        @if($call->source_url)<a href="{{ $call->source_url }}" target="_blank" rel="noopener" class="block text-xs text-blue-600 hover:underline">На картата</a>@endif
-                    </td>
-                    <td class="px-4 py-3 whitespace-nowrap">
-                        @if($href = $call->telHref())
-                            <a href="{{ $href }}" class="inline-flex items-center gap-1 font-semibold text-blue-700 hover:underline"><x-icon name="phone" /> {{ $call->phone }}</a>
-                        @else
-                            <span class="text-gray-400">{{ $call->phone ?: 'няма' }}</span>
-                        @endif
-                    </td>
-                    <td class="px-4 py-3">{{ $call->city }}</td>
-                    <td class="px-4 py-3">
-                        <form action="{{ route('admin.outreach.calls.update', $call) }}" method="POST" class="flex flex-wrap items-start gap-2">
-                            @csrf @method('PATCH')
-                            <select name="status" class="rounded border border-gray-300 px-1 py-1 text-xs" aria-label="Статус">
-                                @foreach(\App\Models\OutreachCall::STATUSES as $key => $label)<option value="{{ $key }}" @selected($call->status === $key)>{{ $label }}</option>@endforeach
-                            </select>
-                            <input type="text" name="note" value="{{ $call->note }}" maxlength="1000" placeholder="Бележка (кога да звъннем, с кого говорихме…)" class="min-w-48 flex-1 rounded border border-gray-300 px-2 py-1 text-xs" aria-label="Бележка">
-                            <button class="rounded bg-brand-950 px-2 py-1 text-xs font-semibold text-white hover:bg-brand-800">Запази</button>
-                        </form>
-                        @if($call->called_at)<span class="mt-1 block text-xs text-gray-500">Обаждане: {{ $call->called_at->timezone('Europe/Sofia')->format('d.m.Y H:i') }}</span>@endif
-                    </td>
-                </tr>
-            @empty
-                <tr><td colspan="4" class="px-4 py-8 text-center text-gray-500">Няма бизнеси без сайт. Натиснете „Внеси от сървъра“.</td></tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
+<ul class="divide-y divide-gray-100 rounded-lg bg-white shadow">
+    @forelse($calls as $call)
+        <li class="grid gap-3 p-4 md:grid-cols-[minmax(0,1.2fr)_auto_minmax(0,2fr)] md:items-start md:gap-6">
+            <div class="min-w-0">
+                <span class="font-semibold text-gray-900">{{ $call->name }}</span>
+                <span class="block text-xs text-gray-500">{{ collect([$call->industryLabel(), $call->city])->filter()->join(' · ') }}</span>
+                @if($call->source_url)<a href="{{ $call->source_url }}" target="_blank" rel="noopener" class="text-xs text-blue-600 hover:underline">На картата</a>@endif
+            </div>
+            <div class="whitespace-nowrap">
+                @if($href = $call->telHref())
+                    <a href="{{ $href }}" class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-700"><x-icon name="phone" /> {{ $call->phone }}</a>
+                @else
+                    <span class="text-sm text-gray-400">{{ $call->phone ?: 'Няма телефон' }}</span>
+                @endif
+            </div>
+            <div class="min-w-0">
+                <form action="{{ route('admin.outreach.calls.update', $call) }}" method="POST" class="flex flex-wrap items-center gap-2">
+                    @csrf @method('PATCH')
+                    <select name="status" class="rounded border border-gray-300 px-2 py-1.5 text-sm" aria-label="Статус">
+                        @foreach(\App\Models\OutreachCall::STATUSES as $key => $label)<option value="{{ $key }}" @selected($call->status === $key)>{{ $label }}</option>@endforeach
+                    </select>
+                    <input type="text" name="note" value="{{ $call->note }}" maxlength="1000" placeholder="Бележка (кога да звъннем, с кого говорихме…)" class="min-w-0 flex-1 basis-48 rounded border border-gray-300 px-2 py-1.5 text-sm" aria-label="Бележка">
+                    <button class="rounded bg-brand-950 px-3 py-1.5 text-sm font-semibold text-white hover:bg-brand-800">Запази</button>
+                </form>
+                @if($call->called_at)<span class="mt-1 block text-xs text-gray-500">Обаждане: {{ $call->called_at->timezone('Europe/Sofia')->format('d.m.Y H:i') }}</span>@endif
+            </div>
+        </li>
+    @empty
+        <li class="px-4 py-8 text-center text-gray-500">Няма бизнеси без сайт. Натиснете „Внеси от сървъра“.</li>
+    @endforelse
+</ul>
 <div class="mt-4">{{ $calls->links() }}</div>
 @endsection
