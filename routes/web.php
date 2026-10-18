@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\OutreachCallController;
 use App\Http\Controllers\Admin\OutreachController;
+use App\Http\Controllers\Admin\ReviewReplyController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -93,6 +94,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('emails/{template}', [ClientEmailController::class, 'store'])->middleware('throttle:20,1')->name('client-emails.store');
 
     // Потенциални клиенти: бизнеси от Harvey и първо писмо до тях
+    Route::get('reviews', [ReviewReplyController::class, 'index'])->name('reviews.index');
+    Route::post('reviews', [ReviewReplyController::class, 'store'])->middleware('throttle:30,1')->name('reviews.store');
+    Route::get('reviews/{reply}', [ReviewReplyController::class, 'show'])->name('reviews.show');
+    Route::patch('reviews/{reply}', [ReviewReplyController::class, 'update'])->name('reviews.update');
     Route::get('outreach-calls', [OutreachCallController::class, 'index'])->name('outreach.calls.index');
     Route::post('outreach-calls/import', [OutreachCallController::class, 'import'])->name('outreach.calls.import');
     Route::patch('outreach-calls/{call}', [OutreachCallController::class, 'update'])->name('outreach.calls.update');

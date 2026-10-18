@@ -39,6 +39,8 @@ install -o "$HUSER" -g "$HUSER" -m 644 "$APP_DIR/tools/harvey/osm_categories.py"
 runuser -u "$HUSER" -- python3.12 "$HHOME/osm_categories.py" "$HDIR"
 # Бизнесите без сайт (за обаждане от админа) не излизат от `harvey export`; изнася ги този скрипт.
 install -o "$HUSER" -g "$HUSER" -m 644 "$APP_DIR/tools/harvey/export_no_website.py" "$HHOME/export_no_website.py"
+# Harvey търси имена от страници „Екип“ и пропуска info@/office@; този скрипт взима имейла, който бизнесът е публикувал.
+install -o "$HUSER" -g "$HUSER" -m 644 "$APP_DIR/tools/harvey/find_site_emails.py" "$HHOME/find_site_emails.py"
 [ -f "$HDIR/.env" ] || install -o "$HUSER" -g "$HUSER" -m 600 "$HDIR/.env.example" "$HDIR/.env"
 
 echo "== Claude Code за $HUSER"
@@ -99,6 +101,8 @@ ExecStart=/usr/sbin/runuser -u $HUSER -- $HDIR/.venv/bin/harvey export --out $HH
 ExecStart=/usr/bin/install -d -o deploy -g deploy -m 750 $EXPORT_DIR
 ExecStart=/usr/bin/install -o deploy -g deploy -m 640 $HHOME/prospects.csv $EXPORT_DIR/prospects.csv
 ExecStart=/usr/sbin/runuser -u $HUSER -- /usr/bin/python3.12 $HHOME/export_no_website.py $HDIR $HHOME/no-website.csv
+ExecStart=/usr/sbin/runuser -u $HUSER -- $HDIR/.venv/bin/python $HHOME/find_site_emails.py $HDIR $HHOME/site-emails.csv
+ExecStart=/usr/bin/install -o deploy -g deploy -m 640 $HHOME/site-emails.csv $EXPORT_DIR/site-emails.csv
 ExecStart=/usr/bin/install -o deploy -g deploy -m 640 $HHOME/no-website.csv $EXPORT_DIR/no-website.csv
 ExecStart=/usr/sbin/restorecon -R $EXPORT_DIR
 UNIT

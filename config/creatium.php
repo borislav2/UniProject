@@ -64,6 +64,8 @@ return [
         'harvey_csv' => env('OUTREACH_HARVEY_CSV', storage_path('app/harvey/prospects.csv')),
         // Бизнесите без сайт с телефон, за обаждане (tools/harvey/export_no_website.py).
         'harvey_no_website_csv' => env('OUTREACH_HARVEY_NO_WEBSITE_CSV', storage_path('app/harvey/no-website.csv')),
+        // Имейлите, публикувани на сайтовете на бизнесите (tools/harvey/find_site_emails.py); внасят се заедно с harvey_csv.
+        'harvey_site_emails_csv' => env('OUTREACH_HARVEY_SITE_EMAILS_CSV', storage_path('app/harvey/site-emails.csv')),
     ],
 
     // Безплатна проверка на сайт (/proverka-na-sait). audit_price_note е текстът за цената на подробния одит в имейла

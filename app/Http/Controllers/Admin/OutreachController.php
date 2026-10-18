@@ -30,7 +30,7 @@ class OutreachController extends Controller
             'status' => $status,
             'configured' => Outreach::configured(),
             'remaining' => Outreach::remainingToday(),
-            'serverCsv' => is_readable($path = config('creatium.outreach.harvey_csv')) ? \Illuminate\Support\Carbon::createFromTimestamp(filemtime($path)) : null,
+            'serverCsv' => ($time = collect(self::serverFiles())->map(fn ($p) => filemtime($p))->max()) ? \Illuminate\Support\Carbon::createFromTimestamp($time) : null,
         ]);
     }
 
@@ -43,17 +43,31 @@ class OutreachController extends Controller
         return redirect()->route('admin.outreach.index')->with('success', "Внесени: {$result['added']} нови, {$result['updated']} обновени, {$result['skipped']} пропуснати (невалидни, повтарящи се или отписани).");
     }
 
-    /** Внася последния списък, изнесен от Harvey на сървъра (без качване на файл). */
+    /** Внася последните списъци, изнесени от Harvey на сървъра (без качване на файл). */
     public function importServer()
     {
-        $path = config('creatium.outreach.harvey_csv');
-        if (! is_readable($path)) {
-            return redirect()->route('admin.outreach.index')->with('send_error', 'Няма списък от Harvey на сървъра (' . $path . '). Изнася се всеки ден в 06:30.');
+        $files = self::serverFiles();
+        if ($files === []) {
+            return redirect()->route('admin.outreach.index')->with('send_error', 'Няма списък от Harvey на сървъра (' . config('creatium.outreach.harvey_csv') . '). Изнася се всеки ден в 06:30.');
         }
 
-        $result = Outreach::import($path);
+        $result = ['added' => 0, 'updated' => 0, 'skipped' => 0];
+        foreach ($files as $path) {
+            foreach (Outreach::import($path) as $key => $count) {
+                $result[$key] += $count;
+            }
+        }
 
         return redirect()->route('admin.outreach.index')->with('success', "От сървъра: {$result['added']} нови, {$result['updated']} обновени, {$result['skipped']} пропуснати.");
+    }
+
+    /** Списъците с имейли на сървъра: хората, намерени от Harvey, и имейлите от сайтовете. */
+    private static function serverFiles(): array
+    {
+        return array_values(array_filter(
+            [config('creatium.outreach.harvey_csv'), config('creatium.outreach.harvey_site_emails_csv')],
+            fn ($path) => $path && is_readable($path),
+        ));
     }
 
     public function compose(Request $request, OutreachProspect $prospect)
