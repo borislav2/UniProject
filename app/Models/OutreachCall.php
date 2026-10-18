@@ -65,6 +65,20 @@ class OutreachCall extends Model
         return strlen(ltrim($digits, '+')) >= 6 ? 'tel:' . $digits : null;
     }
 
+    /**
+     * Търсенето по радиус хваща и бизнеси отвъд границата (около Русе: Гюргево, Румъния).
+     * Чужд е номер с код, различен от +359, или град на латиница, който не е от нашите.
+     */
+    public static function isForeign(?string $phone, ?string $city): bool
+    {
+        $phone = preg_replace('/[^\d+]/', '', (string) $phone);
+        if (preg_match('/^(\+|00)(?!359)\d/', $phone)) {
+            return true;
+        }
+
+        return filled($city) && ! preg_match('/\p{Cyrillic}/u', $city) && ! in_array($city, self::CITIES, true);
+    }
+
     public static function cityName(?string $location): ?string
     {
         $city = trim(explode(',', (string) $location)[0]);

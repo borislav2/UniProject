@@ -78,12 +78,13 @@ class Outreach
     /**
      * Внася бизнесите без сайт (CSV от tools/harvey/export_no_website.py: external_id, name, phone, industry,
      * location, source_url) в списъка за обаждане. Статусът и бележките на вече внесените не се пипат.
+     * Бизнесите извън България се пропускат, а вече внесените и непипнати се махат.
      *
-     * @return array{added: int, updated: int, skipped: int}
+     * @return array{added: int, updated: int, skipped: int, foreign: int}
      */
     public static function importCalls(string $path): array
     {
-        $result = ['added' => 0, 'updated' => 0, 'skipped' => 0];
+        $result = ['added' => 0, 'updated' => 0, 'skipped' => 0, 'foreign' => 0];
 
         foreach (self::rows($path) as $data) {
             $id = self::clean($data['external_id'] ?? null);
@@ -101,6 +102,12 @@ class Outreach
                 'city' => OutreachCall::cityName(self::clean($data['location'] ?? null)),
                 'source_url' => $sourceUrl && preg_match('#^https://#i', $sourceUrl) ? $sourceUrl : null,
             ];
+
+            if (OutreachCall::isForeign($values['phone'], $values['city'])) {
+                OutreachCall::where('external_id', $id)->where('status', 'new')->whereNull('note')->delete();
+                $result['foreign']++;
+                continue;
+            }
 
             $call = OutreachCall::firstOrNew(['external_id' => $id]);
             $result[$call->exists ? 'updated' : 'added']++;

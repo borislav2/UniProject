@@ -25,7 +25,7 @@ class ImportOutreachProspects extends Command
         }
 
         $result = $calls ? Outreach::importCalls($path) : Outreach::import($path);
-        $this->info("Внесени: {$result['added']} нови, {$result['updated']} обновени, {$result['skipped']} пропуснати. Нищо не е изпратено.");
+        $this->info("Внесени: {$result['added']} нови, {$result['updated']} обновени, {$result['skipped']} пропуснати" . (isset($result['foreign']) ? ", {$result['foreign']} извън България" : '') . '. Нищо не е изпратено.');
 
         return self::SUCCESS;
     }

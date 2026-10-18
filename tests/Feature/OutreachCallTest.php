@@ -17,7 +17,9 @@ class OutreachCallTest extends TestCase
         . "osm:node/1,Механа Старата къща,+359 88 123 4567,restaurant,\"Sofia, Bulgaria\",https://www.openstreetmap.org/node/1\n"
         . "osm:way/2,Салон Ирис,,beauty,Пловдив,https://www.openstreetmap.org/way/2\n"
         . ",Без идентификатор,0888,restaurant,Варна,\n"
-        . "osm:node/3,Автосервиз Мотор,032 555 666; 0899 111 222,car_repair,\"Plovdiv, Bulgaria\",javascript:alert(1)\n";
+        . "osm:node/3,Автосервиз Мотор,032 555 666; 0899 111 222,car_repair,\"Plovdiv, Bulgaria\",javascript:alert(1)\n"
+        . "osm:node/4,Glam by Lili,+40 762 942 283,beauty,\"Ruse, Bulgaria\",https://www.openstreetmap.org/node/4\n"
+        . "osm:node/5,Pensiunea Dunarea,,hotel,Giurgiu,https://www.openstreetmap.org/node/5\n";
 
     private string $path;
 
@@ -50,7 +52,7 @@ class OutreachCallTest extends TestCase
 
         $this->actingAs($user)->post('/admin/outreach-calls/import')
             ->assertRedirect('/admin/outreach-calls')
-            ->assertSessionHas('success', 'От сървъра: 3 нови, 0 обновени, 1 пропуснати.');
+            ->assertSessionHas('success', 'От сървъра: 3 нови, 0 обновени, 1 пропуснати, 2 извън България.');
 
         $this->assertSame('София', OutreachCall::where('external_id', 'osm:node/1')->value('city'));
         $this->assertNull(OutreachCall::where('external_id', 'osm:node/3')->value('source_url'));
@@ -80,13 +82,28 @@ class OutreachCallTest extends TestCase
         $this->assertNotNull($call->fresh()->called_at);
 
         file_put_contents($this->path, "external_id,name,phone,industry,location,source_url\nosm:node/1,Механа Старата къща (ново име),0888 000 000,restaurant,София,\n");
-        $this->actingAs($user)->post('/admin/outreach-calls/import')->assertSessionHas('success', 'От сървъра: 0 нови, 1 обновени, 0 пропуснати.');
+        $this->actingAs($user)->post('/admin/outreach-calls/import')->assertSessionHas('success', 'От сървъра: 0 нови, 1 обновени, 0 пропуснати, 0 извън България.');
 
         $call->refresh();
         $this->assertSame('interested', $call->status);
         $this->assertSame('Звънни в понеделник', $call->note);
         $this->assertSame('Механа Старата къща (ново име)', $call->name);
         $this->assertSame('0888 000 000', $call->phone);
+    }
+
+    public function test_foreign_businesses_already_imported_are_removed_unless_worked_on(): void
+    {
+        $user = $this->admin();
+        OutreachCall::create(['external_id' => 'osm:node/4', 'name' => 'Glam by Lili', 'phone' => '+40 762 942 283']);
+        OutreachCall::create(['external_id' => 'osm:node/5', 'name' => 'Pensiunea Dunarea', 'status' => 'no_answer', 'note' => 'Румъния']);
+
+        $this->actingAs($user)->post('/admin/outreach-calls/import')->assertSessionHas('success');
+
+        $this->assertFalse(OutreachCall::where('external_id', 'osm:node/4')->exists());
+        $this->assertTrue(OutreachCall::where('external_id', 'osm:node/5')->exists());
+        $this->assertTrue(OutreachCall::isForeign('0040 21 123', null));
+        $this->assertFalse(OutreachCall::isForeign('+359 2 123 456', 'Велико Търново'));
+        $this->assertFalse(OutreachCall::isForeign('088 123', 'Русе'));
     }
 
     public function test_missing_server_file_is_explained(): void

@@ -49,7 +49,7 @@ class OutreachCallController extends Controller
 
         $result = Outreach::importCalls($path);
 
-        return redirect()->route('admin.outreach.calls.index')->with('success', "От сървъра: {$result['added']} нови, {$result['updated']} обновени, {$result['skipped']} пропуснати.");
+        return redirect()->route('admin.outreach.calls.index')->with('success', "От сървъра: {$result['added']} нови, {$result['updated']} обновени, {$result['skipped']} пропуснати, {$result['foreign']} извън България.");
     }
 
     public function update(Request $request, OutreachCall $call)
