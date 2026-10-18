@@ -4,9 +4,6 @@
 
 @section('content')
 @include('admin.outreach._tabs')
-@if(session('success'))
-    <div class="mb-6 rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-sm text-green-800" role="status">{{ session('success') }}</div>
-@endif
 @if(session('send_error'))
     <div class="mb-6 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">{{ session('send_error') }}</div>
 @endif
