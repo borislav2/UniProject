@@ -174,7 +174,7 @@ class OutreachTest extends TestCase
     {
         $user = $this->admin();
         $path = tempnam(sys_get_temp_dir(), 'harvey');
-        config(['creatium.outreach.harvey_csv' => $path . '.missing']);
+        config(['creatium.outreach.harvey_csv' => $path . '.missing', 'creatium.outreach.harvey_site_emails_csv' => $path . '.missing']);
         $this->actingAs($user)->get('/admin/outreach')->assertDontSee('Внеси от сървъра');
         $this->actingAs($user)->post('/admin/outreach/import-server')->assertSessionHas('send_error');
 
@@ -183,6 +183,16 @@ class OutreachTest extends TestCase
         $this->actingAs($user)->get('/admin/outreach')->assertSee('Внеси от сървъра');
         $this->actingAs($user)->post('/admin/outreach/import-server')->assertSessionHas('success', 'От сървъра: 3 нови, 1 обновени, 1 пропуснати.');
         $this->assertSame(3, OutreachProspect::count());
+
+        // Имейлите от сайтовете (tools/harvey/find_site_emails.py) се внасят със същия бутон.
+        $sitePath = $path . '.site';
+        file_put_contents($sitePath, "email,first_name,last_name,company_name,title,website,industry,personalization,email_status,score\n"
+            . "info@salon-iris.bg,,,Салон Ирис,,https://salon-iris.bg,beauty,Имейлът е публикуван на сайта: https://salon-iris.bg/kontakti,verified,60\n");
+        config(['creatium.outreach.harvey_site_emails_csv' => $sitePath]);
+        $this->actingAs($user)->post('/admin/outreach/import-server')->assertSessionHas('success', 'От сървъра: 1 нови, 4 обновени, 1 пропуснати.');
+        $this->assertTrue(OutreachProspect::where('email', 'info@salon-iris.bg')->firstOrFail()->canBeEmailed());
+        $this->actingAs($user)->get('/admin/outreach')->assertSee('Козметичен салон');
+        unlink($sitePath);
 
         $this->artisan('creatium:outreach-import', ['path' => $path])->expectsOutputToContain('Нищо не е изпратено.')->assertSuccessful();
         $this->artisan('creatium:outreach-import', ['path' => $path . '.missing'])->assertFailed();

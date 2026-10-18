@@ -65,7 +65,7 @@
                 <tr class="align-top">
                     <td class="px-4 py-3">
                         <span class="font-semibold text-gray-900">{{ $prospect->displayName() }}</span>
-                        @if($prospect->industry)<span class="block text-xs text-gray-500">{{ $prospect->industry }}</span>@endif
+                        @if($prospect->industry)<span class="block text-xs text-gray-500">{{ \App\Models\OutreachCall::INDUSTRIES[mb_strtolower($prospect->industry)] ?? $prospect->industry }}</span>@endif
                         @if($prospect->website)<a href="{{ $prospect->website }}" target="_blank" rel="noopener" class="block text-xs text-blue-600 hover:underline">{{ parse_url($prospect->website, PHP_URL_HOST) ?: $prospect->website }}</a>@endif
                     </td>
                     <td class="px-4 py-3">{{ $prospect->email }}<span class="block text-xs {{ in_array($prospect->email_status, \App\Models\OutreachProspect::SENDABLE_EMAIL_STATUSES, true) ? 'text-green-700' : 'text-red-600' }}">{{ $prospect->email_status ?: 'непроверен' }}</span></td>
