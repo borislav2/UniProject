@@ -75,9 +75,9 @@ class OutreachController extends Controller
         return view('admin.outreach.compose', [
             'prospect' => $prospect,
             'defaults' => [
-                'subject' => 'Въпрос за сайта на ' . $prospect->displayName(),
+                'subject' => self::defaultSubject($prospect),
                 'first_name' => $prospect->first_name,
-                'observation' => '',
+                'observation' => $prospect->suggestedObservation(),
                 'sender' => $request->user()->name,
             ],
             'configured' => Outreach::configured(),
@@ -101,46 +101,96 @@ class OutreachController extends Controller
         $validated = $request->validate([
             'subject' => 'required|string|max:150',
             'first_name' => 'nullable|string|max:60',
-            'observation' => 'required|string|min:20|max:600',
+            'observation' => 'required|string|min:20|max:900',
             'sender' => 'required|string|max:100',
         ], [
             'observation.required' => 'Напишете какво забелязахте за бизнеса им. Това е причината да им пишем.',
             'observation.min' => 'Наблюдението е твърде кратко. Едно-две конкретни изречения.',
         ]);
 
-        if (! Outreach::configured()) {
-            return back()->withInput()->with('send_error', 'Пощата за потенциални клиенти не е настроена (OUTREACH_MAIL_*). Пуснете на сървъра bash deploy/configure-outreach-mail.sh.');
-        }
-        if (! $prospect->canBeEmailed()) {
-            return back()->withInput()->with('send_error', 'На този адрес не може да се пише: вече е изпратено, адресът не е потвърден или е отписан.');
-        }
-        if (Outreach::remainingToday() < 1) {
-            return back()->withInput()->with('send_error', 'Дневният лимит от ' . config('creatium.outreach.daily_limit') . ' писма е достигнат. Продължете утре, за да не попаднем в спам.');
+        $data = ['first_name' => $validated['first_name'] ?? null, 'observation' => trim($validated['observation']), 'sender' => $validated['sender']];
+        if ($error = $this->deliver($prospect, $validated['subject'], $data, $request->user()->id)) {
+            return back()->withInput()->with('send_error', $error);
         }
 
-        $data = ['first_name' => $validated['first_name'] ?? null, 'observation' => trim($validated['observation']), 'sender' => $validated['sender']];
+        return redirect()->route('admin.outreach.index')->with('success', 'Писмото до ' . $prospect->displayName() . ' е изпратено.');
+    }
+
+    /** Изпраща на избраните с готовото писмо от проверката на сайта им, до дневния лимит. */
+    public function sendSelected(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array|max:50',
+            'ids.*' => 'integer',
+        ], ['ids.required' => 'Изберете поне един бизнес.']);
+
+        $sent = 0;
+        $errors = [];
+        foreach (OutreachProspect::whereIn('id', $validated['ids'])->orderByDesc('score')->get() as $prospect) {
+            $observation = $prospect->suggestedObservation();
+            if ($observation === '') {
+                $errors[] = $prospect->displayName() . ': няма проверка на сайта, напишете писмото ръчно';
+                continue;
+            }
+            $data = ['first_name' => $prospect->first_name, 'observation' => $observation, 'sender' => $request->user()->name];
+            if ($error = $this->deliver($prospect, self::defaultSubject($prospect), $data, $request->user()->id)) {
+                $errors[] = $prospect->displayName() . ': ' . $error;
+                if (! Outreach::configured() || Outreach::remainingToday() < 1) {
+                    break;
+                }
+                continue;
+            }
+            $sent++;
+        }
+
+        $redirect = redirect()->route('admin.outreach.index');
+        if ($errors) {
+            $redirect->with('send_error', implode(' · ', array_slice($errors, 0, 5)) . (count($errors) > 5 ? ' …' : ''));
+        }
+
+        return $redirect->with('success', "Изпратени: {$sent}.");
+    }
+
+    public static function defaultSubject(OutreachProspect $prospect): string
+    {
+        return 'Въпрос за сайта на ' . $prospect->displayName();
+    }
+
+    /** Изпраща едно писмо през отделната поща и го записва. Връща текста на грешката или null. */
+    private function deliver(OutreachProspect $prospect, string $subject, array $data, int $userId): ?string
+    {
+        if (! Outreach::configured()) {
+            return 'Пощата за потенциални клиенти не е настроена (OUTREACH_MAIL_*). Пуснете на сървъра bash deploy/configure-outreach-mail.sh.';
+        }
+        if (! $prospect->canBeEmailed()) {
+            return 'На този адрес не може да се пише: вече е изпратено, адресът не е потвърден или е отписан.';
+        }
+        if (Outreach::remainingToday() < 1) {
+            return 'Дневният лимит от ' . config('creatium.outreach.daily_limit') . ' писма е достигнат. Продължете утре, за да не попаднем в спам.';
+        }
+
         $log = ClientEmail::create([
             'outreach_prospect_id' => $prospect->id,
-            'user_id' => $request->user()->id,
+            'user_id' => $userId,
             'template' => 'outreach',
             'to_email' => $prospect->email,
-            'subject' => $validated['subject'],
+            'subject' => $subject,
             'data' => $data,
         ]);
 
         try {
-            Mail::mailer('outreach')->to($prospect->email)->send(new OutreachMail($prospect, $data, $validated['subject']));
+            Mail::mailer('outreach')->to($prospect->email)->send(new OutreachMail($prospect, $data, $subject));
         } catch (Throwable $e) {
             Log::error('Outreach email failed', ['prospect_id' => $prospect->id, 'error' => $e->getMessage()]);
             $log->forceFill(['error' => mb_substr($e->getMessage(), 0, 1000)])->save();
 
-            return back()->withInput()->with('send_error', 'Писмото не беше изпратено: ' . $e->getMessage());
+            return 'Писмото не беше изпратено: ' . $e->getMessage();
         }
 
         $log->forceFill(['sent_at' => now()])->save();
         $prospect->forceFill(['status' => 'sent', 'sent_at' => now()])->save();
 
-        return redirect()->route('admin.outreach.index')->with('success', 'Писмото до ' . $prospect->displayName() . ' е изпратено.');
+        return null;
     }
 
     public function update(Request $request, OutreachProspect $prospect)

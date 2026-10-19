@@ -16,8 +16,8 @@
 
 <div class="grid gap-6 lg:grid-cols-3 mb-8">
     <div class="lg:col-span-2 rounded-lg bg-white p-5 shadow">
-        <h3 class="font-bold text-gray-900">Внасяне от Harvey</h3>
-        <p class="mt-1 text-sm text-gray-600">Качете файла от <code class="rounded bg-gray-100 px-1">harvey export</code> (prospects.csv). Повтарящите се адреси се обновяват, отписаните се пропускат.</p>
+        <h3 class="font-bold text-gray-900">Внасяне от файл</h3>
+        <p class="mt-1 text-sm text-gray-600">По желание: CSV със списък (например от <code class="rounded bg-gray-100 px-1">harvey export</code>). Новите бизнеси идват от „Търсене“.</p>
         <form action="{{ route('admin.outreach.import') }}" method="POST" enctype="multipart/form-data" class="mt-4 flex flex-wrap items-center gap-3">
             @csrf
             <input type="file" name="file" accept=".csv,text/csv" required class="text-sm">
@@ -35,8 +35,8 @@
     <div class="rounded-lg bg-white p-5 shadow text-sm text-gray-700 space-y-1">
         <h3 class="font-bold text-gray-900">Правила</h3>
         <p>Днес може да се изпратят още <strong>{{ $remaining }}</strong> от {{ config('creatium.outreach.daily_limit') }} писма.</p>
-        <p>Пишем само до потвърдени адреси (verified / risky).</p>
-        <p>Всяко писмо се пише и одобрява ръчно и има линк за отписване.</p>
+        <p>Пишем само до адреси, които бизнесът сам е публикувал или които са потвърдени, по едно писмо на бизнес.</p>
+        <p>Всяко писмо е с проверката на техния сайт и има линк за отписване. Преди „Изпрати на избраните“ отворете няколко сайта и вижте дали находките са верни.</p>
         @if($configured)<p>Изпраща се от <strong>{{ config('creatium.outreach.from_address') }}</strong>.</p>@endif
     </div>
 </div>
@@ -48,13 +48,21 @@
     @endforeach
 </nav>
 
+<form id="bulk-send" action="{{ route('admin.outreach.send-selected') }}" method="POST" class="mb-3 flex flex-wrap items-center gap-3 rounded-lg bg-white p-3 text-sm shadow" onsubmit="return confirm('Да изпратим ли писмата до избраните бизнеси? Всяко е с проверката на техния сайт.')">
+    @csrf
+    <button @disabled(! $configured || $remaining < 1) class="inline-flex items-center gap-2 rounded-lg bg-brand-950 px-4 py-2 font-semibold text-white hover:bg-brand-800 disabled:opacity-50"><x-icon name="paper-plane" /> Изпрати на избраните</button>
+    <span class="text-gray-600">Готовото писмо от проверката на сайта им. Днес остават {{ $remaining }}. Отворете „Напиши“, ако искате да го промените първо.</span>
+    @error('ids')<span class="text-red-600">{{ $message }}</span>@enderror
+</form>
+
 <div class="overflow-x-auto rounded-lg bg-white shadow">
     <table class="min-w-full text-sm">
         <thead class="bg-gray-50 text-left text-gray-600">
             <tr>
+                <th class="px-4 py-3"><input type="checkbox" aria-label="Избери всички" onclick="document.querySelectorAll('[data-bulk]').forEach(c => c.checked = this.checked)"></th>
                 <th class="px-4 py-3 font-semibold">Бизнес</th>
                 <th class="px-4 py-3 font-semibold">Имейл</th>
-                <th class="px-4 py-3 font-semibold">Какво е забелязал Harvey</th>
+                <th class="px-4 py-3 font-semibold">Какво забелязахме на сайта</th>
                 <th class="px-4 py-3 font-semibold">Оценка</th>
                 <th class="px-4 py-3 font-semibold">Статус</th>
                 <th class="px-4 py-3"></th>
@@ -63,13 +71,20 @@
         <tbody class="divide-y divide-gray-100">
             @forelse($prospects as $prospect)
                 <tr class="align-top">
+                    <td class="px-4 py-3">@if($prospect->canBeEmailed())<input type="checkbox" name="ids[]" value="{{ $prospect->id }}" form="bulk-send" data-bulk aria-label="Избери {{ $prospect->displayName() }}">@endif</td>
                     <td class="px-4 py-3">
                         <span class="font-semibold text-gray-900">{{ $prospect->displayName() }}</span>
-                        @if($prospect->industry)<span class="block text-xs text-gray-500">{{ \App\Models\OutreachCall::INDUSTRIES[mb_strtolower($prospect->industry)] ?? $prospect->industry }}</span>@endif
+                        <span class="block text-xs text-gray-500">{{ collect([\App\Models\OutreachCall::INDUSTRIES[mb_strtolower((string) $prospect->industry)] ?? $prospect->industry, $prospect->city])->filter()->join(' · ') }}</span>
                         @if($prospect->website)<a href="{{ $prospect->website }}" target="_blank" rel="noopener" class="block text-xs text-blue-600 hover:underline">{{ parse_url($prospect->website, PHP_URL_HOST) ?: $prospect->website }}</a>@endif
                     </td>
-                    <td class="px-4 py-3">{{ $prospect->email }}<span class="block text-xs {{ in_array($prospect->email_status, \App\Models\OutreachProspect::SENDABLE_EMAIL_STATUSES, true) ? 'text-green-700' : 'text-red-600' }}">{{ $prospect->email_status ?: 'непроверен' }}</span></td>
-                    <td class="px-4 py-3 max-w-md text-gray-600">{{ \Illuminate\Support\Str::limit($prospect->personalization, 160) }}</td>
+                    <td class="px-4 py-3">{{ $prospect->email }}<span class="block text-xs {{ in_array($prospect->email_status, \App\Models\OutreachProspect::SENDABLE_EMAIL_STATUSES, true) ? 'text-green-700' : 'text-red-600' }}">{{ \App\Models\OutreachProspect::EMAIL_STATUSES[$prospect->email_status] ?? ($prospect->email_status ?: 'непроверен') }}</span></td>
+                    <td class="px-4 py-3 max-w-md text-gray-600">
+                        @if($prospect->findings)
+                            <ul class="space-y-0.5">@foreach($prospect->findings as $finding)<li>– {{ $finding['title'] }}</li>@endforeach</ul>
+                        @else
+                            {{ \Illuminate\Support\Str::limit($prospect->personalization, 160) }}
+                        @endif
+                    </td>
                     <td class="px-4 py-3">{{ $prospect->score }}</td>
                     <td class="px-4 py-3">{{ \App\Models\OutreachProspect::STATUSES[$prospect->status] ?? $prospect->status }}@if($prospect->sent_at)<span class="block text-xs text-gray-500">{{ $prospect->sent_at->format('d.m.Y') }}</span>@endif</td>
                     <td class="px-4 py-3 whitespace-nowrap text-right">
@@ -89,7 +104,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="px-4 py-8 text-center text-gray-500">Още няма внесени бизнеси. Качете prospects.csv от Harvey.</td></tr>
+                <tr><td colspan="7" class="px-4 py-8 text-center text-gray-500">Още няма бизнеси с имейл. Пуснете търсене в „Търсене“.</td></tr>
             @endforelse
         </tbody>
     </table>

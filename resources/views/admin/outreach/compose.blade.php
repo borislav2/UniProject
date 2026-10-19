@@ -21,7 +21,7 @@
             <p><strong>{{ $prospect->displayName() }}</strong> · {{ $prospect->email }} <span class="text-green-700">({{ $prospect->email_status }})</span></p>
             @if($prospect->website)<a href="{{ $prospect->website }}" target="_blank" rel="noopener" class="text-blue-600 hover:underline">{{ $prospect->website }}</a>@endif
             @if($prospect->personalization)
-                <p class="mt-2 text-gray-600"><span class="font-semibold text-gray-800">Harvey е забелязал:</span> {{ $prospect->personalization }}</p>
+                <p class="mt-2 text-gray-600"><span class="font-semibold text-gray-800">Източник:</span> {{ $prospect->personalization }}</p>
             @endif
         </div>
         <div>
@@ -35,8 +35,8 @@
         </div>
         <div>
             <label for="observation" class="block text-sm font-semibold text-gray-700 mb-1">Какво забелязахме <span class="text-red-500">*</span></label>
-            <textarea id="observation" name="observation" rows="4" required minlength="20" maxlength="600" class="{{ $input }}" placeholder="Разгледахме сайта ви и видяхме, че на телефон формата за запитване не се вижда, а телефонът не се набира с едно докосване.">{{ old('observation', $defaults['observation']) }}</textarea>
-            <p class="mt-1 text-xs text-gray-500">1–2 конкретни изречения на български, проверени от вас на сайта им. Това е причината да им пишем.</p>
+            <textarea id="observation" name="observation" rows="7" required minlength="20" maxlength="900" class="{{ $input }}" placeholder="Разгледахме сайта ви и видяхме, че на телефон формата за запитване не се вижда, а телефонът не се набира с едно докосване.">{{ old('observation', $defaults['observation']) }}</textarea>
+            <p class="mt-1 text-xs text-gray-500">@if($prospect->findings)Попълнено от автоматичната проверка на сайта им. Отворете сайта и махнете всичко, което не е вярно.@else 1–2 конкретни изречения на български, проверени от вас на сайта им. Това е причината да им пишем.@endif</p>
             @error('observation')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
         </div>
         <div>

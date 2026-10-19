@@ -240,8 +240,12 @@ class SiteChecker
         return $doc;
     }
 
-    /** @return array{response: ?Response, url: string, ms: int, error: ?string} */
-    private function fetch(string $url, bool $follow = true): array
+    /**
+     * Безопасно изтегляне: само публични IPv4 адреси, портове 80/443, пренасочванията се проверяват наново.
+     *
+     * @return array{response: ?Response, url: string, ms: int, error: ?string}
+     */
+    public function fetch(string $url, bool $follow = true): array
     {
         for ($redirects = 0; ; $redirects++) {
             $parts = parse_url($url);
