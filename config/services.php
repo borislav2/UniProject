@@ -35,6 +35,11 @@ return [
         ],
     ],
 
+    // Търсене на бизнеси в Google Maps (serper.dev, 2 500 безплатни търсения). Без ключ се търси в OpenStreetMap.
+    'serper' => [
+        'key' => env('SERPER_API_KEY'),
+    ],
+
     // Проверка на имейлите от търсенето на бизнеси (по желание; reoon.com, 600 безплатни на месец).
     'reoon' => [
         'key' => env('REOON_API_KEY'),

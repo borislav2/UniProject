@@ -9,7 +9,12 @@
     <form action="{{ route('admin.outreach.search.store') }}" method="POST" class="rounded-lg bg-white p-5 shadow lg:col-span-3 space-y-4">
         @csrf
         <h3 class="font-bold text-gray-900">Намери бизнеси</h3>
-        <p class="text-sm text-gray-600">Търси в картата (OpenStreetMap) бизнеси от избрания вид в града. За всеки със сайт намира публикувания имейл и проверява сайта; от проверката се пише личното писмо. Тези без имейл, но с телефон, отиват в „Без сайт (за обаждане)“.</p>
+        @if($usesGoogle)
+            <p class="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">Търси в <strong>Google Maps</strong> (Serper): до около 60 бизнеса на търсене, повечето със сайт.</p>
+        @else
+            <p class="rounded-lg bg-yellow-50 px-3 py-2 text-sm text-yellow-900">Търси в OpenStreetMap, където малко бизнеси имат записан сайт, затова имейлите са малко. За Google Maps добавете <code class="rounded bg-yellow-100 px-1">SERPER_API_KEY</code> в <code class="rounded bg-yellow-100 px-1">.env</code> (serper.dev, 2 500 безплатни търсения).</p>
+        @endif
+        <p class="text-sm text-gray-600">Търси бизнеси от избрания вид в града. За всеки със сайт намира публикувания имейл и проверява сайта; от проверката се пише личното писмо. Тези без имейл, но с телефон, отиват в „Без сайт (за обаждане)“.</p>
         <div class="grid gap-4 sm:grid-cols-2">
             <label class="block text-sm">
                 <span class="font-semibold text-gray-800">Град</span>
@@ -34,6 +39,14 @@
         <p class="text-gray-500">Данните са от OpenStreetMap: не всеки бизнес е там и не всеки има сайт. Опитайте няколко вида бизнес в един град.</p>
     </div>
 </div>
+
+@if($resettable > 0)
+    <form action="{{ route('admin.outreach.search.reset') }}" method="POST" class="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-white p-4 text-sm shadow" onsubmit="return confirm('Да изтрием ли всички търсения, намерени бизнеси, списъка за обаждане и контактите, на които още не сме писали? Изпратените и отписаните остават.')">
+        @csrf
+        <span class="text-gray-700">Започнете на чисто: трие търсенията, намерените бизнеси, списъка за обаждане и контактите без изпратено писмо. Изпратените и отписаните остават.</span>
+        <button class="rounded-lg border border-red-300 px-4 py-2 font-semibold text-red-700 hover:bg-red-50">Изчисти и започни отначало</button>
+    </form>
+@endif
 
 <ul class="divide-y divide-gray-100 rounded-lg bg-white shadow">
     @forelse($searches as $search)

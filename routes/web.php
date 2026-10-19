@@ -104,6 +104,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('outreach-search', [OutreachSearchController::class, 'index'])->name('outreach.search.index');
     Route::post('outreach-search', [OutreachSearchController::class, 'store'])->middleware('throttle:20,1')->name('outreach.search.store');
     Route::post('outreach-search/{search}/work', [OutreachSearchController::class, 'work'])->name('outreach.search.work');
+    Route::post('outreach-search/reset', [OutreachSearchController::class, 'reset'])->name('outreach.search.reset');
     Route::get('outreach-calls', [OutreachCallController::class, 'index'])->name('outreach.calls.index');
     Route::post('outreach-calls/import', [OutreachCallController::class, 'import'])->name('outreach.calls.import');
     Route::patch('outreach-calls/{call}', [OutreachCallController::class, 'update'])->name('outreach.calls.update');
