@@ -126,7 +126,7 @@ class PublicSiteTest extends TestCase
     public function test_packages_page_shows_the_three_packages_with_prices(): void
     {
         $this->get('/paketi')->assertOk()
-            ->assertSee('Вие не купувате просто „уебсайт“.')
+            ->assertSee('Не купувате просто сайт.')
             ->assertSeeInOrder(['Стартов двигател', '€450', '€150 / месец', 'Активен Маркетинг &amp; Растеж', 'Най-предпочитан', '€850', '€400 / месец', 'Индивидуална Маркетинг Мащабируемост'], false)
             ->assertSee('Поискайте оферта за този пакет');
         $this->get('/en/packages')->assertOk()->assertSee('Starter Engine')->assertSee('Request a quote for this package');

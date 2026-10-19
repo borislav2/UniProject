@@ -35,6 +35,9 @@ class OutreachCall extends Model
         'builder' => 'Строител',
         'lawyer' => 'Адвокат',
         'gardener' => 'Озеленяване',
+        'cafe' => 'Кафене / бар',
+        'fitness' => 'Фитнес',
+        'accountant' => 'Счетоводител',
     ];
 
     /** Градовете от harvey.local.yaml; Harvey пише или тях, или града от адреса в картата. */

@@ -13,6 +13,6 @@
 Creatium Lab · {!! url('/') !!}@if(! empty($contact['phones'][0])) · {!! $contact['phones'][0] !!}@endif
 
 --
-Пишем ви, защото адресът {!! $prospect->email !!} е публикуван на сайта на {!! $prospect->displayName() !!}.
+Пишем ви, защото адресът {!! $prospect->email !!} е публикуван като контакт на {!! $prospect->displayName() !!}.
 Ако не искате да получавате писма от нас, отпишете се тук: {!! $unsubscribeUrl !!}
 {!! $legal['company'] !!}@if($legal['eik']), ЕИК {!! $legal['eik'] !!}@endif @if($legal['address'])· {!! $legal['address'] !!}@endif

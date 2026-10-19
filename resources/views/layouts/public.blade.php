@@ -104,14 +104,26 @@
         <!-- End Google Tag Manager (noscript) -->
     @endif
     @php
-        $links = [];
-        foreach (['services' => 'Услуги', 'site-check' => 'Проверка на сайт', 'packages' => 'Пакети', 'portfolio' => 'Проекти', 'blog.index' => 'Блог', 'about' => 'За нас', 'contact' => 'Контакти'] as $name => $label) {
-            if ($name === 'blog.index' && ! config('creatium.blog_enabled')) {
-                continue;
-            }
-            $pattern = $name === 'blog.index' ? 'blog.*' : $name;
-            $links[] = [__($label), lroute($name), request()->routeIs($pattern, 'en.' . $pattern)];
+        // Главно меню: Услуги ▾ · Пакети · Проекти · За нас ▾ и бутон „Безплатна консултация“.
+        $is = fn (...$patterns) => collect($patterns)->contains(fn ($p) => request()->routeIs($p, 'en.' . $p));
+        $serviceLinks = [[__('Всички услуги'), lroute('services'), $is('services'), 'list-ul']];
+        foreach (site('service_pages') as $key => $servicePage) {
+            $serviceLinks[] = [$servicePage['menu'], \App\Http\Controllers\PageController::serviceUrl($key), request()->routeIs('services.show', 'en.services.show') && request()->route('slug') === $servicePage['slug'], $servicePage['icon']];
         }
+        $serviceLinks[] = [__('Безплатна проверка на сайт'), lroute('site-check'), $is('site-check'), 'gauge-high'];
+        $aboutLinks = [[__('Кои сме'), lroute('about'), $is('about'), 'users']];
+        if (config('creatium.blog_enabled')) {
+            $aboutLinks[] = [__('Блог'), lroute('blog.index'), $is('blog.*'), 'newspaper'];
+        }
+        $aboutLinks[] = [__('Често задавани въпроси'), lroute('about') . '#vaprosi', false, 'quote-left'];
+        $aboutLinks[] = [__('Контакти'), lroute('contact'), $is('contact'), 'envelope'];
+        $menu = [
+            ['label' => __('Услуги'), 'children' => $serviceLinks, 'active' => $is('services', 'services.show', 'site-check')],
+            ['label' => __('Пакети'), 'href' => lroute('packages'), 'active' => $is('packages')],
+            ['label' => __('Проекти'), 'href' => lroute('portfolio'), 'active' => $is('portfolio')],
+            ['label' => __('За нас'), 'children' => $aboutLinks, 'active' => $is('about', 'blog.*', 'contact')],
+        ];
+        $consultationUrl = lroute('contact') . '#konsultatsiya';
         $languages = ['bg' => ['BG', 'Български'], 'en' => ['EN', 'English']];
     @endphp
 
@@ -125,14 +137,33 @@
                 </a>
 
                 <div class="hidden lg:flex items-center gap-0.5 xl:gap-1">
-                    @foreach($links as [$label, $href, $active])
-                        <a href="{{ $href }}" class="relative whitespace-nowrap px-2 xl:px-3 py-2 text-sm font-semibold rounded-lg transition-colors {{ $active ? 'text-brand-700' : 'text-gray-600 hover:text-brand-950 hover:bg-gray-50' }}" @if($active) aria-current="page" @endif>
-                            {{ $label }}
-                            @if($active)
-                                <span class="absolute left-2 right-2 xl:left-3 xl:right-3 -bottom-0.5 h-0.5 rounded-full bg-brand-500"></span>
-                            @endif
-                        </a>
+                    @foreach($menu as $item)
+                        @php($itemClass = 'relative inline-flex items-center gap-1 whitespace-nowrap px-2.5 xl:px-3 py-2 text-sm font-semibold rounded-lg transition-colors ' . ($item['active'] ? 'text-brand-700' : 'text-gray-600 hover:text-brand-950 hover:bg-gray-50'))
+                        @if(isset($item['children']))
+                            <div class="relative group" data-dropdown>
+                                <button type="button" class="{{ $itemClass }}" aria-expanded="false" aria-haspopup="true" data-dropdown-button>
+                                    {{ $item['label'] }} <x-icon name="chevron-down" class="text-[10px] transition-transform group-hover:rotate-180" />
+                                    @if($item['active'])<span class="absolute left-2.5 right-2.5 xl:left-3 xl:right-3 -bottom-0.5 h-0.5 rounded-full bg-brand-500"></span>@endif
+                                </button>
+                                <div class="absolute left-0 top-full z-50 hidden pt-2 group-hover:block group-focus-within:block" data-dropdown-panel>
+                                    <div class="w-80 rounded-2xl border border-gray-200 bg-white p-2 shadow-xl shadow-brand-950/10">
+                                        @foreach($item['children'] as [$label, $href, $active, $icon])
+                                            <a href="{{ $href }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold {{ $active ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50 hover:text-brand-950' }}" @if($active) aria-current="page" @endif>
+                                                <span class="w-8 h-8 shrink-0 rounded-lg bg-brand-50 flex items-center justify-center"><x-icon :name="$icon" class="text-xs text-brand-600" /></span>{{ $label }}
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <a href="{{ $item['href'] }}" class="{{ $itemClass }}" @if($item['active']) aria-current="page" @endif>
+                                {{ $item['label'] }}
+                                @if($item['active'])<span class="absolute left-2.5 right-2.5 xl:left-3 xl:right-3 -bottom-0.5 h-0.5 rounded-full bg-brand-500"></span>@endif
+                            </a>
+                        @endif
                     @endforeach
+
+                    <a href="{{ $consultationUrl }}" class="btn-shine ml-2 whitespace-nowrap rounded-xl bg-brand-950 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800">{{ __('Безплатна консултация') }}</a>
 
                     <div class="ml-3 flex items-center rounded-lg border border-gray-200 p-0.5 text-xs font-bold" role="group" aria-label="{{ __('Език') }}">
                         @foreach($languages as $code => [$short, $name])
@@ -176,10 +207,23 @@
 
         <div id="mobile-menu" class="mobile-menu hidden lg:hidden border-t border-gray-200/70">
             <div class="px-4 py-3 space-y-1">
-                @foreach($links as [$label, $href, $active])
-                    <a href="{{ $href }}" class="block px-3 py-2.5 rounded-lg font-medium {{ $active ? 'text-brand-700 bg-brand-50' : 'text-gray-700 hover:bg-gray-50' }}">{{ $label }}</a>
+                @foreach($menu as $item)
+                    @if(isset($item['children']))
+                        <details class="group" @if($item['active']) open @endif>
+                            <summary class="flex cursor-pointer list-none items-center justify-between px-3 py-2.5 rounded-lg font-medium {{ $item['active'] ? 'text-brand-700' : 'text-gray-700 hover:bg-gray-50' }}">
+                                {{ $item['label'] }} <x-icon name="chevron-down" class="text-xs transition-transform group-open:rotate-180" />
+                            </summary>
+                            <div class="ml-3 border-l border-gray-200 pl-2 pb-1">
+                                @foreach($item['children'] as [$label, $href, $active, $icon])
+                                    <a href="{{ $href }}" class="block px-3 py-2 rounded-lg text-sm {{ $active ? 'text-brand-700 bg-brand-50 font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">{{ $label }}</a>
+                                @endforeach
+                            </div>
+                        </details>
+                    @else
+                        <a href="{{ $item['href'] }}" class="block px-3 py-2.5 rounded-lg font-medium {{ $item['active'] ? 'text-brand-700 bg-brand-50' : 'text-gray-700 hover:bg-gray-50' }}">{{ $item['label'] }}</a>
+                    @endif
                 @endforeach
-                <a href="{{ lroute('contact') }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold">{{ __('Свържете се с нас') }}</a>
+                <a href="{{ $consultationUrl }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold">{{ __('Безплатна консултация') }}</a>
                 @auth
                     <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-gray-500">{{ __('Административен панел') }}</a>
                     <form action="{{ route('logout') }}" method="POST">
@@ -200,21 +244,30 @@
         <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_70%)]" aria-hidden="true"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 md:pt-20">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-10 py-14">
-                <div class="md:col-span-5">
+                <div class="md:col-span-4">
                     <img src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="223px" alt="Creatium Lab" width="445" height="64" class="h-8 w-auto" loading="lazy" decoding="async">
                     <p class="mt-5 max-w-sm text-gray-400 leading-relaxed">{{ __('Правим сайтове за малки бизнеси и се грижим хората да ги намират в Google.') }}</p>
                 </div>
 
                 <div class="md:col-span-3">
-                    <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-brand-300 mb-5">{{ __('Навигация') }}</h2>
+                    <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-brand-300 mb-5">{{ __('Услуги') }}</h2>
                     <ul class="space-y-3">
-                        @foreach($links as [$label, $href])
+                        @foreach(array_slice($serviceLinks, 1) as [$label, $href])
                             <li><a href="{{ $href }}" class="text-gray-300 hover:text-white transition-colors">{{ $label }}</a></li>
                         @endforeach
                     </ul>
                 </div>
 
-                <div class="md:col-span-4">
+                <div class="md:col-span-2">
+                    <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-brand-300 mb-5">{{ __('Навигация') }}</h2>
+                    <ul class="space-y-3">
+                        @foreach(array_merge([[__('Пакети'), lroute('packages')], [__('Проекти'), lroute('portfolio')]], $aboutLinks) as [$label, $href])
+                            <li><a href="{{ $href }}" class="text-gray-300 hover:text-white transition-colors">{{ $label }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
+
+                <div class="md:col-span-3">
                     <h2 class="text-xs font-bold uppercase tracking-[0.18em] text-brand-300 mb-5">{{ __('Контакти') }}</h2>
                     <ul class="space-y-3.5 text-gray-300">
                         <li class="flex items-center gap-3"><x-icon name="envelope" class="w-4 text-brand-300" /><a href="mailto:{{ config('creatium.contact.email') }}" class="hover:text-white">{{ config('creatium.contact.email') }}</a></li>
@@ -247,6 +300,19 @@
     @endif
 
     <script>
+        // Подменютата: отварят се при посочване, а с клик/докосване или клавиатура остават отворени до клик навън или Esc.
+        document.querySelectorAll('[data-dropdown]').forEach(function (dropdown) {
+            var button = dropdown.querySelector('[data-dropdown-button]');
+            var panel = dropdown.querySelector('[data-dropdown-panel]');
+            function set(open) {
+                button.setAttribute('aria-expanded', open ? 'true' : 'false');
+                panel.classList.toggle('hidden', !open);
+            }
+            button.addEventListener('click', function () { set(button.getAttribute('aria-expanded') !== 'true'); });
+            document.addEventListener('click', function (e) { if (!dropdown.contains(e.target)) { set(false); } });
+            dropdown.addEventListener('keydown', function (e) { if (e.key === 'Escape') { set(false); button.focus(); } });
+        });
+
         document.querySelector('.mobile-menu-button').addEventListener('click', function () {
             var menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');

@@ -14,7 +14,7 @@
 <p style="margin:0 0 14px;">Ако ви е интересно, ще ви изпратим кратък безплатен преглед на сайта с няколко конкретни неща за подобряване. Да ви го пратим ли?</p>
 <p style="margin:0 0 22px;">Поздрави,<br>{{ $data['sender'] }}<br>Creatium Lab · <a href="{{ url('/') }}" style="color:#2d63a3;">{{ parse_url(url('/'), PHP_URL_HOST) }}</a>@if(! empty($contact['phones'][0])) · {{ $contact['phones'][0] }}@endif</p>
 <p style="margin:0;border-top:1px solid #e2e8f0;padding-top:12px;font-size:12px;line-height:1.5;color:#64748b;">
-Пишем ви, защото адресът {{ $prospect->email }} е публикуван на сайта на {{ $prospect->displayName() }}.
+Пишем ви, защото адресът {{ $prospect->email }} е публикуван като контакт на {{ $prospect->displayName() }}.
 Ако не искате да получавате писма от нас, <a href="{{ $unsubscribeUrl }}" style="color:#64748b;">отпишете се тук</a> и няма да ви пишем повече.
 <br>{{ $legal['company'] }}@if($legal['eik']), ЕИК {{ $legal['eik'] }}@endif @if($legal['address'])· {{ $legal['address'] }}@endif
 </p>
