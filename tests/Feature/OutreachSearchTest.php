@@ -155,9 +155,54 @@ class OutreachSearchTest extends TestCase
         $this->assertStringContainsString('не отговаря', $progress['error']);
     }
 
+    public function test_with_a_serper_key_the_search_uses_google_maps(): void
+    {
+        Http::fake([
+            'google.serper.dev/places' => Http::response(['places' => [
+                ['position' => 1, 'title' => 'Ресторант Лозата', 'address' => 'ул. Главна 1, Пловдив', 'category' => 'Ресторант', 'phoneNumber' => '032 111 222', 'website' => 'https://lozata.bg', 'cid' => '111'],
+                ['position' => 2, 'title' => 'Механа Без Сайт', 'address' => 'Пловдив', 'category' => 'Ресторант', 'phoneNumber' => '088 123 4567', 'cid' => '222'],
+            ]]),
+        ]);
+        $this->fakeWorld();
+        config(['services.serper.key' => 'test-key']);
+        $user = $this->admin();
+
+        $this->actingAs($user)->get('/admin/outreach-search')->assertSee('Google Maps');
+        $this->actingAs($user)->post('/admin/outreach-search', ['city' => 'Пловдив', 'category' => 'restaurant']);
+        $progress = $this->runToEnd($user, OutreachSearch::firstOrFail());
+
+        $this->assertSame(['done', 2, 1, 1], [$progress['status'], $progress['found'], $progress['emails'], $progress['calls']]);
+        $this->assertSame('info@lozata.bg', OutreachProspect::sole()->email);
+        $this->assertSame('g:111', OutreachBusiness::where('name', 'Ресторант Лозата')->value('external_id'));
+        Http::assertSent(fn ($request) => $request->url() === 'https://google.serper.dev/places'
+            && $request->hasHeader('X-API-KEY', 'test-key')
+            && $request['q'] === 'ресторант Пловдив' && $request['gl'] === 'bg' && $request['page'] === 1);
+    }
+
+    public function test_reset_clears_everything_except_contacted_and_unsubscribed(): void
+    {
+        $user = $this->admin();
+        OutreachSearch::create(['city' => 'Пловдив', 'category' => 'restaurant', 'status' => 'done']);
+        OutreachBusiness::create(['external_id' => 'osm:node/1', 'name' => 'Х']);
+        OutreachCall::create(['external_id' => 'osm:node/2', 'name' => 'Y', 'phone' => '0888']);
+        OutreachProspect::create(['email' => 'new@a.bg', 'status' => 'new']);
+        OutreachProspect::create(['email' => 'sent@a.bg', 'status' => 'sent', 'sent_at' => now()]);
+        OutreachProspect::create(['email' => 'unsub@a.bg', 'status' => 'unsubscribed', 'sent_at' => now()]);
+        \App\Models\OutreachSuppression::add('unsub@a.bg', 'unsubscribe');
+
+        $this->actingAs($user)->get('/admin/outreach-search')->assertSee('Изчисти и започни отначало');
+        $this->actingAs($user)->post('/admin/outreach-search/reset')
+            ->assertRedirect('/admin/outreach-search')->assertSessionHas('success', 'Изчистено: 1 контакта без изпратено писмо и 1 от списъка за обаждане. Изпратените и отписаните са запазени.');
+
+        $this->assertSame(['sent@a.bg', 'unsub@a.bg'], OutreachProspect::orderBy('email')->pluck('email')->all());
+        $this->assertSame([0, 0, 0], [OutreachSearch::count(), OutreachBusiness::count(), OutreachCall::count()]);
+        $this->assertTrue(\App\Models\OutreachSuppression::where('email', 'unsub@a.bg')->exists());
+    }
+
     public function test_guests_cannot_search(): void
     {
         $this->get('/admin/outreach-search')->assertRedirect('/login');
         $this->post('/admin/outreach-search', ['city' => 'Русе', 'category' => 'hotel'])->assertRedirect('/login');
+        $this->post('/admin/outreach-search/reset')->assertRedirect('/login');
     }
 }

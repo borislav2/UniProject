@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Http;
 use RuntimeException;
 
 /**
- * Търси бизнеси по град и вид в OpenStreetMap (Overpass API, безплатно и без регистрация).
- * Връща име, сайт, телефон и имейл, ако са в картата.
+ * Търси бизнеси по град и вид. С SERPER_API_KEY: в Google Maps през serper.dev (почти всички бизнеси, повечето със сайт).
+ * Без ключ: в OpenStreetMap (Overpass API, безплатно, но малко бизнеси имат записан сайт).
  */
 class BusinessSearch
 {
@@ -26,21 +26,21 @@ class BusinessSearch
         'Шумен' => [43.2706, 26.9361, 5],
     ];
 
-    /** Вид бизнес => етикет и таговете в картата, които го описват. */
+    /** Вид бизнес => етикет, таговете в OpenStreetMap и думата за търсене в Google Maps. */
     public const CATEGORIES = [
-        'restaurant' => ['label' => 'Ресторанти', 'tags' => ['amenity=restaurant']],
-        'cafe' => ['label' => 'Кафенета и барове', 'tags' => ['amenity=cafe', 'amenity=bar']],
-        'hotel' => ['label' => 'Хотели и къщи за гости', 'tags' => ['tourism=hotel', 'tourism=guest_house']],
-        'beauty' => ['label' => 'Козметични салони', 'tags' => ['shop=beauty']],
-        'hairdresser' => ['label' => 'Фризьори', 'tags' => ['shop=hairdresser']],
-        'dentist' => ['label' => 'Зъболекари', 'tags' => ['amenity=dentist', 'healthcare=dentist']],
-        'physiotherapy' => ['label' => 'Физиотерапия', 'tags' => ['healthcare=physiotherapist']],
-        'veterinary' => ['label' => 'Ветеринари', 'tags' => ['amenity=veterinary']],
-        'car_repair' => ['label' => 'Автосервизи', 'tags' => ['shop=car_repair']],
-        'fitness' => ['label' => 'Фитнес зали', 'tags' => ['leisure=fitness_centre']],
-        'builder' => ['label' => 'Строители и ремонти', 'tags' => ['craft=builder', 'office=construction_company', 'craft=roofer']],
-        'lawyer' => ['label' => 'Адвокати', 'tags' => ['office=lawyer']],
-        'accountant' => ['label' => 'Счетоводители', 'tags' => ['office=accountant']],
+        'restaurant' => ['label' => 'Ресторанти', 'tags' => ['amenity=restaurant'], 'query' => 'ресторант'],
+        'cafe' => ['label' => 'Кафенета и барове', 'tags' => ['amenity=cafe', 'amenity=bar'], 'query' => 'кафе бар'],
+        'hotel' => ['label' => 'Хотели и къщи за гости', 'tags' => ['tourism=hotel', 'tourism=guest_house'], 'query' => 'хотел'],
+        'beauty' => ['label' => 'Козметични салони', 'tags' => ['shop=beauty'], 'query' => 'козметичен салон'],
+        'hairdresser' => ['label' => 'Фризьори', 'tags' => ['shop=hairdresser'], 'query' => 'фризьорски салон'],
+        'dentist' => ['label' => 'Зъболекари', 'tags' => ['amenity=dentist', 'healthcare=dentist'], 'query' => 'зъболекар'],
+        'physiotherapy' => ['label' => 'Физиотерапия', 'tags' => ['healthcare=physiotherapist'], 'query' => 'физиотерапия'],
+        'veterinary' => ['label' => 'Ветеринари', 'tags' => ['amenity=veterinary'], 'query' => 'ветеринарна клиника'],
+        'car_repair' => ['label' => 'Автосервизи', 'tags' => ['shop=car_repair'], 'query' => 'автосервиз'],
+        'fitness' => ['label' => 'Фитнес зали', 'tags' => ['leisure=fitness_centre'], 'query' => 'фитнес зала'],
+        'builder' => ['label' => 'Строители и ремонти', 'tags' => ['craft=builder', 'office=construction_company', 'craft=roofer'], 'query' => 'строителна фирма'],
+        'lawyer' => ['label' => 'Адвокати', 'tags' => ['office=lawyer'], 'query' => 'адвокат'],
+        'accountant' => ['label' => 'Счетоводители', 'tags' => ['office=accountant'], 'query' => 'счетоводна кантора'],
     ];
 
     public const ENDPOINTS = [
@@ -51,11 +51,23 @@ class BusinessSearch
 
     private const LIMIT = 400;
 
+    /** Страници от Google Maps на едно търсене (по около 20 бизнеса, всяка струва кредит в Serper). */
+    private const SERPER_PAGES = 3;
+
+    public static function usesGoogle(): bool
+    {
+        return filled(config('services.serper.key'));
+    }
+
     /**
      * @return list<array{external_id: string, name: string, website: ?string, phone: ?string, email: ?string, city: ?string}>
      */
     public function find(string $city, string $category): array
     {
+        if (self::usesGoogle()) {
+            return $this->findOnGoogle($city, $category);
+        }
+
         [$lat, $lng, $km] = self::CITIES[$city] ?? throw new RuntimeException("Непознат град: $city");
         $tags = self::CATEGORIES[$category]['tags'] ?? throw new RuntimeException("Непознат вид бизнес: $category");
 
@@ -87,6 +99,57 @@ class BusinessSearch
         }
 
         return $businesses;
+    }
+
+    /** Google Maps през serper.dev: „ресторант Пловдив“, до три страници резултати. */
+    private function findOnGoogle(string $city, string $category): array
+    {
+        $query = (self::CATEGORIES[$category]['query'] ?? throw new RuntimeException("Непознат вид бизнес: $category")) . ' ' . $city;
+        isset(self::CITIES[$city]) || throw new RuntimeException("Непознат град: $city");
+
+        $businesses = [];
+        for ($page = 1; $page <= self::SERPER_PAGES; $page++) {
+            try {
+                $response = Http::withHeaders(['X-API-KEY' => config('services.serper.key')])
+                    ->acceptJson()
+                    ->connectTimeout(10)
+                    ->timeout(30)
+                    ->post('https://google.serper.dev/places', ['q' => $query, 'gl' => 'bg', 'hl' => 'bg', 'page' => $page]);
+            } catch (ConnectionException) {
+                throw new RuntimeException('Google Maps (Serper) не отговаря в момента. Опитайте пак след малко.');
+            }
+            if (in_array($response->status(), [401, 403], true)) {
+                throw new RuntimeException('Ключът за Serper (SERPER_API_KEY) не е валиден или кредитите са свършили.');
+            }
+            if (! $response->successful()) {
+                throw new RuntimeException('Google Maps (Serper) върна грешка (код ' . $response->status() . ').');
+            }
+
+            $places = $response->json('places');
+            if (! is_array($places) || $places === []) {
+                break;
+            }
+            foreach ($places as $place) {
+                $name = trim((string) ($place['title'] ?? ''));
+                $id = $place['cid'] ?? $place['placeId'] ?? null;
+                if ($name === '' || ! $id) {
+                    continue;
+                }
+                $businesses['g:' . $id] = [
+                    'external_id' => 'g:' . $id,
+                    'name' => mb_substr($name, 0, 255),
+                    'website' => self::website($place['website'] ?? null),
+                    'phone' => self::first($place['phoneNumber'] ?? null, 100),
+                    'email' => null,
+                    'city' => $city,
+                ];
+            }
+            if (count($places) < 10) {
+                break;
+            }
+        }
+
+        return array_values($businesses);
     }
 
     /** Пита публичните Overpass сървъри един след друг, защото често са претоварени. */
