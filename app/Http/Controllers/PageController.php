@@ -16,6 +16,39 @@ class PageController extends Controller
         ]);
     }
 
+    /** Страница на една услуга (/uslugi/{slug}, /en/services/{slug}). */
+    public function service(string $slug)
+    {
+        $locale = app()->getLocale();
+        $pages = site('service_pages');
+        $key = collect($pages)->search(fn ($page) => $page['slug'] === $slug);
+        abort_if($key === false, 404);
+
+        $alternates = [];
+        foreach (['bg', 'en'] as $lang) {
+            $alternates[$lang] = self::serviceUrl($key, $lang);
+        }
+
+        return view('service', [
+            'key' => $key,
+            'page' => $pages[$key],
+            'others' => collect($pages)->except($key),
+            'plan' => site('plans')['items'][$pages[$key]['package'] ?? -1] ?? null,
+            'pageAlternates' => $alternates,
+            'hreflangAlternates' => $alternates,
+            'seo' => ['meta_title' => $pages[$key]['seo_title'], 'meta_description' => $pages[$key]['seo_description']],
+        ]);
+    }
+
+    /** Адресът на услуга на даден език (slug-ът е различен за всеки език). */
+    public static function serviceUrl(string $key, ?string $locale = null): string
+    {
+        $locale ??= app()->getLocale();
+        $slug = $locale === 'en' ? config("creatium_en.service_pages.$key.slug") : config("creatium.service_pages.$key.slug");
+
+        return lroute('services.show', ['slug' => $slug], $locale);
+    }
+
     public function packages()
     {
         return view('packages', [
@@ -65,6 +98,13 @@ class PageController extends Controller
 
         foreach ($pages as $name) {
             $alternates = ['bg' => lroute($name, [], 'bg'), 'en' => lroute($name, [], 'en')];
+            foreach ($alternates as $url) {
+                $urls[] = ['loc' => $url, 'alternates' => $alternates];
+            }
+        }
+
+        foreach (array_keys(config('creatium.service_pages')) as $key) {
+            $alternates = ['bg' => self::serviceUrl($key, 'bg'), 'en' => self::serviceUrl($key, 'en')];
             foreach ($alternates as $url) {
                 $urls[] = ['loc' => $url, 'alternates' => $alternates];
             }

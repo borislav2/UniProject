@@ -4,6 +4,7 @@
 @section('meta_description', __('Уеб платформа, която продава, GEO и SEO позициониране, автоматизиран имейл маркетинг и техническа грижа 24/7. Четирите елемента на един работещ търговски канал.'))
 
 @section('content')
+@php($cardPages = ['websites' => 'website', 'geo-seo' => 'seo', 'email' => 'email', 'monitoring' => 'support'])
 @include('partials/page-header', ['eyebrow' => __('Услуги'), 'heading' => $page['title'], 'sub' => $page['intro']])
 
 <section class="py-16 md:py-24 bg-white dark:bg-ink-950">
@@ -24,8 +25,26 @@
                         <li class="flex items-start gap-3 text-gray-700 dark:text-gray-200"><span class="mt-0.5 w-5 h-5 shrink-0 rounded-full bg-brand-50 flex items-center justify-center dark:bg-white/10"><x-icon name="check" class="text-[10px] text-brand-600 dark:text-brand-300" /></span>{{ $item }}</li>
                     @endforeach
                 </ul>
+                @if($pageKey = $cardPages[$card['slug']] ?? null)
+                    <div class="flex-1"></div>
+                    <a href="{{ \App\Http\Controllers\PageController::serviceUrl($pageKey) }}" class="mt-7 inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">{{ __('Научете повече') }} <x-icon name="arrow-right" class="text-sm" /></a>
+                @endif
             </article>
         @endforeach
+
+        @if($google = site('service_pages')['google'] ?? null)
+            <article class="reveal card-hover overflow-hidden rounded-3xl border border-brand-300 bg-brand-50/60 p-7 md:p-9 flex flex-col md:col-span-2 md:flex-row md:items-center md:justify-between gap-6 dark:border-brand-400/30 dark:bg-white/[0.04]">
+                <div class="flex items-start gap-4">
+                    <div class="icon-pop w-14 h-14 shrink-0 rounded-2xl bg-brand-gradient flex items-center justify-center shadow-lg shadow-brand-900/20"><x-icon :name="$google['icon']" class="text-white text-lg" /></div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-[0.14em] text-brand-600 dark:text-brand-300">{{ __('Ново') }}</p>
+                        <h2 class="mt-1 text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $google['title'] }}</h2>
+                        <p class="mt-2 max-w-2xl text-gray-600 leading-relaxed dark:text-gray-300">{{ $google['lead'] }}</p>
+                    </div>
+                </div>
+                <a href="{{ \App\Http\Controllers\PageController::serviceUrl('google') }}" class="btn-shine shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-brand-950 px-6 py-3.5 font-semibold text-white hover:bg-brand-800 dark:bg-white dark:text-brand-950">{{ __('Научете повече') }} <x-icon name="arrow-right" class="text-sm" /></a>
+            </article>
+        @endif
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">

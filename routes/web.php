@@ -46,6 +46,8 @@ foreach (['bg', 'en'] as $locale) {
             Route::get($locale === 'en' ? $enPath : $bgPath, $action)->name($name);
         }
 
+        Route::get($locale === 'en' ? '/services/{slug}' : '/uslugi/{slug}', [PageController::class, 'service'])->where('slug', '[a-z0-9-]+')->name('services.show');
+
         Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
         Route::get($locale === 'en' ? '/blog/category/{slug}' : '/blog/kategoriya/{slug}', [BlogController::class, 'category'])->name('blog.category');
         Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');

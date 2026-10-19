@@ -66,7 +66,7 @@
     </div>
 </section>
 
-<section class="py-16 md:py-20 bg-white dark:bg-ink-950">
+<section id="vaprosi" class="scroll-mt-28 py-16 md:py-20 bg-white dark:bg-ink-950">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 text-center mb-8 dark:text-white">{{ __('Често задавани въпроси') }}</h2>
         <div class="space-y-3">
