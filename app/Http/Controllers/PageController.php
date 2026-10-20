@@ -72,6 +72,26 @@ class PageController extends Controller
         return view('about', ['about' => site('about'), 'team' => site('team'), 'faq' => site('questions')]);
     }
 
+    /**
+     * Презентацията на Creatium Lab: слайдове 16:9 от съдържанието на сайта. Служи и като източник на PDF-а
+     * за изтегляне (tools/presentation/render.mjs го записва в public/files). Не се индексира.
+     */
+    public function presentation()
+    {
+        return view('presentation', [
+            'hero' => site('home_hero'),
+            'problem' => site('home_problem'),
+            'engine' => site('home_engine'),
+            'engineCards' => site('services_page.cards') ?? [],
+            'trust' => site('home_trust'),
+            'process' => site('home_process'),
+            'plans' => site('plans'),
+            'demos' => site('demos') ?? [],
+            'team' => site('team') ?? [],
+            'contact' => config('creatium.contact'),
+        ]);
+    }
+
     public function privacy()
     {
         return view($this->localized('privacy'), [

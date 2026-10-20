@@ -390,6 +390,15 @@
                     <span class="w-11 h-11 rounded-xl bg-brand-500/20 flex items-center justify-center"><x-icon name="location-dot" class="text-brand-200" /></span>
                     <span class="font-semibold">{{ __($contact['city']) }}, {{ __('България') }}</span>
                 </li>
+                @php($presentationPdf = 'files/' . (app()->getLocale() === 'en' ? 'creatium-lab-presentation.pdf' : 'creatium-lab-prezentatsiya.pdf'))
+                @if(is_file(public_path($presentationPdf)))
+                    <li>
+                        <a href="{{ asset($presentationPdf) }}" download class="relative edge glass flex items-center gap-4 rounded-2xl px-4 py-3.5 hover:bg-white/10 transition-colors">
+                            <span class="w-11 h-11 rounded-xl bg-brand-500/20 flex items-center justify-center"><x-icon name="file" class="text-brand-200" /></span>
+                            <span class="font-semibold">{{ __('Изтеглете презентацията ни') }} <span class="text-gray-400 font-normal">PDF</span></span>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </div>
 

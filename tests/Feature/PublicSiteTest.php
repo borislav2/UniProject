@@ -319,4 +319,16 @@ class PublicSiteTest extends TestCase
             ->assertSeeTextInOrder(['06 / Работен процес', '07 / Анализи и съвети', 'Първа статия', '08 / Следващата стъпка']);
         $this->get('/en')->assertOk()->assertSeeText('12 Google reviews')->assertDontSeeText('Първа статия');
     }
+
+    public function test_presentation_page_and_pdf_download(): void
+    {
+        $this->get('/prezentatsiya')->assertOk()->assertSee('noindex', false)
+            ->assertSeeText('Не работим с всеки бизнес.')->assertSeeText('Стартов двигател')->assertSeeText('creatiumlab.com');
+        $this->get('/en/presentation')->assertOk()->assertSeeText('Starter Engine');
+
+        $this->assertFileExists(public_path('files/creatium-lab-prezentatsiya.pdf'));
+        $this->assertFileExists(public_path('files/creatium-lab-presentation.pdf'));
+        $this->get('/')->assertSee('files/creatium-lab-prezentatsiya.pdf', false);
+        $this->get('/en')->assertSee('files/creatium-lab-presentation.pdf', false);
+    }
 }
