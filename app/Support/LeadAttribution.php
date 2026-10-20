@@ -54,6 +54,7 @@ class LeadAttribution
         $clickId = $data['click_id'] ?? null;
 
         return match (true) {
+            self::isAiAssistant($source) || self::isAiAssistant($referrer) => 'AI асистенти',
             str_contains($source, 'instagram') || $source === 'ig' || str_contains($referrer, 'instagram.') => 'Instagram',
             str_contains($source, 'facebook') || $source === 'fb' || str_contains($referrer, 'facebook.') || str_contains($referrer, 'fb.') => 'Facebook',
             $clickId === 'fbclid' || $source === 'meta' => 'Meta реклама',
@@ -62,6 +63,18 @@ class LeadAttribution
             $referrer !== '' => $referrer,
             default => 'Директно',
         };
+    }
+
+    /** ChatGPT, Perplexity, Gemini, Claude и Copilot: пращат хора с utm_source или като referrer. */
+    public static function isAiAssistant(string $value): bool
+    {
+        foreach (['chatgpt', 'openai.com', 'perplexity', 'gemini.google', 'claude.ai', 'copilot.microsoft'] as $needle) {
+            if (str_contains($value, $needle)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static function clean(mixed $value): ?string

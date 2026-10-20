@@ -70,6 +70,9 @@ class MarketingTest extends TestCase
         $this->assertSame('Facebook', LeadAttribution::channel(['referrer' => 'l.facebook.com']));
         $this->assertSame('Instagram', LeadAttribution::channel(['referrer' => 'l.instagram.com']));
         $this->assertSame('Meta реклама', LeadAttribution::channel(['click_id' => 'fbclid']));
+        $this->assertSame('AI асистенти', LeadAttribution::channel(['utm_source' => 'chatgpt.com']));
+        $this->assertSame('AI асистенти', LeadAttribution::channel(['referrer' => 'gemini.google.com']));
+        $this->assertSame('AI асистенти', LeadAttribution::channel(['referrer' => 'www.perplexity.ai']));
         $this->assertSame('Newsletter', LeadAttribution::channel(['utm_source' => 'newsletter']));
         $this->assertSame('example.com', LeadAttribution::channel(['referrer' => 'example.com']));
         $this->assertSame('Директно', LeadAttribution::channel(null));

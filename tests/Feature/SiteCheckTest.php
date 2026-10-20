@@ -64,6 +64,36 @@ class SiteCheckTest extends TestCase
         }
     }
 
+    public function test_a_robots_txt_that_blocks_ai_assistants_is_reported(): void
+    {
+        Mail::fake();
+        $this->fakeSite(robots: "User-agent: GPTBot\nUser-agent: OAI-SearchBot\nUser-agent: PerplexityBot\nDisallow: /\n\nUser-agent: *\nDisallow: /admin\nSitemap: https://firma.bg/sitemap.xml");
+
+        $this->post('/proverka-na-sait', ['domain' => 'firma.bg', 'email' => 'ivan@firma.bg', 'consent' => '1']);
+
+        Mail::assertSent(SiteCheckReportMail::class, function ($mail) {
+            $check = collect($mail->report['checks'])->firstWhere('title', 'AI асистентите са спрени');
+            $this->assertNotNull($check, json_encode($mail->report['checks'], JSON_UNESCAPED_UNICODE));
+            $this->assertStringContainsString('OAI-SearchBot, PerplexityBot', $check['detail']);
+            $this->assertStringNotContainsString('GPTBot', $check['detail']);
+            // Google още може да показва сайта: спрени са само AI ботовете.
+            $this->assertTrue(collect($mail->report['checks'])->contains('title', 'Google може да показва сайта'));
+
+            return true;
+        });
+    }
+
+    public function test_llms_txt_describes_the_business_for_ai_assistants(): void
+    {
+        $this->get('/llms.txt')->assertOk()
+            ->assertHeader('Content-Type', 'text/markdown; charset=UTF-8')
+            ->assertSee('# Creatium Lab', false)
+            ->assertSee('## Услуги', false)
+            ->assertSee('(' . url('/uslugi/google-profil-i-otzivi') . ')', false)
+            ->assertSee('**Стартов двигател**: €450', false)
+            ->assertSee(config('creatium.contact.email'));
+    }
+
     public function test_good_site_gets_a_high_score_and_the_report_is_emailed(): void
     {
         Mail::fake();

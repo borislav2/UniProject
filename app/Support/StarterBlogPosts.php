@@ -18,9 +18,9 @@ class StarterBlogPosts
     /** Дни между две насрочени статии: редуват се, за да не излизат в един и същ ден от седмицата. */
     public const GAPS = [3, 2, 4, 3, 4, 2];
 
-    public static function data(): array
+    public static function data(string $file = 'blog-posts.php'): array
     {
-        return require database_path('data/blog-posts.php');
+        return require database_path('data/' . $file);
     }
 
     /** Датите на публикуване по реда на статиите. */
@@ -42,10 +42,13 @@ class StarterBlogPosts
         return $dates;
     }
 
-    /** Добавя статиите, които още ги няма (по адрес на български). Връща броя на добавените. */
-    public static function import(?Carbon $start = null): int
+    /**
+     * Добавя статиите, които още ги няма (по адрес на български). Връща броя на добавените.
+     * С $status = 'draft' влизат като чернови без дата: собствениците ги преглеждат и публикуват от админа.
+     */
+    public static function import(?Carbon $start = null, string $file = 'blog-posts.php', string $status = 'published'): int
     {
-        $data = self::data();
+        $data = self::data($file);
         $categories = [];
         foreach ($data['categories'] as $key => $names) {
             $categories[$key] = PostCategory::findBySlug($names['bg'][1], 'bg') ?? PostCategory::create([
@@ -66,8 +69,8 @@ class StarterBlogPosts
                 'slug' => ['bg' => $post['slug']],
                 'excerpt' => ['bg' => $post['excerpt']],
                 'body' => ['bg' => trim($post['body'])],
-                'status' => 'published',
-                'published_at' => $dates[$i],
+                'status' => $status,
+                'published_at' => $status === 'published' ? $dates[$i] : null,
             ]);
             $added++;
         }

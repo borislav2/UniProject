@@ -103,4 +103,23 @@ class StarterBlogAndDemoTest extends TestCase
             }
         }
     }
+
+    public function test_summit_articles_come_in_as_hidden_drafts_with_working_links(): void
+    {
+        $added = StarterBlogPosts::import(file: 'summit-posts.php', status: 'draft');
+        $data = StarterBlogPosts::data('summit-posts.php');
+
+        $this->assertSame(count($data['posts']), $added);
+        $this->assertSame(0, StarterBlogPosts::import(file: 'summit-posts.php', status: 'draft'));
+        $this->assertSame(count($data['posts']), \App\Models\Post::where('status', 'draft')->whereNull('published_at')->count());
+
+        foreach ($data['posts'] as $post) {
+            $this->get('/blog/' . $post['slug'])->assertNotFound();
+            preg_match_all('/\]\((\/[^)]*)\)/', $post['body'], $links);
+            foreach ($links[1] as $link) {
+                $this->get($link)->assertOk();
+            }
+            $this->assertStringContainsString('eCommerce Annual Summit 2026', $post['body'], $post['title']);
+        }
+    }
 }

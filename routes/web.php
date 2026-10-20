@@ -70,6 +70,7 @@ Route::match(['get', 'post'], '/otpisvane/{prospect}', OutreachUnsubscribeContro
 
 Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [PageController::class, 'robots'])->name('robots');
+Route::get('/llms.txt', [PageController::class, 'llms'])->name('llms');
 
 // Old URLs
 Route::redirect('/about', '/za-nas', 301);

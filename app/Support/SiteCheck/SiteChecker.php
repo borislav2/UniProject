@@ -154,6 +154,12 @@ class SiteChecker
             ? $this->item('fail', __('Сайтът е скрит от Google'), __('Сайтът казва на Google да не го показва (noindex или забрана в robots.txt). Често остава така по погрешка след изработката.'))
             : $this->item('ok', __('Google може да показва сайта'), __('Няма забрана за показване в търсачките.'));
 
+        // 8б. AI асистентите (ChatGPT, Perplexity, Claude): дали robots.txt не ги спира изрично
+        $aiBlocked = $this->blockedAgents($robotsBody, self::AI_SEARCH_BOTS);
+        $report['checks'][] = $aiBlocked
+            ? $this->item('fail', __('AI асистентите са спрени'), __('robots.txt не пуска :bots. Така ChatGPT и подобните не могат да препоръчат бизнеса, когато някой ги пита.', ['bots' => implode(', ', $aiBlocked)]))
+            : $this->item('ok', __('AI асистентите имат достъп'), __('ChatGPT, Perplexity и Claude могат да четат сайта и да го препоръчват.'));
+
         // 9. Карта на сайта
         $hasSitemap = (bool) preg_match('/^\s*sitemap\s*:/im', $robotsBody) || $this->isOk($this->fetch($origin . '/sitemap.xml'));
         $report['checks'][] = $hasSitemap
@@ -213,20 +219,45 @@ class SiteChecker
         return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '');
     }
 
+    /** Ботовете, които търсят и четат за AI асистентите (не тези за обучение на модели). */
+    public const AI_SEARCH_BOTS = ['OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot', 'Perplexity-User', 'Claude-SearchBot', 'Claude-User'];
+
     /** robots.txt със „Disallow: /“ за всички ботове. */
     private function disallowsEverything(string $robots): bool
     {
-        $applies = false;
+        return in_array('*', $this->blockedAgents($robots, ['*']), true);
+    }
+
+    /**
+     * Кои от дадените ботове robots.txt спира изцяло („Disallow: /“ в тяхната група).
+     * Няколко поредни реда User-agent образуват една група с общи правила.
+     */
+    public function blockedAgents(string $robots, array $agents): array
+    {
+        $blocked = [];
+        $group = [];
+        $inRules = false;
         foreach (preg_split('/\R/', $robots) as $line) {
             $line = trim(preg_replace('/#.*/', '', $line));
             if (preg_match('/^user-agent\s*:\s*(.+)$/i', $line, $m)) {
-                $applies = trim($m[1]) === '*';
-            } elseif ($applies && preg_match('/^disallow\s*:\s*\/\s*$/i', $line)) {
-                return true;
+                if ($inRules) {
+                    $group = [];
+                    $inRules = false;
+                }
+                $group[] = strtolower(trim($m[1]));
+            } elseif (preg_match('/^(dis)?allow\s*:/i', $line)) {
+                $inRules = true;
+                if (preg_match('/^disallow\s*:\s*\/\s*$/i', $line)) {
+                    foreach ($agents as $agent) {
+                        if (in_array(strtolower($agent), $group, true)) {
+                            $blocked[$agent] = $agent;
+                        }
+                    }
+                }
             }
         }
 
-        return false;
+        return array_values($blocked);
     }
 
     private function parse(string $html): \DOMDocument
