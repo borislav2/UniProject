@@ -3,55 +3,72 @@
 @section('title', __('За нас'))
 @section('meta_description', __('Creatium Lab сме двама: единият прави сайтовете, другият се грижи хората да ги намират в Google. Работим с малки бизнеси в България.'))
 
+@php
+    // Номерацията на секциите следва реда им; текстът „За нас“ може да е празен в админа.
+    $section = 0;
+    $number = function () use (&$section) { return str_pad((string) ++$section, 2, '0', STR_PAD_LEFT) . ' /'; };
+@endphp
+
 @section('content')
-@include('partials/page-header', ['heading' => __('За нас'), 'sub' => $about['subtitle']])
+@include('partials/page-header', ['eyebrow' => 'Creatium Lab', 'heading' => __('За нас'), 'sub' => filled($about['subtitle'] ?? null) ? $about['subtitle'] : __('Creatium Lab сме двама: единият прави сайтовете, другият се грижи хората да ги намират в Google. Работим с малки бизнеси в България.')])
 
 @if(!empty($about['paragraphs']))
-<section class="py-16 bg-white dark:bg-ink-950">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 text-lg text-gray-700 dark:text-gray-200">
-        @foreach($about['paragraphs'] as $paragraph)
-            <p>{{ $paragraph }}</p>
-        @endforeach
+<section class="py-20 md:py-28 bg-white dark:bg-ink-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-10 lg:gap-16">
+        <div class="lg:col-span-4 reveal">
+            <p class="kicker kicker-light">{{ $number() }} {{ __('Кои сме') }}</p>
+        </div>
+        <div class="lg:col-span-8 space-y-6 text-lg md:text-xl leading-relaxed text-gray-700 dark:text-gray-200 reveal">
+            @foreach($about['paragraphs'] as $paragraph)
+                <p class="{{ $loop->first ? 'text-2xl md:text-3xl font-bold tracking-tight text-brand-950 dark:text-white leading-snug' : '' }}">{{ $paragraph }}</p>
+            @endforeach
+        </div>
     </div>
 </section>
 @endif
 
-<section class="py-16 md:py-20 bg-brand-50/60 dark:bg-ink-900">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid md:grid-cols-2 gap-8">
+{{-- The team --}}
+<section class="relative py-20 md:py-28 bg-brand-50/60 dark:bg-ink-900">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal max-w-3xl">
+            <p class="kicker kicker-light">{{ $number() }} {{ __('Екипът') }}</p>
+            <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ __('Говорите с хората, които правят работата.') }}</h2>
+        </div>
+        <div class="mt-12 grid md:grid-cols-2 gap-6">
             @foreach($team as $member)
                 @php
                     $initials = collect(preg_split('/\s+/u', trim((string) ($member['name'] ?? '')), -1, PREG_SPLIT_NO_EMPTY))->take(2)->map(fn ($w) => mb_strtoupper(mb_substr($w, 0, 1)))->implode('');
                     $linkedin = str_starts_with((string) ($member['linkedin'] ?? ''), 'https://') ? $member['linkedin'] : null;
                 @endphp
-                <div class="flex flex-col bg-white rounded-2xl border border-gray-200 p-7 card-hover reveal dark:bg-white/[0.03] dark:border-white/10">
+                <article class="reveal card-hover flex flex-col rounded-3xl border border-gray-200 bg-white p-7 md:p-9 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ $loop->index * 100 }}ms">
                     @if(!empty($member['name']))
-                        <div class="flex items-center gap-4 mb-4">
+                        <div class="flex items-center gap-5">
                             @if(!empty($member['image']))
-                                <img src="{{ asset($member['image']) }}" alt="{{ $member['name'] }}" width="96" height="96" loading="lazy" class="w-24 h-24 shrink-0 rounded-full object-cover ring-2 ring-brand-100 dark:ring-white/15">
+                                <img src="{{ asset($member['image']) }}" alt="{{ $member['name'] }}" width="112" height="112" loading="lazy" class="w-24 h-24 md:w-28 md:h-28 shrink-0 rounded-2xl object-cover ring-1 ring-gray-200 dark:ring-white/20">
                             @else
-                                <span class="w-24 h-24 shrink-0 rounded-full bg-brand-gradient flex items-center justify-center text-2xl font-extrabold text-white shadow-lg shadow-brand-900/20" aria-hidden="true">{{ $initials }}</span>
+                                <span class="w-24 h-24 md:w-28 md:h-28 shrink-0 rounded-2xl bg-brand-gradient flex items-center justify-center text-2xl font-extrabold text-white" aria-hidden="true">{{ $initials }}</span>
                             @endif
                             <div>
-                                <h2 class="text-xl font-bold dark:text-white">{{ $member['name'] }}</h2>
-                                <p class="text-brand-600 font-semibold dark:text-brand-300">{{ $member['role'] }}</p>
+                                <p class="text-xs font-bold tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</p>
+                                <h3 class="mt-1 text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $member['name'] }}</h3>
+                                <p class="mt-1 font-semibold text-brand-600 dark:text-brand-300">{{ $member['role'] }}</p>
                             </div>
                         </div>
                     @else
-                        <p class="text-xl font-bold text-brand-600 mb-3 dark:text-brand-300">{{ $member['role'] }}</p>
+                        <h3 class="text-2xl font-extrabold tracking-tight text-brand-600 dark:text-brand-300">{{ $member['role'] }}</h3>
                     @endif
-                    <p class="font-medium text-brand-950 dark:text-white">{{ $member['description'] }}</p>
+                    <p class="mt-6 text-lg font-semibold text-brand-950 dark:text-white">{{ $member['description'] }}</p>
                     @if(!empty($member['bio']))
-                        <div class="mt-4 space-y-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                        <div class="mt-4 space-y-3 leading-relaxed text-gray-600 dark:text-gray-300">
                             @foreach((array) $member['bio'] as $paragraph)
                                 <p>{{ $paragraph }}</p>
                             @endforeach
                         </div>
                     @endif
                     @if(!empty($member['skills']))
-                        <ul class="mt-5 flex flex-wrap gap-2">
+                        <ul class="mt-6 flex flex-wrap gap-2">
                             @foreach((array) $member['skills'] as $skill)
-                                <li class="rounded-full border border-gray-100 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700 dark:border-white/10 dark:bg-white/5 dark:text-gray-200">{{ $skill }}</li>
+                                <li class="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700 dark:border-white/10 dark:bg-white/5 dark:text-gray-200">{{ $skill }}</li>
                             @endforeach
                         </ul>
                     @endif
@@ -60,20 +77,51 @@
                             {{ __('Профил в LinkedIn') }} <x-icon name="arrow-up-right-from-square" class="text-xs" />
                         </a>
                     @endif
-                </div>
+                </article>
             @endforeach
         </div>
     </div>
 </section>
 
-<section id="vaprosi" class="scroll-mt-28 py-16 md:py-20 bg-white dark:bg-ink-950">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 text-center mb-8 dark:text-white">{{ __('Често задавани въпроси') }}</h2>
-        <div class="space-y-3">
+{{-- How we think (same principles as the home page) --}}
+@if(!empty($trust['principle_items']))
+<section class="py-20 md:py-28 bg-white dark:bg-ink-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal max-w-3xl">
+            <p class="kicker kicker-light">{{ $number() }} {{ $trust['principles_eyebrow'] }}</p>
+            <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $trust['principles_title'] }}</h2>
+        </div>
+        <div class="mt-14 grid md:grid-cols-2 border-t border-l border-gray-200 dark:border-white/10">
+            @foreach($trust['principle_items'] as $item)
+                <article class="reveal p-8 md:p-10 border-r border-b border-gray-200 dark:border-white/10" style="--reveal-delay: {{ ($loop->index % 2) * 100 }}ms">
+                    <div class="flex items-center gap-6">
+                        <span class="numeral">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                        <span class="h-px flex-1 bg-gray-200 dark:bg-white/10" aria-hidden="true"></span>
+                    </div>
+                    <h3 class="mt-8 text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $item['title'] }}</h3>
+                    <p class="mt-3 text-gray-600 leading-relaxed dark:text-gray-300">{{ $item['text'] }}</p>
+                </article>
+            @endforeach
+        </div>
+        <a href="{{ lroute('home') }}#s-kogo-rabotim" class="reveal mt-10 inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-950 dark:text-brand-300 dark:hover:text-white">
+            {{ $trust['fit_eyebrow'] }} <x-icon name="arrow-right" class="text-xs" />
+        </a>
+    </div>
+</section>
+@endif
+
+<section id="vaprosi" class="scroll-mt-28 py-20 md:py-28 bg-brand-50/60 dark:bg-ink-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-10 lg:gap-16">
+        <div class="lg:col-span-4 reveal lg:sticky lg:top-32 self-start">
+            <p class="kicker kicker-light">{{ $number() }} {{ __('Въпроси') }}</p>
+            <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ __('Често задавани въпроси') }}</h2>
+            <a href="{{ lroute('contact') }}#contact-form" class="btn-shine mt-8 inline-flex items-center gap-2 bg-brand-950 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-brand-800 transition-colors dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">{{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-sm" /></a>
+        </div>
+        <div class="lg:col-span-8 space-y-3">
             @foreach($faq as $item)
-                <details class="group bg-brand-50/60 rounded-xl border border-gray-200 p-5 open:shadow-sm reveal dark:bg-white/[0.03] dark:border-white/10">
-                    <summary class="font-semibold text-brand-950 cursor-pointer list-none flex items-center justify-between gap-4 [&::-webkit-details-marker]:hidden dark:text-white">{{ $item['q'] }}<x-icon name="chevron-down" class="text-xs text-gray-400 transition-transform group-open:rotate-180" /></summary>
-                    <p class="text-gray-600 mt-3 dark:text-gray-300">{{ $item['a'] }}</p>
+                <details class="group bg-white rounded-2xl border border-gray-200 p-6 open:shadow-sm reveal dark:bg-white/[0.03] dark:border-white/10">
+                    <summary class="text-lg font-bold text-brand-950 cursor-pointer list-none flex items-center justify-between gap-4 [&::-webkit-details-marker]:hidden dark:text-white">{{ $item['q'] }}<x-icon name="chevron-down" class="text-xs text-gray-500 transition-transform group-open:rotate-180" /></summary>
+                    <p class="text-gray-600 mt-3 leading-relaxed dark:text-gray-300">{{ $item['a'] }}</p>
                 </details>
             @endforeach
         </div>

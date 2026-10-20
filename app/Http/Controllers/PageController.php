@@ -13,6 +13,7 @@ class PageController extends Controller
     {
         return view('services', [
             'page' => site('services_page'),
+            'trust' => site('home_trust'),
         ]);
     }
 
@@ -69,7 +70,7 @@ class PageController extends Controller
 
     public function about()
     {
-        return view('about', ['about' => site('about'), 'team' => site('team'), 'faq' => site('questions')]);
+        return view('about', ['about' => site('about'), 'team' => site('team'), 'faq' => site('questions'), 'trust' => site('home_trust')]);
     }
 
     /**
