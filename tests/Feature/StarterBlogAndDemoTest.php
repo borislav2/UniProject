@@ -123,6 +123,27 @@ class StarterBlogAndDemoTest extends TestCase
         }
     }
 
+    public function test_summit_drafts_can_be_scheduled_without_touching_ones_already_handled_in_admin(): void
+    {
+        config(['creatium.blog_enabled' => true]);
+        StarterBlogPosts::import(file: 'summit-posts.php', status: 'draft');
+        $slugs = array_column(StarterBlogPosts::data('summit-posts.php')['posts'], 'slug');
+        $handled = Post::where('slug->bg', $slugs[3])->first();
+        $handled->update(['status' => 'published', 'published_at' => now()->subDay()]);
+
+        $at = now()->addDay();
+        $this->assertSame(3, StarterBlogPosts::publishDraftsAt($at, 'summit-posts.php'));
+        $this->assertSame(0, StarterBlogPosts::publishDraftsAt($at, 'summit-posts.php'));
+        $this->assertTrue($handled->fresh()->published_at->lt(now()));
+
+        $this->get('/blog/' . $slugs[0])->assertNotFound();
+        $this->travelTo($at->copy()->addMinutes(5));
+        foreach ($slugs as $slug) {
+            $this->get('/blog/' . $slug)->assertOk();
+        }
+        $this->assertSame($slugs[0], Post::visible('bg')->orderByDesc('published_at')->first()->tr('slug'));
+    }
+
     public function test_expanded_posts_replace_only_untouched_texts_and_add_covers(): void
     {
         StarterBlogPosts::import(now());

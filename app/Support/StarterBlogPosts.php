@@ -89,6 +89,23 @@ class StarterBlogPosts
     }
 
     /**
+     * Насрочва черновите от $file за $at: стават публикувани с тази дата и се показват сами, когато тя дойде.
+     * Пипа само статии, които още са чернови без дата (ако собствениците вече са ги публикували или насрочили, остават така).
+     * Първата статия от файла получава най-късната минута, за да е най-отгоре в блога.
+     */
+    public static function publishDraftsAt(Carbon $at, string $file): int
+    {
+        $posts = self::data($file)['posts'];
+        $count = 0;
+        foreach ($posts as $i => $data) {
+            $count += Post::where('slug->bg', $data['slug'])->where('status', 'draft')->whereNull('published_at')
+                ->update(['status' => 'published', 'published_at' => $at->copy()->addMinutes(count($posts) - 1 - $i)->utc()]);
+        }
+
+        return $count;
+    }
+
+    /**
      * Добавя статиите, които още ги няма (по адрес на български). Връща броя на добавените.
      * С $status = 'draft' влизат като чернови без дата: собствениците ги преглеждат и публикуват от админа.
      */
