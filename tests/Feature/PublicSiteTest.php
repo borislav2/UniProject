@@ -107,7 +107,7 @@ class PublicSiteTest extends TestCase
     public function test_home_page_follows_the_spec(): void
     {
         $this->get('/')
-            ->assertSeeInOrder([
+            ->assertSeeTextInOrder([
                 'Сайт, който продава. Маркетинг, който докарва клиенти.',
                 'Целият ви дигитален двигател – в една работеща система.',
                 'Планирайте консултация', 'Нова резервация',
@@ -116,6 +116,9 @@ class PublicSiteTest extends TestCase
                 'Управляем и структуриран път от концепцията до пазарния старт', 'Стратегически анализ', 'Регулярна поддръжка и надграждане',
                 'Готови ли сте за дигитална система, която работи за вашите продажби?', 'За директна връзка',
             ])
+            ->assertSee('<span class="text-accent">продава</span>', false)
+            ->assertSeeTextInOrder(['1–2 седмици', '01 / Проблемът', '02 / Дигиталният двигател', 'Разработка и дизайн', 'Аналитика и SEO', 'Имейл маркетинг', 'Мониторинг и сигурност', '03 / С кого работим', 'Не сме подходящи, ако', '04 / Как мислим', '05 / Браншове', '06 / Работен процес'])
+            ->assertDontSee('отзива в Google')
             ->assertSee('href="#konsultatsiya"', false)
             ->assertSee('id="konsultatsiya"', false)
             ->assertDontSee('Стандарти на работа')
@@ -286,5 +289,16 @@ class PublicSiteTest extends TestCase
         }
 
         $this->post('/kontakti', $this->payload())->assertStatus(429);
+    }
+
+    public function test_home_page_shows_the_google_rating_only_when_there_are_reviews_and_the_latest_articles(): void
+    {
+        config(['creatium.google_reviews' => ['rating' => 4.9, 'count' => 12, 'url' => 'https://g.page/r/example'], 'creatium.blog_enabled' => true]);
+        \App\Models\Post::create(['title' => ['bg' => 'Първа статия'], 'slug' => ['bg' => 'parva-statiya'], 'body' => ['bg' => 'Текст.'], 'status' => 'published', 'published_at' => now()->subDay()]);
+
+        $this->get('/')->assertOk()
+            ->assertSeeText('4,9')->assertSeeText('12 отзива в Google')->assertSee('https://g.page/r/example', false)
+            ->assertSeeTextInOrder(['06 / Работен процес', '07 / Анализи и съвети', 'Първа статия', '08 / Следващата стъпка']);
+        $this->get('/en')->assertOk()->assertSeeText('12 Google reviews')->assertDontSeeText('Първа статия');
     }
 }

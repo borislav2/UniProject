@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\ConsultationBookedMail;
 use App\Mail\NewLeadMail;
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\Project;
 use App\Support\Booking;
 use App\Support\LeadAttribution;
@@ -24,6 +25,11 @@ class HomeController extends Controller
             'engine' => site('home_engine'),
             'process' => site('home_process'),
             'contactBlock' => site('home_contact'),
+            'trust' => site('home_trust'),
+            'engineCards' => site('services_page.cards') ?? [],
+            'demos' => site('demos') ?? [],
+            'posts' => config('creatium.blog_enabled') ? Post::visible()->with('category')->latest('published_at')->take(3)->get() : collect(),
+            'reviews' => config('creatium.google_reviews'),
             'contact' => config('creatium.contact'),
         ]);
     }

@@ -37,7 +37,7 @@ return [
         ['q' => 'How is the project budget set?', 'a' => 'We work with fixed price frameworks, starting from €450 for a starter website and €850 for a complete system for active marketing and online sales. All parameters, features and deadlines are described in our proposal in advance, so you have full visibility of your budget before the official start.'],
         ['q' => 'What is the monthly subscription for?', 'a' => 'To bring real results, a website needs systematic support and development, not just to sit there as a static business card. The monthly subscription covers round-the-clock technical security, hosting, regular backups and system updates, as well as the active marketing work – tracking metrics in Google Analytics, keeping your positions in Google Maps and AI search engines (ChatGPT, Gemini), email communication and ongoing changes.'],
         ['q' => 'Why are the website and the marketing done together?', 'a' => 'When the website and the marketing go to different contractors, communication often slows down and things do not line up – the marketing strategy runs into technical limits of the platform, and the website lacks tracking codes and the right structure. When they are designed together, the website is built with analytics, email funnels and SEO architecture in place from the very start.'],
-        ['q' => 'How long does a project take?', 'a' => 'The standard time to build the platform, set up the analytics and prepare the initial marketing processes is between 2 and 4 weeks. The schedule is agreed at the start and followed strictly.'],
+        ['q' => 'How long does a project take?', 'a' => 'The standard time to build the platform, set up the analytics and prepare the initial marketing processes is between 1 and 2 weeks. The schedule is agreed at the start and followed strictly.'],
         ['q' => 'Do we need ready texts and visuals?', 'a' => 'Not necessarily. As part of the marketing service we structure and write professional, selling texts and articles for your business. For visuals we work with your real photos or choose suitable licensed images.'],
         ['q' => 'Can we make changes to the content ourselves?', 'a' => 'Yes. Websites come with an easy-to-use admin panel. On top of that, your subscription includes our regular support – so when you need to change prices, offers or texts, we can quickly do it for you.'],
         ['q' => 'How does payment work?', 'a' => 'The project starts with a 50% advance payment when the contract is signed and the scope is set. The remaining 50% is paid after you review the finished demo, the final corrections are made and you fully approve the product, before it goes live.'],
@@ -53,6 +53,7 @@ return [
         'highlight' => 'Your whole digital engine – in one working system.',
         'subtitle' => 'Most businesses make a fundamental mistake: they invest in a website with one team and then look for an outside agency to rescue it with marketing. We design the technology platform and the marketing strategy fully integrated, so your business can generate results from day one.',
         'button' => 'Book a consultation',
+        'accent' => ['sells', 'customers'],
     ],
 
     'home_problem' => [
@@ -102,6 +103,44 @@ return [
         'text' => 'Tell us about your business goals. We will get back to you within one working day.',
     ],
 
+    'home_trust' => [
+        'eyebrow' => 'Websites and digital marketing for small businesses',
+        'proof' => [
+            ['value' => '1–2 weeks', 'text' => 'from kickoff to a finished website'],
+            ['value' => '1 working day', 'text' => 'at most until we answer an inquiry'],
+            ['value' => '4 in 1', 'text' => 'website, Google, emails and maintenance from one team'],
+        ],
+        'engine_eyebrow' => 'The digital engine',
+        'engine_center' => 'Digital engine',
+        'fit_eyebrow' => 'Who we work with',
+        'fit_title' => 'We don\'t work with every business.',
+        'fit_text' => 'We help most where a business does good work but looks weaker online than it really is. If you recognise yourself here, we will get along.',
+        'fit_items' => [
+            ['title' => 'Local businesses with a good reputation', 'text' => 'Salons, garages, clinics, restaurants and repair companies that customers praise but Google barely shows.'],
+            ['title' => 'Businesses that want inquiries', 'text' => 'Your website should bring calls and orders, not just exist.'],
+            ['title' => 'Owners who want to see the numbers', 'text' => 'We show where customers come from and what works, so you decide with data.'],
+            ['title' => 'Small online shops', 'text' => 'That want to sell more to the people who already visit, instead of paying more and more for ads.'],
+        ],
+        'not_title' => 'We are not the right fit if you',
+        'not_items' => ['want the cheapest website made in a day', 'want a promise of first place in Google or ChatGPT', 'have no time for one conversation about your business'],
+        'principles_eyebrow' => 'How we think',
+        'principles_title' => 'One system instead of five contractors.',
+        'principles_text' => 'The website, Google, emails and maintenance work together when one team builds them. These are the rules we work by.',
+        'principle_items' => [
+            ['title' => 'Customer first, decoration second', 'text' => 'Every page leads to one action: a call, an inquiry or a purchase. The design serves that.'],
+            ['title' => 'We measure, we don\'t guess', 'text' => 'Every website starts with Google Analytics and Search Console. You see where inquiries come from.'],
+            ['title' => 'You talk to the people doing the work', 'text' => 'There are two of us. No account managers, no handovers between departments.'],
+            ['title' => 'Everything is in your name', 'text' => 'The domain, profiles and access are yours from day one. If you ever leave, you take everything.'],
+        ],
+        'demos_eyebrow' => 'Industries',
+        'demos_title' => 'We have thought about your industry.',
+        'demos_text' => 'We built demo websites for businesses we want to work with. Each one solves the real problems of its industry. The businesses are fictional, the solutions are real.',
+        'blog_eyebrow' => 'Insights and advice',
+        'blog_title' => 'We write about what works.',
+        'blog_text' => 'Practical articles about websites, Google, AI search and email, without jargon.',
+        'contact_eyebrow' => 'The next step',
+    ],
+
     'service_pages' => [
         'website' => [
             'slug' => 'website-design', 'icon' => 'code', 'menu' => 'Website design',
@@ -121,7 +160,7 @@ return [
             'result' => 'A website that works like a salesperson 24/7, collecting enquiries while you work.',
             'package' => 0,
             'faq' => [
-                ['How long does it take?', 'Usually 2–4 weeks, depending on the content. The timeline is in the proposal before we start.'],
+                ['How long does it take?', 'Usually 1–2 weeks, depending on the content. The timeline is in the proposal before we start.'],
                 ['Can I change the text myself?', 'Yes, from a simple panel. If you have no time, changes are included in the monthly care plan.'],
                 ['What if I don\'t like it?', 'That is what the demo is for: we make the changes and launch only after you approve.'],
             ],
