@@ -42,6 +42,69 @@ class StarterBlogPosts
         return $dates;
     }
 
+    public const EXPANDED_DIR = 'data/blog-expanded';
+
+    public const COVERS_DIR = 'images/blog';
+
+    /**
+     * По-дългите версии на първите статии (database/data/blog-expanded/{slug}.md) и кориците им (public/images/blog/{slug}.webp).
+     * Текстът се сменя само ако статията е непроменена от админа (още е точно оригиналът от blog-posts.php / summit-posts.php),
+     * а корицата се слага само ако статията няма снимка. Каквото собствениците са редактирали, не се пипа.
+     *
+     * @return array{bodies: int, covers: int}
+     */
+    public static function expand(): array
+    {
+        $originals = [];
+        foreach (['blog-posts.php', 'summit-posts.php'] as $file) {
+            foreach (self::data($file)['posts'] as $post) {
+                $originals[$post['slug']] = trim($post['body']);
+            }
+        }
+
+        $done = ['bodies' => 0, 'covers' => 0];
+        foreach (glob(database_path(self::EXPANDED_DIR . '/*.md')) as $path) {
+            $slug = basename($path, '.md');
+            $post = Post::where('slug->bg', $slug)->first();
+            if (! $post) {
+                continue;
+            }
+
+            $body = $post->body;
+            if (isset($originals[$slug]) && trim((string) ($body['bg'] ?? '')) === $originals[$slug]) {
+                $post->body = ['bg' => trim(file_get_contents($path))] + (array) $body;
+                $done['bodies']++;
+            }
+
+            $cover = self::COVERS_DIR . "/$slug.webp";
+            if (blank($post->cover_image) && is_file(public_path($cover))) {
+                $post->cover_image = $cover;
+                $done['covers']++;
+            }
+
+            $post->save();
+        }
+
+        return $done;
+    }
+
+    /**
+     * Насрочва черновите от $file за $at: стават публикувани с тази дата и се показват сами, когато тя дойде.
+     * Пипа само статии, които още са чернови без дата (ако собствениците вече са ги публикували или насрочили, остават така).
+     * Първата статия от файла получава най-късната минута, за да е най-отгоре в блога.
+     */
+    public static function publishDraftsAt(Carbon $at, string $file): int
+    {
+        $posts = self::data($file)['posts'];
+        $count = 0;
+        foreach ($posts as $i => $data) {
+            $count += Post::where('slug->bg', $data['slug'])->where('status', 'draft')->whereNull('published_at')
+                ->update(['status' => 'published', 'published_at' => $at->copy()->addMinutes(count($posts) - 1 - $i)->utc()]);
+        }
+
+        return $count;
+    }
+
     /**
      * Добавя статиите, които още ги няма (по адрес на български). Връща броя на добавените.
      * С $status = 'draft' влизат като чернови без дата: собствениците ги преглеждат и публикуват от админа.
