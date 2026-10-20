@@ -122,4 +122,53 @@ class StarterBlogAndDemoTest extends TestCase
             $this->assertStringContainsString('eCommerce Annual Summit 2026', $post['body'], $post['title']);
         }
     }
+
+    public function test_expanded_posts_replace_only_untouched_texts_and_add_covers(): void
+    {
+        StarterBlogPosts::import(now());
+        StarterBlogPosts::import(file: 'summit-posts.php', status: 'draft');
+        $all = array_merge(StarterBlogPosts::data()['posts'], StarterBlogPosts::data('summit-posts.php')['posts']);
+
+        // Собствениците са редактирали една статия и са сложили своя снимка на друга.
+        $edited = Post::where('slug->bg', 'otzivi-v-google')->first();
+        $edited->update(['body' => ['bg' => 'Нашият текст.']]);
+        $withPhoto = Post::where('slug->bg', 'kakvo-e-geo')->first();
+        $withPhoto->update(['cover_image' => 'uploads/blog/nasha-snimka.jpg']);
+
+        $done = StarterBlogPosts::expand();
+        $this->assertSame(count($all) - 1, $done['bodies']);
+        $this->assertSame(count($all) - 1, $done['covers']);
+        $this->assertSame(['bodies' => 0, 'covers' => 0], StarterBlogPosts::expand(), 'Running twice changes nothing');
+
+        $this->assertSame('Нашият текст.', $edited->fresh()->body['bg']);
+        $this->assertSame('uploads/blog/nasha-snimka.jpg', $withPhoto->fresh()->cover_image);
+
+        $order = array_flip(array_column(StarterBlogPosts::data()['posts'], 'slug'));
+        foreach ($all as $original) {
+            $file = database_path("data/blog-expanded/{$original['slug']}.md");
+            $this->assertFileExists($file);
+            $this->assertFileExists(public_path("images/blog/{$original['slug']}.webp"));
+            $text = file_get_contents($file);
+            $this->assertGreaterThan(2 * mb_strlen($original['body']) * 0.8, mb_strlen($text), $original['slug']);
+
+            // Линковете водят до страници на сайта или до по-ранна статия (вече публикувана), никога до чернова или по-късна.
+            preg_match_all('/\]\((\/[^)]*)\)/', $text, $links);
+            foreach ($links[1] as $link) {
+                if (str_starts_with($link, '/blog/')) {
+                    $target = substr($link, 6);
+                    $this->assertArrayHasKey($target, $order, $link);
+                    $this->assertLessThan($order[$original['slug']] ?? -1, $order[$target], "{$original['slug']} → $link");
+                    continue;
+                }
+                $this->get($link)->assertOk();
+            }
+        }
+
+        $post = Post::where('slug->bg', 'kakvo-tryabva-da-ima-saytat-na-malak-biznes')->first();
+        $this->assertSame('images/blog/kakvo-tryabva-da-ima-saytat-na-malak-biznes.webp', $post->cover_image);
+        config(['creatium.blog_enabled' => true]);
+        $this->get('/blog/' . $post->tr('slug'))->assertOk()
+            ->assertSee('images/blog/kakvo-tryabva-da-ima-saytat-na-malak-biznes.webp', false)
+            ->assertSee('Какво НЕ е нужно в началото');
+    }
 }
