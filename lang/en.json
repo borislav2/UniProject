@@ -338,5 +338,10 @@
     "При старта": "At launch",
     "Другите ни услуги": "Our other services",
     "Вижте пакетите": "See the packages",
-    "Ново": "New"
+    "Ново": "New",
+    "AI асистентите са спрени": "AI assistants are blocked",
+    "robots.txt не пуска :bots. Така ChatGPT и подобните не могат да препоръчат бизнеса, когато някой ги пита.": "robots.txt blocks :bots. ChatGPT and similar assistants cannot recommend the business when someone asks them.",
+    "AI асистентите имат достъп": "AI assistants have access",
+    "ChatGPT, Perplexity и Claude могат да четат сайта и да го препоръчват.": "ChatGPT, Perplexity and Claude can read the site and recommend it.",
+    "Описан ли е бизнесът така, че машините да го разберат, и не спира ли сайтът ChatGPT и другите AI асистенти.": "Whether machines can understand the business, and whether the site blocks ChatGPT and other AI assistants."
 }

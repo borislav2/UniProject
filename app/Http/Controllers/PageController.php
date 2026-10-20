@@ -136,6 +136,48 @@ class PageController extends Controller
             ->header('Content-Type', 'application/xml');
     }
 
+    /**
+     * /llms.txt: кратко описание на бизнеса в Markdown за AI асистентите (llmstxt.org):
+     * какво правим, услугите, пакетите с цените и как да се свържат с нас. Генерира се от съдържанието на сайта.
+     */
+    public function llms(): Response
+    {
+        app()->setLocale('bg');
+        $contact = config('creatium.contact');
+        $lines = [
+            '# Creatium Lab',
+            '',
+            '> ' . __('Правим сайтове за малки бизнеси и се грижим хората да ги намират в Google.') . ' ' . site('services_page')['intro'],
+            '',
+            'Екип от двама в ' . __($contact['city']) . ', България, който работи с малки бизнеси. Сайт на български: ' . lroute('home', [], 'bg') . ', на английски: ' . lroute('home', [], 'en'),
+            '',
+            '## Услуги',
+            '',
+        ];
+        foreach (site('service_pages') as $key => $service) {
+            $lines[] = '- [' . $service['title'] . '](' . self::serviceUrl($key, 'bg') . '): ' . $service['lead'];
+        }
+        $lines[] = '- [Безплатна проверка на сайт](' . lroute('site-check', [], 'bg') . '): въвеждате адреса и имейл и получавате отчет за минута.';
+        $lines[] = '';
+        $lines[] = '## Пакети и цени';
+        $lines[] = '';
+        foreach (site('plans')['items'] as $plan) {
+            $lines[] = '- **' . $plan['name'] . '**: ' . implode(' + ', $plan['prices']) . '. ' . $plan['audience'];
+        }
+        $lines[] = '- Всички пакети: ' . lroute('packages', [], 'bg');
+        $lines[] = '';
+        $lines[] = '## Контакти';
+        $lines[] = '';
+        $lines[] = '- Имейл: ' . $contact['email'];
+        foreach ($contact['phones'] as $phone) {
+            $lines[] = '- Телефон: ' . $phone;
+        }
+        $lines[] = '- Безплатна консултация: ' . lroute('contact', [], 'bg') . '#konsultatsiya';
+        $lines[] = '- Проекти и демо сайтове: ' . lroute('portfolio', [], 'bg');
+
+        return response(implode("\n", $lines) . "\n")->header('Content-Type', 'text/markdown; charset=UTF-8');
+    }
+
     public function robots(): Response
     {
         $body = "User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: " . route('sitemap') . "\n";
