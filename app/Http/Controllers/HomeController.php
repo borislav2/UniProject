@@ -47,6 +47,11 @@ class HomeController extends Controller
             'email' => 'required|email|max:255',
             'service' => ['required', 'string', Rule::in(array_keys(config('creatium.contact_topics')))],
             'message' => 'nullable|string|max:5000',
+            'goals' => 'nullable|array',
+            'goals.*' => ['string', Rule::in(array_keys(config('creatium.contact_goals')))],
+            'business' => 'nullable|string|max:150',
+            'site_url' => 'nullable|string|max:255',
+            'timeline' => ['nullable', 'string', Rule::in(array_keys(config('creatium.contact_timelines')))],
             'consultation' => ['nullable', 'string', function ($attribute, $value, $fail) {
                 if (! Booking::resolve($value)) {
                     $fail(__('Този час вече е зает. Моля, изберете друг.'));
@@ -85,7 +90,8 @@ class HomeController extends Controller
 
         $lead = Project::create([
             'name' => 'Запитване от ' . $validated['name'],
-            'description' => ($validated['message'] ?? null) ?: 'Без съобщение. Тема: ' . $service . '.',
+            'description' => self::leadDescription($validated, $service),
+            'website_url' => self::siteUrl($validated['site_url'] ?? null),
             'start_date' => now()->toDateString(),
             'status' => 'Planning',
             'manager' => 'Неразпределен',
@@ -122,6 +128,42 @@ class HomeController extends Controller
             ->with('success', $success)
             ->with('lead_created', true)
             ->with('lead_service', $service);
+    }
+
+    /**
+     * The message plus the answers from the step form, in Bulgarian for the admin and the team email:
+     * „Цели: …“, „Бизнес: …“, „Сайт: …“, „Кога: …“ on their own lines under the message.
+     */
+    private static function leadDescription(array $data, string $service): string
+    {
+        $answers = array_filter([
+            'Цели' => implode(', ', array_map(fn ($key) => config('creatium.contact_goals')[$key], $data['goals'] ?? [])),
+            'Бизнес' => trim((string) ($data['business'] ?? '')),
+            'Сайт' => trim((string) ($data['site_url'] ?? '')),
+            'Кога' => isset($data['timeline']) ? config('creatium.contact_timelines')[$data['timeline']] : '',
+        ], 'strlen');
+        $lines = implode("\n", array_map(fn ($label, $value) => "$label: $value", array_keys($answers), $answers));
+        $message = trim((string) ($data['message'] ?? ''));
+
+        if ($message === '' && $lines === '') {
+            return 'Без съобщение. Тема: ' . $service . '.';
+        }
+
+        return trim($message . ($message !== '' && $lines !== '' ? "\n\n" : '') . $lines);
+    }
+
+    /** „vashiyatsait.bg“ → https://vashiyatsait.bg; anything that is not a web address is left out. */
+    private static function siteUrl(?string $value): ?string
+    {
+        $value = trim((string) $value);
+        if ($value === '') {
+            return null;
+        }
+        if (! preg_match('#^https?://#i', $value)) {
+            $value = 'https://' . ltrim($value, '/');
+        }
+
+        return filter_var($value, FILTER_VALIDATE_URL) && str_contains((string) parse_url($value, PHP_URL_HOST), '.') ? mb_substr($value, 0, 255) : null;
     }
 
     public function showLoginForm()

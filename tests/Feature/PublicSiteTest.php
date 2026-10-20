@@ -88,8 +88,8 @@ class PublicSiteTest extends TestCase
 
     public function test_contact_form_preselects_the_service_from_the_link(): void
     {
-        $this->assertMatchesRegularExpression('/<option value="support"[^>]*\sselected/', $this->get('/kontakti?service=support')->getContent());
-        $this->assertDoesNotMatchRegularExpression('/<option value="[a-z-]+"[^>]*\sselected/', $this->get('/kontakti?service=nonsense')->getContent());
+        $this->assertMatchesRegularExpression('/name="service" value="support"[^>]*\schecked/', $this->get('/kontakti?service=support')->getContent());
+        $this->assertDoesNotMatchRegularExpression('/name="service" value="[a-z-]+"[^>]*\schecked/', $this->get('/kontakti?service=nonsense')->getContent());
     }
 
     public function test_public_project_links_to_the_client_site(): void
@@ -147,7 +147,25 @@ class PublicSiteTest extends TestCase
             ->assertSee('Техническа поддръжка, аналитика и дигитално развитие')
             ->assertSee('Описание на бизнес целите')
             ->assertSee('Стартирайте вашия проект')
+            ->assertSeeInOrder(['data-step', 'name="service"', 'name="goals[]"', 'data-step', 'name="business"', 'name="site_url"', 'name="message"', 'data-step', 'name="timeline"', 'id="konsultatsiya"', 'data-step', 'name="name"', 'name="consent"'], false)
             ->assertDontSee('Размер на бизнеса');
+    }
+
+    public function test_step_form_answers_are_saved_on_the_lead_in_bulgarian(): void
+    {
+        Mail::fake();
+
+        $this->post('/en/contact', $this->payload([
+            'goals' => ['google', 'reviews'], 'business' => 'Автосервиз, Бургас', 'site_url' => 'motorpro.bg', 'timeline' => 'month',
+        ]))->assertSessionHasNoErrors();
+
+        $lead = Project::where('source', 'website')->firstOrFail();
+        $this->assertSame("Искам сайт за моя ресторант.\n\nЦели: Повече клиенти от Google и Google Maps, Google профил и отзиви\nБизнес: Автосервиз, Бургас\nСайт: motorpro.bg\nКога: До един месец", $lead->description);
+        $this->assertSame('https://motorpro.bg', $lead->website_url);
+
+        $this->post('/kontakti', $this->payload(['goals' => ['nonsense'], 'timeline' => 'someday']))->assertSessionHasErrors(['goals.0', 'timeline']);
+        $this->post('/kontakti', $this->payload(['message' => '', 'site_url' => 'не е адрес']))->assertSessionHasNoErrors();
+        $this->assertNull(Project::where('source', 'website')->latest('id')->first()->website_url);
     }
 
     public function test_email_is_saved_on_the_lead(): void

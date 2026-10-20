@@ -308,6 +308,21 @@ return [
     ],
 
     // Labels only: the keys must match config/creatium.php.
+    'contact_goals' => [
+        'website' => 'A new or better website',
+        'google' => 'More customers from Google and Google Maps',
+        'reviews' => 'Google profile and reviews',
+        'ai' => 'Visibility in AI assistants (ChatGPT, Gemini)',
+        'email' => 'Emails to customers',
+        'support' => 'Maintenance, security and speed',
+    ],
+    'contact_timelines' => [
+        'asap' => 'As soon as possible',
+        'month' => 'Within a month',
+        'quarter' => 'In the next 3 months',
+        'exploring' => 'Just exploring',
+    ],
+
     'contact_topics' => [
         'new-system' => 'Building a new digital system (website + marketing)',
         'modernization' => 'Modernising an existing website and marketing optimisation',
