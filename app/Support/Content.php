@@ -17,6 +17,7 @@ class Content
         'home_hero' => 'Начална страница: горна част',
         'home_problem' => 'Начална страница: „Проблемът vs. Синергията“',
         'home_engine' => 'Начална страница: „Двигателят“',
+        'home_trust' => 'Начална страница: доказателства, „С кого работим“, принципи, браншове, блог',
         'home_process' => 'Начална страница: работен процес',
         'home_contact' => 'Начална страница: контакти',
         'services_page' => 'Услуги',
@@ -52,11 +53,18 @@ class Content
         'q' => 'Въпрос', 'a' => 'Отговор', 'role' => 'Роля', 'image' => 'Снимка', 'linkedin' => 'LinkedIn (адрес на профила)', 'bio' => 'Разказ за човека (по един абзац на ред)', 'skills' => 'Умения (по едно на ред)', 'paragraphs' => 'Абзаци (по един на ред)',
         'button' => 'Текст на бутона', 'scenarios' => 'Сценарии', 'label' => 'Етикет',
         'tech_title' => 'Блок 1: заглавие', 'tech_tag' => 'Блок 1: етикет', 'tech_items' => 'Блок 1: елементи', 'growth_title' => 'Блок 2: заглавие', 'growth_tag' => 'Блок 2: етикет', 'growth_items' => 'Блок 2: елементи', 'steps' => 'Стъпки', 'cta_title' => 'Призив: заглавие', 'cta_button' => 'Призив: бутон',
+        'accent' => 'Думи от заглавието в цвят (по една на ред)', 'eyebrow' => 'Надзаглавие', 'proof' => 'Доказателства под горната част', 'value' => 'Число или кратък факт',
+        'engine_eyebrow' => 'Двигателят: надзаглавие', 'engine_center' => 'Двигателят: текст в центъра на схемата',
+        'fit_eyebrow' => '„С кого работим“: надзаглавие', 'fit_title' => '„С кого работим“: заглавие', 'fit_text' => '„С кого работим“: текст', 'fit_items' => '„С кого работим“: подходящи бизнеси',
+        'not_title' => '„Не сме подходящи“: заглавие', 'not_items' => '„Не сме подходящи“: случаи (по един на ред)',
+        'principles_eyebrow' => 'Принципи: надзаглавие', 'principles_title' => 'Принципи: заглавие', 'principles_text' => 'Принципи: текст', 'principle_items' => 'Принципи',
+        'demos_eyebrow' => 'Браншове: надзаглавие', 'demos_title' => 'Браншове: заглавие', 'demos_text' => 'Браншове: текст',
+        'blog_eyebrow' => 'Блог: надзаглавие', 'blog_title' => 'Блог: заглавие', 'blog_text' => 'Блог: текст', 'contact_eyebrow' => 'Контакти: надзаглавие',
         'items' => 'Пакети', 'badge' => 'Етикет (напр. „Най-предпочитан“)', 'audience' => 'За кого е', 'prices' => 'Цени (по една на ред)', 'build_title' => 'Първа част: заглавие', 'build_items' => 'Първа част (по един на ред, „Заглавие: текст“)', 'monthly_title' => 'Месечна част: заглавие', 'monthly_items' => 'Месечна част (по един на ред, „Заглавие: текст“)',
     ];
 
     /** Fields shown as a multi-line text box. */
-    public const LONG_FIELDS = ['text', 'intro', 'description', 'details', 'a', 'subtitle'];
+    public const LONG_FIELDS = ['text', 'intro', 'description', 'details', 'a', 'subtitle', 'fit_text', 'principles_text', 'demos_text', 'blog_text'];
 
     /** An empty copy of a config structure, used for "add item" in the admin form. */
     public static function blank(mixed $template): mixed

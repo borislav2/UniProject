@@ -23,6 +23,22 @@
 <script type="application/ld+json">{!! json_encode(array_filter($ld), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
 @endpush
 
+@php
+    // Заглавието с оцветени думи (home_hero.accent): текстът се екранира, после думите се обвиват в <span>.
+    $title = e($hero['title']);
+    foreach (array_filter((array) ($hero['accent'] ?? [])) as $word) {
+        $title = preg_replace('/(?<![\p{L}])(' . preg_quote(e($word), '/') . ')(?![\p{L}])/u', '<span class="text-accent">$1</span>', $title, 1);
+    }
+    // Първото изречение на подзаглавието се откроява, останалото е по-тихо.
+    preg_match('/^(.+?[.!?])\s+(.+)$/us', (string) $hero['subtitle'], $sub);
+
+    // Номерацията на секциите следва реда им („01 / Проблемът“), блогът може да липсва.
+    $section = 0;
+    $number = function () use (&$section) { return str_pad((string) ++$section, 2, '0', STR_PAD_LEFT) . ' /'; };
+
+    $hasReviews = ($reviews['count'] ?? 0) > 0 && ($reviews['rating'] ?? 0) > 0;
+@endphp
+
 @section('content')
 
 {{-- Hero: dark in both themes --}}
@@ -31,19 +47,22 @@
     <div class="hidden md:block aurora-a absolute -top-48 right-[-10rem] w-[40rem] h-[40rem] rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true"></div>
     <div class="hidden md:block aurora-b absolute top-1/3 -left-48 w-[30rem] h-[30rem] rounded-full bg-brand-700/30 blur-3xl" aria-hidden="true"></div>
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-header pb-20 md:pb-28 grid lg:grid-cols-12 gap-12 lg:gap-12 items-center">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-header pb-14 md:pb-20 grid lg:grid-cols-12 gap-12 lg:gap-12 items-center">
         <div class="lg:col-span-7">
-            <span class="rise-in badge-glow inline-flex items-center gap-2.5 rounded-full px-4 py-1.5 text-xs font-semibold text-brand-100">
-                <span class="relative flex w-2 h-2"><span class="absolute inset-0 rounded-full bg-brand-300 animate-ping motion-reduce:animate-none"></span><span class="relative w-2 h-2 rounded-full bg-brand-300"></span></span>
-                {{ __('Уебсайтове и дигитален маркетинг') }}
-            </span>
-            <h1 class="rise-text mt-7" style="--d: 80ms">
-                <span class="display block text-4xl sm:text-5xl xl:text-6xl">{{ $hero['title'] }}</span>
+            <p class="rise-in kicker">{{ $trust['eyebrow'] }}</p>
+            <h1 class="rise-text mt-6" style="--d: 80ms">
+                <span class="display block text-[2.6rem] leading-[1.05] sm:text-6xl xl:text-7xl">{!! $title !!}</span>
                 @if(filled($hero['highlight'] ?? null))
-                    <span class="text-shimmer mt-4 block text-2xl sm:text-3xl font-extrabold tracking-tight leading-snug">{{ $hero['highlight'] }}</span>
+                    <span class="mt-5 block text-xl sm:text-2xl font-bold tracking-tight leading-snug text-brand-200">{{ $hero['highlight'] }}</span>
                 @endif
             </h1>
-            <p class="rise-text mt-7 text-lg text-gray-300 leading-relaxed max-w-2xl text-pretty" style="--d: 180ms">{{ $hero['subtitle'] }}</p>
+            <p class="rise-text mt-7 text-lg leading-relaxed max-w-2xl text-pretty" style="--d: 180ms">
+                @if($sub)
+                    <span class="font-semibold text-white">{{ $sub[1] }}</span> <span class="text-gray-400">{{ $sub[2] }}</span>
+                @else
+                    <span class="text-gray-300">{{ $hero['subtitle'] }}</span>
+                @endif
+            </p>
             <div class="rise-text mt-10 flex flex-col sm:flex-row gap-3" style="--d: 260ms">
                 <a href="#konsultatsiya" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
                     <x-icon name="calendar" class="text-sm" /> {{ $hero['button'] }}
@@ -58,12 +77,42 @@
             @include('partials/hero-visual')
         </div>
     </div>
+
+    {{-- Proof: only facts we can stand behind; the Google rating appears once there are real reviews --}}
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
+        <dl class="rise-text grid grid-cols-2 lg:grid-cols-4 border-y border-white/10 divide-white/10 [&>div]:py-6 [&>div]:pr-4 [&>div:nth-child(odd)]:border-r [&>div:nth-child(odd)]:border-white/10 lg:[&>div]:border-r lg:[&>div:last-child]:border-r-0 lg:[&>div]:px-6 lg:[&>div:first-child]:pl-0" style="--d: 320ms">
+            @if($hasReviews)
+                <div class="col-span-2 lg:col-span-1 flex items-center gap-4 border-b border-white/10 lg:border-b-0">
+                    <span class="w-11 h-11 shrink-0 rounded-full bg-white flex items-center justify-center text-lg font-extrabold text-brand-950" aria-hidden="true">G</span>
+                    <div>
+                        <dt class="sr-only">{{ __('Оценка в Google') }}</dt>
+                        <dd class="flex items-center gap-2 text-2xl font-extrabold">{{ number_format($reviews['rating'], 1, app()->getLocale() === 'bg' ? ',' : '.') }} <span class="text-sm text-amber-400 tracking-tight" aria-hidden="true">★★★★★</span></dd>
+                        @php($reviewsText = __($reviews['count'] === 1 ? ':count отзив в Google' : ':count отзива в Google', ['count' => $reviews['count']]))
+                        <dd class="text-sm text-gray-400">@if($reviews['url'])<a href="{{ $reviews['url'] }}" target="_blank" rel="noopener" class="hover:text-white underline-offset-4 hover:underline">{{ $reviewsText }}</a>@else{{ $reviewsText }}@endif</dd>
+                    </div>
+                </div>
+            @endif
+            @foreach($trust['proof'] as $fact)
+                <div class="{{ ! $hasReviews && $loop->last && $loop->count % 2 ? 'col-span-2 lg:col-span-1' : '' }}">
+                    <dt class="sr-only">{{ $fact['text'] }}</dt>
+                    <dd class="display text-2xl md:text-3xl">{{ $fact['value'] }}</dd>
+                    <dd class="mt-1 text-sm text-gray-400 leading-snug">{{ $fact['text'] }}</dd>
+                </div>
+            @endforeach
+            <div class="{{ $hasReviews ? '' : 'hidden lg:block' }}">
+                <dt class="sr-only">{{ __('Скорост') }}</dt>
+                <dd class="display text-2xl md:text-3xl">PageSpeed</dd>
+                <dd class="mt-1 text-sm text-gray-400 leading-snug"><a href="https://pagespeed.web.dev/analysis?url={{ urlencode(url('/')) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:text-white underline-offset-4 hover:underline">{{ __('проверете скоростта ни сами') }} <x-icon name="arrow-up-right-from-square" class="text-[10px]" /></a></dd>
+            </div>
+        </dl>
+    </div>
 </section>
 
-{{-- Problem vs synergy --}}
+{{-- 01 Problem vs synergy --}}
 <section id="problemat" class="relative py-20 md:py-28 bg-white scroll-mt-24 dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="reveal display max-w-3xl text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $problem['title'] }}</h2>
+        <p class="reveal kicker kicker-light">{{ $number() }} {{ __('Проблемът') }}</p>
+        <h2 class="reveal display mt-5 max-w-3xl text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $problem['title'] }}</h2>
         <div class="mt-12 grid lg:grid-cols-3 gap-6">
             @foreach($problem['scenarios'] as $scenario)
                 @if($loop->last)
@@ -88,34 +137,39 @@
     </div>
 </section>
 
-{{-- The engine: services as one system --}}
-<section id="dvigatel" class="relative py-20 md:py-28 bg-brand-50/60 scroll-mt-24 dark:bg-ink-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+{{-- 02 The engine: one system, drawn as a hub with the four components --}}
+<section id="dvigatel" class="relative py-20 md:py-28 surface-night grain on-dark text-white scroll-mt-24 overflow-hidden">
+    <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]" aria-hidden="true"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 reveal">
-            <h2 class="display max-w-3xl text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $engine['title'] }}</h2>
-            <a href="{{ lroute('services') }}" class="group shrink-0 inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-950 dark:text-brand-300 dark:hover:text-white">
+            <div>
+                <p class="kicker">{{ $number() }} {{ $trust['engine_eyebrow'] }}</p>
+                <h2 class="display mt-5 max-w-3xl text-4xl md:text-5xl">{{ $engine['title'] }}</h2>
+            </div>
+            <a href="{{ lroute('services') }}" class="group shrink-0 inline-flex items-center gap-2 font-semibold text-brand-200 hover:text-white">
                 {{ __('Вижте услугите') }} <x-icon name="arrow-right" class="text-xs transition-transform group-hover:translate-x-1" />
             </a>
         </div>
 
-        <div class="mt-12 grid lg:grid-cols-2 gap-6">
-            @foreach([['code', 'tech', 1], ['chart-line', 'growth', 2]] as [$icon, $group, $number])
-                <article class="reveal card-hover overflow-hidden rounded-3xl border border-gray-200 bg-white p-7 md:p-9 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ ($number - 1) * 100 }}ms">
-                    <div class="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-brand-400/10 blur-2xl dark:bg-brand-500/10" aria-hidden="true"></div>
+        @include('partials/engine-diagram', ['cards' => $engineCards, 'center' => $trust['engine_center']])
+
+        <div class="mt-14 grid lg:grid-cols-2 gap-6">
+            @foreach([['code', 'tech', 1], ['chart-line', 'growth', 2]] as [$icon, $group, $n])
+                <article class="reveal relative edge glass overflow-hidden rounded-3xl p-7 md:p-9" style="--reveal-delay: {{ ($n - 1) * 100 }}ms">
                     <div class="flex items-start gap-5">
-                        <div class="icon-pop w-14 h-14 shrink-0 rounded-2xl bg-brand-gradient flex items-center justify-center shadow-lg shadow-brand-900/20">
+                        <div class="w-14 h-14 shrink-0 rounded-2xl bg-brand-gradient ring-1 ring-white/20 flex items-center justify-center">
                             <x-icon :name="$icon" class="text-white text-lg" />
                         </div>
                         <div>
-                            <p class="text-xs font-bold uppercase tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ $number }}. {{ $engine[$group . '_tag'] }}</p>
-                            <h3 class="mt-1 text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $engine[$group . '_title'] }}</h3>
+                            <p class="text-xs font-bold uppercase tracking-[0.18em] text-brand-300">{{ $engine[$group . '_tag'] }}</p>
+                            <h3 class="mt-1 text-2xl font-extrabold tracking-tight">{{ $engine[$group . '_title'] }}</h3>
                         </div>
                     </div>
                     <ul class="mt-8 space-y-5">
                         @foreach($engine[$group . '_items'] as $item)
                             <li class="flex items-start gap-3.5">
-                                <span class="mt-1 w-5 h-5 shrink-0 rounded-full bg-brand-50 flex items-center justify-center dark:bg-white/10"><x-icon name="check" class="text-[10px] text-brand-600 dark:text-brand-300" /></span>
-                                <span><span class="block font-bold text-brand-950 dark:text-white">{{ $item['title'] }}</span><span class="mt-1 block text-gray-600 leading-relaxed dark:text-gray-300">{{ $item['text'] }}</span></span>
+                                <span class="mt-1 w-5 h-5 shrink-0 rounded-full bg-white/10 flex items-center justify-center"><x-icon name="check" class="text-[10px] text-brand-200" /></span>
+                                <span><span class="block font-bold">{{ $item['title'] }}</span><span class="mt-1 block text-gray-400 leading-relaxed">{{ $item['text'] }}</span></span>
                             </li>
                         @endforeach
                     </ul>
@@ -125,32 +179,155 @@
     </div>
 </section>
 
-{{-- Process: sticky title + timeline --}}
-<section id="proces" class="relative py-20 md:py-28 bg-white scroll-mt-24 dark:bg-ink-950">
+{{-- 03 Who we work with (and who we don't) --}}
+<section id="s-kogo-rabotim" class="relative py-20 md:py-28 bg-brand-50/60 scroll-mt-24 dark:bg-ink-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-12 lg:gap-16">
-        <div class="lg:col-span-5 lg:sticky lg:top-32 self-start reveal">
-            <span class="eyebrow">{{ __('Работен процес') }}</span>
-            <h2 class="display mt-4 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $process['title'] }}</h2>
-            <a href="#konsultatsiya" class="btn-shine mt-8 inline-flex items-center gap-2 bg-brand-950 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-brand-800 transition-colors dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">
+        <div class="lg:col-span-5 reveal lg:sticky lg:top-32 self-start">
+            <p class="kicker kicker-light">{{ $number() }} {{ $trust['fit_eyebrow'] }}</p>
+            <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $trust['fit_title'] }}</h2>
+            <p class="mt-6 text-lg text-gray-600 leading-relaxed dark:text-gray-300">{{ $trust['fit_text'] }}</p>
+        </div>
+        <div class="lg:col-span-7">
+            <ol class="reveal divide-y divide-gray-200 border-y border-gray-200 dark:divide-white/10 dark:border-white/10">
+                @foreach($trust['fit_items'] as $item)
+                    <li class="group relative flex gap-6 py-6 md:py-7 pl-5 md:pl-6">
+                        <span class="absolute left-0 top-6 bottom-6 w-[3px] rounded-full bg-brand-200 transition-colors group-hover:bg-brand-600 dark:bg-white/10 dark:group-hover:bg-brand-300" aria-hidden="true"></span>
+                        <span class="pt-1 text-sm font-bold tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                        <span>
+                            <span class="block text-xl md:text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $item['title'] }}</span>
+                            <span class="mt-2 block text-gray-600 leading-relaxed dark:text-gray-300">{{ $item['text'] }}</span>
+                        </span>
+                    </li>
+                @endforeach
+            </ol>
+            @if(! empty($trust['not_items']))
+                <div class="reveal mt-8 rounded-2xl border border-gray-200 bg-white p-6 md:p-7 dark:border-white/10 dark:bg-white/[0.03]">
+                    <p class="font-extrabold text-brand-950 dark:text-white">{{ $trust['not_title'] }}:</p>
+                    <ul class="mt-4 space-y-3">
+                        @foreach($trust['not_items'] as $not)
+                            <li class="flex items-start gap-3 text-gray-600 dark:text-gray-300">
+                                <span class="mt-0.5 w-5 h-5 shrink-0 rounded-full bg-red-50 flex items-center justify-center dark:bg-red-500/15"><x-icon name="minus" class="text-[10px] text-red-600 dark:text-red-300" /></span>
+                                {{ $not }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        </div>
+    </div>
+</section>
+
+{{-- 04 Principles: large numerals --}}
+<section id="printsipi" class="relative py-20 md:py-28 bg-white scroll-mt-24 dark:bg-ink-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal max-w-3xl">
+            <p class="kicker kicker-light">{{ $number() }} {{ $trust['principles_eyebrow'] }}</p>
+            <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $trust['principles_title'] }}</h2>
+            <p class="mt-6 text-lg text-gray-600 leading-relaxed dark:text-gray-300">{{ $trust['principles_text'] }}</p>
+        </div>
+        <div class="mt-14 grid md:grid-cols-2 border-t border-l border-gray-200 dark:border-white/10">
+            @foreach($trust['principle_items'] as $item)
+                <article class="reveal p-8 md:p-10 border-r border-b border-gray-200 dark:border-white/10" style="--reveal-delay: {{ ($loop->index % 2) * 100 }}ms">
+                    <div class="flex items-center gap-6">
+                        <span class="numeral">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                        <span class="h-px flex-1 bg-gray-200 dark:bg-white/10" aria-hidden="true"></span>
+                    </div>
+                    <h3 class="mt-8 text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $item['title'] }}</h3>
+                    <p class="mt-3 text-gray-600 leading-relaxed dark:text-gray-300">{{ $item['text'] }}</p>
+                </article>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+{{-- 05 Industries: the demo websites --}}
+@if(! empty($demos))
+<section id="branshove" class="relative py-20 md:py-28 surface-night grain on-dark text-white scroll-mt-24 overflow-hidden">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal grid lg:grid-cols-12 gap-8 items-end">
+            <div class="lg:col-span-7">
+                <p class="kicker">{{ $number() }} {{ $trust['demos_eyebrow'] }}</p>
+                <h2 class="display mt-5 text-4xl md:text-5xl">{{ $trust['demos_title'] }}</h2>
+                <p class="mt-6 text-lg text-gray-400 leading-relaxed">{{ $trust['demos_text'] }}</p>
+            </div>
+            <dl class="lg:col-span-5 flex gap-10 lg:justify-end">
+                <div><dd class="display text-5xl">{{ count($demos) }}</dd><dt class="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-gray-400">{{ __('демо сайта') }}</dt></div>
+                <div><dd class="display text-5xl">{{ collect($demos)->pluck('industry')->unique()->count() }}</dd><dt class="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-gray-400">{{ __('бранша') }}</dt></div>
+            </dl>
+        </div>
+
+        <div class="reveal mt-12 -mx-4 px-4 sm:mx-0 sm:px-0 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:overflow-visible sm:pb-0 [scrollbar-width:none]">
+            @foreach($demos as $demo)
+                <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="group relative edge glass snap-start shrink-0 w-[82%] sm:w-auto rounded-2xl overflow-hidden hover:bg-white/10 transition-colors">
+                    <span class="relative block aspect-[8/5] overflow-hidden bg-white/5">
+                        @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
+                            <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" alt="" width="960" height="600" loading="lazy" decoding="async" class="h-full w-full object-cover object-top opacity-90 transition duration-500 group-hover:scale-[1.03] group-hover:opacity-100">
+                        @endif
+                        <span class="absolute top-3 left-3 rounded-full bg-brand-950/80 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white ring-1 ring-white/20">{{ __('Демо') }}</span>
+                    </span>
+                    <span class="block p-5">
+                        <span class="block text-xs font-bold uppercase tracking-[0.18em] text-brand-300">{{ $demo['industry'] }}</span>
+                        <span class="mt-1.5 flex items-center justify-between gap-3 font-extrabold text-lg">{{ $demo['name'] }} <x-icon name="arrow-up-right-from-square" class="text-xs text-brand-300" /></span>
+                    </span>
+                </a>
+            @endforeach
+        </div>
+        <a href="{{ lroute('portfolio') }}" class="reveal mt-10 inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 font-semibold hover:bg-white/10 transition-colors">
+            {{ __('Какво решава всеки от тях') }} <x-icon name="arrow-right" class="text-xs" />
+        </a>
+    </div>
+</section>
+@endif
+
+{{-- 06 Process: large numerals in a grid --}}
+<section id="proces" class="relative py-20 md:py-28 bg-brand-50/60 scroll-mt-24 dark:bg-ink-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+            <div class="max-w-3xl">
+                <p class="kicker kicker-light">{{ $number() }} {{ __('Работен процес') }}</p>
+                <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $process['title'] }}</h2>
+            </div>
+            <a href="#konsultatsiya" class="btn-shine shrink-0 inline-flex items-center justify-center gap-2 bg-brand-950 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-brand-800 transition-colors dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">
                 <x-icon name="calendar" class="text-sm" /> {{ $hero['button'] }}
             </a>
         </div>
-
-        <ol class="lg:col-span-7 relative pl-16 md:pl-20">
-            <span class="absolute left-[1.375rem] md:left-[1.625rem] top-3 bottom-3 w-px bg-gray-200 dark:bg-white/10" aria-hidden="true"></span>
-            <span class="timeline-fill absolute left-[1.375rem] md:left-[1.625rem] top-3 bottom-3 w-px bg-gradient-to-b from-brand-500 via-brand-400 to-brand-300" aria-hidden="true"></span>
+        <ol class="mt-14 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach($process['steps'] as $step)
-                <li class="reveal relative pb-6 last:pb-0" style="--reveal-delay: 60ms">
-                    <span class="absolute -left-16 md:-left-20 top-4 w-11 h-11 md:w-[3.25rem] md:h-[3.25rem] rounded-full bg-white ring-1 ring-gray-200 flex items-center justify-center text-sm font-extrabold shadow-sm dark:bg-ink-900 dark:ring-white/15" aria-hidden="true"><span class="text-gradient">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span></span>
-                    <div class="card-hover rounded-2xl border border-gray-200 bg-white p-6 md:p-7 dark:border-white/10 dark:bg-white/[0.03]">
-                        <h3 class="text-lg md:text-xl font-extrabold tracking-tight text-brand-950 dark:text-white"><span class="sr-only">{{ __('Стъпка :n', ['n' => $loop->iteration]) }}: </span>{{ $step['title'] }}</h3>
-                        <p class="mt-2 text-gray-600 leading-relaxed dark:text-gray-300">{{ $step['text'] }}</p>
+                <li class="reveal card-hover rounded-3xl border border-gray-200 bg-white p-7 md:p-8 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ ($loop->index % 3) * 80 }}ms">
+                    <div class="flex items-center gap-5">
+                        <span class="numeral text-5xl">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                        <span class="h-px flex-1 bg-gray-200 dark:bg-white/10" aria-hidden="true"></span>
                     </div>
+                    <h3 class="mt-6 text-xl font-extrabold tracking-tight text-brand-950 dark:text-white"><span class="sr-only">{{ __('Стъпка :n', ['n' => $loop->iteration]) }}: </span>{{ $step['title'] }}</h3>
+                    <p class="mt-2 text-gray-600 leading-relaxed dark:text-gray-300">{{ $step['text'] }}</p>
                 </li>
             @endforeach
         </ol>
     </div>
 </section>
+
+{{-- 07 Blog --}}
+@if($posts->isNotEmpty())
+<section id="statii" class="relative py-20 md:py-28 bg-white scroll-mt-24 dark:bg-ink-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div class="max-w-3xl">
+                <p class="kicker kicker-light">{{ $number() }} {{ $trust['blog_eyebrow'] }}</p>
+                <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $trust['blog_title'] }}</h2>
+                <p class="mt-6 text-lg text-gray-600 leading-relaxed dark:text-gray-300">{{ $trust['blog_text'] }}</p>
+            </div>
+            <a href="{{ lroute('blog.index') }}" class="group shrink-0 inline-flex items-center gap-2 rounded-full border border-gray-300 px-6 py-3 font-semibold text-brand-950 hover:border-brand-500 dark:border-white/20 dark:text-white dark:hover:border-brand-300">
+                {{ __('Всички статии') }} <x-icon name="arrow-right" class="text-xs transition-transform group-hover:translate-x-1" />
+            </a>
+        </div>
+        <div class="mt-12 grid md:grid-cols-3 gap-6">
+            @foreach($posts as $post)
+                @include('blog._card', ['post' => $post, 'heading' => 'h3'])
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
 
 {{-- Contact --}}
 <section id="kontakt" class="relative py-20 md:py-28 surface-night grain on-dark text-white scroll-mt-24 overflow-hidden">
@@ -159,8 +336,8 @@
     <div class="aurora-b absolute -top-40 right-0 w-[26rem] h-[26rem] rounded-full bg-brand-400/10 blur-3xl" aria-hidden="true"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-12 items-start">
         <div class="lg:col-span-5 reveal lg:sticky lg:top-32">
-            <span class="eyebrow">{{ __('Контакти') }}</span>
-            <h2 class="display mt-4 text-3xl md:text-4xl">{{ $contactBlock['title'] }}</h2>
+            <p class="kicker">{{ $number() }} {{ $trust['contact_eyebrow'] }}</p>
+            <h2 class="display mt-5 text-3xl md:text-4xl">{{ $contactBlock['title'] }}</h2>
             <p class="mt-6 text-lg text-gray-300 max-w-md leading-relaxed">{{ $contactBlock['text'] }}</p>
             <p class="mt-10 text-xs font-bold uppercase tracking-[0.18em] text-brand-300">{{ __('За директна връзка') }}</p>
             <ul class="mt-4 space-y-3">
@@ -182,6 +359,15 @@
                     <span class="w-11 h-11 rounded-xl bg-brand-500/20 flex items-center justify-center"><x-icon name="location-dot" class="text-brand-200" /></span>
                     <span class="font-semibold">{{ __($contact['city']) }}, {{ __('България') }}</span>
                 </li>
+                @php($presentationPdf = 'files/' . (app()->getLocale() === 'en' ? 'creatium-lab-presentation.pdf' : 'creatium-lab-prezentatsiya.pdf'))
+                @if(is_file(public_path($presentationPdf)))
+                    <li>
+                        <a href="{{ asset($presentationPdf) }}" download class="relative edge glass flex items-center gap-4 rounded-2xl px-4 py-3.5 hover:bg-white/10 transition-colors">
+                            <span class="w-11 h-11 rounded-xl bg-brand-500/20 flex items-center justify-center"><x-icon name="file" class="text-brand-200" /></span>
+                            <span class="font-semibold">{{ __('Изтеглете презентацията ни') }} <span class="text-gray-400 font-normal">PDF</span></span>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </div>
 

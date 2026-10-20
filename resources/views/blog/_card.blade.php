@@ -13,7 +13,7 @@
             @endif
             <time datetime="{{ $post->published_at->toDateString() }}" class="text-gray-500 dark:text-gray-400">{{ $post->published_at->locale(app()->getLocale())->translatedFormat('j F Y') }}</time>
         </div>
-        <h2 class="mt-3 text-xl font-bold text-brand-950 leading-snug dark:text-white"><a href="{{ $post->url() }}" class="hover:text-brand-700 dark:hover:text-brand-300">{{ $post->tr('title') }}</a></h2>
+        <{{ $heading ?? 'h2' }} class="mt-3 text-xl font-bold text-brand-950 leading-snug dark:text-white"><a href="{{ $post->url() }}" class="hover:text-brand-700 dark:hover:text-brand-300">{{ $post->tr('title') }}</a></{{ $heading ?? 'h2' }}>
         <p class="mt-3 text-gray-600 leading-relaxed flex-1 dark:text-gray-300">{{ $post->excerptOrSummary() }}</p>
         <a href="{{ $post->url() }}" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 group-hover:gap-3 transition-all dark:text-brand-300" aria-label="{{ __('Прочетете: :title', ['title' => $post->tr('title')]) }}">
             {{ __('Прочетете') }} <x-icon name="arrow-right" class="text-xs" />

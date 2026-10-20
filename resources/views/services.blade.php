@@ -7,16 +7,21 @@
 @php($cardPages = ['websites' => 'website', 'geo-seo' => 'seo', 'email' => 'email', 'monitoring' => 'support'])
 @include('partials/page-header', ['eyebrow' => __('Услуги'), 'heading' => $page['title'], 'sub' => $page['intro']])
 
-<section class="py-16 md:py-24 bg-white dark:bg-ink-950">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-6">
+<section class="py-20 md:py-28 bg-white dark:bg-ink-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
+        <p class="kicker kicker-light">01 / {{ __('Компонентите') }}</p>
+    </div>
+    <div class="mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-6">
         @foreach($page['cards'] as $card)
             <article id="{{ $card['slug'] }}" class="reveal card-hover scroll-mt-28 overflow-hidden rounded-3xl border border-gray-200 bg-white p-7 md:p-9 flex flex-col dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ ($loop->index % 2) * 100 }}ms">
                 <div class="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-brand-400/10 blur-2xl dark:bg-brand-500/10" aria-hidden="true"></div>
-                <div class="flex items-center gap-4">
-                    <div class="icon-pop w-14 h-14 shrink-0 rounded-2xl bg-brand-gradient flex items-center justify-center shadow-lg shadow-brand-900/20"><x-icon :name="$card['icon']" class="text-white text-lg" /></div>
-                    <p class="text-xs font-bold uppercase tracking-[0.14em] text-brand-600 dark:text-brand-300">{{ $loop->iteration }}. {{ $card['label'] }}</p>
+                <div class="flex items-center gap-5">
+                    <span class="numeral">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                    <span class="h-px flex-1 bg-gray-200 dark:bg-white/10" aria-hidden="true"></span>
+                    <div class="icon-pop w-12 h-12 shrink-0 rounded-2xl bg-brand-gradient flex items-center justify-center shadow-lg shadow-brand-900/20"><x-icon :name="$card['icon']" class="text-white" /></div>
                 </div>
-                <h2 class="mt-6 text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $card['title'] }}</h2>
+                <p class="mt-6 text-xs font-bold uppercase tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ $card['label'] }}</p>
+                <h2 class="mt-2 text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $card['title'] }}</h2>
                 <p class="mt-2 font-semibold text-brand-700 dark:text-brand-300">{{ $card['tag'] }}</p>
                 <p class="mt-4 text-gray-600 leading-relaxed dark:text-gray-300">{{ $card['description'] }}</p>
                 <h3 class="mt-7 text-sm font-bold uppercase tracking-wider text-brand-950 dark:text-white">{{ __('Какво получавате') }}</h3>
@@ -47,8 +52,25 @@
         @endif
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
-        <div class="reveal relative overflow-hidden rounded-3xl bg-brand-950 text-white p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6 dark:bg-brand-900/60 dark:ring-1 dark:ring-brand-400/30">
+</section>
+
+{{-- 02 How the parts work together --}}
+<section class="relative py-20 md:py-28 surface-night grain on-dark text-white overflow-hidden">
+    <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]" aria-hidden="true"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal max-w-3xl">
+            <p class="kicker">02 / {{ $trust['engine_eyebrow'] }}</p>
+            <h2 class="display mt-5 text-4xl md:text-5xl">{{ $trust['principles_title'] }}</h2>
+            <p class="mt-6 text-lg text-gray-400 leading-relaxed">{{ $trust['principles_text'] }}</p>
+        </div>
+        @include('partials/engine-diagram', ['cards' => $page['cards'], 'center' => $trust['engine_center']])
+    </div>
+</section>
+
+<section class="py-16 md:py-24 bg-white dark:bg-ink-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <p class="reveal kicker kicker-light">03 / {{ __('Следващата стъпка') }}</p>
+        <div class="mt-8 reveal relative overflow-hidden rounded-3xl bg-brand-950 text-white p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6 dark:bg-brand-900/60 dark:ring-1 dark:ring-brand-400/30">
             <div class="absolute inset-0 bg-grid-light" aria-hidden="true"></div>
             <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-brand-500/30 blur-3xl" aria-hidden="true"></div>
             <h2 class="relative text-2xl md:text-3xl font-extrabold tracking-tight max-w-2xl">{{ $page['cta_title'] }}</h2>

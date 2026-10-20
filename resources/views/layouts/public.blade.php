@@ -274,6 +274,12 @@
                         <li class="flex items-start gap-3"><x-icon name="phone" class="w-4 mt-1 text-brand-300" /><span class="flex flex-col">@foreach(config('creatium.contact.phones') as $phone)<a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}" class="hover:text-white">{{ $phone }}</a>@endforeach</span></li>
                         <li class="flex items-center gap-3"><x-icon name="location-dot" class="w-4 text-brand-300" />{{ __(config('creatium.contact.city')) }}, {{ __('България') }}</li>
                     </ul>
+                    @php($presentationPdf = 'files/' . (app()->getLocale() === 'en' ? 'creatium-lab-presentation.pdf' : 'creatium-lab-prezentatsiya.pdf'))
+                    @if(is_file(public_path($presentationPdf)))
+                        <a href="{{ asset($presentationPdf) }}" download class="relative edge glass mt-6 flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors">
+                            <x-icon name="file" class="text-brand-300" /> {{ __('Презентация (PDF)') }} <x-icon name="arrow-right" class="ml-auto text-[10px] text-brand-300 rotate-90" />
+                        </a>
+                    @endif
                 </div>
             </div>
 
