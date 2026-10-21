@@ -13,6 +13,15 @@ return [
         'city' => env('CREATIUM_CITY', 'София'),
     ],
 
+    // Чатът на сайта (AI асистент с Claude, без ANTHROPIC_API_KEY отговаря от честите въпроси).
+    'chat' => [
+        'enabled' => (bool) env('CHAT_ENABLED', true),
+        // Колко съобщения от посетители на ден минават през Claude (над тях отговаря от честите въпроси).
+        'daily_limit' => (int) env('CHAT_DAILY_LIMIT', 300),
+        'max_messages' => 30,
+        'retention_days' => 30,
+    ],
+
     // Оценката на Creatium Lab в Google. Показва се на началната страница едва когато има отзиви
     // (GOOGLE_REVIEWS_COUNT > 0). Попълва се ръчно от профила в Google Business, никога с измислени числа.
     'google_reviews' => [

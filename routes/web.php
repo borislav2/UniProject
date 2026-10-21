@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ChatController as AdminChatController;
 use App\Http\Controllers\Admin\ClientEmailController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\InquiryController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\TechnologyController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OutreachUnsubscribeController;
@@ -64,6 +66,10 @@ foreach (['bg', 'en'] as $locale) {
     });
 }
 
+// Чатът на сайта (partials/chat-widget)
+Route::post('/chat', [ChatController::class, 'send'])->middleware('throttle:20,1')->name('chat.send');
+Route::get('/chat/{conversation}', [ChatController::class, 'history'])->whereUuid('conversation')->middleware('throttle:60,1')->name('chat.history');
+
 // Demo sites shown on the Projects page (Bulgarian only, not indexed)
 Route::get('/demo/{slug}', [DemoController::class, 'show'])->where('slug', '[a-z-]+')->name('demo.show');
 
@@ -100,6 +106,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('emails/{template}', [ClientEmailController::class, 'store'])->middleware('throttle:20,1')->name('client-emails.store');
 
     // Потенциални клиенти: бизнеси от Harvey и първо писмо до тях
+    // Разговорите от чата на сайта
+    Route::get('chats', [AdminChatController::class, 'index'])->name('chats.index');
+    Route::get('chats/{chat}', [AdminChatController::class, 'show'])->name('chats.show');
+
     Route::get('reviews', [ReviewReplyController::class, 'index'])->name('reviews.index');
     Route::post('reviews', [ReviewReplyController::class, 'store'])->middleware('throttle:30,1')->name('reviews.store');
     Route::get('reviews/{reply}', [ReviewReplyController::class, 'show'])->name('reviews.show');

@@ -301,6 +301,10 @@
         <div class="wordmark relative pointer-events-none text-center whitespace-nowrap text-[15vw] -mb-[2.5vw] pt-2" aria-hidden="true">Creatium Lab</div>
     </footer>
 
+    @if(config('creatium.chat.enabled'))
+        @include('partials/chat-widget')
+    @endif
+
     @if(config('creatium.gtm_id'))
         @include('partials/cookie-consent')
     @endif
