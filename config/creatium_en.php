@@ -129,7 +129,7 @@ return [
         'principle_items' => [
             ['title' => 'Customer first, decoration second', 'text' => 'Every page leads to one action: a call, an inquiry or a purchase. The design serves that.'],
             ['title' => 'We measure, we don\'t guess', 'text' => 'Every website starts with Google Analytics and Search Console. You see where inquiries come from.'],
-            ['title' => 'You talk to the people doing the work', 'text' => 'There are two of us. No account managers, no handovers between departments.'],
+            ['title' => 'No middlemen', 'text' => 'You work directly with the people who build your website and marketing. Your questions don\'t go through account managers.'],
             ['title' => 'Everything is in your name', 'text' => 'The domain, profiles and access are yours from day one. If you ever leave, you take everything.'],
         ],
         'demos_eyebrow' => 'Industries',
