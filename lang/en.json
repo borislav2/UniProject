@@ -2,7 +2,6 @@
     "(по желание)": "(optional)",
     "08X XXX XXXX": "+359 8X XXX XXXX",
     "Creatium Lab - начало": "Creatium Lab - home",
-    "Creatium Lab сме двама: единият прави сайтовете, другият се грижи хората да ги намират в Google. Работим с малки бизнеси в България.": "Creatium Lab is two people: one builds the websites, the other makes sure people find them on Google. We work with small businesses.",
     "Google Analytics и Microsoft Clarity: кои страници се четат и кое е неудобно.": "Google Analytics and Microsoft Clarity: which pages get read and what is awkward to use.",
     "Административен панел": "Admin panel",
     "Аналитични": "Analytics",
@@ -127,7 +126,6 @@
     "Следваща стъпка": "Next step",
     "Фиксирана цена, преди да започнем": "A fixed price before we start",
     "Виждате сайта, преди да е готов": "You see the site before it is finished",
-    "Работите директно с нас двамата": "You work directly with the two of us",
     "Безплатно": "Free",
     "Проверете сайта си за минута": "Check your website in a minute",
     "Въведете адреса и имейл и ще получите отчет: HTTPS, скорост на сървъра, заглавия за Google, телефон и още.": "Enter the address and an email and you will get a report: HTTPS, server speed, Google titles, phone and more.",
@@ -382,5 +380,6 @@
     "Следващата стъпка": "The next step",
     "Екипът": "The team",
     "Говорите с хората, които правят работата.": "You talk to the people who do the work.",
-    "Въпроси": "Questions"
+    "Въпроси": "Questions",
+    "Creatium Lab прави сайтове и маркетинг за малки бизнеси в България: от първата страница до клиентите, които я намират в Google.": "Creatium Lab builds websites and marketing for small businesses in Bulgaria: from the first page to the customers who find it on Google."
 }

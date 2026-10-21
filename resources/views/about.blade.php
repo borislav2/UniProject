@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', __('За нас'))
-@section('meta_description', __('Creatium Lab сме двама: единият прави сайтовете, другият се грижи хората да ги намират в Google. Работим с малки бизнеси в България.'))
+@section('meta_description', __('Creatium Lab прави сайтове и маркетинг за малки бизнеси в България: от първата страница до клиентите, които я намират в Google.'))
 
 @php
     // Номерацията на секциите следва реда им; текстът „За нас“ може да е празен в админа.
@@ -10,7 +10,7 @@
 @endphp
 
 @section('content')
-@include('partials/page-header', ['eyebrow' => 'Creatium Lab', 'heading' => __('За нас'), 'sub' => filled($about['subtitle'] ?? null) ? $about['subtitle'] : __('Creatium Lab сме двама: единият прави сайтовете, другият се грижи хората да ги намират в Google. Работим с малки бизнеси в България.')])
+@include('partials/page-header', ['eyebrow' => 'Creatium Lab', 'heading' => __('За нас'), 'sub' => filled($about['subtitle'] ?? null) ? $about['subtitle'] : __('Creatium Lab прави сайтове и маркетинг за малки бизнеси в България: от първата страница до клиентите, които я намират в Google.')])
 
 @if(!empty($about['paragraphs']))
 <section class="py-20 md:py-28 bg-white dark:bg-ink-950">
