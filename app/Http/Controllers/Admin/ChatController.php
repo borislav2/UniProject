@@ -17,7 +17,7 @@ class ChatController extends Controller
             'chats' => ChatConversation::with('lead')->withCount('messages')
                 ->with(['messages' => fn ($q) => $q->where('role', 'user')->orderBy('id')])
                 ->latest('updated_at')->paginate(30),
-            'usesClaude' => ChatAssistant::usesClaude(),
+            'provider' => ChatAssistant::providerName(),
         ]);
     }
 

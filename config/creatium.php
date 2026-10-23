@@ -16,6 +16,8 @@ return [
     // Чатът на сайта (AI асистент с Claude, без ANTHROPIC_API_KEY отговаря от честите въпроси).
     'chat' => [
         'enabled' => (bool) env('CHAT_ENABLED', true),
+        // Кой AI отговаря: auto (Claude, ако има ANTHROPIC_API_KEY, иначе Mistral с MISTRAL_API_KEY), anthropic или mistral.
+        'provider' => env('CHAT_PROVIDER') ?: 'auto',
         // Колко съобщения от посетители на ден минават през Claude (над тях отговаря от честите въпроси).
         'daily_limit' => (int) env('CHAT_DAILY_LIMIT', 300),
         'max_messages' => 30,

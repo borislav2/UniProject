@@ -4,12 +4,14 @@
 
 @section('content')
 
-@unless($usesClaude)
+@if($provider)
+    <p class="mb-4 text-sm text-gray-600">Отговаря: <span class="font-semibold text-gray-900">{{ $provider }}</span>. Дневен таван: {{ config('creatium.chat.daily_limit') }} съобщения през AI (<code class="rounded bg-gray-100 px-1">CHAT_DAILY_LIMIT</code>), над него отговаря от честите въпроси.</p>
+@else
     <div class="mb-6 rounded-lg border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-900" role="status">
-        <p class="font-semibold">Claude не е свързан, затова чатът отговаря само от честите въпроси на сайта.</p>
-        <p class="mt-1">За истински разговор добавете <code class="rounded bg-yellow-100 px-1">ANTHROPIC_API_KEY</code> в <code class="rounded bg-yellow-100 px-1">.env</code> на сървъра (ключ от console.anthropic.com, плаща се на употреба). Дневният таван е {{ config('creatium.chat.daily_limit') }} съобщения (<code class="rounded bg-yellow-100 px-1">CHAT_DAILY_LIMIT</code>).</p>
+        <p class="font-semibold">Няма свързан AI, затова чатът отговаря само от честите въпроси на сайта.</p>
+        <p class="mt-1">Добавете в <code class="rounded bg-yellow-100 px-1">.env</code> на сървъра <code class="rounded bg-yellow-100 px-1">MISTRAL_API_KEY</code> (безплатен план от console.mistral.ai; първо изключете използването на данните за обучение) или <code class="rounded bg-yellow-100 px-1">ANTHROPIC_API_KEY</code> (Claude, плаща се на употреба).</p>
     </div>
-@endunless
+@endif
 
 <p class="mb-4 text-sm text-gray-600">Разговорите от чата на сайта. Пазят се {{ config('creatium.chat.retention_days') }} дни след последното съобщение и после се изтриват сами. Когато посетител остави телефон или имейл, запитването се появява и в „Запитвания“.</p>
 

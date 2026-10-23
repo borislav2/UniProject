@@ -5,14 +5,17 @@ namespace App\Support\Chat;
 use Anthropic\Client;
 use Anthropic\Core\Exceptions\AnthropicException;
 use App\Models\ChatConversation;
+use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Чатът на сайта. С ANTHROPIC_API_KEY отговаря Claude, само от съдържанието на сайта (SiteKnowledge),
- * и записва запитване с инструмента save_contact. Без ключ, при грешка, отказ или над дневния лимит
- * отговаря от честите въпроси (FaqResponder). Историята към Claude (api_messages) само се допълва:
- * блоковете (и тези за мислене) се пазят и връщат непроменени.
+ * Чатът на сайта. Отговаря AI модел (Claude или Mistral, според creatium.chat.provider и ключовете),
+ * само от съдържанието на сайта (SiteKnowledge), и записва запитване с инструмента save_contact.
+ * Без ключ, при грешка, отказ или над дневния лимит отговаря от честите въпроси (FaqResponder).
+ * Историята към Claude (api_messages) само се допълва: блоковете (и тези за мислене) се пазят и връщат
+ * непроменени. Към Mistral историята се сглобява всеки път от видимите съобщения (chat_messages).
  */
 class ChatAssistant
 {
@@ -59,7 +62,33 @@ PROMPT;
 
     public static function usesClaude(): bool
     {
-        return filled(config('services.anthropic.key'));
+        return self::provider() === 'anthropic';
+    }
+
+    /**
+     * Кой модел отговаря: 'anthropic', 'mistral' или null (само честите въпроси).
+     * CHAT_PROVIDER=auto (по подразбиране) избира Claude, ако има ключ, иначе Mistral, ако има ключ.
+     */
+    public static function provider(): ?string
+    {
+        $keys = ['anthropic' => filled(config('services.anthropic.key')), 'mistral' => filled(config('services.mistral.key'))];
+        $wanted = config('creatium.chat.provider', 'auto');
+
+        if (isset($keys[$wanted])) {
+            return $keys[$wanted] ? $wanted : null;
+        }
+
+        return array_key_first(array_filter($keys));
+    }
+
+    /** Име за админа и политиката за поверителност. */
+    public static function providerName(): ?string
+    {
+        return match (self::provider()) {
+            'anthropic' => 'Claude (Anthropic, САЩ)',
+            'mistral' => 'Mistral AI (Франция)',
+            default => null,
+        };
     }
 
     /**
@@ -67,14 +96,17 @@ PROMPT;
      */
     public function reply(ChatConversation $chat, string $text, ?array $attribution): array
     {
-        if (self::usesClaude() && $this->withinDailyLimit()) {
+        $provider = self::provider();
+        if ($provider && $this->withinDailyLimit()) {
             try {
-                $reply = $this->replyWithClaude($chat, $text, $attribution);
+                $reply = $provider === 'mistral'
+                    ? $this->replyWithMistral($chat, $attribution)
+                    : $this->replyWithClaude($chat, $text, $attribution);
                 if ($reply !== null) {
                     return ['reply' => $reply, 'source' => 'ai'];
                 }
-            } catch (AnthropicException $e) {
-                Log::warning('Chat via Claude failed', ['error' => $e->getMessage(), 'chat' => $chat->id]);
+            } catch (AnthropicException|HttpClientException $e) {
+                Log::warning('Chat via ' . $provider . ' failed', ['error' => $e->getMessage(), 'chat' => $chat->id]);
             }
         }
 
@@ -165,7 +197,89 @@ PROMPT;
         return ['stop' => $message->stopReason, 'content' => json_decode(json_encode($message->content), true) ?? []];
     }
 
-    /** Дневен таван на съобщенията през Claude, за да не излезе сметката извън контрол при злоупотреба. */
+    /**
+     * Един ход с Mistral. Историята са видимите съобщения на разговора (последните 20, вече с новото),
+     * а изпълнените save_contact се помнят само в рамките на хода; дали вече има запитване, се казва в системния текст.
+     */
+    private function replyWithMistral(ChatConversation $chat, ?array $attribution): ?string
+    {
+        $system = self::SYSTEM . "\n\n<site_info>\n" . SiteKnowledge::text() . "\n</site_info>";
+        if ($chat->lead_id) {
+            $system .= "\n\nThe visitor's contact details were already saved in this conversation. Call save_contact again only to correct them.";
+        }
+
+        $history = $chat->messages()->latest('id')->take(20)->get(['role', 'text'])->reverse()->values();
+        while ($history->isNotEmpty() && $history->first()->role !== 'user') {
+            $history->shift();
+        }
+        $messages = [['role' => 'system', 'content' => $system]];
+        foreach ($history as $message) {
+            $messages[] = ['role' => $message->role === 'user' ? 'user' : 'assistant', 'content' => $message->text];
+        }
+
+        $replyText = '';
+        for ($round = 0; $round <= self::MAX_TOOL_ROUNDS; $round++) {
+            $choice = $this->askMistral($messages);
+            $message = $choice['message'] ?? [];
+            $text = self::mistralText($message['content'] ?? null);
+            if ($text !== '') {
+                $replyText .= ($replyText === '' ? '' : "\n\n") . $text;
+            }
+
+            $toolCalls = $message['tool_calls'] ?? [];
+            if (! $toolCalls) {
+                break;
+            }
+            $messages[] = ['role' => 'assistant', 'content' => $text, 'tool_calls' => $toolCalls];
+            foreach ($toolCalls as $call) {
+                $name = $call['function']['name'] ?? '';
+                $args = $call['function']['arguments'] ?? [];
+                $args = is_string($args) ? (json_decode($args, true) ?: []) : (array) $args;
+                $error = $name === 'save_contact' ? ChatLeads::save($chat, $args, $attribution) : 'Unknown tool.';
+                $messages[] = ['role' => 'tool', 'tool_call_id' => $call['id'] ?? '', 'name' => $name, 'content' => $error ?? 'Saved. The team will get back to the visitor within one working day.'];
+            }
+        }
+
+        return $replyText !== '' ? $replyText : null;
+    }
+
+    /** Текстът от отговор на Mistral: низ или списък от части (само частите „text“, без „thinking“). */
+    private static function mistralText(mixed $content): string
+    {
+        if (is_string($content)) {
+            return trim($content);
+        }
+
+        return trim(implode('', array_map(fn ($chunk) => ($chunk['type'] ?? null) === 'text' ? (string) ($chunk['text'] ?? '') : '', (array) $content)));
+    }
+
+    /**
+     * Една заявка към Mistral (POST /v1/chat/completions). Връща първия избор от отговора.
+     * Грешка от API-то хвърля HttpClientException и чатът минава на честите въпроси.
+     *
+     * @return array{finish_reason?: string, message?: array<string, mixed>}
+     */
+    protected function askMistral(array $messages): array
+    {
+        $tool = self::TOOLS[0];
+
+        return Http::withToken(config('services.mistral.key'))
+            ->acceptJson()
+            ->connectTimeout(10)
+            ->timeout(45)
+            ->post(rtrim(config('services.mistral.base_url'), '/') . '/chat/completions', [
+                'model' => config('services.mistral.model'),
+                'messages' => $messages,
+                'tools' => [['type' => 'function', 'function' => ['name' => $tool['name'], 'description' => $tool['description'], 'parameters' => $tool['inputSchema']]]],
+                'tool_choice' => 'auto',
+                'max_tokens' => 1000,
+                'temperature' => 0.3,
+            ])
+            ->throw()
+            ->json('choices.0') ?? [];
+    }
+
+    /** Дневен таван на съобщенията през AI, за да не излезе сметката извън контрол при злоупотреба. */
     private function withinDailyLimit(): bool
     {
         $key = 'chat-ai:' . now()->toDateString();
