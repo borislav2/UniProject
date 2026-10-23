@@ -14,7 +14,7 @@
         @else
             <p class="rounded-lg bg-yellow-50 px-3 py-2 text-sm text-yellow-900">Търси в OpenStreetMap, където малко бизнеси имат записан сайт, затова имейлите са малко. За Google Maps добавете <code class="rounded bg-yellow-100 px-1">SERPER_API_KEY</code> в <code class="rounded bg-yellow-100 px-1">.env</code> (serper.dev, 2 500 безплатни търсения).</p>
         @endif
-        <p class="text-sm text-gray-600">Търси бизнеси от избрания вид в града. За всеки със сайт намира публикувания имейл и проверява сайта; от проверката се пише личното писмо. Тези без имейл, но с телефон, отиват в „Без сайт (за обаждане)“.</p>
+        <p class="text-sm text-gray-600">Търси бизнеси от избрания вид в града, само такива със сайт. За всеки намира публикувания имейл и проверява сайта; от проверката се пише личното писмо. Бизнесите без имейл се пропускат.@if(config('creatium.outreach.search_call_list')) Тези с телефон отиват в „Без сайт (за обаждане)“.@endif</p>
         <div class="grid gap-4 sm:grid-cols-2">
             <label class="block text-sm">
                 <span class="font-semibold text-gray-800">Град</span>
@@ -54,7 +54,7 @@
             <div>
                 <span class="font-semibold text-gray-900">{{ $search->label() }}</span>
                 <span class="block text-sm text-gray-500" data-progress>
-                    {{ \App\Models\OutreachSearch::STATUSES[$search->status] ?? $search->status }} · намерени {{ $search->found }} · с имейл {{ $search->emails }} · за обаждане {{ $search->calls }}
+                    {{ \App\Models\OutreachSearch::STATUSES[$search->status] ?? $search->status }} · намерени {{ $search->found }} · с имейл {{ $search->emails }}@if($search->calls) · за обаждане {{ $search->calls }}@endif
                     @if($search->error)<span class="block text-red-600">{{ $search->error }}</span>@endif
                 </span>
             </div>
@@ -74,7 +74,7 @@
             fetch(row.dataset.searchWork, { method: 'POST', headers: { 'X-CSRF-TOKEN': token, 'Accept': 'application/json' } })
                 .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
                 .then(function (p) {
-                    out.textContent = p.status_label + ' · проверени ' + p.processed + ' от ' + p.found + ' · с имейл ' + p.emails + ' · за обаждане ' + p.calls + (p.error ? ' · ' + p.error : '');
+                    out.textContent = p.status_label + ' · проверени ' + p.processed + ' от ' + p.found + ' · с имейл ' + p.emails + (p.calls ? ' · за обаждане ' + p.calls : '') + (p.error ? ' · ' + p.error : '');
                     if (p.status === 'queued' || p.status === 'processing') { step(0); }
                 })
                 .catch(function () {

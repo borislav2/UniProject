@@ -107,7 +107,7 @@ class ProspectFinder
 
             if ($found && $this->addProspect($business, $found)) {
                 $search->increment('emails');
-            } elseif ($this->addCall($business)) {
+            } elseif (config('creatium.outreach.search_call_list') && $this->addCall($business)) {
                 $search->increment('calls');
             }
         } catch (Throwable $e) {
