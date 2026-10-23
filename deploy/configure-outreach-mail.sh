@@ -3,6 +3,7 @@
 # Пуска се като потребител 'deploy' в папката на приложението:
 #   bash deploy/configure-outreach-mail.sh <smtp-хост> <акаунт за вход> [адрес на подателя] [дневен лимит]
 # Пример: bash deploy/configure-outreach-mail.sh smtp.gmail.com info@creativemoa.site
+# Отделен домейн е по-безопасен; адрес от creatiumlab.com се приема само след потвърждение.
 # Паролата се пита скрито и се записва само в .env. Не я пращайте в чат или имейл.
 # Порт 587 е по подразбиране; за 465: OUTREACH_PORT_OVERRIDE=465 bash deploy/configure-outreach-mail.sh ...
 set -euo pipefail
@@ -17,8 +18,14 @@ FROM_ADDRESS="${3:-$ACCOUNT}"
 LIMIT="${4:-20}"
 PORT="${OUTREACH_PORT_OVERRIDE:-587}"
 
+# По решение на собствениците (23.10.2026) е разрешен и основният домейн, след изрично потвърждение:
+# оплаквания за спам от студените писма могат да навредят и на нормалната поща от creatiumlab.com.
 case "$FROM_ADDRESS" in
-    *@creatiumlab.com) echo "Първите писма не се пращат от creatiumlab.com: използвайте отделния домейн."; exit 1 ;;
+    *@creatiumlab.com)
+        echo "Внимание: първите писма ще тръгват от основния домейн creatiumlab.com."
+        echo "Ако получатели ги отбележат като спам, може да пострада и нормалната ви поща. Пращайте малко и само проверени писма."
+        read -r -p "Продължавате ли? (да/не): " ANSWER
+        [ "$ANSWER" = "да" ] || { echo "Отказано. Нищо не е променено."; exit 1; } ;;
 esac
 
 read -r -s -p "Парола на приложение за ${ACCOUNT} (не се показва): " PASS
