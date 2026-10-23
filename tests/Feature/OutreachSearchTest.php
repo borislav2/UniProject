@@ -80,7 +80,7 @@ class OutreachSearchTest extends TestCase
         $this->fail('Търсенето не приключи.');
     }
 
-    public function test_a_search_finds_emails_on_sites_and_sends_the_rest_to_the_call_list(): void
+    public function test_a_search_keeps_only_businesses_with_a_site_and_an_email(): void
     {
         $this->fakeWorld();
         $user = $this->admin();
@@ -92,7 +92,9 @@ class OutreachSearchTest extends TestCase
         $this->actingAs($user)->get('/admin/outreach-search')->assertSee('data-search-work', false)->assertSee('Ресторанти, Пловдив');
 
         $progress = $this->runToEnd($user, $search);
-        $this->assertSame(['done', 4, 4, 1, 2], [$progress['status'], $progress['found'], $progress['processed'], $progress['emails'], $progress['calls']]);
+        // Без сайт (Механа, Giurgiu, без име) не влизат изобщо; Бистро Тихо има сайт, но няма имейл и не отива в списъка за обаждане.
+        $this->assertSame(['done', 2, 2, 1, 0], [$progress['status'], $progress['found'], $progress['processed'], $progress['emails'], $progress['calls']]);
+        Http::assertSent(fn ($request) => str_contains($request->url(), 'overpass-api.de') && str_contains((string) $request['data'], '[~"^(website|contact:website|url)$"~"."]'));
 
         $prospect = OutreachProspect::sole();
         $this->assertSame(['info@lozata.bg', 'published', 'restaurant', 'Пловдив'], [$prospect->email, $prospect->email_status, $prospect->industry, $prospect->city]);
@@ -102,14 +104,13 @@ class OutreachSearchTest extends TestCase
         $this->assertStringStartsWith('При преглед на бизнесите в Пловдив проверихме и сайта на Ресторант Лозата (lozata.bg)', $prospect->suggestedObservation());
         $this->assertCount(3, $prospect->findings);
 
-        // Без имейл, но с български телефон: за обаждане. Румънският е пропуснат.
-        $this->assertEqualsCanonicalizing(['Механа Без Сайт', 'Бистро Тихо'], OutreachCall::pluck('name')->all());
+        $this->assertSame(0, OutreachCall::count());
 
         // Повторно търсене не проверява наново вече намерените.
         $this->actingAs($user)->post('/admin/outreach-search', ['city' => 'Пловдив', 'category' => 'restaurant']);
         $again = $this->runToEnd($user, OutreachSearch::latest('id')->first());
         $this->assertSame([0, 0], [$again['emails'], $again['calls']]);
-        $this->assertSame(4, OutreachBusiness::count());
+        $this->assertSame(2, OutreachBusiness::count());
     }
 
     public function test_the_first_email_is_written_from_the_site_check_and_sent_to_selected(): void
@@ -175,7 +176,7 @@ class OutreachSearchTest extends TestCase
         $this->actingAs($user)->post('/admin/outreach-search', ['city' => 'Пловдив', 'category' => 'restaurant']);
         $progress = $this->runToEnd($user, OutreachSearch::firstOrFail());
 
-        $this->assertSame(['done', 2, 1, 1], [$progress['status'], $progress['found'], $progress['emails'], $progress['calls']]);
+        $this->assertSame(['done', 1, 1, 0], [$progress['status'], $progress['found'], $progress['emails'], $progress['calls']]);
         $this->assertSame('info@lozata.bg', OutreachProspect::sole()->email);
         $this->assertSame('g:111', OutreachBusiness::where('name', 'Ресторант Лозата')->value('external_id'));
         Http::assertSent(fn ($request) => $request->url() === 'https://google.serper.dev/places'
@@ -227,5 +228,17 @@ class OutreachSearchTest extends TestCase
         $this->assertStringContainsString('в добро състояние', $fine->suggestedObservation());
         $this->assertStringContainsString('потърсете в Google „козметичен салон Варна“', $fine->suggestedObservation());
         $this->assertSame('Видимост на Салон Роза в Google и Google Maps', \App\Http\Controllers\Admin\OutreachController::defaultSubject($fine));
+    }
+
+    public function test_the_call_list_can_be_turned_back_on(): void
+    {
+        $this->fakeWorld();
+        config(['creatium.outreach.search_call_list' => true]);
+        $user = $this->admin();
+        $this->actingAs($user)->post('/admin/outreach-search', ['city' => 'Пловдив', 'category' => 'restaurant']);
+        $progress = $this->runToEnd($user, OutreachSearch::firstOrFail());
+
+        $this->assertSame([1, 1], [$progress['emails'], $progress['calls']]);
+        $this->assertSame(['Бистро Тихо'], OutreachCall::pluck('name')->all());
     }
 }

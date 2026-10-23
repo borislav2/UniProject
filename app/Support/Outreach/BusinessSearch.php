@@ -9,6 +9,7 @@ use RuntimeException;
 /**
  * Търси бизнеси по град и вид. С SERPER_API_KEY: в Google Maps през serper.dev (почти всички бизнеси, повечето със сайт).
  * Без ключ: в OpenStreetMap (Overpass API, безплатно, но малко бизнеси имат записан сайт).
+ * И от двата източника се взимат само бизнеси със сайт.
  */
 class BusinessSearch
 {
@@ -75,7 +76,8 @@ class BusinessSearch
         $clauses = implode('', array_map(function ($tag) use ($around) {
             [$key, $value] = explode('=', $tag);
 
-            return "nwr[\"$key\"=\"$value\"]($around);";
+            // Само бизнеси със записан сайт: без сайт няма откъде да се намери имейл.
+            return "nwr[\"$key\"=\"$value\"][~\"^(website|contact:website|url)$\"~\".\"]($around);";
         }, $tags));
         $query = "[out:json][timeout:50];($clauses);out center tags " . self::LIMIT . ';';
 
@@ -85,13 +87,14 @@ class BusinessSearch
         foreach ($elements as $element) {
             $t = $element['tags'] ?? [];
             $name = trim((string) ($t['name'] ?? $t['name:bg'] ?? ''));
-            if ($name === '' || ! isset($element['type'], $element['id'])) {
+            $website = self::website($t['website'] ?? $t['contact:website'] ?? $t['url'] ?? null);
+            if ($name === '' || ! $website || ! isset($element['type'], $element['id'])) {
                 continue;
             }
             $businesses[] = [
                 'external_id' => 'osm:' . $element['type'] . '/' . $element['id'],
                 'name' => mb_substr($name, 0, 255),
-                'website' => self::website($t['website'] ?? $t['contact:website'] ?? $t['url'] ?? null),
+                'website' => $website,
                 'phone' => self::first($t['phone'] ?? $t['contact:phone'] ?? $t['contact:mobile'] ?? null, 100),
                 'email' => self::first($t['email'] ?? $t['contact:email'] ?? null, 255),
                 'city' => self::first($t['addr:city'] ?? null, 255) ?: $city,
@@ -132,13 +135,14 @@ class BusinessSearch
             foreach ($places as $place) {
                 $name = trim((string) ($place['title'] ?? ''));
                 $id = $place['cid'] ?? $place['placeId'] ?? null;
-                if ($name === '' || ! $id) {
+                $website = self::website($place['website'] ?? null);
+                if ($name === '' || ! $id || ! $website) {
                     continue;
                 }
                 $businesses['g:' . $id] = [
                     'external_id' => 'g:' . $id,
                     'name' => mb_substr($name, 0, 255),
-                    'website' => self::website($place['website'] ?? null),
+                    'website' => $website,
                     'phone' => self::first($place['phoneNumber'] ?? null, 100),
                     'email' => null,
                     'city' => $city,
