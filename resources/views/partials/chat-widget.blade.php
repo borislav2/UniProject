@@ -42,7 +42,7 @@
         </form>
     </div>
 
-    <button type="button" class="group relative flex items-center gap-2.5 rounded-full bg-brand-950 py-3 pl-3 pr-5 text-white shadow-[0_16px_40px_-10px_rgb(15_26_43/0.7)] ring-1 ring-white/15 hover:bg-brand-800 transition-colors dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100" aria-expanded="false" aria-controls="chat" data-chat-toggle>
+    <button type="button" class="group relative flex items-center gap-2.5 rounded-full bg-brand-950 py-3 pl-3 pr-5 text-white shadow-[0_16px_40px_-10px_rgb(15_26_43/0.7)] ring-1 ring-white/15 hover:bg-brand-800 transition dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100" aria-expanded="false" aria-controls="chat" data-chat-toggle>
         <span class="w-9 h-9 rounded-full bg-brand-gradient flex items-center justify-center ring-1 ring-white/20"><x-icon name="robot" class="text-sm text-white" /></span>
         <span class="text-sm font-bold">{{ __('Попитайте ни') }}</span>
     </button>
@@ -150,6 +150,16 @@
         form.addEventListener('submit', function (e) { e.preventDefault(); send(input.value); });
         input.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input.value); } });
         input.addEventListener('input', function () { input.style.height = ''; input.style.height = Math.min(input.scrollHeight, 128) + 'px'; });
+        // On phones the button would cover the contact form's buttons: hide it while the form is on screen.
+        var contactForm = document.getElementById('contact-form');
+        if (contactForm && window.IntersectionObserver && window.matchMedia) {
+            var small = window.matchMedia('(max-width: 639px)');
+            new IntersectionObserver(function (entries) {
+                var hide = small.matches && entries[0].isIntersecting && panel.classList.contains('hidden');
+                toggle.classList.toggle('opacity-0', hide);
+                toggle.classList.toggle('pointer-events-none', hide);
+            }).observe(contactForm);
+        }
         document.querySelectorAll('[data-open-chat]').forEach(function (el) { el.addEventListener('click', function (e) { e.preventDefault(); open(true); }); });
     })();
 </script>

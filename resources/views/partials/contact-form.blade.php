@@ -15,7 +15,7 @@
     $stepWithError = collect([['service', 'goals'], ['business', 'site_url', 'message'], ['timeline', 'consultation'], ['name', 'phone', 'email', 'consent']])
         ->search(fn ($names) => collect($names)->contains(fn ($n) => $errors->has($n) || $errors->has("$n.*")));
 @endphp
-<div id="contact-form" class="bg-white rounded-2xl p-6 md:p-8 text-gray-900 dark:bg-ink-900 dark:text-gray-100 dark:ring-1 dark:ring-white/10">
+<div id="contact-form" class="scroll-mt-28 md:scroll-mt-32 bg-white rounded-2xl p-6 md:p-8 text-gray-900 dark:bg-ink-900 dark:text-gray-100 dark:ring-1 dark:ring-white/10">
     @if(session('success'))
         <div class="text-center py-8" role="status">
             <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center dark:bg-green-500/15">
@@ -163,7 +163,7 @@
         var head = form.querySelector('[data-steps-head]'), nav = form.querySelector('[data-steps-nav]');
         var bar = form.querySelector('[data-steps-bar]'), count = form.querySelector('[data-steps-count]');
         var back = form.querySelector('[data-steps-back]'), next = form.querySelector('[data-steps-next]');
-        var total = steps.length, current = 0;
+        var box = document.getElementById('contact-form'), total = steps.length, current = 0;
         var countText = @json(__('Въпрос :n от :total'));
 
         head.classList.remove('hidden');
@@ -178,19 +178,34 @@
             count.textContent = countText.replace(':n', current + 1).replace(':total', total);
             back.classList.toggle('invisible', current === 0);
             next.style.display = current === total - 1 ? 'none' : '';
-            if (focus) steps[current].querySelector('legend').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            // The step's title and progress must stay visible below the floating header.
+            if (focus && box.getBoundingClientRect().top < 0) reveal(true);
         }
 
-        // Required fields of the current step must be valid before moving on (radio groups count once).
-        function valid() {
-            var fields = steps[current].querySelectorAll('[required]');
+        function reveal(smooth) {
+            box.scrollIntoView({ block: 'start', behavior: smooth ? 'smooth' : 'auto' });
+        }
+
+        // Required fields of a step must be valid before moving on (radio groups count once).
+        function valid(i) {
+            var fields = steps[i].querySelectorAll('[required]');
             for (var k = 0; k < fields.length; k++) {
-                if (!fields[k].checkValidity()) { fields[k].reportValidity(); return false; }
+                if (!fields[k].checkValidity()) {
+                    if (i !== current) { show(i); reveal(false); }
+                    fields[k].reportValidity();
+                    return false;
+                }
             }
             return true;
         }
 
-        next.addEventListener('click', function () { if (valid()) show(current + 1, true); });
+        next.addEventListener('click', function () { if (valid(current)) show(current + 1, true); });
+        // A visitor who jumped straight to the calendar may have skipped step 1: send them back to what is missing.
+        form.addEventListener('submit', function (e) {
+            for (var i = 0; i < total; i++) {
+                if (!valid(i)) { e.preventDefault(); return; }
+            }
+        });
         back.addEventListener('click', function () { show(current - 1, true); });
         form.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && e.target.tagName === 'INPUT' && current < total - 1) { e.preventDefault(); next.click(); }
@@ -201,13 +216,13 @@
             var m = location.hash.match(/^#service-([a-z-]+)$/);
             if (m) {
                 var r = form.querySelector('input[name="service"][value="' + m[1] + '"]');
-                if (r) { r.checked = true; show(0); document.getElementById('contact-form').scrollIntoView({ block: 'center' }); }
+                if (r) { r.checked = true; show(0); reveal(false); }
                 return;
             }
             var target = location.hash.length > 1 && document.getElementById(location.hash.slice(1));
             if (target && form.contains(target)) {
                 var k = Array.prototype.indexOf.call(steps, target.closest('[data-step]'));
-                if (k >= 0) { show(k); target.scrollIntoView({ block: 'start' }); }
+                if (k >= 0) { show(k); reveal(false); }
             }
         }
         show(parseInt(form.dataset.start, 10) || 0);

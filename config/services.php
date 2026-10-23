@@ -53,4 +53,11 @@ return [
         'chat_model' => env('ANTHROPIC_CHAT_MODEL') ?: env('ANTHROPIC_MODEL') ?: 'claude-opus-5-5',
     ],
 
+    // Чатът на сайта с Mistral (безплатен план: изключете използването на данните за обучение в акаунта).
+    'mistral' => [
+        'key' => env('MISTRAL_API_KEY'),
+        'model' => env('MISTRAL_MODEL') ?: 'mistral-medium-latest',
+        'base_url' => env('MISTRAL_BASE_URL') ?: 'https://api.mistral.ai/v1',
+    ],
+
 ];

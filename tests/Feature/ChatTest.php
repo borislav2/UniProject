@@ -12,6 +12,8 @@ use App\Support\Chat\ChatLeads;
 use App\Support\Chat\SiteKnowledge;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\Request as HttpRequest;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
@@ -152,7 +154,7 @@ class ChatTest extends TestCase
         $user = User::factory()->create();
         $user->roles()->attach(Role::where('slug', 'developer')->value('id'));
 
-        $this->actingAs($user)->get('/admin/chats')->assertOk()->assertSee('Колко струва сайт?')->assertSee('Claude не е свързан');
+        $this->actingAs($user)->get('/admin/chats')->assertOk()->assertSee('Колко струва сайт?')->assertSee('Няма свързан AI');
         $this->assertModelMissing($old);
         $chat = ChatConversation::where('public_id', $id)->firstOrFail();
         $this->actingAs($user)->get('/admin/chats/' . $chat->id)->assertOk()->assertSee('от честите въпроси (без AI)');
@@ -166,5 +168,66 @@ class ChatTest extends TestCase
 
         $this->get('/poveritelnost')->assertSee('чата на сайта');
         $this->get('/en/privacy')->assertSee('chat on the site');
+    }
+
+    public function test_the_provider_follows_chat_provider_and_the_keys(): void
+    {
+        config(['services.anthropic.key' => 'a', 'services.mistral.key' => 'm', 'creatium.chat.provider' => 'auto']);
+        $this->assertSame('anthropic', ChatAssistant::provider());
+        config(['creatium.chat.provider' => 'mistral']);
+        $this->assertSame('mistral', ChatAssistant::provider());
+        config(['services.mistral.key' => null]);
+        $this->assertNull(ChatAssistant::provider(), 'An explicit provider without its key means FAQ answers only');
+        config(['services.anthropic.key' => null, 'services.mistral.key' => 'm', 'creatium.chat.provider' => 'auto']);
+        $this->assertSame('mistral', ChatAssistant::provider());
+    }
+
+    public function test_mistral_answers_from_the_site_and_saves_the_contact_with_the_tool(): void
+    {
+        Mail::fake();
+        config(['services.anthropic.key' => null, 'services.mistral.key' => 'm-key', 'services.mistral.model' => 'mistral-medium-latest', 'creatium.chat.provider' => 'auto']);
+        Http::fake(['api.mistral.ai/*' => Http::sequence()
+            ->push(['choices' => [['finish_reason' => 'stop', 'message' => ['role' => 'assistant', 'content' => 'Стартовият двигател е €450. Да ви се обадим ли?']]]])
+            ->push(['choices' => [['finish_reason' => 'tool_calls', 'message' => ['role' => 'assistant', 'content' => '', 'tool_calls' => [
+                ['id' => 'call_1', 'type' => 'function', 'function' => ['name' => 'save_contact', 'arguments' => json_encode(['name' => 'Мария', 'phone' => '0888 111 222', 'email' => '', 'business' => 'салон, Варна', 'need' => 'Иска сайт.'])]],
+            ]]]]])
+            ->push(['choices' => [['finish_reason' => 'stop', 'message' => ['role' => 'assistant', 'content' => [['type' => 'thinking', 'thinking' => [['type' => 'text', 'text' => 'вътрешно']]], ['type' => 'text', 'text' => 'Благодарим, Мария! Ще ви се обадим.']]]]]]),
+        ]);
+
+        $first = $this->send('Колко струва сайт?')->assertOk()->json();
+        $this->assertSame('Стартовият двигател е €450. Да ви се обадим ли?', $first['reply']);
+        $second = $this->send('Да, Мария, 0888 111 222, салон във Варна', $first['conversation'])->assertOk()->json();
+        $this->assertSame('Благодарим, Мария! Ще ви се обадим.', $second['reply']);
+        $this->assertTrue($second['lead']);
+
+        $lead = Project::where('service', ChatLeads::SERVICE)->firstOrFail();
+        $this->assertSame('0888 111 222', $lead->client_phone);
+        $this->assertStringContainsString('Бизнес: салон, Варна', $lead->description);
+
+        $requests = Http::recorded()->map(fn ($pair) => $pair[0]);
+        $this->assertCount(3, $requests);
+        $firstBody = $requests[0]->data();
+        $this->assertSame('https://api.mistral.ai/v1/chat/completions', $requests[0]->url());
+        $this->assertSame('Bearer m-key', $requests[0]->header('Authorization')[0]);
+        $this->assertSame('mistral-medium-latest', $firstBody['model']);
+        $this->assertSame('save_contact', $firstBody['tools'][0]['function']['name']);
+        $this->assertSame('system', $firstBody['messages'][0]['role']);
+        $this->assertStringContainsString('<site_info>', $firstBody['messages'][0]['content']);
+
+        // The second turn carries the first exchange; the third the tool result for call_1.
+        $secondBody = $requests[1]->data();
+        $this->assertSame(['user', 'assistant', 'user'], array_column(array_slice($secondBody['messages'], 1), 'role'));
+        $toolMessage = end($requests[2]->data()['messages']);
+        $this->assertSame(['tool', 'call_1', 'save_contact'], [$toolMessage['role'], $toolMessage['tool_call_id'], $toolMessage['name']]);
+        $this->assertNull(ChatConversation::firstOrFail()->api_messages, 'Mistral history comes from the visible messages');
+    }
+
+    public function test_a_mistral_error_falls_back_to_the_faq(): void
+    {
+        config(['services.anthropic.key' => null, 'services.mistral.key' => 'm-key', 'creatium.chat.provider' => 'mistral']);
+        Http::fake(['api.mistral.ai/*' => Http::response(['message' => 'Unauthorized'], 401)]);
+
+        $reply = $this->send('Колко време отнема изработката на сайта?')->assertOk()->json('reply');
+        $this->assertStringContainsString('1–2 седмици', $reply);
     }
 }
