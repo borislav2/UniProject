@@ -1,16 +1,45 @@
 @php($contact = config('creatium.contact'))
 @php($legal = config('creatium.legal'))
+@php($sender = $data['sender'])
+@php($teamSignature = str_contains($sender, 'Creatium'))
 Здравейте{!! filled($data['first_name'] ?? null) ? ', ' . $data['first_name'] : '' !!},
 
-{!! $data['observation'] !!}
+{!! $teamSignature ? 'Пишем ви от Creatium Lab.' : 'Казвам се ' . $sender . ' и съм от Creatium Lab.' !!} Изработваме и поддържаме сайтове за малки и средни бизнеси в България и се грижим да бъдат намирани в Google, в Google Maps и в AI асистентите.
 
-Ние сме Creatium Lab: правим сайтове и маркетинг за малки бизнеси в България. Подобни неща обикновено се оправят бързо, а разликата се усеща в запитванията.
+@foreach($parts['intro'] as $paragraph)
+{!! $paragraph !!}
 
-Ако ви е интересно, ще ви изпратим кратък безплатен преглед на сайта с няколко конкретни неща за подобряване. Да ви го пратим ли?
+@endforeach
+@foreach($parts['items'] as $i => $item)
+{{ $i + 1 }}. {!! $item['title'] !!}
+@if($item['detail'] !== '')   {!! $item['detail'] !!}
+@endif
 
-Поздрави,
-{!! $data['sender'] !!}
-Creatium Lab · {!! url('/') !!}@if(! empty($contact['phones'][0])) · {!! $contact['phones'][0] !!}@endif
+@endforeach
+@foreach($parts['outro'] as $paragraph)
+{!! $paragraph !!}
+
+@endforeach
+@if($parts['items'])
+Това са проблеми, които собственикът на сайта обикновено не забелязва, защото не се виждат при нормално отваряне. Те обаче влияят пряко на броя запитвания и обаждания. Повечето се отстраняват за няколко дни, без нов сайт.
+
+Можете да видите пълния резултат и сами. Безплатната ни проверка изпраща подробен доклад на имейла ви за около минута:
+{!! $links['check'] !!}
+@else
+Ако искате да видите техническия доклад за сайта си, безплатната ни проверка го изпраща на имейла ви за около минута:
+{!! $links['check'] !!}
+@endif
+
+Повече за услугите ни, начина ни на работа и цените: {!! $links['site'] !!}
+
+{!! $parts['items'] ? 'Ако желаете, ще ви предложа конкретен план за отстраняването им.' : 'Ако желаете, ще ви кажа какво конкретно бих направил за ' . $prospect->displayName() . '.' !!} Изберете удобен час за безплатен разговор ({{ $links['minutes'] }} минути) или просто отговорете на този имейл:
+{!! $links['booking'] !!}
+
+С уважение,
+{!! $sender !!}
+@unless($teamSignature)Creatium Lab
+@endunless
+@if(! empty($contact['phones'][0])){!! $contact['phones'][0] !!} · @endif{!! url('/') !!}
 
 --
 Пишем ви, защото адресът {!! $prospect->email !!} е публикуван като контакт на {!! $prospect->displayName() !!}.

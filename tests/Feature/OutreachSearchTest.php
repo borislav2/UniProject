@@ -98,8 +98,8 @@ class OutreachSearchTest extends TestCase
         $this->assertSame(['info@lozata.bg', 'published', 'restaurant', 'Пловдив'], [$prospect->email, $prospect->email_status, $prospect->industry, $prospect->city]);
         $this->assertTrue($prospect->canBeEmailed());
         $this->assertSame(['Няма описание за Google', 'Не е настроен за телефон', 'Адресът с http:// не води към https://'], array_column($prospect->findings, 'title'));
-        $this->assertStringContainsString("\n– Не е настроен за телефон. Липсва настройката viewport", $prospect->suggestedObservation());
-        $this->assertStringStartsWith("Разгледахме сайта ви lozata.bg и забелязахме", $prospect->suggestedObservation());
+        $this->assertStringContainsString("\n– Сайтът не е пригоден за телефон. Повечето клиенти ви търсят от телефона", $prospect->suggestedObservation());
+        $this->assertStringStartsWith('При преглед на бизнесите в Пловдив проверихме и сайта на Ресторант Лозата (lozata.bg)', $prospect->suggestedObservation());
         $this->assertCount(3, $prospect->findings);
 
         // Без имейл, но с български телефон: за обаждане. Румънският е пропуснат.
@@ -123,17 +123,21 @@ class OutreachSearchTest extends TestCase
         $prospect = OutreachProspect::sole();
 
         $this->actingAs($user)->get('/admin/outreach')->assertSee('name="ids[]"', false)->assertSee('Ресторант · Пловдив')->assertSee('публикуван от бизнеса');
-        $this->actingAs($user)->get("/admin/outreach/{$prospect->id}")->assertSee('Разгледахме сайта ви lozata.bg');
+        $this->actingAs($user)->get("/admin/outreach/{$prospect->id}")->assertSee('проверихме и сайта на Ресторант Лозата (lozata.bg)');
 
         $this->actingAs($user)->post('/admin/outreach/send-selected', ['ids' => [$prospect->id]])
             ->assertRedirect('/admin/outreach')->assertSessionHas('success', 'Изпратени: 1.');
 
         Mail::assertSent(OutreachMail::class, function (OutreachMail $mail) {
             $html = $mail->render();
-            $this->assertStringContainsString('Разгледахме сайта ви lozata.bg', $html);
+            $this->assertStringContainsString('проверихме и сайта на Ресторант Лозата (lozata.bg)', $html);
+            $this->assertStringContainsString('Липсва описание в резултатите на Google', $html);
+            $this->assertStringContainsString('/proverka-na-sait?utm_source=outreach', $html);
+            $this->assertStringContainsString('/kontakti?utm_source=outreach&amp;utm_medium=email&amp;utm_campaign=first-email#konsultatsiya', $html);
+            $this->assertStringContainsString('Запазете час за разговор', $html);
             $this->assertStringContainsString('публикуван като контакт на Ресторант Лозата', $html);
 
-            return $mail->hasTo('info@lozata.bg') && $mail->mailSubject === 'Въпрос за сайта на Ресторант Лозата';
+            return $mail->hasTo('info@lozata.bg') && $mail->mailSubject === 'Резултати от проверка на сайта на Ресторант Лозата';
         });
         $this->assertSame('sent', $prospect->fresh()->status);
 
@@ -204,5 +208,24 @@ class OutreachSearchTest extends TestCase
         $this->get('/admin/outreach-search')->assertRedirect('/login');
         $this->post('/admin/outreach-search', ['city' => 'Русе', 'category' => 'hotel'])->assertRedirect('/login');
         $this->post('/admin/outreach-search/reset')->assertRedirect('/login');
+    }
+
+    public function test_the_first_email_explains_findings_and_handles_a_site_without_problems(): void
+    {
+        $parts = OutreachMail::observationParts("Увод.\n– Сайтът се зарежда бавно. Хората си тръгват. Още.\n- Без точка\nФинал.");
+        $this->assertSame(['Увод.'], $parts['intro']);
+        $this->assertSame([['title' => 'Сайтът се зарежда бавно', 'detail' => 'Хората си тръгват. Още.'], ['title' => 'Без точка', 'detail' => '']], $parts['items']);
+        $this->assertSame(['Финал.'], $parts['outro']);
+        $this->assertSame(['Само ръчен текст без списък.'], OutreachMail::observationParts('Само ръчен текст без списък.')['intro']);
+
+        $slow = new OutreachProspect(['company' => 'Салон Роза', 'website' => 'https://www.roza.bg', 'city' => 'Варна', 'industry' => 'beauty',
+            'findings' => [['title' => 'Сървърът отговаря много бавно (3.4 s)', 'detail' => 'x'], ['title' => 'Нещо ново', 'detail' => 'Първо. Второ.']]]);
+        $this->assertStringContainsString('– Сайтът започва да се зарежда след 3,4 секунди. Голяма част', $slow->suggestedObservation());
+        $this->assertStringContainsString('– Нещо ново. Първо.', $slow->suggestedObservation());
+
+        $fine = new OutreachProspect(['company' => 'Салон Роза', 'website' => 'https://www.roza.bg', 'city' => 'Варна', 'industry' => 'beauty', 'findings' => []]);
+        $this->assertStringContainsString('в добро състояние', $fine->suggestedObservation());
+        $this->assertStringContainsString('потърсете в Google „козметичен салон Варна“', $fine->suggestedObservation());
+        $this->assertSame('Видимост на Салон Роза в Google и Google Maps', \App\Http\Controllers\Admin\OutreachController::defaultSubject($fine));
     }
 }

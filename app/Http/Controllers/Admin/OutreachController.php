@@ -153,7 +153,9 @@ class OutreachController extends Controller
 
     public static function defaultSubject(OutreachProspect $prospect): string
     {
-        return 'Въпрос за сайта на ' . $prospect->displayName();
+        return $prospect->findings
+            ? 'Резултати от проверка на сайта на ' . $prospect->displayName()
+            : 'Видимост на ' . $prospect->displayName() . ' в Google и Google Maps';
     }
 
     /** Изпраща едно писмо през отделната поща и го записва. Връща текста на грешката или null. */

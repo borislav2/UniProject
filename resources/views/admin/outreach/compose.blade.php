@@ -35,8 +35,8 @@
         </div>
         <div>
             <label for="observation" class="block text-sm font-semibold text-gray-700 mb-1">Какво забелязахме <span class="text-red-500">*</span></label>
-            <textarea id="observation" name="observation" rows="7" required minlength="20" maxlength="900" class="{{ $input }}" placeholder="Разгледахме сайта ви и видяхме, че на телефон формата за запитване не се вижда, а телефонът не се набира с едно докосване.">{{ old('observation', $defaults['observation']) }}</textarea>
-            <p class="mt-1 text-xs text-gray-500">@if($prospect->findings)Попълнено от автоматичната проверка на сайта им. Отворете сайта и махнете всичко, което не е вярно.@else 1–2 конкретни изречения на български, проверени от вас на сайта им. Това е причината да им пишем.@endif</p>
+            <textarea id="observation" name="observation" rows="7" required minlength="20" maxlength="900" class="{{ $input }}" placeholder="Проверихме сайта на … и ето най-важното, което установихме:&#10;– Проблем. Как се отразява на клиентите ви.">{{ old('observation', $defaults['observation']) }}</textarea>
+            <p class="mt-1 text-xs text-gray-500">@if($prospect->findings)Попълнено от автоматичната проверка на сайта им. Отворете сайта и махнете всичко, което не е вярно.@else 1–2 конкретни изречения на български, проверени от вас на сайта им. Това е причината да им пишем.@endif Редовете, започващи с „– “, излизат в писмото като номериран списък (заглавие до първата точка, после обяснение). Представянето, връзките към сайта и проверката и бутонът за разговор се добавят автоматично.</p>
             @error('observation')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
         </div>
         <div>
