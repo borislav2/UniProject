@@ -39,6 +39,9 @@
                 <a href="{{ route('admin.client-emails.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.client-emails.*') ? 'bg-gray-700' : '' }}">
                     <x-icon name="paper-plane" class="mr-2" /> Имейли до клиенти
                 </a>
+                <a href="{{ route('admin.chats.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.chats.*') ? 'bg-gray-700' : '' }}">
+                    <x-icon name="quote-left" class="mr-2" /> Чат разговори
+                </a>
                 <a href="{{ route('admin.reviews.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.reviews.*') ? 'bg-gray-700' : '' }}">
                     <x-icon name="reply" class="mr-2" /> Отговори на отзиви
                 </a>

@@ -99,6 +99,16 @@ class OutreachTest extends TestCase
             ->assertSee('Здравейте, Мария,')->assertSee('менюто е само PDF')->assertSee('отпишете се тук')->assertSee('/otpisvane/' . $prospect->id, false);
     }
 
+    public function test_preview_works_before_the_separate_mailbox_is_set_up(): void
+    {
+        $user = $this->admin();
+        $this->import($user);
+        $prospect = OutreachProspect::where('email', 'office@lozata.bg')->firstOrFail();
+
+        $this->actingAs($user)->post('/admin/outreach/' . $prospect->id . '/preview', $this->message())->assertOk()
+            ->assertSee('Здравейте, Мария,')->assertSee('/otpisvane/' . $prospect->id, false);
+    }
+
     public function test_sending_needs_the_separate_mailbox(): void
     {
         Mail::fake();

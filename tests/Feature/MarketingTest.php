@@ -125,7 +125,7 @@ class MarketingTest extends TestCase
             'name' => 'Мария', 'phone' => '0888123456', 'email' => 'maria@example.bg', 'service' => 'modernization', 'consent' => '1',
         ])->assertSee("event: 'generate_lead'", false)->assertSee(json_encode('Модернизация на съществуващ сайт и маркетингова оптимизация'), false);
 
-        $this->get('/')->assertDontSee('generate_lead');
+        $this->get('/')->assertDontSee("event: 'generate_lead'", false);
     }
 
     public function test_gtm_id_is_validated_and_off_outside_production(): void

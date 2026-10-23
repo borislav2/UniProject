@@ -49,6 +49,8 @@ return [
     'anthropic' => [
         'key' => env('ANTHROPIC_API_KEY'),
         'model' => env('ANTHROPIC_MODEL', 'claude-opus-5-5'),
+        // Моделът на чата на сайта; по подразбиране същият.
+        'chat_model' => env('ANTHROPIC_CHAT_MODEL') ?: env('ANTHROPIC_MODEL') ?: 'claude-opus-5-5',
     ],
 
 ];

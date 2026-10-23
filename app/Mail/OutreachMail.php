@@ -24,15 +24,23 @@ class OutreachMail extends Mailable
 
     public function envelope(): Envelope
     {
-        $from = new Address(config('creatium.outreach.from_address'), config('creatium.outreach.from_name'));
+        // Без настроена поща (OUTREACH_MAIL_FROM) писмото не се изпраща (Outreach::configured()),
+        // но прегледът в админа трябва да работи, затова тогава просто няма подател.
+        $address = config('creatium.outreach.from_address');
+        if (blank($address)) {
+            return new Envelope(subject: $this->mailSubject);
+        }
+        $from = new Address($address, config('creatium.outreach.from_name'));
 
         return new Envelope(from: $from, replyTo: [$from], subject: $this->mailSubject);
     }
 
     public function headers(): Headers
     {
+        $address = config('creatium.outreach.from_address');
+
         return new Headers(text: [
-            'List-Unsubscribe' => '<' . $this->unsubscribeUrl() . '>, <mailto:' . config('creatium.outreach.from_address') . '?subject=unsubscribe>',
+            'List-Unsubscribe' => '<' . $this->unsubscribeUrl() . '>' . (filled($address) ? ', <mailto:' . $address . '?subject=unsubscribe>' : ''),
             'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click',
         ]);
     }
