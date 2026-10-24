@@ -51,7 +51,7 @@ return [
     'home_hero' => [
         'title' => 'A website that sells. Marketing that brings customers.',
         'highlight' => 'Your whole digital engine – in one working system.',
-        'subtitle' => 'A beautiful website nobody finds is a cost, not an investment. Most businesses pay twice: once for the site, then for an agency to find it customers. We design the site and the marketing together, as one team, so every page is built to bring in enquiries.',
+        'subtitle' => 'A beautiful website nobody finds is a cost, not an investment. We design the site and the marketing together, as one team, so it brings in enquiries.',
         'button' => 'Book a consultation',
         'accent' => ['sells', 'customers'],
     ],
