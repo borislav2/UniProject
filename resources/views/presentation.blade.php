@@ -135,14 +135,6 @@
                 <p class="kicker kicker-light text-base">{{ $trust['fit_eyebrow'] }}</p>
                 <h2 class="display mt-6 text-6xl text-brand-950">{{ $trust['fit_title'] }}</h2>
                 <p class="mt-8 text-2xl text-gray-600 leading-relaxed">{{ $trust['fit_text'] }}</p>
-                @if(! empty($trust['not_items']))
-                    <div class="mt-10 rounded-3xl border border-gray-200 bg-gray-50 p-8">
-                        <p class="text-xl font-extrabold text-brand-950">{{ $trust['not_title'] }}:</p>
-                        <ul class="mt-4 space-y-3 text-lg text-gray-600">
-                            @foreach($trust['not_items'] as $not)<li class="flex gap-3"><span class="text-red-600">–</span> {{ $not }}</li>@endforeach
-                        </ul>
-                    </div>
-                @endif
             </div>
             <ol class="col-span-7 self-center divide-y divide-gray-200 border-y border-gray-200">
                 @foreach($trust['fit_items'] as $item)

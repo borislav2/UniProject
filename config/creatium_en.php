@@ -127,8 +127,6 @@ return [
             ['title' => 'Leaders who invest against a clear return (ROI)', 'text' => 'Owners who require an exact report on every euro invested, full control of the data and strict measurement of the final profit.'],
             ['title' => 'E-commerce brands seeking maximum margin', 'text' => 'Online shops that aim to raise the average basket value and the revenue from every customer.'],
         ],
-        'not_title' => 'We are not the right fit if you',
-        'not_items' => ['want the cheapest website made in a day', 'want a promise of first place in Google or ChatGPT', 'have no time for one conversation about your business'],
         'principles_eyebrow' => 'How we think',
         'principles_title' => 'One system instead of five contractors.',
         'principles_text' => 'The website, Google, emails and maintenance work together when one team builds them. These are the rules we work by.',
