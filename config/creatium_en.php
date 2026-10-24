@@ -138,7 +138,7 @@ return [
         ],
         'demos_eyebrow' => 'Industries',
         'demos_title' => 'We have thought about your industry.',
-        'demos_text' => 'We built demo websites for businesses we want to work with. Each one solves the real problems of its industry. The businesses are fictional, the solutions are real.',
+        'demos_text' => 'We built demo websites for businesses we want to work with. Each of them solves the problems of its industry.',
         'blog_eyebrow' => 'Insights and advice',
         'blog_title' => 'We write about what works.',
         'blog_text' => 'Practical articles about websites, Google, AI search and email, without jargon.',
