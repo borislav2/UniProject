@@ -223,11 +223,11 @@ class CmsTest extends TestCase
         foreach ($faq as $i => $item) {
             $input[$i] = $item + ($i === 0 ? ['_remove' => '1'] : []);
         }
-        $input['new0'] = ['q' => 'Нов въпрос?', 'a' => 'Нов отговор.'];
+        $input['new0'] = ['q' => 'Нов въпрос?', 'a' => 'Нов отговор.', 'group' => 'Цени и плащане'];
 
         $this->put('/admin/content/questions', ['locale' => 'bg', 'content' => $input])->assertSessionHasNoErrors();
 
-        $this->get('/za-nas')->assertSee('Нов въпрос?')->assertDontSee($faq[0]['q']);
+        $this->get('/vaprosi')->assertSee('Нов въпрос?')->assertDontSee($faq[0]['q']);
 
         $plans = config('creatium.plans');
         $plans['items'] = [['name' => 'Старт', 'badge' => '', 'highlighted' => '0', 'audience' => 'x', 'prices' => "€600 веднъж\n\n",

@@ -4,7 +4,7 @@
 @section('meta_description', __('Пишете или се обадете на Creatium Lab.'))
 
 @section('content')
-@include('partials/page-header', ['heading' => __('Контакти'), 'sub' => __('Пишете или се обадете.')])
+@include('partials/page-header', ['heading' => __('Контакти')])
 
 <section class="py-16 md:py-24 bg-brand-50/60 dark:bg-ink-900">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-start">
@@ -21,7 +21,6 @@
                 <div class="w-12 h-12 bg-white ring-1 ring-brand-100 shadow-sm rounded-xl flex items-center justify-center shrink-0 dark:bg-white/5 dark:ring-white/10"><x-icon name="location-dot" class="text-brand-600 dark:text-brand-300" /></div>
                 <div><h2 class="font-semibold dark:text-white">{{ __('Град') }}</h2><p class="text-gray-600 dark:text-gray-300">{{ __($contact['city']) }}, {{ __('България') }}</p></div>
             </div>
-            <p class="text-gray-600 dark:text-gray-300">{{ __('Отговаряме до един работен ден. Ако е спешно, обадете се.') }}</p>
         </div>
 
         <div class="min-w-0 shadow-2xl shadow-brand-950/10 rounded-2xl ring-1 ring-gray-100 reveal dark:ring-white/10 dark:shadow-black/40">

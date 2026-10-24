@@ -110,20 +110,15 @@
 </section>
 @endif
 
-<section id="vaprosi" class="scroll-mt-28 py-20 md:py-28 bg-brand-50/60 dark:bg-ink-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-10 lg:gap-16">
-        <div class="lg:col-span-4 reveal lg:sticky lg:top-32 self-start">
-            <p class="kicker kicker-light">{{ $number() }} {{ __('Въпроси') }}</p>
-            <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ __('Често задавани въпроси') }}</h2>
-            <a href="{{ lroute('contact') }}#contact-form" class="btn-shine mt-8 inline-flex items-center gap-2 bg-brand-950 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-brand-800 transition-colors dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">{{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-sm" /></a>
-        </div>
-        <div class="lg:col-span-8 space-y-3">
-            @foreach($faq as $item)
-                <details class="group bg-white rounded-2xl border border-gray-200 p-6 open:shadow-sm reveal dark:bg-white/[0.03] dark:border-white/10">
-                    <summary class="text-lg font-bold text-brand-950 cursor-pointer list-none flex items-center justify-between gap-4 [&::-webkit-details-marker]:hidden dark:text-white">{{ $item['q'] }}<x-icon name="chevron-down" class="text-xs text-gray-500 transition-transform group-open:rotate-180" /></summary>
-                    <p class="text-gray-600 mt-3 leading-relaxed dark:text-gray-300">{{ $item['a'] }}</p>
-                </details>
-            @endforeach
+{{-- Въпросите са на отделна страница („Често задавани въпроси“, /vaprosi). --}}
+<section class="py-16 md:py-20 bg-brand-50/60 dark:bg-ink-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal flex flex-col items-center gap-4 rounded-3xl border border-gray-200 bg-white p-7 text-center sm:flex-row sm:justify-between sm:text-left dark:border-white/10 dark:bg-white/[0.03]">
+            <div>
+                <h2 class="text-xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ __('Имате въпроси?') }}</h2>
+                <p class="mt-1 text-gray-600 dark:text-gray-300">{{ __('Събрали сме отговорите на най-честите въпроси за цени, срокове и работа с нас.') }}</p>
+            </div>
+            <a href="{{ lroute('faq') }}" class="btn-shine shrink-0 inline-flex items-center gap-2 rounded-xl bg-brand-950 px-6 py-3.5 font-semibold text-white hover:bg-brand-800 dark:bg-white dark:text-brand-950">{{ __('Често задавани въпроси') }} <x-icon name="arrow-right" class="text-sm" /></a>
         </div>
     </div>
 </section>

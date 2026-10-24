@@ -36,6 +36,7 @@ $publicPages = [
     'portfolio' => ['/proekti', '/projects', [PageController::class, 'portfolio']],
     'site-check' => ['/proverka-na-sait', '/website-check', [SiteCheckController::class, 'show']],
     'about' => ['/za-nas', '/about', [PageController::class, 'about']],
+    'faq' => ['/vaprosi', '/faq', [PageController::class, 'faq']],
     'contact' => ['/kontakti', '/contact', [HomeController::class, 'contact']],
     'privacy' => ['/poveritelnost', '/privacy', [PageController::class, 'privacy']],
     'terms' => ['/usloviya', '/terms', [PageController::class, 'terms']],

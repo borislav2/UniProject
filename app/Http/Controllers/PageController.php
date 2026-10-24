@@ -70,7 +70,15 @@ class PageController extends Controller
 
     public function about()
     {
-        return view('about', ['about' => site('about'), 'team' => site('team'), 'faq' => site('questions'), 'trust' => site('home_trust')]);
+        return view('about', ['about' => site('about'), 'team' => site('team'), 'trust' => site('home_trust')]);
+    }
+
+    /** Често задавани въпроси: отделна страница, по теми („group“), с FAQPage данни за Google. */
+    public function faq()
+    {
+        $questions = collect(site('questions') ?? [])->filter(fn ($item) => filled($item['q'] ?? null) && filled($item['a'] ?? null));
+
+        return view('faq', ['groups' => $questions->groupBy(fn ($item) => $item['group'] ?? '')]);
     }
 
     /**
@@ -114,7 +122,7 @@ class PageController extends Controller
     public function sitemap(): Response
     {
         $blog = config('creatium.blog_enabled');
-        $pages = array_values(array_filter(['home', 'services', 'site-check', 'packages', 'portfolio', 'blog.index', 'about', 'contact', 'privacy', 'terms', 'cookies'], fn ($name) => $blog || $name !== 'blog.index'));
+        $pages = array_values(array_filter(['home', 'services', 'site-check', 'packages', 'portfolio', 'blog.index', 'about', 'faq', 'contact', 'privacy', 'terms', 'cookies'], fn ($name) => $blog || $name !== 'blog.index'));
         $urls = [];
 
         foreach ($pages as $name) {

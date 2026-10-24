@@ -115,7 +115,7 @@
         if (config('creatium.blog_enabled')) {
             $aboutLinks[] = [__('Блог'), lroute('blog.index'), $is('blog.*'), 'newspaper'];
         }
-        $aboutLinks[] = [__('Често задавани въпроси'), lroute('about') . '#vaprosi', false, 'quote-left'];
+        $aboutLinks[] = [__('Често задавани въпроси'), lroute('faq'), $is('faq'), 'quote-left'];
         $aboutLinks[] = [__('Контакти'), lroute('contact'), $is('contact'), 'envelope'];
         $menu = [
             ['label' => __('Услуги'), 'children' => $serviceLinks, 'active' => $is('services', 'services.show', 'site-check')],

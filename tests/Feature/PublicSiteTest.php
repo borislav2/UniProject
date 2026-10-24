@@ -195,12 +195,17 @@ class PublicSiteTest extends TestCase
         $this->get('/en/about')->assertSee('Borislav Kostadinov')->assertSee('LinkedIn profile')->assertSee('Performance Marketing Expert');
     }
 
-    public function test_faq_lives_on_the_about_page(): void
+    public function test_faq_has_its_own_page_grouped_by_topic(): void
     {
-        $this->get('/za-nas')->assertSee('Често задавани въпроси')
-            ->assertSeeInOrder(['Как се определя инвестицията за проекта?', 'Каква е ролята на месечния абонамент?', 'Как протича процесът на плащане?']);
-        $this->get('/en/about')->assertSee('Frequently asked questions')->assertSee('How is the project budget set?');
-        $this->get('/uslugi')->assertDontSee('Как се определя инвестицията');
+        $this->get('/vaprosi')->assertOk()
+            ->assertSee('"@type":"FAQPage"', false)
+            ->assertSeeInOrder(['Цени и плащане', 'Как се определя инвестицията за проекта?', 'Включени ли са хостингът и домейнът?',
+                'Изработка и срокове', 'Ще видя ли сайта, преди да бъде пуснат?', 'Google, реклама и AI', 'Гарантирате ли първо място в Google?',
+                'След пускането', 'Колко бързо отговаряте?'])
+            ->assertSee('href="#ceni-i-plashtane"', false);
+        $this->get('/en/faq')->assertOk()->assertSee('Frequently asked questions')->assertSee('How is the project budget set?')->assertSee('Prices and payment');
+        $this->get('/za-nas')->assertSee('href="' . url('/vaprosi') . '"', false)->assertDontSee('Как се определя инвестицията');
+        $this->get('/sitemap.xml')->assertSee(url('/vaprosi'))->assertSee(url('/en/faq'));
     }
 
     public function test_privacy_page_shows_no_placeholder_company_details(): void
