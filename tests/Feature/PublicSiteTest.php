@@ -324,7 +324,7 @@ class PublicSiteTest extends TestCase
     public function test_presentation_page_and_pdf_download(): void
     {
         $this->get('/prezentatsiya')->assertOk()->assertSee('noindex', false)
-            ->assertSeeText('Не работим с всеки бизнес.')->assertSeeText('Стартов двигател')->assertSeeText('creatiumlab.com');
+            ->assertSeeText('Къде създаваме най-висока стойност')->assertSeeText('Стартов двигател')->assertSeeText('creatiumlab.com');
         $this->get('/en/presentation')->assertOk()->assertSeeText('Starter Engine');
 
         $this->assertFileExists(public_path('files/creatium-lab-prezentatsiya.pdf'));

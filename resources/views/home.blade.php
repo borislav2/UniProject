@@ -191,6 +191,9 @@
             <p class="mt-6 text-lg text-gray-600 leading-relaxed dark:text-gray-300">{{ $trust['fit_text'] }}</p>
         </div>
         <div class="lg:col-span-7">
+            @if(filled($trust['fit_list_label'] ?? null))
+                <p class="reveal mb-4 text-sm font-bold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">{{ $trust['fit_list_label'] }}</p>
+            @endif
             <ol class="reveal divide-y divide-gray-200 border-y border-gray-200 dark:divide-white/10 dark:border-white/10">
                 @foreach($trust['fit_items'] as $item)
                     <li class="group relative flex gap-6 py-6 md:py-7 pl-5 md:pl-6">
