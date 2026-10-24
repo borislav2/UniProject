@@ -171,9 +171,12 @@ class OutreachCallTest extends TestCase
             ->assertSee('Обади се отново днес (1)')
             ->assertSee('4 в опашката');
 
-        $this->actingAs($user)->get('/admin/outreach-calls/next?city=' . urlencode('Пловдив'))
+        $city = 'city=' . urlencode('Пловдив');
+        // Без ?call= страницата закача първия от опашката в адреса, за да го пази при обновяване.
+        $this->actingAs($user)->get("/admin/outreach-calls/next?$city")->assertRedirect("/admin/outreach-calls/next?$city&call={$due->id}");
+        $this->actingAs($user)->get("/admin/outreach-calls/next?$city&call={$due->id}")
             ->assertOk()->assertSee('Уговорен за днес')->assertSee('Уговорено обаждане за 27.10.2026')
-            ->assertSee('Скрипт за разговора')->assertSee('остават 4');
+            ->assertSee('Скрипт за разговора')->assertSee('остават 4')->assertDontSee('Назад към предишния');
 
         // Резултатът се записва, уговорената дата (днес) пада, и следва следващият.
         $this->actingAs($user)->patch("/admin/outreach-calls/{$due->id}", ['status' => 'interested', 'note' => 'имейл: x@y.bg', 'callback_on' => '2026-10-27', 'next' => 1, 'city' => 'Пловдив'])
@@ -182,7 +185,15 @@ class OutreachCallTest extends TestCase
         $this->assertNull($due->callback_on);
         $this->assertSame(1, $due->attempts);
 
-        $this->actingAs($user)->get('/admin/outreach-calls/next?city=' . urlencode('Пловдив'))->assertSee('Нов мобилен');
+        $this->actingAs($user)->get("/admin/outreach-calls/next?$city")->assertRedirect("/admin/outreach-calls/next?$city&call={$mobile->id}");
+        $this->actingAs($user)->get("/admin/outreach-calls/next?$city&call={$mobile->id}")->assertSee('Нов мобилен')->assertSee('Назад към предишния');
+
+        // „Назад“ връща предишния със записания резултат, за да се поправи; после пак продължаваме от „Нов мобилен“.
+        $this->actingAs($user)->get("/admin/outreach-calls/back?$city")->assertRedirect("/admin/outreach-calls/next?$city&call={$due->id}&back=1");
+        $this->actingAs($user)->get("/admin/outreach-calls/next?$city&call={$due->id}&back=1")->assertSee('Записано: Интерес')->assertSee('value="interested" required checked', false);
+        $this->actingAs($user)->patch("/admin/outreach-calls/{$due->id}", ['status' => 'not_interested', 'next' => 1, 'city' => 'Пловдив']);
+        $this->assertSame('not_interested', $due->fresh()->status);
+        $this->actingAs($user)->get("/admin/outreach-calls/next?$city")->assertRedirect("/admin/outreach-calls/next?$city&call={$mobile->id}");
 
         // „Не вдигна“ с ново обаждане след седмица излиза от опашката до тогава.
         $this->actingAs($user)->patch("/admin/outreach-calls/{$mobile->id}", ['status' => 'no_answer', 'callback_on' => '2026-11-03', 'next' => 1, 'city' => 'Пловдив']);
@@ -190,13 +201,20 @@ class OutreachCallTest extends TestCase
 
         // „Пропусни“ скрива бизнеса до края на сесията.
         $this->actingAs($user)->post("/admin/outreach-calls/{$landline->id}/skip", ['city' => 'Пловдив'])->assertRedirect('/admin/outreach-calls/next?city=' . urlencode('Пловдив'));
-        $this->actingAs($user)->get('/admin/outreach-calls/next?city=' . urlencode('Пловдив'))->assertSee('Не вдигна вчера')->assertSee('остават 1');
+        $this->actingAs($user)->get("/admin/outreach-calls/next?$city")->assertRedirect();
+        $this->actingAs($user)->followingRedirects()->get("/admin/outreach-calls/next?$city")->assertSee('Не вдигна вчера')->assertSee('остават 1');
 
         // Броячът за деня: две обаждания днес (плюс „Не вдигна днес“ от сутринта).
-        $this->actingAs($user)->get('/admin/outreach-calls')->assertSee('Днес: 3')->assertSee('от 40 обаждания');
+        $this->actingAs($user)->get('/admin/outreach-calls?all=1')->assertSee('Днес: 3')->assertSee('от 40 обаждания');
+
+        // Списъкът помни последните филтри; „Изчисти филтрите“ ги маха.
+        $this->actingAs($user)->get("/admin/outreach-calls?$city&mobile=mobile");
+        $this->actingAs($user)->get('/admin/outreach-calls')->assertRedirect("/admin/outreach-calls?$city&mobile=mobile");
+        $this->actingAs($user)->get('/admin/outreach-calls?reset=1')->assertRedirect('/admin/outreach-calls');
+        $this->actingAs($user)->get('/admin/outreach-calls')->assertOk();
 
         // Бележка, запазена пак същия ден, не е второ обаждане.
-        $this->actingAs($user)->patch("/admin/outreach-calls/{$due->id}", ['status' => 'interested', 'note' => 'ново']);
+        $this->actingAs($user)->patch("/admin/outreach-calls/{$due->id}", ['status' => 'not_interested', 'note' => 'ново']);
         $this->assertSame(1, $due->fresh()->attempts);
 
         Carbon::setTestNow('2026-11-03 08:00:00');

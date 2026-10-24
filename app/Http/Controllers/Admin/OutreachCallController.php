@@ -14,6 +14,18 @@ class OutreachCallController extends Controller
 {
     public function index(Request $request)
     {
+        // Списъкът помни последните филтри и страница: връщане от менюто отваря същото място („?reset=1“ ги чисти).
+        $remembered = $request->session()->get('outreach_calls_list_query');
+        if ($request->boolean('reset')) {
+            $request->session()->forget('outreach_calls_list_query');
+
+            return redirect()->route('admin.outreach.calls.index');
+        }
+        if ($request->query() === [] && $remembered) {
+            return redirect()->route('admin.outreach.calls.index', $remembered);
+        }
+        $request->session()->put('outreach_calls_list_query', array_filter($request->only(['status', 'city', 'industry', 'phone', 'mobile', 'due', 'page'])) ?: null);
+
         $filters = $this->filters($request);
         $path = config('creatium.outreach.harvey_no_website_csv');
         $today = OutreachCall::today();
@@ -40,28 +52,79 @@ class OutreachCallController extends Controller
 
     /**
      * „Следващо обаждане“: един бизнес от опашката (OutreachCall::queue) със скрипта за разговора.
-     * Филтрите (град, вид, мобилен) се пазят в адреса; „Пропусни“ го скрива до края на сесията.
+     * Текущият бизнес е в адреса (?call=), така че обновяването на страницата го пази; без него се отваря
+     * последният незавършен от сесията или първият в опашката. Филтрите (град, вид, мобилен) също са в адреса.
+     * „Пропусни“ го скрива до края на сесията; „Назад“ връща предишния (OutreachCallController::back).
      */
     public function next(Request $request)
     {
         $filters = $this->filters($request);
-        $skipped = $request->session()->get('outreach_calls_skipped', []);
-        $query = $this->filtered($filters)->queue()->whereNotIn('id', $skipped);
+        $session = $request->session();
+        $skipped = $session->get('outreach_calls_skipped', []);
+        $queue = $this->filtered($filters)->queue()->whereNotIn('id', $skipped);
+
+        if (! $request->filled('call')) {
+            // Връщане към страницата: продължаваме от бизнеса, на който сте били, ако още чака обаждане.
+            $resume = $session->get('outreach_calls_current');
+            $call = ($resume ? (clone $queue)->whereKey($resume)->first() : null) ?? (clone $queue)->first();
+            if ($call) {
+                return redirect()->route('admin.outreach.calls.next', $this->filterQuery($filters) + ['call' => $call->id]);
+            }
+        }
+
+        $call = $request->filled('call') ? OutreachCall::find($request->integer('call')) : null;
+        if ($request->filled('call') && ! $call) {
+            return redirect()->route('admin.outreach.calls.next', $this->filterQuery($filters));
+        }
+        if ($call) {
+            $session->put('outreach_calls_current', $call->id);
+        }
 
         return view('admin.outreach.call-next', [
-            'call' => (clone $query)->first(),
-            'left' => $query->count(),
+            'call' => $call,
+            'left' => $queue->count(),
             'today' => $this->todayStats(),
             'filters' => $filters,
             'query' => $this->filterQuery($filters),
+            'canGoBack' => $session->get('outreach_calls_history', []) !== [],
+            // Отворен с „Назад“: показваме записания резултат, за да се поправи.
+            'revisit' => $request->boolean('back'),
         ]);
     }
 
     public function skip(Request $request, OutreachCall $call)
     {
         $request->session()->push('outreach_calls_skipped', $call->id);
+        $this->remember($request, $call);
 
         return redirect()->route('admin.outreach.calls.next', $this->filterQuery($this->filters($request)));
+    }
+
+    /** „Назад“: предишният бизнес от „Следващо обаждане“ (запазен или пропуснат), за да се поправи резултатът. */
+    public function back(Request $request)
+    {
+        $filters = $this->filters($request);
+        $history = $request->session()->get('outreach_calls_history', []);
+        $previous = array_pop($history);
+        $request->session()->put('outreach_calls_history', $history);
+        if ($previous) {
+            // Пропуснатият вече не е скрит, щом се върнем към него.
+            $request->session()->put('outreach_calls_skipped', array_values(array_diff($request->session()->get('outreach_calls_skipped', []), [$previous])));
+        }
+
+        return redirect()->route('admin.outreach.calls.next', $this->filterQuery($filters) + ($previous ? ['call' => $previous, 'back' => 1] : []));
+    }
+
+    /** Историята за „Назад“ (последните 50) и край на „текущия“ бизнес, щом е обработен. */
+    private function remember(Request $request, OutreachCall $call): void
+    {
+        $session = $request->session();
+        $history = array_values(array_diff($session->get('outreach_calls_history', []), [$call->id]));
+        $history[] = $call->id;
+        $session->put('outreach_calls_history', array_slice($history, -50));
+        if ($session->get('outreach_calls_current') === $call->id) {
+            $session->forget('outreach_calls_current');
+        }
     }
 
     /** Внася последния списък без сайт, изнесен от Harvey на сървъра. */
@@ -92,9 +155,9 @@ class OutreachCallController extends Controller
             'note' => $validated['note'] ?? null,
             'callback_on' => $callback && $callback > OutreachCall::today() ? $callback : null,
         ]);
-        // Едно обаждане на ден се брои веднъж: смяна на статуса или първото запазване за деня (без „За обаждане“).
+        // Един бизнес се брои за едно обаждане на ден: поправка на резултата (напр. през „Назад“) не е ново обаждане.
         $calledToday = $call->called_at && $call->called_at->timezone('Europe/Sofia')->toDateString() === OutreachCall::today();
-        if ($validated['status'] !== 'new' && ($call->isDirty('status') || ! $calledToday)) {
+        if ($validated['status'] !== 'new' && ! $calledToday) {
             $call->called_at = now();
             $call->attempts = min(255, $call->attempts + 1);
         }
@@ -102,6 +165,8 @@ class OutreachCallController extends Controller
 
         $message = $call->name . ': ' . OutreachCall::STATUSES[$call->status] . ($call->callback_on ? ', ново обаждане на ' . $call->callback_on->format('d.m.Y') : '') . '.';
         if ($request->boolean('next')) {
+            $this->remember($request, $call);
+
             return redirect()->route('admin.outreach.calls.next', $this->filterQuery($this->filters($request)))->with('success', $message);
         }
 

@@ -31,7 +31,8 @@
 </div>
 
 <nav class="mb-4 flex flex-wrap gap-2 text-sm">
-    @php $base = array_filter(['city' => $filters['city'], 'industry' => $filters['industry'], 'phone' => $filters['phone'] ? 1 : null, 'mobile' => $filters['mobile']]); @endphp
+    {{-- „all“ държи адреса непразен, за да не се отвори пак запомненият филтър (OutreachCallController::index). --}}
+    @php $base = array_filter(['city' => $filters['city'], 'industry' => $filters['industry'], 'phone' => $filters['phone'] ? 1 : null, 'mobile' => $filters['mobile']]) ?: ['all' => 1]; @endphp
     <a href="{{ route('admin.outreach.calls.index', $base + ['due' => 1]) }}" class="rounded-full px-3 py-1 {{ $filters['due'] ? 'bg-amber-600 text-white' : 'bg-amber-50 text-amber-800 shadow' }}">Обади се отново днес ({{ $dueCount }})</a>
     <a href="{{ route('admin.outreach.calls.index', $base) }}" class="rounded-full px-3 py-1 {{ $filters['status'] || $filters['due'] ? 'bg-white text-gray-700 shadow' : 'bg-brand-950 text-white' }}">Всички ({{ $counts->sum() }})</a>
     @foreach(\App\Models\OutreachCall::STATUSES as $key => $label)
@@ -57,6 +58,7 @@
     </select>
     <label class="inline-flex items-center gap-2"><input type="checkbox" name="phone" value="1" @checked($filters['phone'])> Само с телефон</label>
     <button class="rounded-lg border border-gray-300 px-3 py-1.5 font-semibold text-gray-800 hover:bg-gray-50">Филтрирай</button>
+    @if(request()->query())<a href="{{ route('admin.outreach.calls.index', ['reset' => 1]) }}" class="text-gray-500 hover:text-gray-800 hover:underline">Изчисти филтрите</a>@endif
 </form>
 
 <ul class="divide-y divide-gray-100 rounded-lg bg-white shadow">

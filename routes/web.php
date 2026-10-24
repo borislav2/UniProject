@@ -122,6 +122,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('outreach-calls/import', [OutreachCallController::class, 'import'])->name('outreach.calls.import');
     Route::patch('outreach-calls/{call}', [OutreachCallController::class, 'update'])->name('outreach.calls.update');
     Route::get('outreach-calls/next', [OutreachCallController::class, 'next'])->name('outreach.calls.next');
+    Route::get('outreach-calls/back', [OutreachCallController::class, 'back'])->name('outreach.calls.back');
     Route::post('outreach-calls/{call}/skip', [OutreachCallController::class, 'skip'])->name('outreach.calls.skip');
     Route::get('outreach', [OutreachController::class, 'index'])->name('outreach.index');
     Route::post('outreach/import', [OutreachController::class, 'import'])->name('outreach.import');
