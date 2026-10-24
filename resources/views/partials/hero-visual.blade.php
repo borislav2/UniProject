@@ -32,6 +32,11 @@
                         </div>
                     </div>
                     <div class="relative aspect-[16/10] overflow-hidden [container-type:inline-size] cursor-ew-resize" data-reveal>
+                        {{-- Подсказката е върху екрана, за да не се застъпва с картата на AI асистента под лаптопа. --}}
+                        <p class="reveal-hint pointer-events-none absolute bottom-2 left-1/2 z-20 -translate-x-1/2 flex items-center gap-1.5 whitespace-nowrap rounded-full bg-ink-950/80 px-3 py-1 text-[10px] font-semibold text-white ring-1 ring-white/15 shadow-lg"><span class="hint-arrows">←</span>
+                            <span class="hidden [@media(hover:hover)]:inline">{{ __('Минете с курсора над екрана') }}</span>
+                            <span class="[@media(hover:hover)]:hidden">{{ __('Докоснете екрана') }}</span>
+                            <span class="hint-arrows">→</span></p>
                         @foreach($slides as [$slug])
                             <img src="{{ asset('images/demos/' . $slug . '.webp') }}" alt="" width="960" height="600" decoding="async" @if(! $loop->first) loading="lazy" @endif class="slide slide-zoom absolute inset-0 w-full h-full object-cover object-top" style="--i: {{ $loop->index }}">
                         @endforeach
@@ -104,12 +109,6 @@
             <div class="relative mx-[-6%] h-3 rounded-b-xl bg-gradient-to-b from-[#c9d1dc] to-[#7d8897] shadow-[0_20px_40px_-10px_rgb(0_0_0/0.9)]">
                 <div class="absolute left-1/2 top-0 -translate-x-1/2 w-[16%] h-1.5 rounded-b-md bg-[#9aa4b2]"></div>
             </div>
-            <p class="reveal-hint mt-4 flex w-[70%] items-center justify-center gap-2 text-xs font-semibold text-brand-200">
-                <span class="hint-arrows">←</span>
-                <span class="hidden [@media(hover:hover)]:inline">{{ __('Минете с курсора над екрана') }}</span>
-                <span class="[@media(hover:hover)]:hidden">{{ __('Докоснете екрана') }}</span>
-                <span class="hint-arrows">→</span>
-            </p>
         </div>
 
         {{-- Phone: scrolls through the demo shop --}}
