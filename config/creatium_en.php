@@ -74,6 +74,7 @@ return [
             ['title' => 'Round-the-clock monitoring and system care', 'text' => 'Continuous technical control and regular updates that keep your business processes running without interruption.'],
             ['title' => 'Business communication and hosting', 'text' => 'Configuration and central maintenance of server infrastructure, domains and business email addresses.'],
             ['title' => 'Independent content management', 'text' => 'An intuitive admin panel where you change prices, texts and media yourself in one click, without depending on outside specialists.'],
+            ['title' => 'Cybersecurity and backups', 'text' => 'SSL encryption, protection from hacking attempts and daily backups that keep your site, your data and your enquiries safe at all times.'],
         ],
         'growth_title' => 'Marketing, analysis and positioning',
         'growth_tag' => 'The growth',
@@ -88,7 +89,7 @@ return [
     ],
 
     'home_process' => [
-        'title' => 'A managed, structured path from concept to market launch',
+        'title' => 'A managed, structured path. From concept to market launch',
         'steps' => [
             ['title' => 'Strategic analysis', 'text' => 'A deep dive into the business model, the target audience and the competitive positioning.'],
             ['title' => 'Architecture and marketing plan', 'text' => 'Designing the website structure, the marketing funnels and the analytics points in parallel.'],
@@ -126,8 +127,6 @@ return [
             ['title' => 'Leaders who invest against a clear return (ROI)', 'text' => 'Owners who require an exact report on every euro invested, full control of the data and strict measurement of the final profit.'],
             ['title' => 'E-commerce brands seeking maximum margin', 'text' => 'Online shops that aim to raise the average basket value and the revenue from every customer.'],
         ],
-        'not_title' => 'We are not the right fit if you',
-        'not_items' => ['want the cheapest website made in a day', 'want a promise of first place in Google or ChatGPT', 'have no time for one conversation about your business'],
         'principles_eyebrow' => 'How we think',
         'principles_title' => 'One system instead of five contractors.',
         'principles_text' => 'The website, Google, emails and maintenance work together when one team builds them. These are the rules we work by.',
@@ -139,7 +138,7 @@ return [
         ],
         'demos_eyebrow' => 'Industries',
         'demos_title' => 'We have thought about your industry.',
-        'demos_text' => 'We built demo websites for businesses we want to work with. Each one solves the real problems of its industry. The businesses are fictional, the solutions are real.',
+        'demos_text' => 'We built demo websites for businesses we want to work with. Each of them solves the problems of its industry.',
         'blog_eyebrow' => 'Insights and advice',
         'blog_title' => 'We write about what works.',
         'blog_text' => 'Practical articles about websites, Google, AI search and email, without jargon.',
