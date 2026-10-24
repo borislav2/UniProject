@@ -104,7 +104,7 @@ return [
     ],
 
     'home_trust' => [
-        'eyebrow' => 'Website design and digital marketing for small businesses',
+        'eyebrow' => 'Website design and digital marketing',
         'proof' => [
             ['value' => '1–2 weeks', 'text' => 'from kickoff to a finished website'],
             ['value' => '1 working day', 'text' => 'at most until we answer an inquiry'],
