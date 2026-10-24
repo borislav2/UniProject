@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\PostCategory;
+use App\Support\Facebook\FacebookPublisher;
 use App\Support\Uploads;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -48,6 +49,24 @@ class PostController extends Controller
         $this->save($request, $post);
 
         return redirect()->route('admin.posts.edit', $post)->with('success', 'Промените са запазени.');
+    }
+
+    /** „Пусни във Facebook“: веднага, извън реда (и повторен опит след грешка). */
+    public function facebook(Post $post, FacebookPublisher $publisher)
+    {
+        if (! $post->isVisible('bg')) {
+            return back()->with('error', 'Статията още не е публикувана на сайта на български.');
+        }
+        if ($post->facebook_post_id) {
+            return back()->with('error', 'Статията вече е във Facebook.');
+        }
+
+        $post->forceFill(['facebook_error' => null])->save();
+        if ($error = $publisher->publish($post)) {
+            return back()->with('error', 'Facebook: ' . $error);
+        }
+
+        return back()->with('success', 'Статията е публикувана във Facebook.');
     }
 
     public function destroy(Post $post)

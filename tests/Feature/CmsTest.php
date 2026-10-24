@@ -273,4 +273,24 @@ class CmsTest extends TestCase
             ->postJson('/admin/uploads/image', ['image' => UploadedFile::fake()->image('a.png')])
             ->assertOk()->assertJsonStructure(['url']);
     }
+
+    public function test_posts_can_be_shared_and_the_facebook_page_is_linked(): void
+    {
+        config(['creatium.blog_enabled' => true, 'creatium.contact.facebook' => null]);
+        $this->makePost();
+        $share = 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode(url('/blog/kak-da-izberete-domeyn'));
+
+        $this->get('/blog/kak-da-izberete-domeyn')->assertOk()
+            ->assertSee($share, false)
+            ->assertSee('Копирай връзката')
+            ->assertDontSee('Последвайте ни във Facebook');
+        $this->get('/')->assertDontSee('"sameAs"', false);
+
+        config(['creatium.contact.facebook' => 'https://www.facebook.com/creatiumlab']);
+        $this->get('/blog/kak-da-izberete-domeyn')->assertSee('Последвайте ни във Facebook за новите статии')
+            ->assertSee('href="https://www.facebook.com/creatiumlab"', false);
+        $this->get('/')->assertSee('"sameAs":["https://www.facebook.com/creatiumlab"]', false);
+        $this->get('/en/how-to-choose-a-domain')->assertStatus(404);
+        $this->get('/en/blog/how-to-choose-a-domain')->assertOk()->assertSee('Share on Facebook')->assertSee('Follow us on Facebook');
+    }
 }

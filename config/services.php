@@ -60,4 +60,12 @@ return [
         'base_url' => env('MISTRAL_BASE_URL') ?: 'https://api.mistral.ai/v1',
     ],
 
+    // Публикуване на статиите от блога във Facebook страницата. Ключът се взима с php artisan creatium:facebook-connect.
+    'facebook' => [
+        'page_id' => env('FACEBOOK_PAGE_ID'),
+        'page_token' => env('FACEBOOK_PAGE_TOKEN'),
+        'page_name' => env('FACEBOOK_PAGE_NAME'),
+        'graph_url' => env('FACEBOOK_GRAPH_URL') ?: 'https://graph.facebook.com',
+    ],
+
 ];
