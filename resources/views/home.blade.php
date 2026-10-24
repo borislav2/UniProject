@@ -206,19 +206,6 @@
                     </li>
                 @endforeach
             </ol>
-            @if(! empty($trust['not_items']))
-                <div class="reveal mt-8 rounded-2xl border border-gray-200 bg-white p-6 md:p-7 dark:border-white/10 dark:bg-white/[0.03]">
-                    <p class="font-extrabold text-brand-950 dark:text-white">{{ $trust['not_title'] }}:</p>
-                    <ul class="mt-4 space-y-3">
-                        @foreach($trust['not_items'] as $not)
-                            <li class="flex items-start gap-3 text-gray-600 dark:text-gray-300">
-                                <span class="mt-0.5 w-5 h-5 shrink-0 rounded-full bg-red-50 flex items-center justify-center dark:bg-red-500/15"><x-icon name="minus" class="text-[10px] text-red-600 dark:text-red-300" /></span>
-                                {{ $not }}
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
         </div>
     </div>
 </section>

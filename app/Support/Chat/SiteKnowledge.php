@@ -64,9 +64,6 @@ class SiteKnowledge
             foreach ($trust['fit_items'] as $item) {
                 $out[] = '- ' . $item['title'] . ': ' . $item['text'];
             }
-            if (! empty($trust['not_items'])) {
-                $out[] = ($trust['not_title'] ?? 'Not a fit') . ': ' . implode('; ', $trust['not_items']);
-            }
         }
         if (! empty($trust['principle_items'])) {
             $out[] = "\n## " . ($trust['principles_eyebrow'] ?? 'Principles');
