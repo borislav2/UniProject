@@ -227,6 +227,12 @@
         }
         show(parseInt(form.dataset.start, 10) || 0);
         fromHash();
+        // The browser's own jump to the anchor comes later and lands in the middle of the form,
+        // under the header: show the whole form from its top instead.
+        if (location.hash.length > 1) {
+            if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+            window.addEventListener('load', function () { requestAnimationFrame(fromHash); });
+        }
         window.addEventListener('hashchange', fromHash);
         document.addEventListener('click', function (e) {
             var a = e.target.closest('a[href$="#konsultatsiya"]');
