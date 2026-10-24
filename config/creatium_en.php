@@ -58,7 +58,7 @@ return [
     'home_problem' => [
         'title' => 'Where are you losing customers?',
         'scenarios' => [
-            ['label' => 'Scenario 1', 'title' => 'A good-looking site nobody finds', 'text' => "When one team builds the site and another runs the ads, nobody is responsible for the end result. One side says \"the site is done\", the other says \"the problem is the site\", and you pay both.\n\nYou have beautiful pages but no tracking at all. Search engines don't find you, and people come and go without leaving their details."],
+            ['label' => 'Scenario 1', 'title' => 'A good-looking site nobody finds', 'text' => "When one team builds the site and another runs the ads, nobody is responsible for the end result. One side says \"the site is done\", the other says \"the problem is the site\", and you pay both."],
             ['label' => 'Scenario 2', 'title' => 'You pay for ads but lose enquiries', 'text' => 'You pour money into Google and Meta ads, but the contact forms are not connected properly. Customers try to reach you, the enquiries get lost on the way, and the ad budget goes to waste.'],
             ['label' => 'The solution', 'title' => 'Everything in one place. With real results.', 'text' => "We take on the whole process: from coding the site and connecting the forms to your email or CRM to setting up the ads in full.\n\nWe are responsible for the whole system, from the visitor's first click to the first enquiry."],
         ],
