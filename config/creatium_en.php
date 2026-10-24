@@ -56,11 +56,11 @@ return [
     ],
 
     'home_problem' => [
-        'title' => 'Why do fragmented digital services waste resources?',
+        'title' => 'Where are you losing customers?',
         'scenarios' => [
-            ['label' => 'Scenario A', 'title' => 'You have a website but no marketing infrastructure', 'text' => 'You have a presentable digital shop window that stays completely invisible to the market. There are no analytics, Google does not index it properly, and potential customers leave without making an enquiry.'],
-            ['label' => 'Scenario B', 'title' => 'You invest in marketing, but the website stops the sales', 'text' => 'You send paid traffic and resources to a platform that loads slowly, has no properly configured tracking (Google Analytics 4, Bing Webmaster Tools) and breaks the user journey.'],
-            ['label' => 'The solution', 'title' => 'One system for digital growth', 'text' => 'We combine the technical build, high speed and security with precise analytics, email automation, brand content and optimisation for Google and AI search engines. Technology provides stability; marketing provides growth.'],
+            ['label' => 'Problem 1', 'title' => 'A good-looking site nobody finds', 'text' => 'It does not show up in Google, measures nothing and brings no enquiries. You are paying for a shop window on an empty street.'],
+            ['label' => 'Problem 2', 'title' => 'Ads that lead to a slow site', 'text' => 'You pay for every click, and people leave before the page loads. And you never know which of them called.'],
+            ['label' => 'The solution', 'title' => 'Website and marketing from one team', 'text' => 'We make the site fast, visible in Google and AI search, and measure every enquiry. One system, one team accountable.'],
         ],
     ],
 
