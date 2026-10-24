@@ -74,6 +74,7 @@ return [
             ['title' => 'Round-the-clock monitoring and system care', 'text' => 'Continuous technical control and regular updates that keep your business processes running without interruption.'],
             ['title' => 'Business communication and hosting', 'text' => 'Configuration and central maintenance of server infrastructure, domains and business email addresses.'],
             ['title' => 'Independent content management', 'text' => 'An intuitive admin panel where you change prices, texts and media yourself in one click, without depending on outside specialists.'],
+            ['title' => 'Cybersecurity and backups', 'text' => 'SSL encryption, protection from hacking attempts and daily backups that keep your site, your data and your enquiries safe at all times.'],
         ],
         'growth_title' => 'Marketing, analysis and positioning',
         'growth_tag' => 'The growth',
