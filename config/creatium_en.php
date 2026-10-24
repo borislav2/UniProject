@@ -89,7 +89,7 @@ return [
     ],
 
     'home_process' => [
-        'title' => 'A managed, structured path from concept to market launch',
+        'title' => 'A managed, structured path. From concept to market launch',
         'steps' => [
             ['title' => 'Strategic analysis', 'text' => 'A deep dive into the business model, the target audience and the competitive positioning.'],
             ['title' => 'Architecture and marketing plan', 'text' => 'Designing the website structure, the marketing funnels and the analytics points in parallel.'],
