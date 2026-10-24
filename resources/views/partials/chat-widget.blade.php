@@ -15,15 +15,15 @@
         <div class="surface-night on-dark relative flex items-center gap-3 px-5 py-4 text-white">
             <span class="relative w-10 h-10 shrink-0 rounded-2xl bg-brand-gradient ring-1 ring-white/20 flex items-center justify-center"><x-icon name="robot" class="text-brand-100" /><span class="absolute -right-0.5 -bottom-0.5 w-3 h-3 rounded-full bg-emerald-400 ring-2 ring-ink-950"></span></span>
             <div class="min-w-0">
-                <p id="chat-title" class="font-extrabold leading-tight">{{ __('Асистентът на Creatium Lab') }}</p>
-                <p class="text-xs text-gray-400">{{ __('Отговаря веднага за услуги, цени и срокове') }}</p>
+                <p id="chat-title" class="font-extrabold leading-tight">{{ __('Крео') }}</p>
+                <p class="text-xs text-gray-400">{{ __('Асистентът на Creatium Lab') }}</p>
             </div>
             <button type="button" class="ml-auto w-9 h-9 shrink-0 rounded-xl flex items-center justify-center text-gray-300 hover:bg-white/10 hover:text-white" data-chat-close aria-label="{{ __('Затвори чата') }}"><x-icon name="chevron-down" /></button>
         </div>
 
         <div class="flex-1 overflow-y-auto overscroll-contain px-4 py-5 space-y-3 bg-gray-50/70 dark:bg-ink-950" data-chat-log aria-live="polite">
             <div class="flex justify-start" data-chat-greeting>
-                <p class="max-w-[85%] rounded-2xl rounded-bl-md bg-white px-4 py-3 text-sm leading-relaxed text-gray-800 ring-1 ring-gray-200 dark:bg-white/[0.06] dark:text-gray-100 dark:ring-white/10">{{ __('Здравейте! Аз съм асистентът на Creatium Lab. Питайте ме за услугите, цените и сроковете, или оставете телефон и ще ви се обадим.') }}</p>
+                <p class="max-w-[85%] rounded-2xl rounded-bl-md bg-white px-4 py-3 text-sm leading-relaxed text-gray-800 ring-1 ring-gray-200 dark:bg-white/[0.06] dark:text-gray-100 dark:ring-white/10">{{ __('Здравейте! Аз съм Крео, асистентът на Creatium Lab. Питайте ме за услугите, цените и сроковете, или оставете телефон и ще ви се обадим.') }}</p>
             </div>
             <div class="flex flex-wrap gap-2 pt-1" data-chat-suggestions>
                 @foreach($chatSuggestions as $suggestion)
@@ -46,8 +46,8 @@
     <div class="chat-teaser hidden absolute bottom-full right-0 mb-3 w-64 rounded-2xl rounded-br-md bg-white p-4 pr-9 text-sm leading-snug text-gray-800 shadow-[0_20px_50px_-15px_rgb(15_26_43/0.45)] ring-1 ring-gray-200 dark:bg-ink-900 dark:text-gray-100 dark:ring-white/10" data-chat-teaser>
         <button type="button" class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-white/10 dark:hover:text-white" aria-label="{{ __('Затвори') }}" data-chat-teaser-close><x-icon name="minus" class="text-[10px]" /></button>
         <button type="button" class="text-left" data-chat-teaser-open>
-            <strong class="block text-brand-950 dark:text-white">{{ __('Здравейте!') }}</strong>
-            {{ __('Имате въпрос за цени, срокове или вашия сайт? Питайте тук, отговаряме веднага.') }}
+            <strong class="block text-brand-950 dark:text-white">{{ __('Здравейте, аз съм Крео!') }}</strong>
+            {{ __('Имате въпрос за цени, срокове или вашия сайт? Питайте ме, отговарям веднага.') }}
         </button>
     </div>
 
@@ -58,8 +58,8 @@
             <span class="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-brand-700" aria-hidden="true"></span>
         </span>
         <span class="relative flex flex-col items-start leading-tight">
-            <span class="text-sm font-extrabold">{{ __('Попитайте ни') }}</span>
-            <span class="text-[11px] font-medium text-white/80">{{ __('отговаряме веднага') }}</span>
+            <span class="text-sm font-extrabold">{{ __('Попитайте Крео') }}</span>
+            <span class="text-[11px] font-medium text-white/80">{{ __('отговаря веднага') }}</span>
         </span>
     </button>
 </div>
