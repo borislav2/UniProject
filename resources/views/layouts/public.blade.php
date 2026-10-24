@@ -273,6 +273,9 @@
                         <li class="flex items-center gap-3"><x-icon name="envelope" class="w-4 text-brand-300" /><a href="mailto:{{ config('creatium.contact.email') }}" class="hover:text-white">{{ config('creatium.contact.email') }}</a></li>
                         <li class="flex items-start gap-3"><x-icon name="phone" class="w-4 mt-1 text-brand-300" /><span class="flex flex-col">@foreach(config('creatium.contact.phones') as $phone)<a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}" class="hover:text-white">{{ $phone }}</a>@endforeach</span></li>
                         <li class="flex items-center gap-3"><x-icon name="location-dot" class="w-4 text-brand-300" />{{ __(config('creatium.contact.city')) }}, {{ __('България') }}</li>
+                        @if(config('creatium.contact.facebook'))
+                            <li class="flex items-center gap-3"><x-icon name="facebook" class="w-4 text-brand-300" /><a href="{{ config('creatium.contact.facebook') }}" target="_blank" rel="noopener" class="hover:text-white">{{ __('Последвайте ни във Facebook') }}</a></li>
+                        @endif
                     </ul>
                     @php($presentationPdf = 'files/' . (app()->getLocale() === 'en' ? 'creatium-lab-presentation.pdf' : 'creatium-lab-prezentatsiya.pdf'))
                     @if(is_file(public_path($presentationPdf)))

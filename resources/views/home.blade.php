@@ -18,6 +18,7 @@
         'telephone' => $contact['phones'][0] ?? null,
         'address' => ['@type' => 'PostalAddress', 'addressLocality' => __($contact['city']), 'addressCountry' => 'BG'],
         'areaServed' => ['@type' => 'Country', 'name' => __('България')],
+        'sameAs' => array_values(array_filter([$contact['facebook'] ?? null])),
     ];
 @endphp
 <script type="application/ld+json">{!! json_encode(array_filter($ld), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>

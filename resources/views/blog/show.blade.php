@@ -48,6 +48,26 @@
             <div class="prose prose-lg max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:text-brand-950 prose-a:text-brand-700 prose-img:rounded-xl dark:prose-invert dark:prose-headings:text-white dark:prose-a:text-brand-300">
                 {!! $post->bodyHtml() !!}
             </div>
+
+            {{-- Споделяне: Facebook (sharer, без бисквитки и скриптове на Facebook) и копиране на връзката; последване, ако е зададена страницата. --}}
+            <div class="mt-12 rounded-2xl border border-gray-200 bg-brand-50/60 p-6 dark:border-white/10 dark:bg-ink-900">
+                <p class="font-bold text-brand-950 dark:text-white">{{ __('Полезна ли ви беше статията? Споделете я.') }}</p>
+                <div class="mt-4 flex flex-wrap items-center gap-3">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($post->url()) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-xl bg-[#1877F2] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#166fe5]"><x-icon name="facebook" /> {{ __('Сподели във Facebook') }}</a>
+                    <button type="button" data-copy-link="{{ $post->url() }}" class="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 hover:bg-gray-50 dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"><x-icon name="link" /> <span data-copy-label>{{ __('Копирай връзката') }}</span></button>
+                    @if(config('creatium.contact.facebook'))
+                        <a href="{{ config('creatium.contact.facebook') }}" target="_blank" rel="noopener" class="text-sm font-semibold text-brand-700 hover:underline dark:text-brand-300">{{ __('Последвайте ни във Facebook за новите статии') }}</a>
+                    @endif
+                </div>
+            </div>
+            <script>
+                document.querySelectorAll('[data-copy-link]').forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        var label = button.querySelector('[data-copy-label]');
+                        navigator.clipboard && navigator.clipboard.writeText(button.dataset.copyLink).then(function () { label.textContent = @json(__('Връзката е копирана')); });
+                    });
+                });
+            </script>
         </div>
     </div>
 </article>
