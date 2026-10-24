@@ -56,7 +56,7 @@
                 @endif
             </h1>
             <div class="rise-text mt-10 flex flex-col sm:flex-row gap-3" style="--d: 260ms">
-                <a href="#konsultatsiya" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
+                <a href="{{ lroute('contact') }}#konsultatsiya" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
                     <x-icon name="calendar" class="text-sm" /> {{ $hero['button'] }}
                 </a>
                 <a href="{{ lroute('services') }}" class="relative edge glass inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white hover:bg-white/10 transition-colors">
