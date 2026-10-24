@@ -87,6 +87,8 @@ return [
         'harvey_site_emails_csv' => env('OUTREACH_HARVEY_SITE_EMAILS_CSV', storage_path('app/harvey/site-emails.csv')),
         // Търсенето взима само бизнеси със сайт и намерен имейл. true = тези без имейл, но с телефон, отиват в списъка за обаждане.
         'search_call_list' => (bool) env('OUTREACH_SEARCH_CALL_LIST', false),
+        // Целта за обаждания на ден в брояча на „Без сайт (за обаждане)“.
+        'daily_call_goal' => (int) env('OUTREACH_DAILY_CALL_GOAL', 40),
     ],
 
     // Безплатна проверка на сайт (/proverka-na-sait). audit_price_note е текстът за цената на подробния одит в имейла
