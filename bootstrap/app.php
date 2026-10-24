@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\CaptureLeadAttribution;
+use App\Http\Middleware\PublishBlogToFacebook;
 use App\Http\Middleware\CheckAdminAccess;
 use App\Http\Middleware\RequireRole;
 use App\Http\Middleware\SetLocale;
@@ -19,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => CheckAdminAccess::class,
             'role' => RequireRole::class,
         ]);
-        $middleware->web(append: [CaptureLeadAttribution::class]);
+        $middleware->web(append: [CaptureLeadAttribution::class, PublishBlogToFacebook::class]);
         // One-click unsubscribe (RFC 8058) is a POST from the mail provider, without a session or CSRF token.
         $middleware->validateCsrfTokens(except: ['otpisvane/*']);
         $middleware->append(SetLocale::class);

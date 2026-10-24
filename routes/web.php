@@ -139,6 +139,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('technologies', TechnologyController::class);
 
     // Site content: blog, page texts, SEO
+    Route::post('posts/{post}/facebook', [PostController::class, 'facebook'])->middleware('throttle:10,1')->name('posts.facebook');
     Route::resource('posts', PostController::class)->except('show');
     Route::resource('post-categories', PostCategoryController::class)->except(['show', 'create']);
     Route::get('content', [ContentController::class, 'index'])->name('content.index');

@@ -21,7 +21,7 @@ class Post extends Model
         'canonical_url', 'og_title', 'og_description', 'cover_image', 'og_image', 'status', 'published_at',
     ];
 
-    protected $casts = ['published_at' => 'datetime'];
+    protected $casts = ['published_at' => 'datetime', 'facebook_posted_at' => 'datetime'];
 
     public function category(): BelongsTo
     {
