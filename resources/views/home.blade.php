@@ -125,14 +125,14 @@
                         <div class="relative">
                             <span class="inline-flex items-center gap-2 rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300"><x-icon name="circle-check" class="text-[11px]" /> {{ $scenario['label'] }}</span>
                             <h3 class="mt-5 text-2xl font-extrabold tracking-tight">{{ $scenario['title'] }}</h3>
-                            <p class="mt-4 text-gray-300 leading-relaxed">{{ $scenario['text'] }}</p>
+                            @foreach(preg_split('/\R\s*\R/u', trim($scenario['text'])) as $paragraph)<p class="mt-3 first-of-type:mt-4 text-gray-300 leading-relaxed">{{ $paragraph }}</p>@endforeach
                         </div>
                     </article>
                 @else
                     <article class="reveal card-hover rounded-3xl border border-gray-200 bg-white p-8 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ $loop->index * 100 }}ms">
                         <span class="inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-red-700 dark:bg-red-500/10 dark:text-red-300"><x-icon name="triangle-exclamation" class="text-[11px]" /> {{ $scenario['label'] }}</span>
                         <h3 class="mt-5 text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $scenario['title'] }}</h3>
-                        <p class="mt-4 text-gray-600 leading-relaxed dark:text-gray-300">{{ $scenario['text'] }}</p>
+                        @foreach(preg_split('/\R\s*\R/u', trim($scenario['text'])) as $paragraph)<p class="mt-3 first-of-type:mt-4 text-gray-600 leading-relaxed dark:text-gray-300">{{ $paragraph }}</p>@endforeach
                     </article>
                 @endif
             @endforeach

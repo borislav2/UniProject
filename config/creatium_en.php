@@ -58,9 +58,9 @@ return [
     'home_problem' => [
         'title' => 'Where are you losing customers?',
         'scenarios' => [
-            ['label' => 'Problem 1', 'title' => 'A good-looking site nobody finds', 'text' => 'It does not show up in Google, measures nothing and brings no enquiries. You are paying for a shop window on an empty street.'],
-            ['label' => 'Problem 2', 'title' => 'Ads that lead to a slow site', 'text' => 'You pay for every click, and people leave before the page loads. And you never know which of them called.'],
-            ['label' => 'The solution', 'title' => 'Website and marketing from one team', 'text' => 'We make the site fast, visible in Google and AI search, and measure every enquiry. One system, one team accountable.'],
+            ['label' => 'Scenario 1', 'title' => 'A good-looking site nobody finds', 'text' => "When one team builds the site and another runs the ads, nobody is responsible for the end result. One side says \"the site is done\", the other says \"the problem is the site\", and you pay both.\n\nYou have beautiful pages but no tracking at all. Search engines don't find you, and people come and go without leaving their details."],
+            ['label' => 'Scenario 2', 'title' => 'You pay for ads but lose enquiries', 'text' => 'You pour money into Google and Meta ads, but the contact forms are not connected properly. Customers try to reach you, the enquiries get lost on the way, and the ad budget goes to waste.'],
+            ['label' => 'The solution', 'title' => 'Everything in one place. With real results.', 'text' => "We take on the whole process: from coding the site and connecting the forms to your email or CRM to setting up the ads in full.\n\nWe are responsible for the whole system, from the visitor's first click to the first enquiry."],
         ],
     ],
 
