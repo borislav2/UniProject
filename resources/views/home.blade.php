@@ -97,7 +97,7 @@
                     'lg:pl-6 lg:border-l' => $loop->index === 2,
                 ])>
                     <dt class="sr-only">{{ $fact['text'] }}</dt>
-                    <dd class="display text-3xl md:text-4xl">{{ $fact['value'] }}</dd>
+                    <dd class="display text-2xl sm:text-3xl md:text-4xl">{{ $fact['value'] }}</dd>
                     <dd class="mt-2 text-sm text-gray-400 leading-snug">
                         @if(filled($fact['link'] ?? null))
                             <a href="{{ url($fact['link']) }}" class="group underline-offset-4 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300 rounded-sm">{{ $fact['text'] }}&nbsp;<x-icon name="arrow-right" class="inline text-[10px] text-brand-300 transition-transform group-hover:translate-x-0.5" /></a>

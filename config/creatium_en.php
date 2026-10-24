@@ -104,12 +104,12 @@ return [
 
     'home_trust' => [
         'eyebrow' => 'Website design and digital marketing',
-        'proof_label' => 'No surprises for you',
+        'proof_label' => 'A ready system, not a business card',
         'proof' => [
-            ['value' => '€450', 'text' => 'the price of a website, stated up front', 'link' => ''],
-            ['value' => '50%', 'text' => 'paid after you approve the finished site', 'link' => ''],
-            ['value' => '24/7', 'text' => 'we watch your site after launch too', 'link' => ''],
-            ['value' => '1 min', 'text' => 'free check of your current website', 'link' => '/en/website-check'],
+            ['value' => 'Google + Meta', 'text' => 'ad tracking is set up: you measure every enquiry and sale', 'link' => ''],
+            ['value' => 'Instantly', 'text' => 'every enquiry goes to your email, phone or CRM', 'link' => ''],
+            ['value' => '1 click', 'text' => 'you change texts and offers yourself, without waiting for anyone', 'link' => ''],
+            ['value' => 'Conversion', 'text' => 'design and structure built to turn visitors into customers', 'link' => ''],
         ],
         'engine_eyebrow' => 'The digital engine',
         'engine_center' => 'Digital engine',
