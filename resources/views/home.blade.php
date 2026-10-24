@@ -30,8 +30,6 @@
     foreach (array_filter((array) ($hero['accent'] ?? [])) as $word) {
         $title = preg_replace('/(?<![\p{L}])(' . preg_quote(e($word), '/') . ')(?![\p{L}])/u', '<span class="text-accent">$1</span>', $title, 1);
     }
-    // Първото изречение на подзаглавието се откроява, останалото е по-тихо.
-    preg_match('/^(.+?[.!?])\s+(.+)$/us', (string) $hero['subtitle'], $sub);
 
     // Номерацията на секциите следва реда им („01 / Проблемът“), блогът може да липсва.
     $section = 0;
@@ -57,13 +55,6 @@
                     <span class="mt-5 block text-xl sm:text-2xl font-bold tracking-tight leading-snug text-brand-200">{{ $hero['highlight'] }}</span>
                 @endif
             </h1>
-            <p class="rise-text mt-7 text-lg leading-relaxed max-w-2xl text-pretty" style="--d: 180ms">
-                @if($sub)
-                    <span class="font-semibold text-white">{{ $sub[1] }}</span> <span class="text-gray-400">{{ $sub[2] }}</span>
-                @else
-                    <span class="text-gray-300">{{ $hero['subtitle'] }}</span>
-                @endif
-            </p>
             <div class="rise-text mt-10 flex flex-col sm:flex-row gap-3" style="--d: 260ms">
                 <a href="#konsultatsiya" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
                     <x-icon name="calendar" class="text-sm" /> {{ $hero['button'] }}

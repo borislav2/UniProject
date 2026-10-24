@@ -51,7 +51,6 @@ return [
     'home_hero' => [
         'title' => 'A website that sells. Marketing that brings customers.',
         'highlight' => 'Your whole digital engine – in one working system.',
-        'subtitle' => 'A beautiful website nobody finds is a cost, not an investment. We design the site and the marketing together, as one team, so it brings in enquiries.',
         'button' => 'Book a consultation',
         'accent' => ['sells', 'customers'],
     ],
