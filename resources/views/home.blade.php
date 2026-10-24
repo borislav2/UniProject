@@ -30,8 +30,6 @@
     foreach (array_filter((array) ($hero['accent'] ?? [])) as $word) {
         $title = preg_replace('/(?<![\p{L}])(' . preg_quote(e($word), '/') . ')(?![\p{L}])/u', '<span class="text-accent">$1</span>', $title, 1);
     }
-    // Първото изречение на подзаглавието се откроява, останалото е по-тихо.
-    preg_match('/^(.+?[.!?])\s+(.+)$/us', (string) $hero['subtitle'], $sub);
 
     // Номерацията на секциите следва реда им („01 / Проблемът“), блогът може да липсва.
     $section = 0;
@@ -57,15 +55,8 @@
                     <span class="mt-5 block text-xl sm:text-2xl font-bold tracking-tight leading-snug text-brand-200">{{ $hero['highlight'] }}</span>
                 @endif
             </h1>
-            <p class="rise-text mt-7 text-lg leading-relaxed max-w-2xl text-pretty" style="--d: 180ms">
-                @if($sub)
-                    <span class="font-semibold text-white">{{ $sub[1] }}</span> <span class="text-gray-400">{{ $sub[2] }}</span>
-                @else
-                    <span class="text-gray-300">{{ $hero['subtitle'] }}</span>
-                @endif
-            </p>
             <div class="rise-text mt-10 flex flex-col sm:flex-row gap-3" style="--d: 260ms">
-                <a href="#konsultatsiya" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
+                <a href="{{ lroute('contact') }}#konsultatsiya" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
                     <x-icon name="calendar" class="text-sm" /> {{ $hero['button'] }}
                 </a>
                 <a href="{{ lroute('services') }}" class="relative edge glass inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white hover:bg-white/10 transition-colors">
@@ -81,30 +72,41 @@
 
     {{-- Proof: only facts we can stand behind; the Google rating appears once there are real reviews --}}
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
-        <dl class="rise-text grid grid-cols-2 lg:grid-cols-4 border-y border-white/10 divide-white/10 [&>div]:py-6 [&>div]:pr-4 [&>div:nth-child(odd)]:border-r [&>div:nth-child(odd)]:border-white/10 lg:[&>div]:border-r lg:[&>div:last-child]:border-r-0 lg:[&>div]:px-6 lg:[&>div:first-child]:pl-0" style="--d: 320ms">
-            @if($hasReviews)
-                <div class="col-span-2 lg:col-span-1 flex items-center gap-4 border-b border-white/10 lg:border-b-0">
-                    <span class="w-11 h-11 shrink-0 rounded-full bg-white flex items-center justify-center text-lg font-extrabold text-brand-950" aria-hidden="true">G</span>
-                    <div>
-                        <dt class="sr-only">{{ __('Оценка в Google') }}</dt>
-                        <dd class="flex items-center gap-2 text-2xl font-extrabold">{{ number_format($reviews['rating'], 1, app()->getLocale() === 'bg' ? ',' : '.') }} <span class="text-sm text-amber-400 tracking-tight" aria-hidden="true">★★★★★</span></dd>
-                        @php($reviewsText = __($reviews['count'] === 1 ? ':count отзив в Google' : ':count отзива в Google', ['count' => $reviews['count']]))
-                        <dd class="text-sm text-gray-400">@if($reviews['url'])<a href="{{ $reviews['url'] }}" target="_blank" rel="noopener" class="hover:text-white underline-offset-4 hover:underline">{{ $reviewsText }}</a>@else{{ $reviewsText }}@endif</dd>
-                    </div>
-                </div>
-            @endif
+        {{-- Четири еднакви колони с една обща мисъл (proof_label): стойност и един ред текст; „link“ прави текста връзка. --}}
+        @if(filled($trust['proof_label'] ?? null))
+            <p class="rise-text mb-4 text-xs font-bold uppercase tracking-[0.18em] text-brand-300" style="--d: 300ms">{{ $trust['proof_label'] }}</p>
+        @endif
+        @if($hasReviews)
+            <div class="rise-text mb-4 flex items-center gap-4" style="--d: 300ms">
+                <span class="w-11 h-11 shrink-0 rounded-full bg-white flex items-center justify-center text-lg font-extrabold text-brand-950" aria-hidden="true">G</span>
+                <p>
+                    <span class="flex items-center gap-2 text-2xl font-extrabold">{{ number_format($reviews['rating'], 1, app()->getLocale() === 'bg' ? ',' : '.') }} <span class="text-sm text-amber-400 tracking-tight" aria-hidden="true">★★★★★</span></span>
+                    @php($reviewsText = __($reviews['count'] === 1 ? ':count отзив в Google' : ':count отзива в Google', ['count' => $reviews['count']]))
+                    <span class="block text-sm text-gray-400">@if($reviews['url'])<a href="{{ $reviews['url'] }}" target="_blank" rel="noopener" class="hover:text-white underline-offset-4 hover:underline">{{ $reviewsText }}</a>@else{{ $reviewsText }}@endif</span>
+                </p>
+            </div>
+        @endif
+        <dl class="rise-text grid grid-cols-2 lg:grid-cols-4 border-y border-white/10" style="--d: 320ms">
             @foreach($trust['proof'] as $fact)
-                <div class="{{ ! $hasReviews && $loop->last && $loop->count % 2 ? 'col-span-2 lg:col-span-1' : '' }}">
+                {{-- Отстъпи по позиция: първата колона на всеки ред е подравнена с надписа, другите имат линия вляво. --}}
+                <div @class([
+                    'py-6 border-white/10',
+                    'pr-4 sm:pr-6' => $loop->index % 2 === 0,
+                    'pl-4 sm:pl-6 pr-2 border-l' => $loop->index % 2 === 1,
+                    'border-t lg:border-t-0' => $loop->index >= 2,
+                    'lg:pl-6 lg:border-l' => $loop->index === 2,
+                ])>
                     <dt class="sr-only">{{ $fact['text'] }}</dt>
-                    <dd class="display text-2xl md:text-3xl">{{ $fact['value'] }}</dd>
-                    <dd class="mt-1 text-sm text-gray-400 leading-snug">{{ $fact['text'] }}</dd>
+                    <dd class="display text-2xl sm:text-3xl md:text-4xl">{{ $fact['value'] }}</dd>
+                    <dd class="mt-2 text-sm text-gray-400 leading-snug">
+                        @if(filled($fact['link'] ?? null))
+                            <a href="{{ url($fact['link']) }}" class="group underline-offset-4 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300 rounded-sm">{{ $fact['text'] }}&nbsp;<x-icon name="arrow-right" class="inline text-[10px] text-brand-300 transition-transform group-hover:translate-x-0.5" /></a>
+                        @else
+                            {{ $fact['text'] }}
+                        @endif
+                    </dd>
                 </div>
             @endforeach
-            <div class="{{ $hasReviews ? '' : 'hidden lg:block' }}">
-                <dt class="sr-only">{{ __('Скорост') }}</dt>
-                <dd class="display text-2xl md:text-3xl">PageSpeed</dd>
-                <dd class="mt-1 text-sm text-gray-400 leading-snug"><a href="https://pagespeed.web.dev/analysis?url={{ urlencode(url('/')) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:text-white underline-offset-4 hover:underline">{{ __('проверете скоростта ни сами') }} <x-icon name="arrow-up-right-from-square" class="text-[10px]" /></a></dd>
-            </div>
         </dl>
     </div>
 </section>
@@ -123,14 +125,14 @@
                         <div class="relative">
                             <span class="inline-flex items-center gap-2 rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300"><x-icon name="circle-check" class="text-[11px]" /> {{ $scenario['label'] }}</span>
                             <h3 class="mt-5 text-2xl font-extrabold tracking-tight">{{ $scenario['title'] }}</h3>
-                            <p class="mt-4 text-gray-300 leading-relaxed">{{ $scenario['text'] }}</p>
+                            @foreach(preg_split('/\R\s*\R/u', trim($scenario['text'])) as $paragraph)<p class="mt-3 first-of-type:mt-4 text-gray-300 leading-relaxed">{{ $paragraph }}</p>@endforeach
                         </div>
                     </article>
                 @else
                     <article class="reveal card-hover rounded-3xl border border-gray-200 bg-white p-8 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ $loop->index * 100 }}ms">
                         <span class="inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-red-700 dark:bg-red-500/10 dark:text-red-300"><x-icon name="triangle-exclamation" class="text-[11px]" /> {{ $scenario['label'] }}</span>
                         <h3 class="mt-5 text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $scenario['title'] }}</h3>
-                        <p class="mt-4 text-gray-600 leading-relaxed dark:text-gray-300">{{ $scenario['text'] }}</p>
+                        @foreach(preg_split('/\R\s*\R/u', trim($scenario['text'])) as $paragraph)<p class="mt-3 first-of-type:mt-4 text-gray-600 leading-relaxed dark:text-gray-300">{{ $paragraph }}</p>@endforeach
                     </article>
                 @endif
             @endforeach
@@ -189,6 +191,9 @@
             <p class="mt-6 text-lg text-gray-600 leading-relaxed dark:text-gray-300">{{ $trust['fit_text'] }}</p>
         </div>
         <div class="lg:col-span-7">
+            @if(filled($trust['fit_list_label'] ?? null))
+                <p class="reveal mb-4 text-sm font-bold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">{{ $trust['fit_list_label'] }}</p>
+            @endif
             <ol class="reveal divide-y divide-gray-200 border-y border-gray-200 dark:divide-white/10 dark:border-white/10">
                 @foreach($trust['fit_items'] as $item)
                     <li class="group relative flex gap-6 py-6 md:py-7 pl-5 md:pl-6">
