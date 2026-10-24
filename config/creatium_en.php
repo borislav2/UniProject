@@ -104,11 +104,12 @@ return [
 
     'home_trust' => [
         'eyebrow' => 'Website design and digital marketing',
+        'proof_label' => 'No surprises for you',
         'proof' => [
-            ['value' => '€450', 'text' => 'our website price is written here, not "on request"', 'link' => '', 'link_text' => ''],
-            ['value' => '50 / 50', 'text' => 'half up front, the rest after you approve the finished site', 'link' => '', 'link_text' => ''],
-            ['value' => '24/7', 'text' => 'we monitor your site around the clock and act when it goes down', 'link' => '', 'link_text' => ''],
-            ['value' => '1 minute', 'text' => 'free check of your website', 'link' => '/en/website-check', 'link_text' => 'Check your website'],
+            ['value' => '€450', 'text' => 'the price of a website, stated up front', 'link' => ''],
+            ['value' => '50%', 'text' => 'paid after you approve the finished site', 'link' => ''],
+            ['value' => '24/7', 'text' => 'we watch your site after launch too', 'link' => ''],
+            ['value' => '1 min', 'text' => 'free check of your current website', 'link' => '/en/website-check'],
         ],
         'engine_eyebrow' => 'The digital engine',
         'engine_center' => 'Digital engine',

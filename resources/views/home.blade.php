@@ -72,29 +72,39 @@
 
     {{-- Proof: only facts we can stand behind; the Google rating appears once there are real reviews --}}
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
-        {{-- Еднакви карти: иконка, стойност, обяснение и по желание бутон (link / link_text от home_trust.proof). --}}
-        @php($proofIcons = ['tag', 'handshake', 'shield-halved', 'magnifying-glass'])
-        <dl class="rise-text grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4" style="--d: 320ms">
-            @if($hasReviews)
-                <div class="relative edge glass col-span-2 lg:col-span-4 flex items-center gap-4 rounded-2xl p-5 sm:p-6">
-                    <span class="w-11 h-11 shrink-0 rounded-full bg-white flex items-center justify-center text-lg font-extrabold text-brand-950" aria-hidden="true">G</span>
-                    <div>
-                        <dt class="sr-only">{{ __('Оценка в Google') }}</dt>
-                        <dd class="flex items-center gap-2 text-2xl font-extrabold">{{ number_format($reviews['rating'], 1, app()->getLocale() === 'bg' ? ',' : '.') }} <span class="text-sm text-amber-400 tracking-tight" aria-hidden="true">★★★★★</span></dd>
-                        @php($reviewsText = __($reviews['count'] === 1 ? ':count отзив в Google' : ':count отзива в Google', ['count' => $reviews['count']]))
-                        <dd class="text-sm text-gray-400">@if($reviews['url'])<a href="{{ $reviews['url'] }}" target="_blank" rel="noopener" class="hover:text-white underline-offset-4 hover:underline">{{ $reviewsText }}</a>@else{{ $reviewsText }}@endif</dd>
-                    </div>
-                </div>
-            @endif
+        {{-- Четири еднакви колони с една обща мисъл (proof_label): стойност и един ред текст; „link“ прави текста връзка. --}}
+        @if(filled($trust['proof_label'] ?? null))
+            <p class="rise-text mb-4 text-xs font-bold uppercase tracking-[0.18em] text-brand-300" style="--d: 300ms">{{ $trust['proof_label'] }}</p>
+        @endif
+        @if($hasReviews)
+            <div class="rise-text mb-4 flex items-center gap-4" style="--d: 300ms">
+                <span class="w-11 h-11 shrink-0 rounded-full bg-white flex items-center justify-center text-lg font-extrabold text-brand-950" aria-hidden="true">G</span>
+                <p>
+                    <span class="flex items-center gap-2 text-2xl font-extrabold">{{ number_format($reviews['rating'], 1, app()->getLocale() === 'bg' ? ',' : '.') }} <span class="text-sm text-amber-400 tracking-tight" aria-hidden="true">★★★★★</span></span>
+                    @php($reviewsText = __($reviews['count'] === 1 ? ':count отзив в Google' : ':count отзива в Google', ['count' => $reviews['count']]))
+                    <span class="block text-sm text-gray-400">@if($reviews['url'])<a href="{{ $reviews['url'] }}" target="_blank" rel="noopener" class="hover:text-white underline-offset-4 hover:underline">{{ $reviewsText }}</a>@else{{ $reviewsText }}@endif</span>
+                </p>
+            </div>
+        @endif
+        <dl class="rise-text grid grid-cols-2 lg:grid-cols-4 border-y border-white/10" style="--d: 320ms">
             @foreach($trust['proof'] as $fact)
-                <div class="relative edge glass flex flex-col rounded-2xl p-5 sm:p-6">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-brand-200" aria-hidden="true"><x-icon name="{{ $proofIcons[$loop->index] ?? 'check' }}" class="text-sm" /></span>
+                {{-- Отстъпи по позиция: първата колона на всеки ред е подравнена с надписа, другите имат линия вляво. --}}
+                <div @class([
+                    'py-6 border-white/10',
+                    'pr-4 sm:pr-6' => $loop->index % 2 === 0,
+                    'pl-4 sm:pl-6 pr-2 border-l' => $loop->index % 2 === 1,
+                    'border-t lg:border-t-0' => $loop->index >= 2,
+                    'lg:pl-6 lg:border-l' => $loop->index === 2,
+                ])>
                     <dt class="sr-only">{{ $fact['text'] }}</dt>
-                    <dd class="display mt-4 text-2xl md:text-3xl">{{ $fact['value'] }}</dd>
-                    <dd class="mt-1.5 text-sm text-gray-400 leading-snug">{{ $fact['text'] }}</dd>
-                    @if(filled($fact['link'] ?? null))
-                        <dd class="mt-auto pt-4"><a href="{{ url($fact['link']) }}" class="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300">{{ filled($fact['link_text'] ?? null) ? $fact['link_text'] : __('Вижте') }} <x-icon name="arrow-right" class="text-[10px]" /></a></dd>
-                    @endif
+                    <dd class="display text-3xl md:text-4xl">{{ $fact['value'] }}</dd>
+                    <dd class="mt-2 text-sm text-gray-400 leading-snug">
+                        @if(filled($fact['link'] ?? null))
+                            <a href="{{ url($fact['link']) }}" class="group underline-offset-4 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300 rounded-sm">{{ $fact['text'] }}&nbsp;<x-icon name="arrow-right" class="inline text-[10px] text-brand-300 transition-transform group-hover:translate-x-0.5" /></a>
+                        @else
+                            {{ $fact['text'] }}
+                        @endif
+                    </dd>
                 </div>
             @endforeach
         </dl>
