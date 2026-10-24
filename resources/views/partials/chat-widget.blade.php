@@ -42,9 +42,25 @@
         </form>
     </div>
 
-    <button type="button" class="group relative flex items-center gap-2.5 rounded-full bg-brand-950 py-3 pl-3 pr-5 text-white shadow-[0_16px_40px_-10px_rgb(15_26_43/0.7)] ring-1 ring-white/15 hover:bg-brand-800 transition dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100" aria-expanded="false" aria-controls="chat" data-chat-toggle>
-        <span class="w-9 h-9 rounded-full bg-brand-gradient flex items-center justify-center ring-1 ring-white/20"><x-icon name="robot" class="text-sm text-white" /></span>
-        <span class="text-sm font-bold">{{ __('Попитайте ни') }}</span>
+    {{-- Покана: показва се веднъж на 3 дни след няколко секунди, ако посетителят още не е писал (creatium-chat-teaser). --}}
+    <div class="chat-teaser hidden absolute bottom-full right-0 mb-3 w-64 rounded-2xl rounded-br-md bg-white p-4 pr-9 text-sm leading-snug text-gray-800 shadow-[0_20px_50px_-15px_rgb(15_26_43/0.45)] ring-1 ring-gray-200 dark:bg-ink-900 dark:text-gray-100 dark:ring-white/10" data-chat-teaser>
+        <button type="button" class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-white/10 dark:hover:text-white" aria-label="{{ __('Затвори') }}" data-chat-teaser-close><x-icon name="minus" class="text-[10px]" /></button>
+        <button type="button" class="text-left" data-chat-teaser-open>
+            <strong class="block text-brand-950 dark:text-white">{{ __('Здравейте!') }}</strong>
+            {{ __('Имате въпрос за цени, срокове или вашия сайт? Питайте тук, отговаряме веднага.') }}
+        </button>
+    </div>
+
+    <button type="button" class="chat-toggle group relative flex items-center gap-3 rounded-full bg-gradient-to-br from-brand-700 to-brand-500 py-2.5 pl-2.5 pr-5 text-white shadow-[0_18px_45px_-10px_rgb(45_99_163/0.8)] ring-1 ring-white/25 transition hover:-translate-y-0.5 hover:shadow-[0_22px_50px_-10px_rgb(45_99_163/0.95)]" aria-expanded="false" aria-controls="chat" data-chat-toggle>
+        <span class="chat-pulse pointer-events-none absolute inset-0 rounded-full" aria-hidden="true"></span>
+        <span class="relative w-10 h-10 rounded-full bg-white/15 flex items-center justify-center ring-1 ring-white/30">
+            <x-icon name="robot" class="text-base text-white" />
+            <span class="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-brand-700" aria-hidden="true"></span>
+        </span>
+        <span class="relative flex flex-col items-start leading-tight">
+            <span class="text-sm font-extrabold">{{ __('Попитайте ни') }}</span>
+            <span class="text-[11px] font-medium text-white/80">{{ __('отговаряме веднага') }}</span>
+        </span>
     </button>
 </div>
 <script>
@@ -112,6 +128,7 @@
             panel.classList.toggle('flex', state);
             toggle.setAttribute('aria-expanded', state ? 'true' : 'false');
             toggle.classList.toggle('max-sm:hidden', state);
+            if (state) root.querySelector('[data-chat-teaser]').classList.add('hidden');
             if (state) { loadHistory(); setTimeout(function () { input.focus(); }, 50); push('chat_open'); }
         }
 
@@ -143,7 +160,23 @@
             }).then(function () { busy = false; sendBtn.disabled = false; input.focus(); });
         }
 
-        toggle.addEventListener('click', function () { open(panel.classList.contains('hidden')); });
+        // Поканата до бутона: веднъж на 3 дни, след 6 секунди, само ако няма разговор и чатът е затворен.
+        var teaser = root.querySelector('[data-chat-teaser]'), TEASER = 'creatium-chat-teaser';
+        function hideTeaser(remember) {
+            teaser.classList.add('hidden');
+            if (remember) { try { localStorage.setItem(TEASER, String(Date.now())); } catch (e) {} }
+        }
+        var lastTeaser = 0;
+        try { lastTeaser = Number(localStorage.getItem(TEASER)) || 0; } catch (e) {}
+        if (!conversation && Date.now() - lastTeaser > 3 * 864e5) {
+            setTimeout(function () {
+                if (panel.classList.contains('hidden') && !toggle.classList.contains('opacity-0')) { teaser.classList.remove('hidden'); push('chat_teaser_shown'); }
+            }, 6000);
+        }
+        root.querySelector('[data-chat-teaser-close]').addEventListener('click', function () { hideTeaser(true); });
+        root.querySelector('[data-chat-teaser-open]').addEventListener('click', function () { hideTeaser(true); open(true); });
+
+        toggle.addEventListener('click', function () { hideTeaser(true); open(panel.classList.contains('hidden')); });
         root.querySelector('[data-chat-close]').addEventListener('click', function () { open(false); toggle.focus(); });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.classList.contains('hidden')) { open(false); toggle.focus(); } });
         suggestions.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) send(b.textContent); });
@@ -158,6 +191,7 @@
                 var hide = small.matches && entries[0].isIntersecting && panel.classList.contains('hidden');
                 toggle.classList.toggle('opacity-0', hide);
                 toggle.classList.toggle('pointer-events-none', hide);
+                if (hide) root.querySelector('[data-chat-teaser]').classList.add('hidden');
             }).observe(contactForm);
         }
         document.querySelectorAll('[data-open-chat]').forEach(function (el) { el.addEventListener('click', function (e) { e.preventDefault(); open(true); }); });

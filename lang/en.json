@@ -53,7 +53,6 @@
     "Общи условия": "Terms and conditions",
     "Основна навигация": "Main navigation",
     "Отговаряме до един работен ден": "We reply within one business day",
-    "Отговаряме до един работен ден. Ако е спешно, обадете се.": "We reply within one business day. If it is urgent, give us a call.",
     "Отказвам": "Reject",
     "Откъде да започнете": "Where to start",
     "Още от блога": "More from the blog",
@@ -62,7 +61,6 @@
     "Пакети и цени": "Packages and pricing",
     "Пиксели на рекламните платформи: колко запитвания идват от рекламите ни.": "Ad platform pixels: how many inquiries come from our ads.",
     "Пишете или се обадете на Creatium Lab.": "Write to or call Creatium Lab.",
-    "Пишете или се обадете.": "Write or call.",
     "Пишете ни": "Write to us",
     "По-нови": "Newer",
     "По-стари": "Older",
@@ -407,5 +405,16 @@
     "Копирай връзката": "Copy link",
     "Последвайте ни във Facebook за новите статии": "Follow us on Facebook for new articles",
     "Връзката е копирана": "Link copied",
-    "Вижте": "See"
+    "Вижте": "See",
+    "Имате въпроси?": "Have questions?",
+    "Събрали сме отговорите на най-честите въпроси за цени, срокове и работа с нас.": "We have collected the answers to the most common questions about prices, timing and working with us.",
+    "Отговори на най-честите въпроси за цени, плащане, срокове, Google и AI видимост и грижата за сайта след пускането.": "Answers to the most common questions about prices, payment, timing, Google and AI visibility and looking after the site after launch.",
+    "Цени, срокове, Google и AI, грижата след пускането. Ако не намерите отговор, попитайте ни директно.": "Prices, timing, Google and AI, care after launch. If you don't find an answer, ask us directly.",
+    "Теми": "Topics",
+    "Не намерихте отговор?": "Didn't find an answer?",
+    "Запазете безплатна консултация и ще отговорим на всичко за вашия бизнес.": "Book a free consultation and we will answer everything about your business.",
+    "Здравейте!": "Hello!",
+    "Имате въпрос за цени, срокове или вашия сайт? Питайте тук, отговаряме веднага.": "Have a question about prices, timing or your website? Ask here, we answer right away.",
+    "отговаряме веднага": "we answer right away",
+    "Затвори": "Close"
 }

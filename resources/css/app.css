@@ -500,6 +500,11 @@
 }
 
 .hint-arrows { animation: hint-nudge 1.4s ease-in-out infinite; }
+/* Бутонът на чата: пулсиращ ореол и плавна поява на поканата. */
+.chat-pulse { box-shadow: 0 0 0 0 rgb(93 145 205 / 0.55); animation: chat-pulse 2.4s ease-out infinite; }
+@keyframes chat-pulse { 0% { box-shadow: 0 0 0 0 rgb(93 145 205 / 0.55); } 70%, 100% { box-shadow: 0 0 0 14px rgb(93 145 205 / 0); } }
+.chat-teaser:not(.hidden) { animation: chat-teaser-in .35s ease-out both; }
+@keyframes chat-teaser-in { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
 .hint-arrows:first-child { animation-direction: reverse; }
 
 /* The phone scrolls down the demo shop and back */
@@ -669,7 +674,7 @@
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .js .reveal { opacity: 1; transform: none; filter: none; transition: none; }
-    .animate-float, .rise-in, .rise-text, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .bg-animated, .halo-spin, .hint-arrows, .slide, .slide-zoom, .slide-toast, .phone-scroll, .ai-typing, .ai-answer, .typing-dot { animation: none; }
+    .animate-float, .rise-in, .rise-text, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .bg-animated, .halo-spin, .hint-arrows, .chat-pulse, .chat-teaser, .slide, .slide-zoom, .slide-toast, .phone-scroll, .ai-typing, .ai-answer, .typing-dot { animation: none; }
     .ai-typing { display: none; }
     .slide[style*="--i: 0"], .slide-toast[style*="--i: 0"] { opacity: 1; }
     .card-hover:hover, .card-hover:hover .icon-pop, .tilt { transform: none; }

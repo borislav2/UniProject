@@ -48,7 +48,7 @@ class ServicePagesTest extends TestCase
             ->assertSee('data-dropdown', false)
             ->assertSeeInOrder(['Услуги', 'Изработка на сайт', 'Google профил и отзиви', 'Безплатна проверка на сайт', 'Пакети', 'Проекти', 'За нас', 'Кои сме', 'Често задавани въпроси', 'Контакти', 'Безплатна консултация'])
             ->assertSee('href="' . url('/kontakti') . '#konsultatsiya"', false)
-            ->assertSee('href="' . url('/za-nas') . '#vaprosi"', false);
+            ->assertSee('href="' . url('/vaprosi') . '"', false);
 
         $this->get('/sitemap.xml')->assertOk()
             ->assertSee('<loc>' . url('/uslugi/izrabotka-na-sait') . '</loc>', false)
