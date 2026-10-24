@@ -49,8 +49,8 @@ class ChatTest extends TestCase
 
     public function test_widget_is_on_public_pages_and_can_be_turned_off(): void
     {
-        $this->get('/')->assertOk()->assertSee('data-chat', false)->assertSee('Попитайте ни');
-        $this->get('/en')->assertSee('Ask us');
+        $this->get('/')->assertOk()->assertSee('data-chat', false)->assertSee('Попитайте Крео');
+        $this->get('/en')->assertSee('Ask Kreo');
 
         config(['creatium.chat.enabled' => false]);
         $this->get('/')->assertDontSee('data-chat-panel', false);
