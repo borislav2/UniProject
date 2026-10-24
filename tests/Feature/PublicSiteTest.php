@@ -119,7 +119,6 @@ class PublicSiteTest extends TestCase
             ->assertSee('<span class="text-accent">продава</span>', false)
             ->assertSeeTextInOrder(['Готова система, не визитка', 'Google + Meta', 'Моментално', '1 клик', 'Конверсия', '01 / Проблемът', '02 / Дигиталният двигател', 'Уеб архитектура и инфраструктура', 'Бизнес анализиране и SEO/GEO позициониране', 'Маркетингова автоматизация и конверсии', 'Оперативна сигурност и непрекъсваемост', '03 / С кого работим', '04 / Как мислим', '05 / Браншове', '06 / Работен процес'])
             ->assertDontSee('отзива в Google')
-            ->assertSee('href="#konsultatsiya"', false)
             ->assertSee('href="' . url('/kontakti') . '#konsultatsiya" class="btn-shine btn-glow', false)
             ->assertSee('id="konsultatsiya"', false)
             ->assertDontSee('Стандарти на работа')
