@@ -11,8 +11,9 @@ return [
         // Телефони за връзка (CREATIUM_PHONES в .env, разделени със запетая, ги заменя).
         'phones' => array_values(array_filter(array_map('trim', explode(',', (string) env('CREATIUM_PHONES', '+359 895 457 247, +359 877 200 546'))))),
         'city' => env('CREATIUM_CITY', 'София'),
-        // Страницата във Facebook (CREATIUM_FACEBOOK_URL): връзка във футъра и блога и sameAs в данните за Google. Празно = скрито.
-        'facebook' => env('CREATIUM_FACEBOOK_URL', ''),
+        // Страницата във Facebook (CREATIUM_FACEBOOK_URL): връзка във футъра и блога и sameAs в данните за Google.
+        // CREATIUM_FACEBOOK_URL= (празно) я скрива. Линкът за споделяне от приложението води към страницата.
+        'facebook' => env('CREATIUM_FACEBOOK_URL', 'https://www.facebook.com/share/19QzCVJcmT/'),
     ],
 
     // Чатът на сайта (AI асистент с Claude, без ANTHROPIC_API_KEY отговаря от честите въпроси).
