@@ -344,7 +344,6 @@
     "Описан ли е бизнесът така, че машините да го разберат, и не спира ли сайтът ChatGPT и другите AI асистенти.": "Whether machines can understand the business, and whether the site blocks ChatGPT and other AI assistants.",
     "Проблемът": "The problem",
     "Оценка в Google": "Google rating",
-    "проверете скоростта ни сами": "check our speed yourself",
     "демо сайта": "demo websites",
     "бранша": "industries",
     "Какво решава всеки от тях": "What each one solves",
@@ -408,5 +407,6 @@
     "Сподели във Facebook": "Share on Facebook",
     "Копирай връзката": "Copy link",
     "Последвайте ни във Facebook за новите статии": "Follow us on Facebook for new articles",
-    "Връзката е копирана": "Link copied"
+    "Връзката е копирана": "Link copied",
+    "Вижте": "See"
 }

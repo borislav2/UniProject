@@ -105,9 +105,10 @@ return [
     'home_trust' => [
         'eyebrow' => 'Website design and digital marketing',
         'proof' => [
-            ['value' => '1–2 weeks', 'text' => 'from kickoff to a finished website'],
-            ['value' => '1 working day', 'text' => 'at most until we answer an inquiry'],
-            ['value' => '4 in 1', 'text' => 'website, Google, emails and maintenance from one team'],
+            ['value' => '€450', 'text' => 'our website price is written here, not "on request"', 'link' => '', 'link_text' => ''],
+            ['value' => '50 / 50', 'text' => 'half up front, the rest after you approve the finished site', 'link' => '', 'link_text' => ''],
+            ['value' => '24/7', 'text' => 'we monitor your site around the clock and act when it goes down', 'link' => '', 'link_text' => ''],
+            ['value' => '1 minute', 'text' => 'free check of your website', 'link' => '/en/website-check', 'link_text' => 'Check your website'],
         ],
         'engine_eyebrow' => 'The digital engine',
         'engine_center' => 'Digital engine',

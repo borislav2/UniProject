@@ -72,9 +72,11 @@
 
     {{-- Proof: only facts we can stand behind; the Google rating appears once there are real reviews --}}
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
-        <dl class="rise-text grid grid-cols-2 lg:grid-cols-4 border-y border-white/10 divide-white/10 [&>div]:py-6 [&>div]:pr-4 [&>div:nth-child(odd)]:border-r [&>div:nth-child(odd)]:border-white/10 lg:[&>div]:border-r lg:[&>div:last-child]:border-r-0 lg:[&>div]:px-6 lg:[&>div:first-child]:pl-0" style="--d: 320ms">
+        {{-- Еднакви карти: иконка, стойност, обяснение и по желание бутон (link / link_text от home_trust.proof). --}}
+        @php($proofIcons = ['tag', 'handshake', 'shield-halved', 'magnifying-glass'])
+        <dl class="rise-text grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4" style="--d: 320ms">
             @if($hasReviews)
-                <div class="col-span-2 lg:col-span-1 flex items-center gap-4 border-b border-white/10 lg:border-b-0">
+                <div class="relative edge glass col-span-2 lg:col-span-4 flex items-center gap-4 rounded-2xl p-5 sm:p-6">
                     <span class="w-11 h-11 shrink-0 rounded-full bg-white flex items-center justify-center text-lg font-extrabold text-brand-950" aria-hidden="true">G</span>
                     <div>
                         <dt class="sr-only">{{ __('Оценка в Google') }}</dt>
@@ -85,17 +87,16 @@
                 </div>
             @endif
             @foreach($trust['proof'] as $fact)
-                <div class="{{ ! $hasReviews && $loop->last && $loop->count % 2 ? 'col-span-2 lg:col-span-1' : '' }}">
+                <div class="relative edge glass flex flex-col rounded-2xl p-5 sm:p-6">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-brand-200" aria-hidden="true"><x-icon name="{{ $proofIcons[$loop->index] ?? 'check' }}" class="text-sm" /></span>
                     <dt class="sr-only">{{ $fact['text'] }}</dt>
-                    <dd class="display text-2xl md:text-3xl">{{ $fact['value'] }}</dd>
-                    <dd class="mt-1 text-sm text-gray-400 leading-snug">{{ $fact['text'] }}</dd>
+                    <dd class="display mt-4 text-2xl md:text-3xl">{{ $fact['value'] }}</dd>
+                    <dd class="mt-1.5 text-sm text-gray-400 leading-snug">{{ $fact['text'] }}</dd>
+                    @if(filled($fact['link'] ?? null))
+                        <dd class="mt-auto pt-4"><a href="{{ url($fact['link']) }}" class="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-sm font-semibold text-white hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300">{{ filled($fact['link_text'] ?? null) ? $fact['link_text'] : __('Вижте') }} <x-icon name="arrow-right" class="text-[10px]" /></a></dd>
+                    @endif
                 </div>
             @endforeach
-            <div class="{{ $hasReviews ? '' : 'hidden lg:block' }}">
-                <dt class="sr-only">{{ __('Скорост') }}</dt>
-                <dd class="display text-2xl md:text-3xl">PageSpeed</dd>
-                <dd class="mt-1 text-sm text-gray-400 leading-snug"><a href="https://pagespeed.web.dev/analysis?url={{ urlencode(url('/')) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:text-white underline-offset-4 hover:underline">{{ __('проверете скоростта ни сами') }} <x-icon name="arrow-up-right-from-square" class="text-[10px]" /></a></dd>
-            </div>
         </dl>
     </div>
 </section>
