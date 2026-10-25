@@ -14,10 +14,15 @@ gtag('set', 'ads_data_redaction', true);
 })();
 </script>
 <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+{{-- Loaded 2.5 s after the page has loaded, or at the visitor's first scroll, tap or key press, so the tags don't compete with the
+     first paint on slow phones (PageSpeed). Events pushed before that, such as generate_lead, wait in dataLayer and are sent when it loads. --}}
+<script>(function(w,d,s,l,i){var done=false,events=['scroll','pointerdown','keydown','touchstart'];
+function load(){if(done)return;done=true;events.forEach(function(e){w.removeEventListener(e,load,{passive:true});});
+w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);}
+events.forEach(function(e){w.addEventListener(e,load,{passive:true});});
+if(d.readyState==='complete'){setTimeout(load,2500);}else{w.addEventListener('load',function(){setTimeout(load,2500);});}
 })(window,document,'script','dataLayer',@json(config('creatium.gtm_id')));</script>
 <!-- End Google Tag Manager -->
 @if(session('lead_created'))

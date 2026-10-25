@@ -112,6 +112,8 @@ class MarketingTest extends TestCase
         $this->assertStringContainsString("analytics_storage: 'denied'", $html);
         $this->assertLessThan(strpos($html, 'googletagmanager.com/gtm.js'), $default);
         $this->assertLessThan(strpos($html, '<title>'), strpos($html, '<!-- Google Tag Manager -->'));
+        // GTM itself waits for the page load or the first interaction, so it doesn't slow the first paint.
+        $this->assertStringContainsString("setTimeout(load,2500)", $html);
 
         $this->get('/biskvitki')->assertSee('Google Analytics 4')->assertSee('Meta Pixel');
         $this->get('/poveritelnost')->assertSee('Google Tag Manager');
