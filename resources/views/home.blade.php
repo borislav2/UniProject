@@ -254,7 +254,7 @@
                 <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="group relative edge glass snap-start shrink-0 w-[82%] sm:w-auto rounded-2xl overflow-hidden hover:bg-white/10 transition-colors">
                     <span class="relative block aspect-[8/5] overflow-hidden bg-white/5">
                         @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
-                            <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" alt="" width="960" height="600" loading="lazy" decoding="async" class="h-full w-full object-cover object-top opacity-90 transition duration-500 group-hover:scale-[1.03] group-hover:opacity-100">
+                            <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" alt="" width="960" height="600" loading="lazy" decoding="async" class="h-full w-full object-cover object-top opacity-90 transition duration-500 group-hover:scale-[1.03] group-hover:opacity-100">
                         @endif
                         <span class="absolute top-3 left-3 rounded-full bg-brand-950/80 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white ring-1 ring-white/20">{{ __('Демо') }}</span>
                     </span>

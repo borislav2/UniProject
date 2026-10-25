@@ -25,9 +25,9 @@
                             <span class="w-2 h-2 rounded-full bg-[#febc2e]"></span>
                             <span class="w-2 h-2 rounded-full bg-[#28c840]"></span>
                         </div>
-                        <div class="relative flex-1 h-4 rounded bg-white text-[8px] text-gray-500">
+                        <div class="relative flex-1 h-4 rounded bg-white text-[8px] text-gray-700">
                             @foreach($slides as [$slug, $domain])
-                                <span class="slide absolute inset-0 flex items-center justify-center gap-1" style="--i: {{ $loop->index }}"><x-icon name="lock" class="text-[6px] text-emerald-600" />{{ $domain }}</span>
+                                <span class="slide absolute inset-0 flex items-center justify-center gap-1" style="--i: {{ $loop->index }}"><x-icon name="lock" class="text-[6px] text-emerald-600" /><span class="mock-text" data-text="{{ $domain }}"></span></span>
                             @endforeach
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                             <span class="[@media(hover:hover)]:hidden">{{ __('Докоснете екрана') }}</span>
                             <span class="hint-arrows">→</span></p>
                         @foreach($slides as [$slug])
-                            <img src="{{ asset('images/demos/' . $slug . '.webp') }}" alt="" width="960" height="600" decoding="async" @if(! $loop->first) loading="lazy" @endif class="slide slide-zoom absolute inset-0 w-full h-full object-cover object-top" style="--i: {{ $loop->index }}">
+                            <img src="{{ asset('images/demos/' . $slug . '.webp') }}" srcset="{{ demo_srcset($slug) }}" sizes="(min-width: 640px) 420px, 85vw" alt="" width="960" height="600" decoding="async" @if(! $loop->first) loading="lazy" @endif class="slide slide-zoom absolute inset-0 w-full h-full object-cover object-top" style="--i: {{ $loop->index }}">
                         @endforeach
 
                         {{-- Behind the site: the marketing we run for it. Revealed by moving the pointer left to right, a click or a tap. --}}
@@ -94,7 +94,7 @@
                                     <span class="font-semibold text-gray-300">{{ __('Автоматични имейли') }}</span>
                                     <span class="mt-auto space-y-1 text-gray-300">
                                         @foreach([[__('Потвърждение'), __('изпратен')], [__('Напомняне'), __('утре 18:00')], [__('Отзив в Google'), __('след визита')]] as [$mail, $state])
-                                            <span class="flex items-center gap-1"><x-icon name="envelope" class="text-[0.9em] text-brand-300" /><span class="truncate">{{ $mail }}</span><span class="ml-auto shrink-0 text-gray-500">{{ $state }}</span></span>
+                                            <span class="flex items-center gap-1"><x-icon name="envelope" class="text-[0.9em] text-brand-300" /><span class="truncate">{{ $mail }}</span><span class="ml-auto shrink-0 text-gray-400">{{ $state }}</span></span>
                                         @endforeach
                                     </span>
                                 </div>
@@ -116,7 +116,7 @@
             <div class="animate-float rounded-[2rem] bg-gradient-to-b from-[#3a4558] to-[#121823] p-[5px] ring-1 ring-white/20 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.95)]" style="animation-delay: -2s">
                 <div class="relative overflow-hidden rounded-[1.7rem] bg-white aspect-[9/19.5]">
                     <div class="absolute left-1/2 top-1.5 -translate-x-1/2 w-[34%] h-3.5 rounded-full bg-black z-10"></div>
-                    <img src="{{ asset('images/demos/onlain-magazin-mobile.webp') }}" alt="" width="375" height="1600" loading="lazy" decoding="async" class="phone-scroll absolute inset-x-0 top-0 w-full h-auto">
+                    <img src="{{ asset('images/demos/onlain-magazin-mobile.webp') }}" srcset="{{ demo_srcset('onlain-magazin-mobile', [240], 375) }}" sizes="(min-width: 1024px) 140px, 120px" alt="" width="375" height="1600" loading="lazy" decoding="async" class="phone-scroll absolute inset-x-0 top-0 w-full h-auto">
                 </div>
             </div>
         </div>

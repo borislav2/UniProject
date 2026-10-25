@@ -22,3 +22,22 @@ if (! function_exists('site')) {
         return app(\App\Support\Content::class)->get($key);
     }
 }
+
+if (! function_exists('demo_srcset')) {
+    /**
+     * srcset of a demo screenshot in public/images/demos: the smaller copies ({slug}-480/-640.webp) that exist plus the 960 px original,
+     * so phones don't download the full-size image for a 300 px card.
+     */
+    function demo_srcset(string $slug, array $widths = [480, 640], int $full = 960): string
+    {
+        $sources = [];
+        foreach ($widths as $width) {
+            if (is_file(public_path("images/demos/{$slug}-{$width}.webp"))) {
+                $sources[] = asset("images/demos/{$slug}-{$width}.webp") . " {$width}w";
+            }
+        }
+        $sources[] = asset("images/demos/{$slug}.webp") . " {$full}w";
+
+        return implode(', ', $sources);
+    }
+}
