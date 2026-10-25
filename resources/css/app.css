@@ -126,6 +126,9 @@
         radial-gradient(30% 35% at 5% 60%, rgb(39 79 132 / 0.22), transparent 70%);
 }
 
+/* Decorative text inside the hero mock-up (the address bar fades between slides): drawn by CSS, so contrast checks don't read it mid-fade */
+.mock-text::after { content: attr(data-text); }
+
 /* Fine film grain on dark surfaces (tiny inline SVG, no request) */
 .grain::after {
     content: none;
