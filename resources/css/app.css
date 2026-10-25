@@ -267,27 +267,25 @@
 .js .reveal {
     opacity: 0;
     transform: translateY(24px) scale(0.98);
-    filter: blur(4px);
-    transition: opacity 0.7s var(--ease-out-soft), transform 0.7s var(--ease-out-soft), filter 0.7s var(--ease-out-soft);
+    transition: opacity 0.7s var(--ease-out-soft), transform 0.7s var(--ease-out-soft);
     transition-delay: var(--reveal-delay, 0ms);
 }
 
 .js .reveal.is-visible {
     opacity: 1;
     transform: none;
-    filter: none;
 }
 
 :root {
     --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-/* ---- Motion ("wow" layer). Only transform/opacity are animated, so it stays fast; all of it stops for prefers-reduced-motion. ---- */
+/* ---- Motion ("wow" layer). Only transform/opacity are animated (no filter/box-shadow keyframes: they repaint every frame and cost PageSpeed points on phones), so it stays fast; all of it stops for prefers-reduced-motion. ---- */
 
 /* Hero entrance: pure CSS, plays on load with or without JS. --d = delay. */
 @keyframes rise-in {
-    from { opacity: 0; transform: translateY(22px); filter: blur(6px); }
-    to { opacity: 1; transform: none; filter: none; }
+    from { opacity: 0; transform: translateY(22px); }
+    to { opacity: 1; transform: none; }
 }
 
 .rise-in {
@@ -501,8 +499,8 @@
 
 .hint-arrows { animation: hint-nudge 1.4s ease-in-out infinite; }
 /* Бутонът на чата: пулсиращ ореол и плавна поява на поканата. */
-.chat-pulse { box-shadow: 0 0 0 0 rgb(93 145 205 / 0.55); animation: chat-pulse 2.4s ease-out infinite; }
-@keyframes chat-pulse { 0% { box-shadow: 0 0 0 0 rgb(93 145 205 / 0.55); } 70%, 100% { box-shadow: 0 0 0 14px rgb(93 145 205 / 0); } }
+.chat-pulse { border: 2px solid rgb(93 145 205 / 0.7); animation: chat-pulse 2.4s ease-out infinite; will-change: transform, opacity; }
+@keyframes chat-pulse { 0% { transform: scale(1); opacity: 1; } 70%, 100% { transform: scale(1.12, 1.35); opacity: 0; } }
 .chat-teaser:not(.hidden) { animation: chat-teaser-in .35s ease-out both; }
 @keyframes chat-teaser-in { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
 .hint-arrows:first-child { animation-direction: reverse; }
