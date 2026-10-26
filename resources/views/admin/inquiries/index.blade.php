@@ -38,7 +38,7 @@
                     <p class="mt-1 text-sm text-gray-500">{{ $inquiry->created_at->format('d.m.Y H:i') }}</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2 text-xs">
-                    @if($inquiry->service)<span class="rounded-full bg-gray-100 px-2 py-1 text-gray-700">{{ $inquiry->service }}</span>@endif
+                    @if($inquiry->service)<span class="rounded-full bg-gray-100 px-2 py-1 text-gray-700">{{ \Illuminate\Support\Str::limit($inquiry->serviceLabel(), 60) }}</span>@endif
                     @if($inquiry->business_size)<span class="rounded-full bg-gray-100 px-2 py-1 text-gray-700">Бизнес: {{ $inquiry->business_size }}</span>@endif
                     @if($inquiry->lead_channel)<span class="rounded-full bg-gray-100 px-2 py-1 text-gray-700" title="Канал">{{ $inquiry->lead_channel }}</span>@endif
                     @if($inquiry->locale === 'en')<span class="rounded-full bg-purple-100 px-2 py-1 text-purple-800">EN: отговорете на английски</span>@endif

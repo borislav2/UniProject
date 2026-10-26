@@ -46,6 +46,31 @@ class Project extends Model
         'consultation_at' => 'datetime',
     ];
     
+    /** Статусите в базата са на английски (валидират се така); в админа се показват на български. */
+    public const STATUSES = [
+        'Planning' => ['Планиране', 'bg-yellow-100 text-yellow-800'],
+        'In Progress' => ['В работа', 'bg-blue-100 text-blue-800'],
+        'Completed' => ['Завършен', 'bg-green-100 text-green-800'],
+        'On Hold' => ['На пауза', 'bg-orange-100 text-orange-800'],
+        'Cancelled' => ['Отказан', 'bg-red-100 text-red-800'],
+    ];
+
+    public function statusLabel(): string
+    {
+        return self::STATUSES[$this->status][0] ?? (string) $this->status;
+    }
+
+    public function statusClass(): string
+    {
+        return self::STATUSES[$this->status][1] ?? 'bg-gray-100 text-gray-800';
+    }
+
+    /** Темата от формата (new-system, modernization, support) с текста ѝ; други стойности (напр. „Проверка на сайт“) се показват както са. */
+    public function serviceLabel(): ?string
+    {
+        return $this->service ? (config('creatium.contact_topics')[$this->service] ?? $this->service) : null;
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -61,6 +86,8 @@ class Project extends Model
         return $query->where('name', 'like', "%{$search}%")
             ->orWhere('description', 'like', "%{$search}%")
             ->orWhere('manager', 'like', "%{$search}%")
+            ->orWhere('client_email', 'like', "%{$search}%")
+            ->orWhere('client_phone', 'like', "%{$search}%")
             ->orWhere('status', 'like', "%{$search}%")
             ->orWhereHas('category', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%");

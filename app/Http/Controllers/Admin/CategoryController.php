@@ -32,7 +32,7 @@ class CategoryController extends Controller
         Category::create($request->all());
         
         return redirect()->route('admin.categories.index')
-            ->with('success', 'Category created successfully.');
+            ->with('success', 'Категорията е създадена.');
     }
     
     public function show(Category $category)
@@ -57,19 +57,19 @@ class CategoryController extends Controller
         $category->update($request->all());
         
         return redirect()->route('admin.categories.index')
-            ->with('success', 'Category updated successfully.');
+            ->with('success', 'Промените са запазени.');
     }
     
     public function destroy(Category $category)
     {
         if ($category->projects()->count() > 0) {
             return redirect()->route('admin.categories.index')
-                ->with('error', 'Cannot delete category with associated projects.');
+                ->with('error', 'Категория с проекти не може да се изтрие.');
         }
         
         $category->delete();
         
         return redirect()->route('admin.categories.index')
-            ->with('success', 'Category deleted successfully.');
+            ->with('success', 'Категорията е изтрита.');
     }
 }

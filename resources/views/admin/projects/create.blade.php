@@ -1,10 +1,10 @@
 @extends('admin.layout')
 
-@section('title', 'Create Project')
+@section('title', 'Нов проект')
 
 @section('content')
 <div class="mb-6">
-    <h2 class="text-2xl font-bold text-gray-800">Create New Project</h2>
+    <h2 class="text-2xl font-bold text-gray-800">Нов проект</h2>
 </div>
 
 <div class="bg-white rounded-lg shadow p-6">
@@ -13,7 +13,7 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Project Name *</label>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Име на проекта *</label>
                 <input type="text" name="name" id="name" value="{{ old('name') }}" required
                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 @error('name')
@@ -22,7 +22,7 @@
             </div>
 
             <div>
-                <label for="manager" class="block text-sm font-medium text-gray-700 mb-2">Manager *</label>
+                <label for="manager" class="block text-sm font-medium text-gray-700 mb-2">Отговорник *</label>
                 <input type="text" name="manager" id="manager" value="{{ old('manager') }}" required
                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 @error('manager')
@@ -31,10 +31,10 @@
             </div>
 
             <div>
-                <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">Категория *</label>
                 <select name="category_id" id="category_id" required
                         class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">Select a category</option>
+                    <option value="">Изберете категория</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                             {{ $category->name }}
@@ -47,15 +47,12 @@
             </div>
 
             <div>
-                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Статус *</label>
                 <select name="status" id="status" required
                         class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">Select status</option>
-                    <option value="Planning" {{ old('status') == 'Planning' ? 'selected' : '' }}>Planning</option>
-                    <option value="In Progress" {{ old('status') == 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                    <option value="Completed" {{ old('status') == 'Completed' ? 'selected' : '' }}>Completed</option>
-                    <option value="On Hold" {{ old('status') == 'On Hold' ? 'selected' : '' }}>On Hold</option>
-                    <option value="Cancelled" {{ old('status') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+                    @foreach(\App\Models\Project::STATUSES as $value => [$label])
+                        <option value="{{ $value }}" @selected(old('status', $project->status ?? 'Planning') === $value)>{{ $label }}</option>
+                    @endforeach
                 </select>
                 @error('status')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -63,7 +60,7 @@
             </div>
 
             <div>
-                <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">Start Date *</label>
+                <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">Начало *</label>
                 <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}" required
                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 @error('start_date')
@@ -72,7 +69,7 @@
             </div>
 
             <div>
-                <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+                <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">Край</label>
                 <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}"
                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 @error('end_date')
@@ -82,12 +79,27 @@
         </div>
 
         <div class="mt-6">
-            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Описание *</label>
             <textarea name="description" id="description" rows="4" required
                       class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('description') }}</textarea>
             @error('description')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="client_phone" class="block text-sm font-medium text-gray-700 mb-2">Телефон на клиента</label>
+                <input type="tel" name="client_phone" id="client_phone" value="{{ old('client_phone', $project->client_phone ?? '') }}"
+                       class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                @error('client_phone')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label for="client_email" class="block text-sm font-medium text-gray-700 mb-2">Имейл на клиента</label>
+                <input type="email" name="client_email" id="client_email" value="{{ old('client_email', $project->client_email ?? '') }}"
+                       class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                @error('client_email')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+            </div>
         </div>
 
         <div class="mt-6">
@@ -101,7 +113,7 @@
         </div>
 
         <div class="mt-6">
-            <label for="technologies" class="block text-sm font-medium text-gray-700 mb-2">Technologies</label>
+            <label for="technologies" class="block text-sm font-medium text-gray-700 mb-2">Технологии</label>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 @foreach($technologies as $technology)
                     <label class="flex items-center">
@@ -126,10 +138,10 @@
         </div>
 
         <div class="mt-6">
-            <label for="file" class="block text-sm font-medium text-gray-700 mb-2">Project File</label>
+            <label for="file" class="block text-sm font-medium text-gray-700 mb-2">Файл</label>
             <input type="file" name="file" id="file" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif"
                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <p class="text-sm text-gray-500 mt-1">Allowed formats: PDF, DOC, DOCX, TXT, JPG, JPEG, PNG, GIF (Max: 10MB)</p>
+            <p class="text-sm text-gray-500 mt-1">PDF, DOC, DOCX, TXT, JPG, PNG, GIF до 10 MB</p>
             @error('file')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
@@ -137,10 +149,10 @@
 
         <div class="mt-8 flex justify-end space-x-4">
             <a href="{{ route('admin.projects.index') }}" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
-                Cancel
+                Отказ
             </a>
             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Create Project
+                Създай проекта
             </button>
         </div>
     </form>

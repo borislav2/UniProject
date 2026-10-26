@@ -11,13 +11,43 @@ use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
-    public function index()
+    /** Филтри над списъка: ключ => [текст, условие]. */
+    private const FILTERS = [
+        'leads' => 'Нови запитвания',
+        'active' => 'В работа',
+        'done' => 'Завършени',
+    ];
+
+    public function index(Request $request)
     {
-        $projects = Project::with(['category', 'technologies'])
+        $filter = array_key_exists($request->query('filter'), self::FILTERS) ? $request->query('filter') : null;
+        $projects = $this->filtered(Project::query(), $filter)
+            ->with(['category', 'technologies'])
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
-        
-        return view('admin.projects.index', compact('projects'));
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.projects.index', ['projects' => $projects, 'filter' => $filter, 'filters' => $this->filterCounts()]);
+    }
+
+    private function filtered($query, ?string $filter)
+    {
+        return match ($filter) {
+            'leads' => $query->where('status', 'Planning')->where('source', 'website'),
+            'active' => $query->whereIn('status', ['In Progress', 'On Hold']),
+            'done' => $query->where('status', 'Completed'),
+            default => $query,
+        };
+    }
+
+    private function filterCounts(): array
+    {
+        $counts = ['' => ['Всички', Project::count()]];
+        foreach (self::FILTERS as $key => $label) {
+            $counts[$key] = [$label, $this->filtered(Project::query(), $key)->count()];
+        }
+
+        return $counts;
     }
     
     public function create()
@@ -40,6 +70,8 @@ class ProjectController extends Controller
             'category_id' => 'required|exists:categories,id',
             'is_public' => 'nullable|boolean',
             'website_url' => 'nullable|url:http,https|max:255',
+            'client_phone' => 'nullable|string|max:50',
+            'client_email' => 'nullable|email|max:255',
             'technologies' => 'nullable|array',
             'technologies.*' => 'exists:technologies,id',
             'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240'
@@ -62,7 +94,7 @@ class ProjectController extends Controller
         }
         
         return redirect()->route('admin.projects.index')
-            ->with('success', 'Project created successfully.');
+            ->with('success', 'Проектът е създаден.');
     }
     
     public function show(Project $project)
@@ -92,6 +124,8 @@ class ProjectController extends Controller
             'category_id' => 'required|exists:categories,id',
             'is_public' => 'nullable|boolean',
             'website_url' => 'nullable|url:http,https|max:255',
+            'client_phone' => 'nullable|string|max:50',
+            'client_email' => 'nullable|email|max:255',
             'technologies' => 'nullable|array',
             'technologies.*' => 'exists:technologies,id',
             'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240'
@@ -116,8 +150,8 @@ class ProjectController extends Controller
         
         $project->technologies()->sync($request->technologies ?? []);
         
-        return redirect()->route('admin.projects.index')
-            ->with('success', 'Project updated successfully.');
+        return redirect()->route('admin.projects.show', $project)
+            ->with('success', 'Промените са запазени.');
     }
     
     public function destroy(Project $project)
@@ -131,7 +165,7 @@ class ProjectController extends Controller
         $project->delete();
         
         return redirect()->route('admin.projects.index')
-            ->with('success', 'Project deleted successfully.');
+            ->with('success', 'Проектът е изтрит.');
     }
     
     public function search(Request $request)
@@ -145,8 +179,9 @@ class ProjectController extends Controller
         $projects = Project::search($search)
             ->with(['category', 'technologies'])
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
-        
-        return view('admin.projects.index', compact('projects', 'search'));
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.projects.index', ['projects' => $projects, 'search' => $search, 'filter' => null, 'filters' => $this->filterCounts()]);
     }
 }

@@ -32,7 +32,7 @@ class TechnologyController extends Controller
         Technology::create($request->all());
         
         return redirect()->route('admin.technologies.index')
-            ->with('success', 'Technology created successfully.');
+            ->with('success', 'Технологията е създадена.');
     }
     
     public function show(Technology $technology)
@@ -57,19 +57,19 @@ class TechnologyController extends Controller
         $technology->update($request->all());
         
         return redirect()->route('admin.technologies.index')
-            ->with('success', 'Technology updated successfully.');
+            ->with('success', 'Промените са запазени.');
     }
     
     public function destroy(Technology $technology)
     {
         if ($technology->projects()->count() > 0) {
             return redirect()->route('admin.technologies.index')
-                ->with('error', 'Cannot delete technology with associated projects.');
+                ->with('error', 'Технология с проекти не може да се изтрие.');
         }
         
         $technology->delete();
         
         return redirect()->route('admin.technologies.index')
-            ->with('success', 'Technology deleted successfully.');
+            ->with('success', 'Технологията е изтрита.');
     }
 }

@@ -3,37 +3,44 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\ChatConversation;
+use App\Models\OutreachCall;
+use App\Models\Post;
 use App\Models\Project;
-use App\Models\Category;
-use App\Models\Technology;
-use App\Models\User;
+use App\Support\Outreach\Outreach;
 
 class AdminController extends Controller
 {
+    /** Таблото: какво чака днес (запитвания, консултации, обаждания, писма), после общата картина. */
     public function dashboard()
     {
-        $stats = [
-            'total_projects' => Project::count(),
-            'total_categories' => Category::count(),
-            'total_technologies' => Technology::count(),
-            'total_users' => User::count(),
-            'completed_projects' => Project::where('status', 'Completed')->count(),
-            'in_progress_projects' => Project::where('status', 'In Progress')->count(),
-        ];
-        
-        $recentProjects = Project::with(['category', 'technologies'])
-            ->orderBy('created_at', 'desc')
-            ->take(5)
-            ->get();
-        
-        $leadChannels = Project::where('source', 'website')
+        $leads = Project::where('source', 'website');
+
+        $leadChannels = (clone $leads)
             ->where('created_at', '>=', now()->subDays(30))
             ->selectRaw('COALESCE(lead_channel, ?) as channel, COUNT(*) as total', ['Директно'])
             ->groupBy('channel')
             ->orderByDesc('total')
             ->get();
 
-        return view('admin.dashboard', compact('stats', 'recentProjects', 'leadChannels'));
+        return view('admin.dashboard', [
+            'unread' => (clone $leads)->whereNull('read_at')->count(),
+            'recentLeads' => (clone $leads)->latest()->take(5)->get(),
+            'consultations' => Project::whereNotNull('consultation_at')
+                ->whereBetween('consultation_at', [now()->subHour(), now()->addDays(14)])
+                ->orderBy('consultation_at')->take(6)->get(),
+            'calls' => OutreachCall::todayStats(),
+            'callbacks' => OutreachCall::whereNotNull('callback_on')->whereDate('callback_on', '<=', today())->count(),
+            'outreach' => [
+                'configured' => Outreach::configured(),
+                'sent' => Outreach::sentToday(),
+                'limit' => (int) config('creatium.outreach.daily_limit'),
+            ],
+            'chats' => ChatConversation::where('updated_at', '>=', now()->subDays(7))->count(),
+            'activeProjects' => Project::whereIn('status', ['In Progress', 'On Hold'])->count(),
+            'nextPost' => Post::where('status', 'published')->where('published_at', '>', now())->orderBy('published_at')->first(),
+            'mailNotConfigured' => in_array(config('mail.default'), ['log', 'array'], true),
+            'leadChannels' => $leadChannels,
+        ]);
     }
 }

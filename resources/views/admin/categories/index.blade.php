@@ -1,12 +1,12 @@
 @extends('admin.layout')
 
-@section('title', 'Categories')
+@section('title', 'Категории на проекти')
 
 @section('content')
 <div class="mb-6 flex justify-between items-center">
-    <h2 class="text-2xl font-bold text-gray-800">Categories</h2>
+    <h2 class="text-2xl font-bold text-gray-800">Категории на проекти</h2>
     <a href="{{ route('admin.categories.create') }}" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-        <x-icon name="plus" class="mr-2" />New Category
+        <x-icon name="plus" class="mr-2" />Нова категория
     </a>
 </div>
 
@@ -15,10 +15,10 @@
         <table class="min-w-full">
             <thead class="bg-gray-50">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Projects Count</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Име</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Описание</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Проекти</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -40,18 +40,18 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="{{ route('admin.categories.show', $category) }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
-                            <a href="{{ route('admin.categories.edit', $category) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure?')">
+                            <a href="{{ route('admin.categories.show', $category) }}" class="text-blue-600 hover:text-blue-900 mr-3">Отвори</a>
+                            <a href="{{ route('admin.categories.edit', $category) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Редактирай</a>
+                            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline" onsubmit="return confirm('Сигурни ли сте?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-900" {{ $category->projects_count > 0 ? 'disabled title="Cannot delete category with projects"' : '' }}>Delete</button>
+                                <button type="submit" class="text-red-600 hover:text-red-900" {{ $category->projects_count > 0 ? 'disabled title="Категория с проекти не може да се изтрие"' : '' }}>Изтрий</button>
                             </form>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">No categories found.</td>
+                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">Няма категории.</td>
                     </tr>
                 @endforelse
             </tbody>
