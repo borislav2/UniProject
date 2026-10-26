@@ -27,14 +27,15 @@ class OutreachProspect extends Model
         'risky' => 'приема всичко',
         'published' => 'публикуван от бизнеса',
         'guess' => 'непроверен',
+        'invalid' => 'невалиден',
     ];
 
     protected $fillable = [
         'email', 'first_name', 'last_name', 'company', 'title', 'website', 'industry', 'city',
-        'personalization', 'findings', 'email_status', 'score', 'status', 'sent_at', 'unsubscribed_at',
+        'personalization', 'findings', 'site_checked_at', 'check_note', 'email_status', 'score', 'status', 'sent_at', 'unsubscribed_at',
     ];
 
-    protected $casts = ['sent_at' => 'datetime', 'unsubscribed_at' => 'datetime', 'score' => 'integer', 'findings' => 'array'];
+    protected $casts = ['sent_at' => 'datetime', 'unsubscribed_at' => 'datetime', 'score' => 'integer', 'findings' => 'array', 'site_checked_at' => 'datetime'];
 
     public function canBeEmailed(): bool
     {

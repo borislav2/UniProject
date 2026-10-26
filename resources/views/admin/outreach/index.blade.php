@@ -48,6 +48,13 @@
     @endforeach
 </nav>
 
+@if($unchecked > 0)
+    <div class="mb-3 flex flex-wrap items-center gap-3 rounded-lg border border-blue-200 bg-white p-3 text-sm shadow" data-check-work="{{ route('admin.outreach.check') }}">
+        <button type="button" data-check-start class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 font-semibold text-gray-800 hover:bg-gray-50 disabled:opacity-50"><x-icon name="rotate-left" /> Провери сайта и имейла на непроверените ({{ $unchecked }})</button>
+        <span class="text-gray-600" data-check-progress>Имейлът става „публикуван от бизнеса“ само ако е на домейна на сайта им (или gmail/abv) и наистина е на сайта. Останалите остават „непроверен“ с причина. Оставете страницата отворена.</span>
+    </div>
+@endif
+
 <form id="bulk-send" action="{{ route('admin.outreach.send-selected') }}" method="POST" class="mb-3 flex flex-wrap items-center gap-3 rounded-lg bg-white p-3 text-sm shadow" onsubmit="return confirm('Да изпратим ли писмата до избраните бизнеси? Всяко е с проверката на техния сайт.')">
     @csrf
     <button @disabled(! $configured || $remaining < 1) class="inline-flex items-center gap-2 rounded-lg bg-brand-950 px-4 py-2 font-semibold text-white hover:bg-brand-800 disabled:opacity-50"><x-icon name="paper-plane" /> Изпрати на избраните</button>
@@ -77,10 +84,12 @@
                         <span class="block text-xs text-gray-500">{{ collect([\App\Models\OutreachCall::INDUSTRIES[mb_strtolower((string) $prospect->industry)] ?? $prospect->industry, $prospect->city])->filter()->join(' · ') }}</span>
                         @if($prospect->website)<a href="{{ $prospect->website }}" target="_blank" rel="noopener" class="block text-xs text-blue-600 hover:underline">{{ parse_url($prospect->website, PHP_URL_HOST) ?: $prospect->website }}</a>@endif
                     </td>
-                    <td class="px-4 py-3">{{ $prospect->email }}<span class="block text-xs {{ in_array($prospect->email_status, \App\Models\OutreachProspect::SENDABLE_EMAIL_STATUSES, true) ? 'text-green-700' : 'text-red-600' }}">{{ \App\Models\OutreachProspect::EMAIL_STATUSES[$prospect->email_status] ?? ($prospect->email_status ?: 'непроверен') }}</span></td>
+                    <td class="px-4 py-3">{{ $prospect->email }}<span class="block text-xs {{ in_array($prospect->email_status, \App\Models\OutreachProspect::SENDABLE_EMAIL_STATUSES, true) ? 'text-green-700' : 'text-red-600' }}">{{ \App\Models\OutreachProspect::EMAIL_STATUSES[$prospect->email_status] ?? ($prospect->email_status ?: 'непроверен') }}</span>@if($prospect->check_note)<span class="block text-xs text-gray-500">{{ $prospect->check_note }}</span>@endif</td>
                     <td class="px-4 py-3 max-w-md text-gray-600">
                         @if($prospect->findings)
                             <ul class="space-y-0.5">@foreach($prospect->findings as $finding)<li>– {{ $finding['title'] }}</li>@endforeach</ul>
+                        @elseif($prospect->site_checked_at && $prospect->findings === [])
+                            Сайтът е в добро състояние по 14-те показателя.
                         @else
                             {{ \Illuminate\Support\Str::limit($prospect->personalization, 160) }}
                         @endif
@@ -110,4 +119,37 @@
     </table>
 </div>
 <div class="mt-4">{{ $prospects->links() }}</div>
+
+@if($unchecked > 0)
+<script>
+(function () {
+    var box = document.querySelector('[data-check-work]');
+    if (!box) { return; }
+    var button = box.querySelector('[data-check-start]');
+    var out = box.querySelector('[data-check-progress]');
+    var token = document.querySelector('input[name=_token]').value;
+    var total = 0;
+    function step(failures) {
+        fetch(box.dataset.checkWork, { method: 'POST', headers: { 'X-CSRF-TOKEN': token, 'Accept': 'application/json' } })
+            .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+            .then(function (p) {
+                total += p.checked;
+                out.textContent = 'Проверени ' + total + ' · остават ' + p.remaining + (p.busy ? ' · друга проверка върви, изчакваме…' : '');
+                if (p.remaining > 0) { setTimeout(function () { step(0); }, p.busy ? 5000 : 0); return; }
+                out.textContent = 'Готово: проверени ' + total + '. Презареждаме…';
+                location.reload();
+            })
+            .catch(function () {
+                out.textContent += ' · връзката прекъсна, опитваме пак…';
+                if (failures < 5) { setTimeout(function () { step(failures + 1); }, 5000); }
+            });
+    }
+    button.addEventListener('click', function () {
+        button.disabled = true;
+        out.textContent = 'Проверяваме…';
+        step(0);
+    });
+})();
+</script>
+@endif
 @endsection

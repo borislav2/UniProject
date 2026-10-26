@@ -139,7 +139,9 @@ class ProspectFinder
             'industry' => $business->category,
             'city' => $business->city,
             'email_status' => $status,
-            'findings' => $business->website ? $this->findings($business->website) : [],
+            'findings' => ($domain = SiteChecker::normalizeDomain($business->website)) ? ProspectChecker::findings($this->checker, $domain) : [],
+            'site_checked_at' => now(),
+            'check_note' => null,
             'personalization' => $found['page'] ? 'Имейлът е публикуван на ' . $found['page'] : 'Имейлът е публикуван в картата (OpenStreetMap).',
         ];
 
@@ -172,23 +174,5 @@ class ProspectFinder
         ])->save();
 
         return true;
-    }
-
-    /** До три конкретни неща от проверката на сайта: първо грешките, после предупрежденията. */
-    private function findings(string $website): array
-    {
-        $domain = SiteChecker::normalizeDomain($website);
-        if (! $domain) {
-            return [];
-        }
-        $report = $this->checker->check($domain);
-
-        return collect($report['checks'])
-            ->filter(fn ($check) => $check['status'] !== 'ok')
-            ->sortBy(fn ($check) => $check['status'] === 'fail' ? 0 : 1)
-            ->take(3)
-            ->map(fn ($check) => ['title' => $check['title'], 'detail' => $check['detail']])
-            ->values()
-            ->all();
     }
 }

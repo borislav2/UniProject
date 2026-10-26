@@ -60,6 +60,10 @@ class Outreach
             if ($existing) {
                 // Не пипаме вече изпратените; новите данни от Harvey допълват само непипнатите.
                 if ($existing->status === 'new') {
+                    // След нашата проверка статусът на имейла е по-точен от този в списъка.
+                    if ($existing->site_checked_at) {
+                        unset($values['email_status']);
+                    }
                     $existing->update($values);
                     $result['updated']++;
                 } else {
