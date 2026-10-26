@@ -37,7 +37,7 @@ class UserController extends Controller
         ]);
         
         return redirect()->route('admin.users.index')
-            ->with('success', 'User created successfully.');
+            ->with('success', 'Потребителят е създаден.');
     }
     
     public function show(User $user)
@@ -70,7 +70,7 @@ class UserController extends Controller
         $user->update($data);
         
         return redirect()->route('admin.users.index')
-            ->with('success', 'User updated successfully.');
+            ->with('success', 'Промените са запазени.');
     }
     
     public function destroy(User $user)
@@ -78,6 +78,6 @@ class UserController extends Controller
         $user->delete();
         
         return redirect()->route('admin.users.index')
-            ->with('success', 'User deleted successfully.');
+            ->with('success', 'Потребителят е изтрит.');
     }
 }

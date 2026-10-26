@@ -42,7 +42,7 @@ class OutreachCallController extends Controller
             'counts' => OutreachCall::selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status'),
             'dueCount' => OutreachCall::whereDate('callback_on', '<=', $today)->whereNotIn('status', OutreachCall::FINAL_STATUSES)->count(),
             'queueCount' => $this->filtered($filters)->queue()->count(),
-            'today' => $this->todayStats(),
+            'today' => OutreachCall::todayStats(),
             'cities' => OutreachCall::whereNotNull('city')->distinct()->orderBy('city')->pluck('city'),
             'industries' => OutreachCall::whereNotNull('industry')->distinct()->orderBy('industry')->pluck('industry'),
             'filters' => $filters,
@@ -83,7 +83,7 @@ class OutreachCallController extends Controller
         return view('admin.outreach.call-next', [
             'call' => $call,
             'left' => $queue->count(),
-            'today' => $this->todayStats(),
+            'today' => OutreachCall::todayStats(),
             'filters' => $filters,
             'query' => $this->filterQuery($filters),
             'canGoBack' => $session->get('outreach_calls_history', []) !== [],
@@ -200,18 +200,5 @@ class OutreachCallController extends Controller
     private function filterQuery(array $filters): array
     {
         return array_filter(['city' => $filters['city'], 'industry' => $filters['industry'], 'mobile' => $filters['mobile']]);
-    }
-
-    /** Броячът за деня: колко бизнеса са обадени днес (София) и с какъв резултат. */
-    private function todayStats(): array
-    {
-        $byStatus = OutreachCall::where('called_at', '>=', now('Europe/Sofia')->startOfDay()->utc())
-            ->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status');
-
-        return [
-            'total' => (int) $byStatus->sum(),
-            'by_status' => $byStatus,
-            'goal' => max(1, (int) config('creatium.outreach.daily_call_goal')),
-        ];
     }
 }

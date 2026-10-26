@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Panel') - Project Management</title>
+    <title>@yield('title', 'Админ') · Creatium Lab</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
@@ -27,61 +27,49 @@
                 <a href="{{ route('admin.dashboard') }}" class="block"><img src="{{ asset('images/logo-white.webp') }}" alt="Creatium Lab" class="h-6 w-auto"></a>
                 <p class="mt-2 text-xs uppercase tracking-wider text-gray-400">Административен панел</p>
             </div>
-            <nav class="mt-4">
-                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="tachometer-alt" class="mr-2" /> Dashboard
-                </a>
-                @php($unreadInquiries = \App\Models\Project::where('source', 'website')->whereNull('read_at')->count())
-                <a href="{{ route('admin.inquiries.index') }}" class="flex items-center justify-between px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.inquiries.*') ? 'bg-gray-700' : '' }}">
-                    <span><x-icon name="envelope" class="mr-2" /> Запитвания</span>
-                    @if($unreadInquiries > 0)<span class="rounded-full bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">{{ $unreadInquiries }}</span>@endif
-                </a>
-                <a href="{{ route('admin.client-emails.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.client-emails.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="paper-plane" class="mr-2" /> Имейли до клиенти
-                </a>
-                <a href="{{ route('admin.chats.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.chats.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="quote-left" class="mr-2" /> Чат разговори
-                </a>
-                <a href="{{ route('admin.reviews.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.reviews.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="reply" class="mr-2" /> Отговори на отзиви
-                </a>
-                <a href="{{ route('admin.outreach.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.outreach.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="magnifying-glass" class="mr-2" /> Потенциални клиенти
-                </a>
-                <a href="{{ route('admin.projects.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.projects.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="project-diagram" class="mr-2" /> Projects
-                </a>
-                <a href="{{ route('admin.categories.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.categories.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="tags" class="mr-2" /> Categories
-                </a>
-                <a href="{{ route('admin.technologies.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.technologies.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="cogs" class="mr-2" /> Technologies
-                </a>
-                @if(auth()->user()->isAdmin())
-                <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.users.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="users" class="mr-2" /> Users
-                </a>
-                @endif
-
-                <p class="mt-6 px-4 pb-1 text-xs uppercase tracking-wider text-gray-400">Сайт</p>
-                <a href="{{ route('admin.posts.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.posts.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="newspaper" class="mr-2" /> Блог
-                </a>
-                <a href="{{ route('admin.post-categories.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.post-categories.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="tags" class="mr-2" /> Категории на блога
-                </a>
-                <a href="{{ route('admin.content.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.content.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="pen-to-square" class="mr-2" /> Текстове по страниците
-                </a>
-                <a href="{{ route('admin.seo.index') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.seo.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="magnifying-glass" class="mr-2" /> SEO
-                </a>
-
-                <p class="mt-6 px-4 pb-1 text-xs uppercase tracking-wider text-gray-400">Акаунт</p>
-                <a href="{{ route('admin.profile.edit') }}" class="block px-4 py-2 hover:bg-gray-700 {{ request()->routeIs('admin.profile.*') ? 'bg-gray-700' : '' }}">
-                    <x-icon name="user-gear" class="mr-2" /> Моят профил
-                </a>
-                <form action="{{ route('logout') }}" method="POST">
+            @php
+                $unreadInquiries = \App\Models\Project::where('source', 'website')->whereNull('read_at')->count();
+                $callbacksToday = \App\Models\OutreachCall::whereNotNull('callback_on')->whereDate('callback_on', '<=', today())->count();
+                // [група, [route, pattern, икона, текст, брояч]]
+                $menu = [
+                    null => [
+                        ['admin.dashboard', 'admin.dashboard', 'tachometer-alt', 'Табло', 0],
+                    ],
+                    'Клиенти' => [
+                        ['admin.inquiries.index', 'admin.inquiries.*', 'envelope', 'Запитвания', $unreadInquiries],
+                        ['admin.projects.index', 'admin.projects.*', 'project-diagram', 'Проекти', 0],
+                        ['admin.client-emails.index', 'admin.client-emails.*', 'paper-plane', 'Имейли до клиенти', 0],
+                        ['admin.chats.index', 'admin.chats.*', 'quote-left', 'Чат разговори', 0],
+                    ],
+                    'Продажби' => [
+                        ['admin.outreach.index', 'admin.outreach.*', 'magnifying-glass', 'Потенциални клиенти', $callbacksToday],
+                        ['admin.reviews.index', 'admin.reviews.*', 'reply', 'Отговори на отзиви', 0],
+                    ],
+                    'Сайт' => [
+                        ['admin.posts.index', 'admin.posts.*', 'newspaper', 'Блог', 0],
+                        ['admin.post-categories.index', 'admin.post-categories.*', 'tags', 'Категории на блога', 0],
+                        ['admin.content.index', 'admin.content.*', 'pen-to-square', 'Текстове по страниците', 0],
+                        ['admin.seo.index', 'admin.seo.*', 'magnifying-glass', 'SEO', 0],
+                    ],
+                    'Настройки' => array_values(array_filter([
+                        ['admin.categories.index', 'admin.categories.*', 'tags', 'Категории на проекти', 0],
+                        ['admin.technologies.index', 'admin.technologies.*', 'cogs', 'Технологии', 0],
+                        auth()->user()->isAdmin() ? ['admin.users.index', 'admin.users.*', 'users', 'Потребители', 0] : null,
+                        ['admin.profile.edit', 'admin.profile.*', 'user-gear', 'Моят профил', 0],
+                    ])),
+                ];
+            @endphp
+            <nav class="mt-4 pb-6">
+                @foreach($menu as $group => $items)
+                    @if($group)<p class="mt-5 px-4 pb-1 text-xs uppercase tracking-wider text-gray-400">{{ $group }}</p>@endif
+                    @foreach($items as [$route, $pattern, $icon, $label, $count])
+                        <a href="{{ route($route) }}" class="flex items-center justify-between gap-2 px-4 py-2 hover:bg-gray-700 {{ request()->routeIs($pattern) ? 'bg-gray-700' : '' }}" @if(request()->routeIs($pattern)) aria-current="page" @endif>
+                            <span><x-icon name="{{ $icon }}" class="mr-2" /> {{ $label }}</span>
+                            @if($count > 0)<span class="rounded-full bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">{{ $count }}</span>@endif
+                        </a>
+                    @endforeach
+                @endforeach
+                <form action="{{ route('logout') }}" method="POST" class="mt-2">
                     @csrf
                     <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-700"><x-icon name="sign-out-alt" class="mr-2" /> Изход</button>
                 </form>
@@ -101,9 +89,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
-                    <h2 class="text-lg md:text-2xl font-semibold text-gray-800 truncate">@yield('title', 'Admin Panel')</h2>
-                    <a href="{{ route('home') }}" class="hidden sm:flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors whitespace-nowrap text-sm">
-                        <x-icon name="home" class="mr-2" />Back to Home
+                    <h2 class="text-lg md:text-2xl font-semibold text-gray-800 truncate">@yield('title', 'Админ')</h2>
+                    <a href="{{ route('home') }}" target="_blank" rel="noopener" class="hidden sm:flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors whitespace-nowrap text-sm">
+                        <x-icon name="home" class="mr-2" />Към сайта
                     </a>
                 </div>
             </header>

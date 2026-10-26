@@ -61,6 +61,19 @@ class OutreachCall extends Model
 
     protected $casts = ['called_at' => 'datetime', 'callback_on' => 'date', 'is_mobile' => 'boolean', 'attempts' => 'integer'];
 
+    /** Броячът за деня: колко бизнеса са обадени днес (София) и с какъв резултат. */
+    public static function todayStats(): array
+    {
+        $byStatus = self::where('called_at', '>=', now('Europe/Sofia')->startOfDay()->utc())
+            ->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status');
+
+        return [
+            'total' => (int) $byStatus->sum(),
+            'by_status' => $byStatus,
+            'goal' => max(1, (int) config('creatium.outreach.daily_call_goal')),
+        ];
+    }
+
     protected static function booted(): void
     {
         static::saving(function (OutreachCall $call) {

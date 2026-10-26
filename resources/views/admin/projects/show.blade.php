@@ -3,80 +3,100 @@
 @section('title', $project->name)
 
 @section('content')
-<div class="mb-6 flex justify-between items-center">
-    <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <h2 class="text-2xl font-bold text-gray-800 flex flex-wrap items-center gap-3">
         {{ $project->name }}
+        <span class="px-3 py-1 text-xs rounded-full font-semibold {{ $project->statusClass() }}">{{ $project->statusLabel() }}</span>
         @if($project->source === 'website')
             <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-medium">Запитване от сайта</span>
         @endif
     </h2>
-    <div class="flex space-x-4">
-        <a href="{{ route('admin.client-emails.index', ['project' => $project->id]) }}" class="px-4 py-2 bg-brand-950 text-white rounded hover:bg-brand-800">
+    <div class="flex flex-wrap gap-2">
+        <a href="{{ route('admin.client-emails.index', ['project' => $project->id]) }}" class="inline-flex items-center px-4 py-2 bg-brand-950 text-white rounded hover:bg-brand-800">
             <x-icon name="paper-plane" class="mr-2" />Изпрати имейл
         </a>
-        <a href="{{ route('admin.projects.edit', $project) }}" class="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600">
-            <x-icon name="edit" class="mr-2" />Edit Project
+        <a href="{{ route('admin.projects.edit', $project) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-gray-800 rounded hover:bg-gray-50">
+            <x-icon name="edit" class="mr-2" />Редактирай
         </a>
-        <form action="{{ route('admin.projects.destroy', $project) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this project?')">
+        <form action="{{ route('admin.projects.destroy', $project) }}" method="POST" class="inline" onsubmit="return confirm('Да изтрием ли проекта „{{ $project->name }}“? Това не може да се върне.')">
             @csrf
             @method('DELETE')
-            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-                <x-icon name="trash" class="mr-2" />Delete
+            <button type="submit" class="inline-flex items-center px-4 py-2 text-red-600 rounded hover:bg-red-50">
+                <x-icon name="trash" class="mr-2" />Изтрий
             </button>
         </form>
     </div>
 </div>
 
+@if($project->client_phone || $project->client_email || $project->website_url || $project->consultation_at)
+    {{-- Контактът с клиента е най-отгоре: за обаждане или имейл с едно докосване. --}}
+    <div class="mb-6 grid gap-4 rounded-lg bg-white p-6 shadow sm:grid-cols-2 lg:grid-cols-4">
+        @if($project->client_phone)
+            <div>
+                <h4 class="text-sm font-medium text-gray-500">Телефон</h4>
+                <a href="tel:{{ preg_replace('/[^\d+]/', '', $project->client_phone) }}" class="text-lg font-semibold text-blue-600 hover:underline">{{ $project->client_phone }}</a>
+            </div>
+        @endif
+        @if($project->client_email)
+            <div class="min-w-0">
+                <h4 class="text-sm font-medium text-gray-500">Имейл</h4>
+                <a href="mailto:{{ $project->client_email }}" class="block truncate text-lg font-semibold text-blue-600 hover:underline">{{ $project->client_email }}</a>
+            </div>
+        @endif
+        @if($project->website_url)
+            <div class="min-w-0">
+                <h4 class="text-sm font-medium text-gray-500">Сайт</h4>
+                <a href="{{ $project->website_url }}" target="_blank" rel="noopener" class="block truncate text-lg font-semibold text-blue-600 hover:underline">{{ parse_url($project->website_url, PHP_URL_HOST) ?: $project->website_url }}</a>
+            </div>
+        @endif
+        @if($project->consultation_at)
+            <div class="rounded-lg bg-yellow-50 p-3">
+                <h4 class="text-sm font-medium text-yellow-800">Консултация</h4>
+                <p class="font-semibold text-gray-900">{{ \App\Support\Booking::label($project->consultation_at) }}</p>
+            </div>
+        @endif
+    </div>
+@endif
+
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2">
         <div class="bg-white rounded-lg shadow p-6 mb-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Project Details</h3>
-            <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Описание</h3>
+            <p class="whitespace-pre-line text-gray-900">{{ $project->description }}</p>
+
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <h4 class="text-sm font-medium text-gray-500">Description</h4>
-                    <p class="text-gray-900">{{ $project->description }}</p>
+                    <h4 class="text-sm font-medium text-gray-500">Отговорник</h4>
+                    <p class="text-gray-900">{{ $project->manager }}</p>
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-500">Manager</h4>
-                        <p class="text-gray-900">{{ $project->manager }}</p>
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-500">Category</h4>
-                        <p class="text-gray-900">{{ $project->category->name }}</p>
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-500">Status</h4>
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                            @if($project->status == 'Completed') bg-green-100 text-green-800
-                            @elseif($project->status == 'In Progress') bg-blue-100 text-blue-800
-                            @elseif($project->status == 'Planning') bg-yellow-100 text-yellow-800
-                            @elseif($project->status == 'On Hold') bg-orange-100 text-orange-800
-                            @else bg-red-100 text-red-800
-                            @endif">
-                            {{ $project->status }}
-                        </span>
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-500">Duration</h4>
-                        <p class="text-gray-900">
-                            {{ $project->start_date->format('M d, Y') }}
-                            @if($project->end_date)
-                                - {{ $project->end_date->format('M d, Y') }}
-                                ({{ $project->start_date->diffInDays($project->end_date) }} days)
-                            @else
-                                - Present ({{ $project->start_date->diffInDays(now()) }} days)
-                            @endif
-                        </p>
-                    </div>
+                <div>
+                    <h4 class="text-sm font-medium text-gray-500">Категория</h4>
+                    <p class="text-gray-900">{{ $project->category?->name }}</p>
                 </div>
+                <div>
+                    <h4 class="text-sm font-medium text-gray-500">Период</h4>
+                    <p class="text-gray-900">
+                        {{ $project->start_date->format('d.m.Y') }}
+                        @if($project->end_date)
+                            – {{ $project->end_date->format('d.m.Y') }}
+                            ({{ (int) $project->start_date->diffInDays($project->end_date) }} дни)
+                        @else
+                            – досега ({{ (int) $project->start_date->diffInDays(now()) }} дни)
+                        @endif
+                    </p>
+                </div>
+                @if($project->is_public)
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Портфолио</h4>
+                        <p class="text-gray-900">Показва се на /proekti</p>
+                    </div>
+                @endif
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Technologies Used</h3>
-            @if($project->technologies->count() > 0)
+        @if($project->technologies->count() > 0)
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Технологии</h3>
                 <div class="flex flex-wrap gap-2">
                     @foreach($project->technologies as $technology)
                         <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
@@ -84,20 +104,18 @@
                         </span>
                     @endforeach
                 </div>
-            @else
-                <p class="text-gray-500">No technologies assigned to this project.</p>
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
 
     <div>
         <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Project Information</h3>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Информация</h3>
             <div class="space-y-3">
                 @if($project->service)
                     <div>
                         <h4 class="text-sm font-medium text-gray-500">Услуга</h4>
-                        <p class="text-gray-900 font-semibold">{{ $project->service }}</p>
+                        <p class="text-gray-900 font-semibold">{{ $project->serviceLabel() }}</p>
                     </div>
                 @endif
                 @if($project->business_size)
@@ -126,29 +144,18 @@
                         @endif
                     </div>
                 @endif
-                @if($project->client_email || $project->client_phone)
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-500">Контакт с клиента</h4>
-                        @if($project->client_email)
-                            <p class="text-gray-900"><a href="mailto:{{ $project->client_email }}" class="text-blue-600 hover:underline">{{ $project->client_email }}</a></p>
-                        @endif
-                        @if($project->client_phone)
-                            <p class="text-gray-900"><a href="tel:{{ $project->client_phone }}" class="text-blue-600 hover:underline">{{ $project->client_phone }}</a></p>
-                        @endif
-                    </div>
-                @endif
                 <div>
-                    <h4 class="text-sm font-medium text-gray-500">Created</h4>
-                    <p class="text-gray-900">{{ $project->created_at->format('M d, Y H:i') }}</p>
+                    <h4 class="text-sm font-medium text-gray-500">Създаден</h4>
+                    <p class="text-gray-900">{{ $project->created_at->timezone('Europe/Sofia')->format('d.m.Y H:i') }}</p>
                 </div>
                 <div>
-                    <h4 class="text-sm font-medium text-gray-500">Last Updated</h4>
-                    <p class="text-gray-900">{{ $project->updated_at->format('M d, Y H:i') }}</p>
+                    <h4 class="text-sm font-medium text-gray-500">Последна промяна</h4>
+                    <p class="text-gray-900">{{ $project->updated_at->timezone('Europe/Sofia')->format('d.m.Y H:i') }}</p>
                 </div>
                 @if($project->file_path)
                     <div>
-                        <h4 class="text-sm font-medium text-gray-500">Project File</h4>
-                        <a href="{{ asset($project->file_path) }}" target="_blank" 
+                        <h4 class="text-sm font-medium text-gray-500">Файл</h4>
+                        <a href="{{ asset($project->file_path) }}" target="_blank"
                            class="text-blue-600 hover:underline flex items-center">
                             <x-icon name="file" class="mr-2" />
                             {{ basename($project->file_path) }}
@@ -162,7 +169,7 @@
 
 <div class="mt-6">
     <a href="{{ route('admin.projects.index') }}" class="text-blue-600 hover:underline">
-        <x-icon name="arrow-left" class="mr-2" />Back to Projects
+        <x-icon name="arrow-left" class="mr-2" />Към проектите
     </a>
 </div>
 @endsection
