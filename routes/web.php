@@ -128,6 +128,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('outreach', [OutreachController::class, 'index'])->name('outreach.index');
     Route::post('outreach/import', [OutreachController::class, 'import'])->name('outreach.import');
     Route::post('outreach/import-server', [OutreachController::class, 'importServer'])->name('outreach.import-server');
+    Route::post('outreach/check', [OutreachController::class, 'check'])->name('outreach.check');
     Route::post('outreach/send-selected', [OutreachController::class, 'sendSelected'])->middleware('throttle:10,1')->name('outreach.send-selected');
     Route::get('outreach/{prospect}', [OutreachController::class, 'compose'])->name('outreach.compose');
     Route::post('outreach/{prospect}/preview', [OutreachController::class, 'preview'])->name('outreach.preview');

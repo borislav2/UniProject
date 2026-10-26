@@ -39,6 +39,53 @@ class EmailFinder
             return null;
         }
 
+        // Първо страниците за контакт, после началната.
+        foreach (array_reverse($this->pages($website)) as [$url, $html]) {
+            $email = self::best(array_filter(self::extract($html), fn ($e) => self::acceptable($e, $domain)), $domain);
+            if ($email) {
+                return ['email' => $email, 'page' => $url];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Дали адресът наистина е на сайта им: на страницата, където е видян ($hint, само от същия сайт),
+     * на началната или на страниците „Контакти“ / „За нас“.
+     */
+    public function publishedOn(string $website, string $email, ?string $hint = null): bool
+    {
+        $domain = SiteChecker::normalizeDomain($website);
+        $email = mb_strtolower(trim($email));
+        if (! $domain) {
+            return false;
+        }
+
+        $site = preg_replace('/^www\./', '', $domain);
+        $hintHost = $hint ? preg_replace('/^www\./', '', (string) parse_url($hint, PHP_URL_HOST)) : null;
+        if ($hint && $hintHost && ($hintHost === $site || str_ends_with($hintHost, '.' . $site) || str_ends_with($site, '.' . $hintHost))) {
+            $page = $this->checker->fetch($hint);
+            if ($this->ok($page) && in_array($email, self::extract($page['response']->body()), true)) {
+                return true;
+            }
+        }
+
+        foreach ($this->pages($website) as [, $html]) {
+            if (in_array($email, self::extract($html), true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** Началната страница и до три страници „Контакти“ / „За нас“ като [url, html]. */
+    private function pages(string $website): array
+    {
+        if (! preg_match('#^https?://#i', $website)) {
+            $website = 'https://' . $website;
+        }
         if (! parse_url($website, PHP_URL_PATH)) {
             $website = rtrim($website, '/') . '/';
         }
@@ -47,7 +94,7 @@ class EmailFinder
             $start = $this->checker->fetch('http://' . substr($website, 8));
         }
         if (! $this->ok($start)) {
-            return null;
+            return [];
         }
 
         $pages = [[$start['url'], $start['response']->body()]];
@@ -56,15 +103,7 @@ class EmailFinder
             $pages[] = [$page['url'], $this->ok($page) ? $page['response']->body() : ''];
         }
 
-        // Първо страниците за контакт, после началната.
-        foreach (array_reverse($pages) as [$url, $html]) {
-            $email = self::best(array_filter(self::extract($html), fn ($e) => self::acceptable($e, $domain)), $domain);
-            if ($email) {
-                return ['email' => $email, 'page' => $url];
-            }
-        }
-
-        return null;
+        return $pages;
     }
 
     /** Всички адреси в страницата: mailto:, обикновен текст и скритите от Cloudflare. */
@@ -163,7 +202,7 @@ class EmailFinder
         return array_slice($links, 0, self::MAX_EXTRA_PAGES);
     }
 
-    private static function ownDomain(string $host, string $domain): bool
+    public static function ownDomain(string $host, string $domain): bool
     {
         $site = preg_replace('/^www\./', '', $domain);
 

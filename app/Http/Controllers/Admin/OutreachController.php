@@ -8,6 +8,7 @@ use App\Models\ClientEmail;
 use App\Models\OutreachProspect;
 use App\Models\OutreachSuppression;
 use App\Support\Outreach\Outreach;
+use App\Support\Outreach\ProspectChecker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -30,6 +31,7 @@ class OutreachController extends Controller
             'status' => $status,
             'configured' => Outreach::configured(),
             'remaining' => Outreach::remainingToday(),
+            'unchecked' => ProspectChecker::pending()->count(),
             'serverCsv' => ($time = collect(self::serverFiles())->map(fn ($p) => filemtime($p))->max()) ? \Illuminate\Support\Carbon::createFromTimestamp($time) : null,
         ]);
     }
@@ -68,6 +70,15 @@ class OutreachController extends Controller
             [config('creatium.outreach.harvey_csv'), config('creatium.outreach.harvey_site_emails_csv')],
             fn ($path) => $path && is_readable($path),
         ));
+    }
+
+    /** Една порция проверки (до ~20 секунди); страницата я вика отново, докато не остане непроверен бизнес. */
+    public function check(ProspectChecker $checker)
+    {
+        ignore_user_abort(true);
+        set_time_limit(120);
+
+        return response()->json($checker->work());
     }
 
     public function compose(Request $request, OutreachProspect $prospect)
