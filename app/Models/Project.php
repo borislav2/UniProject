@@ -40,6 +40,15 @@ class Project extends Model
         'next_action',
         'next_action_at',
         'lost_reason',
+        'package',
+        'monthly_fee',
+        'billing_day',
+        'monitor_status',
+        'monitor_error',
+        'monitor_checked_at',
+        'monitor_alerted_at',
+        'ssl_expires_at',
+        'domain_expires_at',
     ];
     
     protected $casts = [
@@ -51,6 +60,12 @@ class Project extends Model
         'consultation_at' => 'datetime',
         'stage_changed_at' => 'datetime',
         'next_action_at' => 'datetime',
+        'monthly_fee' => 'decimal:2',
+        'billing_day' => 'integer',
+        'monitor_checked_at' => 'datetime',
+        'monitor_alerted_at' => 'datetime',
+        'ssl_expires_at' => 'datetime',
+        'domain_expires_at' => 'datetime',
     ];
 
     /** Етапите на продажбата за запитванията. Отворените са тези, които още чакат действие от нас. */
@@ -124,6 +139,48 @@ class Project extends Model
     public function serviceLabel(): ?string
     {
         return $this->service ? (config('creatium.contact_topics')[$this->service] ?? $this->service) : null;
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(ClientPayment::class)->latest('period');
+    }
+
+    /** Клиенти на месечен абонамент (с месечна такса, без отказаните). */
+    public function scopeSubscribers(Builder $query): Builder
+    {
+        return $query->where('monthly_fee', '>', 0)->where('status', '!=', 'Cancelled');
+    }
+
+    /**
+     * Плащането за текущия месец (по София): платено, предстои (до деня на плащане) или закъснява.
+     * Ако миналият месец е неплатен (а клиентът е бил на абонамент), закъснението се брои от него.
+     *
+     * @return array{state: string, period: string, due: \Illuminate\Support\Carbon, days: int}
+     */
+    public function paymentState(): array
+    {
+        $today = now('Europe/Sofia')->startOfDay();
+        $dueIn = fn ($month) => $month->copy()->day(min(max(1, (int) ($this->billing_day ?: 1)), $month->daysInMonth));
+        $paid = $this->relationLoaded('payments') ? $this->payments->pluck('period')->all() : $this->payments()->pluck('period')->all();
+
+        $previous = $today->copy()->startOfMonth()->subMonth();
+        $startedBefore = $this->created_at && $this->created_at->timezone('Europe/Sofia')->lt($today->copy()->startOfMonth());
+        if ($startedBefore && $paid && ! in_array($previous->format('Y-m'), $paid, true)) {
+            $due = $dueIn($previous);
+
+            return ['state' => 'late', 'period' => $previous->format('Y-m'), 'due' => $due, 'days' => (int) $due->diffInDays($today)];
+        }
+
+        $period = $today->format('Y-m');
+        $due = $dueIn($today);
+        if (in_array($period, $paid, true)) {
+            return ['state' => 'paid', 'period' => $period, 'due' => $due, 'days' => 0];
+        }
+
+        return $today->lte($due)
+            ? ['state' => 'upcoming', 'period' => $period, 'due' => $due, 'days' => (int) $today->diffInDays($due)]
+            : ['state' => 'late', 'period' => $period, 'due' => $due, 'days' => (int) $due->diffInDays($today)];
     }
 
     public function notes()

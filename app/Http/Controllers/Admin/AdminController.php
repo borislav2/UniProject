@@ -40,6 +40,7 @@ class AdminController extends Controller
             ],
             'chats' => ChatConversation::where('updated_at', '>=', now()->subDays(7))->count(),
             'activeProjects' => Project::whereIn('status', ['In Progress', 'On Hold'])->count(),
+            'mrr' => Project::subscribers()->sum('monthly_fee'),
             'nextPost' => Post::where('status', 'published')->where('published_at', '>', now())->orderBy('published_at')->first(),
             'mailNotConfigured' => in_array(config('mail.default'), ['log', 'array'], true),
             'leadChannels' => $leadChannels,

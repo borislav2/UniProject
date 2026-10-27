@@ -72,6 +72,9 @@ class ProjectController extends Controller
             'website_url' => 'nullable|url:http,https|max:255',
             'client_phone' => 'nullable|string|max:50',
             'client_email' => 'nullable|email|max:255',
+            'package' => 'nullable|string|max:80',
+            'monthly_fee' => 'nullable|numeric|min:0|max:100000',
+            'billing_day' => 'nullable|integer|min:1|max:31',
             'technologies' => 'nullable|array',
             'technologies.*' => 'exists:technologies,id',
             'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240'
@@ -126,6 +129,9 @@ class ProjectController extends Controller
             'website_url' => 'nullable|url:http,https|max:255',
             'client_phone' => 'nullable|string|max:50',
             'client_email' => 'nullable|email|max:255',
+            'package' => 'nullable|string|max:80',
+            'monthly_fee' => 'nullable|numeric|min:0|max:100000',
+            'billing_day' => 'nullable|integer|min:1|max:31',
             'technologies' => 'nullable|array',
             'technologies.*' => 'exists:technologies,id',
             'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240'

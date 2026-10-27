@@ -52,6 +52,15 @@ class Today
             ->where('status', 'sent')->orderByDesc('last_clicked_at')->get();
     }
 
+    /** Клиенти на абонамент, които закъсняват с плащането, и такива със спрял сайт или изтичащ SSL/домейн. */
+    public static function clientIssues()
+    {
+        return Project::subscribers()->with('payments')->get()
+            ->map(fn ($client) => ['client' => $client, 'payment' => $client->paymentState(), 'problems' => SiteMonitor::problems($client)])
+            ->filter(fn ($row) => $row['payment']['state'] === 'late' || $row['problems'])
+            ->values();
+    }
+
     /** Броячът в менюто: неща, които не търпят отлагане. */
     public static function urgentCount(): int
     {

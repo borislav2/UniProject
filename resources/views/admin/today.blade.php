@@ -108,6 +108,28 @@
     </section>
 @endif
 
+@if($clientIssues->isNotEmpty())
+    <section class="mb-6">
+        <h2 class="mb-2 text-lg font-semibold text-gray-800">Клиенти на абонамент <span class="text-sm font-normal text-gray-500">(плащания и сайтове)</span></h2>
+        <div class="overflow-hidden rounded-lg bg-white shadow">
+            <ul class="divide-y">
+                @foreach($clientIssues as $row)
+                    <li class="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
+                        <div class="min-w-0">
+                            <a href="{{ route('admin.clients.index') }}" class="font-semibold text-gray-900 hover:text-blue-600">{{ $row['client']->name }}</a>
+                            <div class="mt-1 flex flex-wrap gap-1.5">
+                                @if($row['payment']['state'] === 'late')<span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800">Плащането закъснява {{ $row['payment']['days'] }} дни</span>@endif
+                                @foreach($row['problems'] as $problem)<span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800">{{ $problem }}</span>@endforeach
+                            </div>
+                        </div>
+                        <x-phone :number="$row['client']->client_phone" />
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </section>
+@endif
+
 @if($withoutNextStep->isNotEmpty())
     <section class="mb-6">
         <h2 class="mb-2 text-lg font-semibold text-gray-800">Без следваща стъпка <span class="text-sm font-normal text-gray-500">(лесно се забравят)</span></h2>

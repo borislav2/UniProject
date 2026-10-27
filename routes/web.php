@@ -98,6 +98,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('dnes', TodayController::class)->name('today');
     Route::get('statistika', \App\Http\Controllers\Admin\StatsController::class)->name('stats');
+    Route::get('abonamenti', [\App\Http\Controllers\Admin\ClientController::class, 'index'])->name('clients.index');
+    Route::post('abonamenti/{project}/paid', [\App\Http\Controllers\Admin\ClientController::class, 'paid'])->name('clients.paid');
+    Route::post('abonamenti/{project}/check', [\App\Http\Controllers\Admin\ClientController::class, 'check'])->middleware('throttle:20,1')->name('clients.check');
 
     // Messages from the website contact form (stored as projects with source = website)
     Route::get('inquiries', [InquiryController::class, 'index'])->name('inquiries.index');

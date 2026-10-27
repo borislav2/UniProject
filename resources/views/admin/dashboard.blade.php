@@ -86,6 +86,8 @@
         <div class="rounded-lg bg-white p-5 shadow text-sm">
             <p class="text-gray-500">Проекти в работа</p>
             <a href="{{ route('admin.projects.index', ['filter' => 'active']) }}" class="text-2xl font-bold text-gray-900 hover:text-blue-600">{{ $activeProjects }}</a>
+            <p class="mt-3 text-gray-500">Месечни приходи от абонаменти</p>
+            <a href="{{ route('admin.clients.index') }}" class="text-2xl font-bold text-gray-900 hover:text-blue-600">{{ number_format((float) $mrr, 0, ',', ' ') }} €</a>
             <p class="mt-3 text-gray-500">Следваща статия в блога</p>
             @if($nextPost)
                 <a href="{{ route('admin.posts.edit', $nextPost) }}" class="font-medium text-gray-900 hover:text-blue-600">{{ $nextPost->trOrBg('title') }}</a>

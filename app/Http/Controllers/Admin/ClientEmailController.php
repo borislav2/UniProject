@@ -36,6 +36,14 @@ class ClientEmailController extends Controller
         if ($project) {
             $defaults['client_name'] = str_replace('Запитване от ', '', $project->name);
         }
+        if ($project && $tpl['key'] === 'monthly-report') {
+            $defaults['business'] = str_replace('Запитване от ', '', $project->name);
+            $problems = \App\Support\Admin\SiteMonitor::problems($project);
+            if ($project->monitor_checked_at) {
+                $defaults['site_status'] = $problems ? implode('; ', $problems) : 'Сайтът работи без прекъсвания'
+                    . ($project->ssl_expires_at ? ', SSL сертификатът е валиден до ' . $project->ssl_expires_at->format('d.m.Y') : '') . '.';
+            }
+        }
 
         return view('admin.client-emails.create', [
             'tpl' => $tpl,

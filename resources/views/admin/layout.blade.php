@@ -30,6 +30,7 @@
             @php
                 $unreadInquiries = \App\Models\Project::where('source', 'website')->whereNull('read_at')->count();
                 $urgentToday = \App\Support\Admin\Today::urgentCount();
+                $latePayments = \App\Models\Project::subscribers()->with('payments')->get()->filter(fn ($client) => $client->paymentState()['state'] === 'late')->count();
                 $callbacksToday = \App\Models\OutreachCall::whereNotNull('callback_on')->whereDate('callback_on', '<=', today())->count();
                 // [група, [route, pattern, икона, текст, брояч]]
                 $menu = [
@@ -40,6 +41,7 @@
                     'Клиенти' => [
                         ['admin.inquiries.index', 'admin.inquiries.*', 'envelope', 'Запитвания', $unreadInquiries],
                         ['admin.projects.index', 'admin.projects.*', 'project-diagram', 'Проекти', 0],
+                        ['admin.clients.index', 'admin.clients.*', 'users', 'Абонаменти', $latePayments],
                         ['admin.client-emails.index', 'admin.client-emails.*', 'paper-plane', 'Имейли до клиенти', 0],
                         ['admin.chats.index', 'admin.chats.*', 'quote-left', 'Чат разговори', 0],
                     ],
