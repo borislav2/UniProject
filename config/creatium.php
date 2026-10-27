@@ -38,7 +38,7 @@ return [
     // Google Tag Manager. По подразбиране е включен само в production; GTM_ID= (празно) в .env го изключва.
     // Аналитиката и пикселите (GA4, Clarity, Meta) се настройват в GTM и тръгват само след съгласие в банера (Consent Mode v2).
     'gtm_id' => (function () {
-        $id = (string) env('GTM_ID', env('APP_ENV') === 'production' ? 'GTM-5QRGW6DP' : '');
+        $id = (string) env('GTM_ID', env('APP_ENV') === 'production' ? 'GTM-5FWFH2B7' : '');
 
         return preg_match('/^GTM-[A-Z0-9]{4,12}$/', $id) ? $id : null;
     })(),

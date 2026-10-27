@@ -99,11 +99,11 @@ class MarketingTest extends TestCase
 
     public function test_gtm_loads_after_consent_mode_defaults(): void
     {
-        config(['creatium.gtm_id' => 'GTM-5QRGW6DP']);
+        config(['creatium.gtm_id' => 'GTM-5FWFH2B7']);
 
         $html = $this->get('/')
             ->assertSee('cookie-banner', false)
-            ->assertSee('ns.html?id=GTM-5QRGW6DP', false)
+            ->assertSee('ns.html?id=GTM-5FWFH2B7', false)
             ->assertSee('Настройки за бисквитки')
             ->getContent();
 
@@ -121,7 +121,7 @@ class MarketingTest extends TestCase
 
     public function test_lead_is_pushed_to_the_data_layer(): void
     {
-        config(['creatium.gtm_id' => 'GTM-5QRGW6DP']);
+        config(['creatium.gtm_id' => 'GTM-5FWFH2B7']);
 
         $this->followingRedirects()->post('/kontakti', [
             'name' => 'Мария', 'phone' => '0888123456', 'email' => 'maria@example.bg', 'service' => 'modernization', 'consent' => '1',
