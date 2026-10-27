@@ -35,6 +35,7 @@ class AdminController extends Controller
                 'configured' => Outreach::configured(),
                 'sent' => Outreach::sentToday(),
                 'limit' => (int) config('creatium.outreach.daily_limit'),
+                'clicked' => \App\Models\OutreachProspect::where('last_clicked_at', '>=', now()->subDays(7))->count(),
             ],
             'chats' => ChatConversation::where('updated_at', '>=', now()->subDays(7))->count(),
             'activeProjects' => Project::whereIn('status', ['In Progress', 'On Hold'])->count(),

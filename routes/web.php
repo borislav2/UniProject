@@ -22,6 +22,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OutreachClickController;
 use App\Http\Controllers\OutreachUnsubscribeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SiteCheckController;
@@ -76,6 +77,7 @@ Route::get('/demo/{slug}', [DemoController::class, 'show'])->where('slug', '[a-z
 
 // Отписване от първите писма до бизнеси (линк в писмото + one-click от пощенския клиент)
 Route::match(['get', 'post'], '/otpisvane/{prospect}', OutreachUnsubscribeController::class)->middleware('signed')->name('outreach.unsubscribe');
+Route::get('/o/{prospect}/{link}', OutreachClickController::class)->middleware(['signed', 'throttle:60,1'])->name('outreach.click');
 
 Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [PageController::class, 'robots'])->name('robots');

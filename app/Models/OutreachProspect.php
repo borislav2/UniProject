@@ -16,6 +16,13 @@ class OutreachProspect extends Model
         'unsubscribed' => 'Отписан',
     ];
 
+    /** Линковете в първото писмо, които броим (ключът е в адреса /o/{prospect}/{link}). */
+    public const CLICK_LINKS = [
+        'site' => 'Сайта',
+        'check' => 'Безплатна проверка',
+        'booking' => 'Запазване на час',
+    ];
+
     /**
      * Потвърдени (verified), catch-all (risky) или публикувани от самия бизнес на домейн, който приема поща (published).
      * „guess“ (налучкан или домейн без поща) не се праща.
@@ -33,9 +40,11 @@ class OutreachProspect extends Model
     protected $fillable = [
         'email', 'first_name', 'last_name', 'company', 'title', 'website', 'industry', 'city',
         'personalization', 'findings', 'site_checked_at', 'check_note', 'email_status', 'score', 'status', 'sent_at', 'unsubscribed_at',
+        'clicked_at', 'last_clicked_at', 'click_count', 'last_click_link',
     ];
 
-    protected $casts = ['sent_at' => 'datetime', 'unsubscribed_at' => 'datetime', 'score' => 'integer', 'findings' => 'array', 'site_checked_at' => 'datetime'];
+    protected $casts = ['sent_at' => 'datetime', 'unsubscribed_at' => 'datetime', 'score' => 'integer', 'findings' => 'array', 'site_checked_at' => 'datetime',
+        'clicked_at' => 'datetime', 'last_clicked_at' => 'datetime', 'click_count' => 'integer'];
 
     public function canBeEmailed(): bool
     {

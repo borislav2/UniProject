@@ -42,9 +42,12 @@
 </div>
 
 <nav class="mb-4 flex flex-wrap gap-2 text-sm">
-    <a href="{{ route('admin.outreach.index') }}" class="rounded-full px-3 py-1 {{ $status ? 'bg-white text-gray-700 shadow' : 'bg-brand-950 text-white' }}">Всички ({{ $counts->sum() }})</a>
+    <a href="{{ route('admin.outreach.index') }}" class="rounded-full px-3 py-1 {{ $status || $clicked ? 'bg-white text-gray-700 shadow' : 'bg-brand-950 text-white' }}">Всички ({{ $counts->sum() }})</a>
     @foreach(\App\Models\OutreachProspect::STATUSES as $key => $label)
         <a href="{{ route('admin.outreach.index', ['status' => $key]) }}" class="rounded-full px-3 py-1 {{ $status === $key ? 'bg-brand-950 text-white' : 'bg-white text-gray-700 shadow' }}">{{ $label }} ({{ $counts[$key] ?? 0 }})</a>
+        @if($key === 'sent')
+            <a href="{{ route('admin.outreach.index', ['clicked' => 1]) }}" class="rounded-full px-3 py-1 {{ $clicked ? 'bg-brand-950 text-white' : 'bg-white text-gray-700 shadow' }}" title="Кликнали по линк в писмото: обадете им се първо">Кликнали ({{ $clickedCount }})</a>
+        @endif
     @endforeach
 </nav>
 
@@ -95,7 +98,8 @@
                         @endif
                     </td>
                     <td class="px-4 py-3">{{ $prospect->score }}</td>
-                    <td class="px-4 py-3">{{ \App\Models\OutreachProspect::STATUSES[$prospect->status] ?? $prospect->status }}@if($prospect->sent_at)<span class="block text-xs text-gray-500">{{ $prospect->sent_at->format('d.m.Y') }}</span>@endif</td>
+                    <td class="px-4 py-3">{{ \App\Models\OutreachProspect::STATUSES[$prospect->status] ?? $prospect->status }}@if($prospect->sent_at)<span class="block text-xs text-gray-500">{{ $prospect->sent_at->format('d.m.Y') }}</span>@endif
+                        @if($prospect->clicked_at)<span class="mt-1 block rounded bg-green-50 px-1.5 py-0.5 text-xs font-semibold text-green-800" title="Първи клик: {{ $prospect->clicked_at->timezone('Europe/Sofia')->format('d.m.Y H:i') }}">Кликна: {{ \App\Models\OutreachProspect::CLICK_LINKS[$prospect->last_click_link] ?? $prospect->last_click_link }} · {{ $prospect->last_clicked_at->timezone('Europe/Sofia')->format('d.m H:i') }}@if($prospect->click_count > 1) ({{ $prospect->click_count }}×)@endif</span>@endif</td>
                     <td class="px-4 py-3 whitespace-nowrap text-right">
                         @if($prospect->canBeEmailed())
                             <a href="{{ route('admin.outreach.compose', $prospect) }}" class="inline-flex items-center gap-1 rounded-lg bg-brand-950 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-800"><x-icon name="paper-plane" /> Напиши</a>

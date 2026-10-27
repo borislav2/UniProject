@@ -21,12 +21,16 @@ class OutreachController extends Controller
     public function index(Request $request)
     {
         $status = $request->query('status');
+        $clicked = $request->boolean('clicked');
 
         return view('admin.outreach.index', [
             'prospects' => OutreachProspect::query()
                 ->when($status && array_key_exists($status, OutreachProspect::STATUSES), fn ($q) => $q->where('status', $status))
+                ->when($clicked, fn ($q) => $q->whereNotNull('clicked_at')->orderByDesc('last_clicked_at'))
                 ->orderByRaw("status = 'new' desc")->orderByDesc('score')->latest()
                 ->paginate(30)->withQueryString(),
+            'clicked' => $clicked,
+            'clickedCount' => OutreachProspect::whereNotNull('clicked_at')->count(),
             'counts' => OutreachProspect::selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status'),
             'status' => $status,
             'configured' => Outreach::configured(),

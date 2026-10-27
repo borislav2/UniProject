@@ -26,6 +26,7 @@
         <p class="text-sm font-medium text-gray-500">Първи писма днес</p>
         <p class="mt-1 text-3xl font-bold text-gray-900">{{ $outreach['sent'] }} <span class="text-base font-medium text-gray-400">/ {{ $outreach['limit'] }}</span></p>
         <p class="mt-1 text-xs {{ $outreach['configured'] ? 'text-gray-500' : 'text-red-600' }}">{{ $outreach['configured'] ? 'Потенциални клиенти' : 'Пощата за писма не е настроена' }}</p>
+        @if($outreach['clicked'])<p class="mt-1 text-xs font-semibold text-green-700">{{ $outreach['clicked'] }} кликнали за 7 дни</p>@endif
     </a>
     <a href="{{ route('admin.chats.index') }}" class="rounded-lg bg-white p-5 shadow hover:ring-2 hover:ring-blue-200">
         <p class="text-sm font-medium text-gray-500">Разговори с Крео</p>

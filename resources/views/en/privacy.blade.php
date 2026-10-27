@@ -25,6 +25,7 @@
                 @endif
                 <li>How you got to the site (for example from Google or from an ad), if the site receives it from your browser or from the link you followed. We store it with your inquiry so we know which channels work.</li>
                 <li>Technical data needed to run and secure the site: IP address and request data in the server logs.</li>
+                <li>If we have written to you as a business: the business name, its publicly listed email address, website and city, taken from public sources (your website, Google Maps or OpenStreetMap), and whether you clicked a link in our email (which link and when). We do not track whether you open the email.</li>
                 @if(config('creatium.gtm_id'))
                     <li>Data about your visit from analytics and advertising tools, only if you have allowed them (see section 6).</li>
                 @endif
@@ -36,6 +37,7 @@
             <ul class="list-disc pl-6 space-y-1">
                 <li>To reply to your inquiry and send you an offer: based on your consent and on taking steps at your request before entering into a contract (Art. 6(1)(a) and (b) GDPR).</li>
                 <li>For security and to prevent misuse of the site: based on our legitimate interest (Art. 6(1)(f) GDPR).</li>
+                <li>For a single business email to a company whose website we think could be improved, and to know whether it was useful (clicks on its links): based on our legitimate interest (Art. 6(1)(f) GDPR). Every such email has an unsubscribe link; after you unsubscribe we do not write again and keep only the address so that we never write to it again.</li>
             </ul>
         </div>
 

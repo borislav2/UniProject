@@ -71,16 +71,32 @@ class OutreachMail extends Mailable
     }
 
     /** Връзките в писмото: сайтът, безплатната проверка и записването за консултация, с UTM за атрибуцията. */
-    public function links(): array
+    /** Адресите, към които водят линковете в писмото (с utm), без проследяването. */
+    public static function targets(): array
     {
         $utm = '?' . http_build_query(['utm_source' => 'outreach', 'utm_medium' => 'email', 'utm_campaign' => 'first-email']);
-        $check = route('site-check');
 
         return [
             'site' => route('home') . $utm,
-            'check' => $check . $utm,
-            'check_label' => preg_replace('#^https?://(www\.)?#', '', $check),
+            'check' => route('site-check') . $utm,
             'booking' => route('contact') . $utm . '#konsultatsiya',
+        ];
+    }
+
+    /**
+     * Линковете в писмото минават през /o/{prospect}/{link} (подписан адрес), за да видим в админа дали бизнесът е кликнал.
+     * Пиксел за отваряне няма: неточен е, вреди на доставката и иска съгласие.
+     */
+    public function links(): array
+    {
+        $check = route('site-check');
+        $links = [];
+        foreach (array_keys(self::targets()) as $key) {
+            $links[$key] = URL::signedRoute('outreach.click', ['prospect' => $this->prospect->id, 'link' => $key]);
+        }
+
+        return $links + [
+            'check_label' => preg_replace('#^https?://(www\.)?#', '', $check),
             'minutes' => config('creatium.booking.minutes'),
         ];
     }
@@ -91,6 +107,7 @@ class OutreachMail extends Mailable
             'data' => $this->data,
             'parts' => self::observationParts($this->data['observation']),
             'links' => $this->links(),
+            'plain' => self::targets(),
             'prospect' => $this->prospect,
             'unsubscribeUrl' => $this->unsubscribeUrl(),
         ]);
