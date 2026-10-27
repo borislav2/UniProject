@@ -16,13 +16,14 @@ class ProjectController extends Controller
         'leads' => 'Отворени запитвания',
         'active' => 'В работа',
         'done' => 'Завършени',
+        'mine' => 'Моите',
     ];
 
     public function index(Request $request)
     {
         $filter = array_key_exists($request->query('filter'), self::FILTERS) ? $request->query('filter') : null;
         $projects = $this->filtered(Project::query(), $filter)
-            ->with(['category', 'technologies'])
+            ->with(['category', 'technologies', 'assignee'])
             ->orderBy('created_at', 'desc')
             ->paginate(15)
             ->withQueryString();
@@ -36,6 +37,7 @@ class ProjectController extends Controller
             'leads' => $query->openLeads()->orderByRaw('next_action_at is null')->orderBy('next_action_at'),
             'active' => $query->whereIn('status', ['In Progress', 'On Hold']),
             'done' => $query->where('status', 'Completed'),
+            'mine' => $query->where('assigned_to', auth()->id()),
             default => $query,
         };
     }
@@ -183,6 +185,7 @@ class ProjectController extends Controller
             'next_action_at' => 'nullable|date',
             'lost_reason' => 'nullable|string|max:255',
             'note' => 'nullable|string|max:2000',
+            'assigned_to' => 'nullable|exists:users,id',
         ]);
 
         $closed = in_array($data['stage'], ['won', 'lost'], true);
@@ -193,6 +196,9 @@ class ProjectController extends Controller
             'lost_reason' => $data['stage'] === 'lost' ? ($data['lost_reason'] ?? null) : null,
             'read_at' => $project->read_at ?? now(),
         ];
+        if ($request->has('assigned_to')) {
+            $values['assigned_to'] = $data['assigned_to'] ?? null;
+        }
         if ($project->stage !== $data['stage']) {
             $values['stage_changed_at'] = now();
         }

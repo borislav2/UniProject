@@ -17,6 +17,15 @@
         @endforeach
     </div>
 
+    @php($team = \App\Models\User::orderBy('name')->get(['id', 'name']))
+    @if($team->count() > 1)
+        <label class="mt-3 flex items-center gap-2 text-xs text-gray-600">Води го:
+            <select name="assigned_to" class="rounded-lg border border-gray-300 bg-white px-2 py-1 text-sm">
+                <option value="">никой</option>
+                @foreach($team as $member)<option value="{{ $member->id }}" @selected((int) old('assigned_to', $project->assigned_to) === $member->id)>{{ $member->name }}</option>@endforeach
+            </select>
+        </label>
+    @endif
     <div class="mt-3 grid gap-2 sm:grid-cols-[1fr_auto]" data-next>
         <input type="text" name="next_action" value="{{ old('next_action', $project->next_action) }}" maxlength="255" placeholder="Следваща стъпка: напр. „обади се за офертата“" class="w-full rounded-lg border border-gray-300 px-3 py-2">
         <input type="datetime-local" name="next_action_at" value="{{ $nextAt }}" class="rounded-lg border border-gray-300 px-3 py-2" aria-label="Кога">

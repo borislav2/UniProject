@@ -40,6 +40,7 @@ class Project extends Model
         'next_action',
         'next_action_at',
         'lost_reason',
+        'assigned_to',
         'package',
         'monthly_fee',
         'billing_day',
@@ -139,6 +140,11 @@ class Project extends Model
     public function serviceLabel(): ?string
     {
         return $this->service ? (config('creatium.contact_topics')[$this->service] ?? $this->service) : null;
+    }
+
+    public function assignee()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 
     public function payments()

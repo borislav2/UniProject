@@ -12,6 +12,12 @@
 
 @section('content')
 {{-- Всичко за вършене днес, по спешност. Празен списък = свършена работа. --}}
+@if(\App\Models\User::count() > 1)
+    <nav class="mb-4 flex gap-2 text-sm">
+        <a href="{{ route('admin.today') }}" class="rounded-full px-4 py-1.5 font-semibold {{ $mine ? 'bg-white text-gray-700 border border-gray-200' : 'bg-gray-800 text-white' }}">Всички</a>
+        <a href="{{ route('admin.today', ['mine' => 1]) }}" class="rounded-full px-4 py-1.5 font-semibold {{ $mine ? 'bg-gray-800 text-white' : 'bg-white text-gray-700 border border-gray-200' }}">Моите и неразпределените</a>
+    </nav>
+@endif
 <div class="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 text-sm">
     <div class="rounded-lg bg-white p-4 shadow"><p class="text-gray-500">Непрочетени</p><p class="text-2xl font-bold {{ $unread->isNotEmpty() ? 'text-blue-600' : 'text-gray-900' }}">{{ $unread->count() }}</p></div>
     <div class="rounded-lg bg-white p-4 shadow"><p class="text-gray-500">Стъпки за днес</p><p class="text-2xl font-bold {{ $due->contains(fn ($p) => $p->isOverdue()) ? 'text-red-600' : 'text-gray-900' }}">{{ $due->count() }}</p></div>

@@ -60,6 +60,7 @@
                                 @endif
                             @endif
                             <span class="md:hidden px-2 py-0.5 text-xs rounded-full font-semibold {{ $project->statusClass() }}">{{ $project->statusLabel() }}</span>
+                            @if($project->assignee)<span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600" title="Води го">{{ $project->assignee->name }}</span>@endif
                         </div>
                         <div class="mt-0.5 text-sm text-gray-500 line-clamp-1">{{ $project->locale === 'en' ? 'EN · ' : '' }}{{ $project->serviceLabel() ? Str::limit($project->serviceLabel(), 40) . ' · ' : '' }}{{ Str::limit($project->description, 70) }}</div>
                         @if($project->isOpenLead() && $project->next_action)
