@@ -82,6 +82,8 @@ return [
         'from_address' => env('OUTREACH_MAIL_FROM'),
         'from_name' => env('OUTREACH_MAIL_FROM_NAME', 'Creatium Lab'),
         'daily_limit' => (int) env('OUTREACH_DAILY_LIMIT', 20),
+        // След колко дни без отговор може да се прати едно (последно) напомняне. Брои се в дневния лимит.
+        'followup_after_days' => (int) env('OUTREACH_FOLLOWUP_DAYS', 4),
         // Списъкът, който Harvey на сървъра изнася всеки ден (deploy/harvey/install-harvey.sh).
         'harvey_csv' => env('OUTREACH_HARVEY_CSV', storage_path('app/harvey/prospects.csv')),
         // Бизнесите без сайт с телефон, за обаждане (tools/harvey/export_no_website.py).

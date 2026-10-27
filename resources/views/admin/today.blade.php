@@ -79,6 +79,12 @@
     @endforelse
 </section>
 
+@if($followups)
+    <a href="{{ route('admin.outreach.index', ['followup' => 1]) }}" class="mb-6 flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-900 hover:bg-amber-100">
+        <span>{{ $followups }} {{ $followups === 1 ? 'бизнес чака' : 'бизнеса чакат' }} напомняне (без отговор {{ config('creatium.outreach.followup_after_days') }}+ дни)</span><span>Напомни →</span>
+    </a>
+@endif
+
 @if($hot->isNotEmpty())
     <section class="mb-6">
         <h2 class="mb-2 text-lg font-semibold text-gray-800">Кликнаха по писмото <span class="text-sm font-normal text-gray-500">(топли контакти, обадете се или пишете)</span></h2>

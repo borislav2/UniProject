@@ -40,11 +40,33 @@ class OutreachProspect extends Model
     protected $fillable = [
         'email', 'first_name', 'last_name', 'company', 'title', 'website', 'industry', 'city',
         'personalization', 'findings', 'site_checked_at', 'check_note', 'email_status', 'score', 'status', 'sent_at', 'unsubscribed_at',
-        'clicked_at', 'last_clicked_at', 'click_count', 'last_click_link', 'phone', 'project_id',
+        'clicked_at', 'last_clicked_at', 'click_count', 'last_click_link', 'phone', 'project_id', 'followup_sent_at',
     ];
 
     protected $casts = ['sent_at' => 'datetime', 'unsubscribed_at' => 'datetime', 'score' => 'integer', 'findings' => 'array', 'site_checked_at' => 'datetime',
-        'clicked_at' => 'datetime', 'last_clicked_at' => 'datetime', 'click_count' => 'integer'];
+        'clicked_at' => 'datetime', 'last_clicked_at' => 'datetime', 'click_count' => 'integer', 'followup_sent_at' => 'datetime'];
+
+    /**
+     * Бизнеси, на които може да се прати едно напомняне: първото писмо е изпратено преди поне
+     * creatium.outreach.followup_after_days дни, не са отговорили, не са се отписали и още нямат напомняне.
+     */
+    public function scopeDueForFollowUp($query)
+    {
+        return $query->where('status', 'sent')
+            ->whereNull('followup_sent_at')->whereNull('unsubscribed_at')->whereNull('project_id')
+            ->where('sent_at', '<=', now()->subDays(max(1, (int) config('creatium.outreach.followup_after_days'))))
+            ->whereNotIn('email', OutreachSuppression::select('email'));
+    }
+
+    public function canFollowUp(): bool
+    {
+        return self::whereKey($this->id)->dueForFollowUp()->exists();
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 
     public function canBeEmailed(): bool
     {

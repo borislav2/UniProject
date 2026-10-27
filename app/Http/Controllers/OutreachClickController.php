@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 /**
  * Клик по линк в първото писмо: записва го при бизнеса и препраща към страницата. Подписан адрес, без вход.
- * Не броим нас (влезли в админа), ботове и скенери на пощата, нито кликове в първата минута след изпращането,
+ * Не броим нас (влезли в админа), ботове и скенери на пощата, нито кликове в първата минута след изпращането (и на напомнянето),
  * когато корпоративните филтри „отварят“ всички линкове сами.
  */
 class OutreachClickController extends Controller
@@ -42,6 +42,7 @@ class OutreachClickController extends Controller
         return $request->isMethod('get')
             && ! $request->user()
             && $agent !== '' && ! preg_match(self::BOTS, $agent)
-            && ! ($prospect->sent_at && $prospect->sent_at->gt(now()->subMinute()));
+            && ! ($prospect->sent_at && $prospect->sent_at->gt(now()->subMinute()))
+            && ! ($prospect->followup_sent_at && $prospect->followup_sent_at->gt(now()->subMinute()));
     }
 }

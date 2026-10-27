@@ -70,7 +70,6 @@ class OutreachMail extends Mailable
         return $parts;
     }
 
-    /** Връзките в писмото: сайтът, безплатната проверка и записването за консултация, с UTM за атрибуцията. */
     /** Адресите, към които водят линковете в писмото (с utm), без проследяването. */
     public static function targets(): array
     {

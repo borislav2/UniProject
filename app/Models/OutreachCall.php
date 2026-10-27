@@ -61,6 +61,11 @@ class OutreachCall extends Model
 
     protected $casts = ['called_at' => 'datetime', 'callback_on' => 'date', 'is_mobile' => 'boolean', 'attempts' => 'integer'];
 
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     /** Броячът за деня: колко бизнеса са обадени днес (София) и с какъв резултат. */
     public static function todayStats(): array
     {

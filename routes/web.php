@@ -97,6 +97,7 @@ Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('dnes', TodayController::class)->name('today');
+    Route::get('statistika', \App\Http\Controllers\Admin\StatsController::class)->name('stats');
 
     // Messages from the website contact form (stored as projects with source = website)
     Route::get('inquiries', [InquiryController::class, 'index'])->name('inquiries.index');
@@ -135,6 +136,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('outreach/import-server', [OutreachController::class, 'importServer'])->name('outreach.import-server');
     Route::post('outreach/check', [OutreachController::class, 'check'])->name('outreach.check');
     Route::post('outreach/send-selected', [OutreachController::class, 'sendSelected'])->middleware('throttle:10,1')->name('outreach.send-selected');
+    Route::post('outreach/follow-up-all', [OutreachController::class, 'followUpAll'])->middleware('throttle:10,1')->name('outreach.follow-up-all');
+    Route::post('outreach/{prospect}/follow-up', [OutreachController::class, 'followUp'])->middleware('throttle:20,1')->name('outreach.follow-up');
     Route::get('outreach/{prospect}', [OutreachController::class, 'compose'])->name('outreach.compose');
     Route::post('outreach/{prospect}/preview', [OutreachController::class, 'preview'])->name('outreach.preview');
     Route::post('outreach/{prospect}/send', [OutreachController::class, 'send'])->middleware('throttle:20,1')->name('outreach.send');

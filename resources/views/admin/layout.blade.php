@@ -45,6 +45,7 @@
                     ],
                     'Продажби' => [
                         ['admin.outreach.index', 'admin.outreach.*', 'magnifying-glass', 'Потенциални клиенти', $callbacksToday],
+                        ['admin.stats', 'admin.stats', 'chart-line', 'Статистика', 0],
                         ['admin.reviews.index', 'admin.reviews.*', 'reply', 'Отговори на отзиви', 0],
                     ],
                     'Сайт' => [

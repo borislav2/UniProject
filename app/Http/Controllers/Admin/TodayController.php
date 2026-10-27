@@ -18,6 +18,7 @@ class TodayController extends Controller
             'callbacks' => Today::callbacks(),
             'calls' => OutreachCall::todayStats(),
             'hot' => Today::hotProspects(),
+            'followups' => \App\Models\OutreachProspect::dueForFollowUp()->count(),
         ]);
     }
 }
