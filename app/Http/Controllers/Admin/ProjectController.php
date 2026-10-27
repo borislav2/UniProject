@@ -13,7 +13,7 @@ class ProjectController extends Controller
 {
     /** Филтри над списъка: ключ => [текст, условие]. */
     private const FILTERS = [
-        'leads' => 'Нови запитвания',
+        'leads' => 'Отворени запитвания',
         'active' => 'В работа',
         'done' => 'Завършени',
     ];
@@ -33,7 +33,7 @@ class ProjectController extends Controller
     private function filtered($query, ?string $filter)
     {
         return match ($filter) {
-            'leads' => $query->where('status', 'Planning')->where('source', 'website'),
+            'leads' => $query->openLeads()->orderByRaw('next_action_at is null')->orderBy('next_action_at'),
             'active' => $query->whereIn('status', ['In Progress', 'On Hold']),
             'done' => $query->where('status', 'Completed'),
             default => $query,
@@ -168,6 +168,39 @@ class ProjectController extends Controller
             ->with('success', 'Проектът е изтрит.');
     }
     
+    /** Етап на продажбата и следваща стъпка (от „Запитвания“, „Днес“ или страницата на проекта). */
+    public function pipeline(Request $request, Project $project)
+    {
+        $data = $request->validate([
+            'stage' => 'required|in:' . implode(',', array_keys(Project::STAGES)),
+            'next_action' => 'nullable|string|max:255',
+            'next_action_at' => 'nullable|date',
+            'lost_reason' => 'nullable|string|max:255',
+        ]);
+
+        $closed = in_array($data['stage'], ['won', 'lost'], true);
+        $values = [
+            'stage' => $data['stage'],
+            'next_action' => $closed ? null : ($data['next_action'] ?? null),
+            'next_action_at' => $closed || empty($data['next_action_at']) ? null : \Illuminate\Support\Carbon::parse($data['next_action_at'], 'Europe/Sofia')->utc(),
+            'lost_reason' => $data['stage'] === 'lost' ? ($data['lost_reason'] ?? null) : null,
+            'read_at' => $project->read_at ?? now(),
+        ];
+        if ($project->stage !== $data['stage']) {
+            $values['stage_changed_at'] = now();
+        }
+        // Спечелен започва работа, загубен се отказва: така и филтрите по статус остават верни.
+        if ($data['stage'] === 'won' && $project->status === 'Planning') {
+            $values['status'] = 'In Progress';
+        }
+        if ($data['stage'] === 'lost') {
+            $values['status'] = 'Cancelled';
+        }
+        $project->forceFill($values)->save();
+
+        return back()->with('success', 'Запазено: ' . $project->stageLabel() . ($project->next_action_at ? ', следваща стъпка ' . $project->next_action_at->timezone('Europe/Sofia')->format('d.m H:i') : '') . '.');
+    }
+
     public function search(Request $request)
     {
         $search = $request->get('search');

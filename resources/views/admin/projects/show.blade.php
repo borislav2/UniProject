@@ -58,6 +58,13 @@
     </div>
 @endif
 
+@if($project->stage)
+    <div class="mb-6 rounded-lg bg-white p-5 shadow">
+        <h3 class="mb-3 font-semibold text-gray-800">Продажба</h3>
+        @include('admin.projects._pipeline')
+    </div>
+@endif
+
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2">
         <div class="bg-white rounded-lg shadow p-6 mb-6">

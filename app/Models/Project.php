@@ -35,6 +35,11 @@ class Project extends Model
         'utm_medium',
         'utm_campaign',
         'referrer',
+        'stage',
+        'stage_changed_at',
+        'next_action',
+        'next_action_at',
+        'lost_reason',
     ];
     
     protected $casts = [
@@ -44,7 +49,57 @@ class Project extends Model
         'read_at' => 'datetime',
         'email_sent_at' => 'datetime',
         'consultation_at' => 'datetime',
+        'stage_changed_at' => 'datetime',
+        'next_action_at' => 'datetime',
     ];
+
+    /** Етапите на продажбата за запитванията. Отворените са тези, които още чакат действие от нас. */
+    public const STAGES = [
+        'new' => ['Ново', 'bg-blue-100 text-blue-800'],
+        'contacted' => ['Свързахме се', 'bg-indigo-100 text-indigo-800'],
+        'offer' => ['Оферта изпратена', 'bg-purple-100 text-purple-800'],
+        'won' => ['Спечелен', 'bg-green-100 text-green-800'],
+        'lost' => ['Загубен', 'bg-gray-200 text-gray-700'],
+    ];
+
+    public const OPEN_STAGES = ['new', 'contacted', 'offer'];
+
+    protected static function booted(): void
+    {
+        // Всяко ново запитване от сайта (форма, чат, проверка на сайт) започва като „Ново“.
+        static::creating(function (Project $project) {
+            if ($project->source === 'website' && ! $project->stage) {
+                $project->stage = 'new';
+                $project->stage_changed_at = now();
+            }
+        });
+    }
+
+    public function stageLabel(): ?string
+    {
+        return $this->stage ? (self::STAGES[$this->stage][0] ?? $this->stage) : null;
+    }
+
+    public function stageClass(): string
+    {
+        return self::STAGES[$this->stage][1] ?? 'bg-gray-100 text-gray-800';
+    }
+
+    public function isOpenLead(): bool
+    {
+        return in_array($this->stage, self::OPEN_STAGES, true);
+    }
+
+    /** Следващата стъпка е минала (или е за днес по-рано) и запитването още е отворено. */
+    public function isOverdue(): bool
+    {
+        return $this->isOpenLead() && $this->next_action_at && $this->next_action_at->isPast();
+    }
+
+    public function scopeOpenLeads(Builder $query): Builder
+    {
+        return $query->whereIn('stage', self::OPEN_STAGES);
+    }
     
     /** Статусите в базата са на английски (валидират се така); в админа се показват на български. */
     public const STATUSES = [

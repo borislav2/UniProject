@@ -55,7 +55,7 @@ class FacebookConnect extends Command
             $this->warn('Внимание: акаунтът няма право да публикува в тази страница (CREATE_CONTENT).');
         }
 
-        $this->setEnv(['FACEBOOK_PAGE_ID' => $page['id'], 'FACEBOOK_PAGE_TOKEN' => $page['access_token'], 'FACEBOOK_PAGE_NAME' => $page['name']]);
+        \App\Support\EnvFile::set(['FACEBOOK_PAGE_ID' => $page['id'], 'FACEBOOK_PAGE_TOKEN' => $page['access_token'], 'FACEBOOK_PAGE_NAME' => $page['name']]);
         if (app()->configurationIsCached()) {
             Artisan::call('config:cache');
         }
@@ -64,17 +64,5 @@ class FacebookConnect extends Command
         $this->line('Проба веднага: php artisan creatium:facebook-publish');
 
         return self::SUCCESS;
-    }
-
-    /** Записва или заменя редовете в .env, без да пипа останалите. */
-    private function setEnv(array $values): void
-    {
-        $path = base_path('.env');
-        $lines = is_file($path) ? preg_split('/\r?\n/', rtrim((string) file_get_contents($path), "\n")) : [];
-        foreach ($values as $key => $value) {
-            $lines = array_values(array_filter($lines, fn ($line) => ! preg_match('/^#?\s*' . preg_quote($key, '/') . '=/', $line)));
-            $lines[] = $key . '="' . str_replace(['\\', '"'], ['\\\\', '\\"'], (string) $value) . '"';
-        }
-        file_put_contents($path, implode("\n", $lines) . "\n");
     }
 }

@@ -29,10 +29,12 @@
             </div>
             @php
                 $unreadInquiries = \App\Models\Project::where('source', 'website')->whereNull('read_at')->count();
+                $urgentToday = \App\Support\Admin\Today::urgentCount();
                 $callbacksToday = \App\Models\OutreachCall::whereNotNull('callback_on')->whereDate('callback_on', '<=', today())->count();
                 // [група, [route, pattern, икона, текст, брояч]]
                 $menu = [
                     null => [
+                        ['admin.today', 'admin.today', 'calendar', 'Днес', $urgentToday],
                         ['admin.dashboard', 'admin.dashboard', 'tachometer-alt', 'Табло', 0],
                     ],
                     'Клиенти' => [

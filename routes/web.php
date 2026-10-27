@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\TodayController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ChatController as AdminChatController;
 use App\Http\Controllers\Admin\ClientEmailController;
@@ -95,6 +96,7 @@ Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
 // Admin panel
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('dnes', TodayController::class)->name('today');
 
     // Messages from the website contact form (stored as projects with source = website)
     Route::get('inquiries', [InquiryController::class, 'index'])->name('inquiries.index');
@@ -138,6 +140,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('outreach/{prospect}', [OutreachController::class, 'update'])->name('outreach.update');
 
     Route::get('projects/search', [ProjectController::class, 'search'])->name('projects.search');
+    Route::patch('projects/{project}/pipeline', [ProjectController::class, 'pipeline'])->name('projects.pipeline');
     Route::resource('projects', ProjectController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('technologies', TechnologyController::class);

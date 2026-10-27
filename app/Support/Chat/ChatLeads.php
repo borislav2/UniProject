@@ -81,6 +81,7 @@ class ChatLeads
         } catch (\Throwable $e) {
             Log::error('Chat lead notification email failed: ' . $e->getMessage(), ['project_id' => $lead->id]);
         }
+        \App\Support\Notify\Telegram::newLead($lead, 'Нов клиент от чата с Крео');
 
         return null;
     }

@@ -25,6 +25,7 @@ class AdminController extends Controller
 
         return view('admin.dashboard', [
             'unread' => (clone $leads)->whereNull('read_at')->count(),
+            'overdue' => Project::openLeads()->whereNotNull('next_action_at')->where('next_action_at', '<', now())->count(),
             'recentLeads' => (clone $leads)->latest()->take(5)->get(),
             'consultations' => Project::whereNotNull('consultation_at')
                 ->whereBetween('consultation_at', [now()->subHour(), now()->addDays(14)])

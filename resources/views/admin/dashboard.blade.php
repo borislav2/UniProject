@@ -9,6 +9,12 @@
     </div>
 @endif
 
+@if($overdue)
+    <a href="{{ route('admin.today') }}" class="mb-6 flex items-center justify-between rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800 hover:bg-red-100">
+        <span>{{ $overdue }} {{ $overdue === 1 ? 'запитване е' : 'запитвания са' }} с просрочена следваща стъпка</span><span>Към „Днес“ →</span>
+    </a>
+@endif
+
 {{-- Какво чака днес: всяка карта води направо към работата. --}}
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
     <a href="{{ route('admin.inquiries.index', $unread ? ['filter' => 'unread'] : []) }}" class="rounded-lg bg-white p-5 shadow hover:ring-2 hover:ring-blue-200">

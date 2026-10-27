@@ -21,6 +21,9 @@ class OutreachClickController extends Controller
         abort_unless(isset($targets[$link]), 404);
 
         if ($this->counts($request, $prospect)) {
+            if (! $prospect->clicked_at || $link === 'booking') {
+                \App\Support\Notify\Telegram::click($prospect, $link);
+            }
             $prospect->forceFill([
                 'clicked_at' => $prospect->clicked_at ?? now(),
                 'last_clicked_at' => now(),

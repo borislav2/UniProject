@@ -31,9 +31,8 @@
                 <div>
                     <h3 class="flex flex-wrap items-center gap-2 text-lg font-semibold text-gray-900">
                         {{ $customer }}
-                        @unless($inquiry->read_at)
-                            <span class="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800">Ново</span>
-                        @endunless
+                        @if($inquiry->stage)<span class="rounded-full px-2 py-0.5 text-xs font-semibold {{ $inquiry->stageClass() }}">{{ $inquiry->stageLabel() }}</span>@endif
+                        @if($inquiry->isOverdue())<span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">Просрочена стъпка</span>@endif
                     </h3>
                     <p class="mt-1 text-sm text-gray-500">{{ $inquiry->created_at->format('d.m.Y H:i') }}</p>
                 </div>
@@ -65,6 +64,8 @@
                 <p class="text-sm text-gray-500">Съобщение</p>
                 <p class="mt-1 whitespace-pre-line rounded-md bg-gray-50 p-3 text-gray-800">{{ $inquiry->description }}</p>
             </div>
+
+            <div class="mt-4">@include('admin.projects._pipeline', ['project' => $inquiry])</div>
 
             <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
                 <p class="{{ $inquiry->email_sent_at ? 'text-gray-500' : 'text-red-600 font-semibold' }}">
