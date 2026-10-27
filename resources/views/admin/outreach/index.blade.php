@@ -42,9 +42,13 @@
 </div>
 
 <nav class="mb-4 flex flex-wrap gap-2 text-sm">
-    <a href="{{ route('admin.outreach.index') }}" class="rounded-full px-3 py-1 {{ $status ? 'bg-white text-gray-700 shadow' : 'bg-brand-950 text-white' }}">Всички ({{ $counts->sum() }})</a>
+    <a href="{{ route('admin.outreach.index') }}" class="rounded-full px-3 py-1 {{ $status || $clicked || $followup ? 'bg-white text-gray-700 shadow' : 'bg-brand-950 text-white' }}">Всички ({{ $counts->sum() }})</a>
     @foreach(\App\Models\OutreachProspect::STATUSES as $key => $label)
         <a href="{{ route('admin.outreach.index', ['status' => $key]) }}" class="rounded-full px-3 py-1 {{ $status === $key ? 'bg-brand-950 text-white' : 'bg-white text-gray-700 shadow' }}">{{ $label }} ({{ $counts[$key] ?? 0 }})</a>
+        @if($key === 'sent')
+            <a href="{{ route('admin.outreach.index', ['followup' => 1]) }}" class="rounded-full px-3 py-1 {{ $followup ? 'bg-brand-950 text-white' : 'bg-white text-gray-700 shadow' }}" title="Изпратено преди {{ config('creatium.outreach.followup_after_days') }}+ дни, без отговор и без напомняне">За напомняне ({{ count($followupIds) }})</a>
+            <a href="{{ route('admin.outreach.index', ['clicked' => 1]) }}" class="rounded-full px-3 py-1 {{ $clicked ? 'bg-brand-950 text-white' : 'bg-white text-gray-700 shadow' }}" title="Кликнали по линк в писмото: обадете им се първо">Кликнали ({{ $clickedCount }})</a>
+        @endif
     @endforeach
 </nav>
 
@@ -53,6 +57,14 @@
         <button type="button" data-check-start class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 font-semibold text-gray-800 hover:bg-gray-50 disabled:opacity-50"><x-icon name="rotate-left" /> Провери сайта и имейла на непроверените ({{ $unchecked }})</button>
         <span class="text-gray-600" data-check-progress>Имейлът става „публикуван от бизнеса“ само ако е на домейна на сайта им (или gmail/abv) и наистина е на сайта. Останалите остават „непроверен“ с причина. Оставете страницата отворена.</span>
     </div>
+@endif
+
+@if($followupIds)
+    <form action="{{ route('admin.outreach.follow-up-all') }}" method="POST" class="mb-3 flex flex-wrap items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm" onsubmit="return confirm('Да изпратим ли напомняне до {{ count($followupIds) }} бизнеса? Влиза в дневния лимит.')">
+        @csrf
+        <button @disabled(! $configured || $remaining < 1) class="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 font-semibold text-white hover:bg-amber-600 disabled:opacity-50"><x-icon name="paper-plane" /> Напомни на всички ({{ count($followupIds) }})</button>
+        <span class="text-amber-900">Кратко второ писмо до тези, които не са отговорили {{ config('creatium.outreach.followup_after_days') }}+ дни. Само веднъж на бизнес. Кликналите са първи.</span>
+    </form>
 @endif
 
 <form id="bulk-send" action="{{ route('admin.outreach.send-selected') }}" method="POST" class="mb-3 flex flex-wrap items-center gap-3 rounded-lg bg-white p-3 text-sm shadow" onsubmit="return confirm('Да изпратим ли писмата до избраните бизнеси? Всяко е с проверката на техния сайт.')">
@@ -83,6 +95,7 @@
                         <span class="font-semibold text-gray-900">{{ $prospect->displayName() }}</span>
                         <span class="block text-xs text-gray-500">{{ collect([\App\Models\OutreachCall::INDUSTRIES[mb_strtolower((string) $prospect->industry)] ?? $prospect->industry, $prospect->city])->filter()->join(' · ') }}</span>
                         @if($prospect->website)<a href="{{ $prospect->website }}" target="_blank" rel="noopener" class="block text-xs text-blue-600 hover:underline">{{ parse_url($prospect->website, PHP_URL_HOST) ?: $prospect->website }}</a>@endif
+                        @if($prospect->phone)<x-phone :number="$prospect->phone" class="mt-1 text-xs" />@endif
                     </td>
                     <td class="px-4 py-3">{{ $prospect->email }}<span class="block text-xs {{ in_array($prospect->email_status, \App\Models\OutreachProspect::SENDABLE_EMAIL_STATUSES, true) ? 'text-green-700' : 'text-red-600' }}">{{ \App\Models\OutreachProspect::EMAIL_STATUSES[$prospect->email_status] ?? ($prospect->email_status ?: 'непроверен') }}</span>@if($prospect->check_note)<span class="block text-xs text-gray-500">{{ $prospect->check_note }}</span>@endif</td>
                     <td class="px-4 py-3 max-w-md text-gray-600">
@@ -95,8 +108,13 @@
                         @endif
                     </td>
                     <td class="px-4 py-3">{{ $prospect->score }}</td>
-                    <td class="px-4 py-3">{{ \App\Models\OutreachProspect::STATUSES[$prospect->status] ?? $prospect->status }}@if($prospect->sent_at)<span class="block text-xs text-gray-500">{{ $prospect->sent_at->format('d.m.Y') }}</span>@endif</td>
+                    <td class="px-4 py-3">{{ \App\Models\OutreachProspect::STATUSES[$prospect->status] ?? $prospect->status }}@if($prospect->sent_at)<span class="block text-xs text-gray-500">{{ $prospect->sent_at->format('d.m.Y') }}</span>@endif @if($prospect->followup_sent_at)<span class="block text-xs text-gray-500">Напомнено {{ $prospect->followup_sent_at->format('d.m.Y') }}</span>@endif
+                        @if($prospect->clicked_at)<span class="mt-1 block rounded bg-green-50 px-1.5 py-0.5 text-xs font-semibold text-green-800" title="Първи клик: {{ $prospect->clicked_at->timezone('Europe/Sofia')->format('d.m.Y H:i') }}">Кликна: {{ \App\Models\OutreachProspect::CLICK_LINKS[$prospect->last_click_link] ?? $prospect->last_click_link }} · {{ $prospect->last_clicked_at->timezone('Europe/Sofia')->format('d.m H:i') }}@if($prospect->click_count > 1) ({{ $prospect->click_count }}×)@endif</span>@endif</td>
                     <td class="px-4 py-3 whitespace-nowrap text-right">
+                        @if(in_array($prospect->id, $followupIds, true))
+                            <form action="{{ route('admin.outreach.follow-up', $prospect) }}" method="POST" class="mb-1" onsubmit="return confirm('Да изпратим ли кратко напомняне до {{ $prospect->displayName() }}?')">@csrf<button class="rounded-lg bg-amber-500 px-2.5 py-1 text-xs font-semibold text-white hover:bg-amber-600">Напомни</button></form>
+                        @endif
+                        <div class="mb-1">@if($prospect->project_id)<a href="{{ route('admin.projects.show', $prospect->project_id) }}" class="inline-flex items-center rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-800 hover:bg-blue-100">Запитване →</a>@else<form action="{{ route('admin.outreach.lead', $prospect) }}" method="POST" class="inline">@csrf<button class="rounded-lg border border-blue-300 px-2.5 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-50" title="Прояви интерес: направи запитване с етапи и следваща стъпка">→ Запитване</button></form>@endif</div>
                         @if($prospect->canBeEmailed())
                             <a href="{{ route('admin.outreach.compose', $prospect) }}" class="inline-flex items-center gap-1 rounded-lg bg-brand-950 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-800"><x-icon name="paper-plane" /> Напиши</a>
                         @endif

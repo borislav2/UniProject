@@ -103,6 +103,31 @@
             </div>
         </div>
 
+        {{-- Абонамент: попълнете пакет и месечна такса, за да е клиентът в „Абонаменти“ (плащания, наблюдение на сайта, отчет). --}}
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
+            <div>
+                <label for="package" class="block text-sm font-medium text-gray-700 mb-2">Пакет (абонамент)</label>
+                <input type="text" name="package" id="package" list="package-names" value="{{ old('package', $project->package ?? '') }}" maxlength="80" placeholder="напр. Стартов двигател"
+                       class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <datalist id="package-names">
+                    @foreach(collect(site('plans')['items'] ?? [])->pluck('name')->filter() as $planName)<option value="{{ $planName }}">@endforeach
+                </datalist>
+            </div>
+            <div>
+                <label for="monthly_fee" class="block text-sm font-medium text-gray-700 mb-2">Месечна такса (€)</label>
+                <input type="number" name="monthly_fee" id="monthly_fee" min="0" step="0.01" value="{{ old('monthly_fee', $project->monthly_fee ?? '') }}"
+                       class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                @error('monthly_fee')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label for="billing_day" class="block text-sm font-medium text-gray-700 mb-2">Плаща на (ден от месеца)</label>
+                <input type="number" name="billing_day" id="billing_day" min="1" max="31" value="{{ old('billing_day', $project->billing_day ?? '') }}" placeholder="1"
+                       class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                @error('billing_day')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+            </div>
+            <p class="md:col-span-3 -mt-3 text-xs text-gray-500">Празна такса = не е на абонамент. Със сайт в „Адрес на сайта“ сайтът се наблюдава автоматично.</p>
+        </div>
+
         <div class="mt-6">
             <label for="website_url" class="block text-sm font-medium text-gray-700 mb-2">Адрес на сайта</label>
             <input type="url" name="website_url" id="website_url" placeholder="https://example.bg" value="{{ old('website_url', $project->website_url) }}"

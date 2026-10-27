@@ -72,6 +72,19 @@ class ClientEmails
                     'valid_until' => ['label' => 'Параметрите и срокът са валидни до', 'type' => 'date', 'required' => true],
                 ],
             ],
+            'monthly-report' => [
+                'label' => 'Месечен отчет',
+                'description' => 'За клиентите на абонамент: какво направихме през месеца, резултати, състояние на сайта и план за следващия.',
+                'subject' => 'Месечен отчет за {business} | Creatium Lab',
+                'view' => 'emails.client.monthly-report',
+                'fields' => $common + [
+                    'month' => ['label' => 'Месец', 'required' => true, 'default' => now('Europe/Sofia')->locale('bg')->isoFormat('MMMM YYYY'), 'help' => 'напр. октомври 2026'],
+                    'done' => ['label' => 'Какво направихме', 'type' => 'textarea', 'required' => true, 'help' => 'По една точка на ред.'],
+                    'results' => ['label' => 'Резултати', 'type' => 'textarea', 'required' => false, 'help' => 'По желание, по една на ред: запитвания, позиции в Google, посещения. Само истински числа.'],
+                    'site_status' => ['label' => 'Състояние на сайта', 'required' => false, 'help' => 'Попълва се от наблюдението; можете да го промените.'],
+                    'next' => ['label' => 'План за следващия месец', 'type' => 'textarea', 'required' => false, 'help' => 'По желание, по една точка на ред.'],
+                ],
+            ],
         ];
     }
 
@@ -102,7 +115,7 @@ class ClientEmails
             $rules["data.$name"] = array_filter([
                 ($field['required'] ?? true) ? 'required' : 'nullable',
                 $type === 'date' ? 'date' : 'string',
-                match ($type) { 'date' => 'after_or_equal:today', 'textarea' => 'max:1000', default => 'max:255' },
+                match ($type) { 'date' => 'after_or_equal:today', 'textarea' => 'max:2000', default => 'max:255' },
             ]);
         }
 

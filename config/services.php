@@ -68,4 +68,11 @@ return [
         'graph_url' => env('FACEBOOK_GRAPH_URL') ?: 'https://graph.facebook.com',
     ],
 
+    // Известия в Telegram (ново запитване, записан час, клик по първото писмо). Свързва се с php artisan creatium:telegram-connect.
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'chat_id' => env('TELEGRAM_CHAT_ID'),
+        'api_url' => env('TELEGRAM_API_URL') ?: 'https://api.telegram.org',
+    ],
+
 ];

@@ -25,6 +25,7 @@ class AdminController extends Controller
 
         return view('admin.dashboard', [
             'unread' => (clone $leads)->whereNull('read_at')->count(),
+            'overdue' => Project::openLeads()->whereNotNull('next_action_at')->where('next_action_at', '<', now())->count(),
             'recentLeads' => (clone $leads)->latest()->take(5)->get(),
             'consultations' => Project::whereNotNull('consultation_at')
                 ->whereBetween('consultation_at', [now()->subHour(), now()->addDays(14)])
@@ -35,9 +36,11 @@ class AdminController extends Controller
                 'configured' => Outreach::configured(),
                 'sent' => Outreach::sentToday(),
                 'limit' => (int) config('creatium.outreach.daily_limit'),
+                'clicked' => \App\Models\OutreachProspect::where('last_clicked_at', '>=', now()->subDays(7))->count(),
             ],
             'chats' => ChatConversation::where('updated_at', '>=', now()->subDays(7))->count(),
             'activeProjects' => Project::whereIn('status', ['In Progress', 'On Hold'])->count(),
+            'mrr' => Project::subscribers()->sum('monthly_fee'),
             'nextPost' => Post::where('status', 'published')->where('published_at', '>', now())->orderBy('published_at')->first(),
             'mailNotConfigured' => in_array(config('mail.default'), ['log', 'array'], true),
             'leadChannels' => $leadChannels,

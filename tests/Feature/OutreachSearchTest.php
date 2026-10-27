@@ -129,12 +129,14 @@ class OutreachSearchTest extends TestCase
         $this->actingAs($user)->post('/admin/outreach/send-selected', ['ids' => [$prospect->id]])
             ->assertRedirect('/admin/outreach')->assertSessionHas('success', 'Изпратени: 1.');
 
-        Mail::assertSent(OutreachMail::class, function (OutreachMail $mail) {
+        Mail::assertSent(OutreachMail::class, function (OutreachMail $mail) use ($prospect) {
             $html = $mail->render();
             $this->assertStringContainsString('проверихме и сайта на Ресторант Лозата (lozata.bg)', $html);
             $this->assertStringContainsString('Липсва описание в резултатите на Google', $html);
-            $this->assertStringContainsString('/proverka-na-sait?utm_source=outreach', $html);
-            $this->assertStringContainsString('/kontakti?utm_source=outreach&amp;utm_medium=email&amp;utm_campaign=first-email#konsultatsiya', $html);
+            // Линковете минават през проследяването на кликове; текстовата версия е с чистите адреси.
+            $this->assertStringContainsString("/o/{$prospect->id}/check?signature=", $html);
+            $this->assertStringContainsString("/o/{$prospect->id}/booking?signature=", $html);
+            $this->assertStringContainsString('/kontakti?utm_source=outreach&utm_medium=email&utm_campaign=first-email#konsultatsiya', $mail->textView ? view($mail->textView, $mail->buildViewData())->render() : '');
             $this->assertStringContainsString('Запазете час за разговор', $html);
             $this->assertStringContainsString('публикуван като контакт на Ресторант Лозата', $html);
 

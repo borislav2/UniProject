@@ -47,6 +47,12 @@
                     <td class="px-4 md:px-6 py-4">
                         <div class="flex flex-wrap items-center gap-2 text-sm font-medium">
                             <a href="{{ route('admin.projects.show', $project) }}" class="text-blue-600 hover:underline">{{ $project->name }}</a>
+                            @if($project->stage)
+                                <span class="px-2 py-0.5 text-xs rounded-full font-semibold {{ $project->stageClass() }}">{{ $project->stageLabel() }}</span>
+                            @endif
+                            @if($project->isOverdue())
+                                <span class="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 font-semibold">Просрочена стъпка</span>
+                            @endif
                             @if($project->source === 'website')
                                 <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800">От сайта</span>
                                 @if($project->lead_channel)
@@ -54,8 +60,12 @@
                                 @endif
                             @endif
                             <span class="md:hidden px-2 py-0.5 text-xs rounded-full font-semibold {{ $project->statusClass() }}">{{ $project->statusLabel() }}</span>
+                            @if($project->assignee)<span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600" title="Води го">{{ $project->assignee->name }}</span>@endif
                         </div>
                         <div class="mt-0.5 text-sm text-gray-500 line-clamp-1">{{ $project->locale === 'en' ? 'EN · ' : '' }}{{ $project->serviceLabel() ? Str::limit($project->serviceLabel(), 40) . ' · ' : '' }}{{ Str::limit($project->description, 70) }}</div>
+                        @if($project->isOpenLead() && $project->next_action)
+                            <div class="mt-1 text-sm {{ $project->isOverdue() ? 'text-red-700' : 'text-gray-700' }}">→ {{ $project->next_action }}@if($project->next_action_at) · {{ $project->next_action_at->timezone('Europe/Sofia')->format('d.m H:i') }}@endif</div>
+                        @endif
                         @if($project->client_phone || $project->client_email)
                             <div class="mt-1 flex flex-wrap gap-x-4 text-sm">
                                 @if($project->client_phone)<a href="tel:{{ preg_replace('/[^\d+]/', '', $project->client_phone) }}" class="text-blue-600 hover:underline">{{ $project->client_phone }}</a>@endif

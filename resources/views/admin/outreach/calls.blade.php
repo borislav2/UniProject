@@ -90,6 +90,7 @@
                     <label class="inline-flex items-center gap-1 text-xs text-gray-600">Отново на <input type="date" name="callback_on" value="{{ $call->callback_on?->toDateString() }}" min="{{ now('Europe/Sofia')->addDay()->toDateString() }}" class="rounded border border-gray-300 px-1.5 py-1 text-sm"></label>
                     <button class="rounded bg-brand-950 px-3 py-1.5 text-sm font-semibold text-white hover:bg-brand-800">Запази</button>
                 </form>
+                <div class="mt-1">@if($call->project_id)<a href="{{ route('admin.projects.show', $call->project_id) }}" class="inline-flex items-center rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-800 hover:bg-blue-100">Запитване →</a>@else<form action="{{ route('admin.outreach.calls.lead', $call) }}" method="POST" class="inline">@csrf<button class="rounded-lg border border-blue-300 px-2.5 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-50" title="Прояви интерес: направи запитване с етапи и следваща стъпка">→ Запитване</button></form>@endif</div>
                 <span class="mt-1 block text-xs text-gray-500">
                     @if($call->called_at)Последно обаждане: {{ $call->called_at->timezone('Europe/Sofia')->format('d.m.Y H:i') }}@if($call->attempts > 1) ({{ $call->attempts }} пъти)@endif @endif
                     @if($call->callback_on)<span class="{{ $call->callbackDue() ? 'font-semibold text-amber-700' : '' }}">· Обади се отново: {{ $call->callback_on->format('d.m.Y') }}</span>@endif

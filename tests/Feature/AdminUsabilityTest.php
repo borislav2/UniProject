@@ -61,7 +61,7 @@ class AdminUsabilityTest extends TestCase
         $this->project(['name' => 'Готов сайт', 'status' => 'Completed']);
 
         $this->actingAs($admin)->get('/admin/projects')->assertOk()
-            ->assertSee('Нови запитвания (1)')->assertSee('В работа (1)')->assertSee('Завършени (1)')
+            ->assertSee('Отворени запитвания (1)')->assertSee('В работа (1)')->assertSee('Завършени (1)')
             ->assertSee('Завършен')->assertDontSee('>Completed<', false);
 
         $this->actingAs($admin)->get('/admin/projects?filter=active')->assertOk()

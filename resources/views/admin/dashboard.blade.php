@@ -9,6 +9,12 @@
     </div>
 @endif
 
+@if($overdue)
+    <a href="{{ route('admin.today') }}" class="mb-6 flex items-center justify-between rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800 hover:bg-red-100">
+        <span>{{ $overdue }} {{ $overdue === 1 ? 'запитване е' : 'запитвания са' }} с просрочена следваща стъпка</span><span>Към „Днес“ →</span>
+    </a>
+@endif
+
 {{-- Какво чака днес: всяка карта води направо към работата. --}}
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
     <a href="{{ route('admin.inquiries.index', $unread ? ['filter' => 'unread'] : []) }}" class="rounded-lg bg-white p-5 shadow hover:ring-2 hover:ring-blue-200">
@@ -26,6 +32,7 @@
         <p class="text-sm font-medium text-gray-500">Първи писма днес</p>
         <p class="mt-1 text-3xl font-bold text-gray-900">{{ $outreach['sent'] }} <span class="text-base font-medium text-gray-400">/ {{ $outreach['limit'] }}</span></p>
         <p class="mt-1 text-xs {{ $outreach['configured'] ? 'text-gray-500' : 'text-red-600' }}">{{ $outreach['configured'] ? 'Потенциални клиенти' : 'Пощата за писма не е настроена' }}</p>
+        @if($outreach['clicked'])<p class="mt-1 text-xs font-semibold text-green-700">{{ $outreach['clicked'] }} кликнали за 7 дни</p>@endif
     </a>
     <a href="{{ route('admin.chats.index') }}" class="rounded-lg bg-white p-5 shadow hover:ring-2 hover:ring-blue-200">
         <p class="text-sm font-medium text-gray-500">Разговори с Крео</p>
@@ -79,6 +86,8 @@
         <div class="rounded-lg bg-white p-5 shadow text-sm">
             <p class="text-gray-500">Проекти в работа</p>
             <a href="{{ route('admin.projects.index', ['filter' => 'active']) }}" class="text-2xl font-bold text-gray-900 hover:text-blue-600">{{ $activeProjects }}</a>
+            <p class="mt-3 text-gray-500">Месечни приходи от абонаменти</p>
+            <a href="{{ route('admin.clients.index') }}" class="text-2xl font-bold text-gray-900 hover:text-blue-600">{{ number_format((float) $mrr, 0, ',', ' ') }} €</a>
             <p class="mt-3 text-gray-500">Следваща статия в блога</p>
             @if($nextPost)
                 <a href="{{ route('admin.posts.edit', $nextPost) }}" class="font-medium text-gray-900 hover:text-blue-600">{{ $nextPost->trOrBg('title') }}</a>

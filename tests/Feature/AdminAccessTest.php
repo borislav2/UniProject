@@ -85,7 +85,7 @@ class AdminAccessTest extends TestCase
         $user = User::factory()->create(['password' => bcrypt('correct-horse-battery')]);
 
         $this->post('/login', ['email' => $user->email, 'password' => 'wrong'])->assertSessionHasErrors('email');
-        $this->post('/login', ['email' => $user->email, 'password' => 'correct-horse-battery'])->assertRedirect('/admin');
+        $this->post('/login', ['email' => $user->email, 'password' => 'correct-horse-battery'])->assertRedirect('/admin/dnes');
         $this->assertAuthenticatedAs($user);
     }
 

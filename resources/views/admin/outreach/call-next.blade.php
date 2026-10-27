@@ -45,14 +45,21 @@
                             <x-icon name="phone" /> {{ $phone['label'] }}
                             <span class="text-xs font-normal opacity-80">{{ $phone['mobile'] ? 'мобилен' : 'стационарен' }}</span>
                         </a>
+                        @if($phone['mobile'])
+                            <div class="flex justify-center gap-2 text-xs">
+                                <a href="{{ \App\Support\Phone::viber($phone['label']) }}" class="rounded-md bg-purple-100 px-2 py-1 font-semibold text-purple-800 hover:bg-purple-200">Viber</a>
+                                <a href="{{ \App\Support\Phone::whatsapp($phone['label']) }}" target="_blank" rel="noopener" class="rounded-md bg-emerald-100 px-2 py-1 font-semibold text-emerald-800 hover:bg-emerald-200">WhatsApp</a>
+                            </div>
+                        @endif
                     @else
                         <span class="text-sm text-gray-500">{{ $phone['label'] }}</span>
                     @endif
                 @endforeach
             </div>
             @if($call->note)<p class="mt-4 rounded bg-gray-50 p-3 text-sm text-gray-700"><strong>Бележка:</strong> {{ $call->note }}</p>@endif
+            <div class="mt-4 text-center">@if($call->project_id)<a href="{{ route('admin.projects.show', $call->project_id) }}" class="inline-flex items-center rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-800 hover:bg-blue-100">Запитване →</a>@else<form action="{{ route('admin.outreach.calls.lead', $call) }}" method="POST" class="inline">@csrf<button class="rounded-lg border border-blue-300 px-2.5 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-50" title="Прояви интерес: направи запитване с етапи и следваща стъпка">Има интерес → направи запитване</button></form>@endif</div>
 
-            <form action="{{ route('admin.outreach.calls.update', $call) }}" method="POST" class="mt-6 space-y-4 border-t border-gray-100 pt-5">
+            <form action="{{ route('admin.outreach.calls.update', $call) }}" method="POST" class="mt-6 space-y-4 border-t border-gray-100 pt-5" data-call-form>
                 @csrf @method('PATCH')
                 <input type="hidden" name="next" value="1">
                 @foreach($query as $key => $value)<input type="hidden" name="{{ $key }}" value="{{ $value }}">@endforeach
@@ -61,7 +68,7 @@
                     <div class="grid grid-cols-2 gap-2">
                         @foreach(['no_answer' => 'Не вдигна', 'interested' => 'Интерес', 'not_interested' => 'Без интерес', 'client' => 'Клиент'] as $key => $label)
                             <label class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2.5 text-sm has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50">
-                                <input type="radio" name="status" value="{{ $key }}" required @checked(old('status', $revisit ? $call->status : null) === $key)> {{ $label }}
+                                <input type="radio" name="status" value="{{ $key }}" required @checked(old('status', $revisit ? $call->status : null) === $key)> <kbd class="hidden md:inline rounded border border-gray-300 px-1 text-[10px] text-gray-500">{{ $loop->iteration }}</kbd> {{ $label }}
                             </label>
                         @endforeach
                     </div>
@@ -86,7 +93,7 @@
                     <button class="rounded-lg bg-brand-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-800">Запази и следващ</button>
                 </div>
             </form>
-            <form action="{{ route('admin.outreach.calls.skip', $call) }}" method="POST" class="mt-3">
+            <form action="{{ route('admin.outreach.calls.skip', $call) }}" method="POST" class="mt-3" data-skip-form>
                 @csrf
                 @foreach($query as $key => $value)<input type="hidden" name="{{ $key }}" value="{{ $value }}">@endforeach
                 <button class="text-sm text-gray-500 hover:text-gray-800 hover:underline">Пропусни засега</button>
@@ -95,7 +102,20 @@
 
         @include('admin.outreach._call-script', ['call' => $call])
     </div>
+    <p class="mt-3 hidden text-center text-xs text-gray-400 md:block">Клавиши: <kbd>1</kbd>–<kbd>4</kbd> резултат · <kbd>Enter</kbd> запази и следващ · <kbd>S</kbd> пропусни · <kbd>B</kbd> назад</p>
     <script>
+        // Бързо минаване през списъка от клавиатурата (не пречи, докато пишете в полетата).
+        document.addEventListener('keydown', function (e) {
+            var tag = (e.target.tagName || '').toLowerCase();
+            if (e.ctrlKey || e.metaKey || e.altKey || tag === 'textarea' || (tag === 'input' && ! ['radio', 'checkbox'].includes(e.target.type)) || tag === 'select') return;
+            var form = document.querySelector('[data-call-form]');
+            if (!form) return;
+            var radios = form.querySelectorAll('input[name=status]');
+            if (/^[1-4]$/.test(e.key) && radios[e.key - 1]) { radios[e.key - 1].checked = true; radios[e.key - 1].dispatchEvent(new Event('change', {bubbles: true})); e.preventDefault(); }
+            else if (e.key === 'Enter') { e.preventDefault(); form.requestSubmit(); }
+            else if (e.key.toLowerCase() === 's') { document.querySelector('[data-skip-form]')?.requestSubmit(); }
+            else if (e.key.toLowerCase() === 'b') { var back = document.querySelector('a[href*="outreach-calls/back"]'); if (back) location.href = back.href; }
+        });
         document.querySelectorAll('[data-callback]').forEach(function (button) {
             button.addEventListener('click', function () { document.getElementById('callback_on').value = button.dataset.callback; });
         });

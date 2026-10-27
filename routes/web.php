@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\TodayController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ChatController as AdminChatController;
 use App\Http\Controllers\Admin\ClientEmailController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OutreachClickController;
 use App\Http\Controllers\OutreachUnsubscribeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SiteCheckController;
@@ -76,6 +78,7 @@ Route::get('/demo/{slug}', [DemoController::class, 'show'])->where('slug', '[a-z
 
 // Отписване от първите писма до бизнеси (линк в писмото + one-click от пощенския клиент)
 Route::match(['get', 'post'], '/otpisvane/{prospect}', OutreachUnsubscribeController::class)->middleware('signed')->name('outreach.unsubscribe');
+Route::get('/o/{prospect}/{link}', OutreachClickController::class)->middleware(['signed', 'throttle:60,1'])->name('outreach.click');
 
 Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [PageController::class, 'robots'])->name('robots');
@@ -93,6 +96,13 @@ Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
 // Admin panel
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('dnes', TodayController::class)->name('today');
+    Route::get('tarsene', \App\Http\Controllers\Admin\SearchController::class)->name('search');
+    Route::get('zdrave', \App\Http\Controllers\Admin\HealthController::class)->name('health');
+    Route::get('statistika', \App\Http\Controllers\Admin\StatsController::class)->name('stats');
+    Route::get('abonamenti', [\App\Http\Controllers\Admin\ClientController::class, 'index'])->name('clients.index');
+    Route::post('abonamenti/{project}/paid', [\App\Http\Controllers\Admin\ClientController::class, 'paid'])->name('clients.paid');
+    Route::post('abonamenti/{project}/check', [\App\Http\Controllers\Admin\ClientController::class, 'check'])->middleware('throttle:20,1')->name('clients.check');
 
     // Messages from the website contact form (stored as projects with source = website)
     Route::get('inquiries', [InquiryController::class, 'index'])->name('inquiries.index');
@@ -125,17 +135,23 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('outreach-calls/next', [OutreachCallController::class, 'next'])->name('outreach.calls.next');
     Route::get('outreach-calls/back', [OutreachCallController::class, 'back'])->name('outreach.calls.back');
     Route::post('outreach-calls/{call}/skip', [OutreachCallController::class, 'skip'])->name('outreach.calls.skip');
+    Route::post('outreach-calls/{call}/lead', [OutreachCallController::class, 'toLead'])->name('outreach.calls.lead');
     Route::get('outreach', [OutreachController::class, 'index'])->name('outreach.index');
     Route::post('outreach/import', [OutreachController::class, 'import'])->name('outreach.import');
     Route::post('outreach/import-server', [OutreachController::class, 'importServer'])->name('outreach.import-server');
     Route::post('outreach/check', [OutreachController::class, 'check'])->name('outreach.check');
     Route::post('outreach/send-selected', [OutreachController::class, 'sendSelected'])->middleware('throttle:10,1')->name('outreach.send-selected');
+    Route::post('outreach/follow-up-all', [OutreachController::class, 'followUpAll'])->middleware('throttle:10,1')->name('outreach.follow-up-all');
+    Route::post('outreach/{prospect}/follow-up', [OutreachController::class, 'followUp'])->middleware('throttle:20,1')->name('outreach.follow-up');
     Route::get('outreach/{prospect}', [OutreachController::class, 'compose'])->name('outreach.compose');
     Route::post('outreach/{prospect}/preview', [OutreachController::class, 'preview'])->name('outreach.preview');
     Route::post('outreach/{prospect}/send', [OutreachController::class, 'send'])->middleware('throttle:20,1')->name('outreach.send');
     Route::patch('outreach/{prospect}', [OutreachController::class, 'update'])->name('outreach.update');
+    Route::post('outreach/{prospect}/lead', [OutreachController::class, 'toLead'])->name('outreach.lead');
 
     Route::get('projects/search', [ProjectController::class, 'search'])->name('projects.search');
+    Route::patch('projects/{project}/pipeline', [ProjectController::class, 'pipeline'])->name('projects.pipeline');
+    Route::post('projects/{project}/notes', [ProjectController::class, 'note'])->name('projects.notes');
     Route::resource('projects', ProjectController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('technologies', TechnologyController::class);

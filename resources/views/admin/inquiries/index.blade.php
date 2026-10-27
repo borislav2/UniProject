@@ -31,9 +31,8 @@
                 <div>
                     <h3 class="flex flex-wrap items-center gap-2 text-lg font-semibold text-gray-900">
                         {{ $customer }}
-                        @unless($inquiry->read_at)
-                            <span class="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800">Ново</span>
-                        @endunless
+                        @if($inquiry->stage)<span class="rounded-full px-2 py-0.5 text-xs font-semibold {{ $inquiry->stageClass() }}">{{ $inquiry->stageLabel() }}</span>@endif
+                        @if($inquiry->isOverdue())<span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">Просрочена стъпка</span>@endif
                     </h3>
                     <p class="mt-1 text-sm text-gray-500">{{ $inquiry->created_at->format('d.m.Y H:i') }}</p>
                 </div>
@@ -47,7 +46,7 @@
 
             <dl class="mt-4 grid gap-3 text-sm sm:grid-cols-2">
                 @if($inquiry->client_phone)
-                    <div><dt class="text-gray-500">Телефон</dt><dd class="font-semibold"><a href="tel:{{ preg_replace('/[^0-9+]/', '', $inquiry->client_phone) }}" class="text-blue-600 hover:underline">{{ $inquiry->client_phone }}</a></dd></div>
+                    <div><dt class="text-gray-500">Телефон</dt><dd><x-phone :number="$inquiry->client_phone" /></dd></div>
                 @endif
                 @if($inquiry->client_email)
                     <div><dt class="text-gray-500">Имейл</dt><dd class="font-semibold"><a href="mailto:{{ $inquiry->client_email }}" class="text-blue-600 hover:underline">{{ $inquiry->client_email }}</a></dd></div>
@@ -65,6 +64,8 @@
                 <p class="text-sm text-gray-500">Съобщение</p>
                 <p class="mt-1 whitespace-pre-line rounded-md bg-gray-50 p-3 text-gray-800">{{ $inquiry->description }}</p>
             </div>
+
+            <div class="mt-4">@include('admin.projects._pipeline', ['project' => $inquiry])</div>
 
             <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
                 <p class="{{ $inquiry->email_sent_at ? 'text-gray-500' : 'text-red-600 font-semibold' }}">

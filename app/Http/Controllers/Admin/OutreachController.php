@@ -21,12 +21,20 @@ class OutreachController extends Controller
     public function index(Request $request)
     {
         $status = $request->query('status');
+        $clicked = $request->boolean('clicked');
+        $followup = $request->boolean('followup');
 
         return view('admin.outreach.index', [
             'prospects' => OutreachProspect::query()
                 ->when($status && array_key_exists($status, OutreachProspect::STATUSES), fn ($q) => $q->where('status', $status))
+                ->when($clicked, fn ($q) => $q->whereNotNull('clicked_at')->orderByDesc('last_clicked_at'))
+                ->when($followup, fn ($q) => $q->dueForFollowUp()->orderBy('sent_at'))
                 ->orderByRaw("status = 'new' desc")->orderByDesc('score')->latest()
                 ->paginate(30)->withQueryString(),
+            'clicked' => $clicked,
+            'followup' => $followup,
+            'followupIds' => OutreachProspect::dueForFollowUp()->pluck('id')->all(),
+            'clickedCount' => OutreachProspect::whereNotNull('clicked_at')->count(),
             'counts' => OutreachProspect::selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status'),
             'status' => $status,
             'configured' => Outreach::configured(),
@@ -170,6 +178,79 @@ class OutreachController extends Controller
     }
 
     /** Изпраща едно писмо през отделната поща и го записва. Връща текста на грешката или null. */
+    /** Едно напомняне до бизнес, който не е отговорил (бутон „Напомни“). */
+    public function followUp(Request $request, OutreachProspect $prospect)
+    {
+        if ($error = $this->deliverFollowUp($prospect, $request->user())) {
+            return back()->with('send_error', $error);
+        }
+
+        return back()->with('success', 'Напомнянето до ' . $prospect->displayName() . ' е изпратено.');
+    }
+
+    /** Напомняне до всички, на които е време, в рамките на дневния лимит. */
+    public function followUpAll(Request $request)
+    {
+        $sent = 0;
+        $errors = [];
+        foreach (OutreachProspect::dueForFollowUp()->orderByDesc('last_clicked_at')->orderBy('sent_at')->limit(50)->get() as $prospect) {
+            if ($error = $this->deliverFollowUp($prospect, $request->user())) {
+                $errors[] = $prospect->displayName() . ': ' . $error;
+                if (! Outreach::configured() || Outreach::remainingToday() < 1) {
+                    break;
+                }
+                continue;
+            }
+            $sent++;
+        }
+
+        $redirect = redirect()->route('admin.outreach.index');
+        if ($errors) {
+            $redirect->with('send_error', implode(' · ', array_slice($errors, 0, 3)) . (count($errors) > 3 ? ' …' : ''));
+        }
+
+        return $redirect->with('success', "Изпратени напомняния: {$sent}.");
+    }
+
+    private function deliverFollowUp(OutreachProspect $prospect, $user): ?string
+    {
+        if (! Outreach::configured()) {
+            return 'Пощата за потенциални клиенти не е настроена (OUTREACH_MAIL_*).';
+        }
+        if (! $prospect->canFollowUp()) {
+            return 'Не е време за напомняне: още не са минали ' . config('creatium.outreach.followup_after_days') . ' дни, вече е напомнено, отговорили са или са отписани.';
+        }
+        if (Outreach::remainingToday() < 1) {
+            return 'Дневният лимит от ' . config('creatium.outreach.daily_limit') . ' писма е достигнат. Продължете утре.';
+        }
+
+        $first = ClientEmail::where('outreach_prospect_id', $prospect->id)->where('template', 'outreach')->whereNotNull('sent_at')->latest('sent_at')->first();
+        $subject = 'Re: ' . ($first?->subject ?? self::defaultSubject($prospect));
+        $data = [
+            'first_name' => $prospect->first_name,
+            'sender' => $user->name,
+            'first_date' => $prospect->sent_at->timezone('Europe/Sofia')->format('d.m.Y'),
+            'finding' => $prospect->findings[0]['title'] ?? null,
+        ];
+
+        $log = ClientEmail::create([
+            'outreach_prospect_id' => $prospect->id, 'user_id' => $user->id, 'template' => 'outreach-followup',
+            'to_email' => $prospect->email, 'subject' => $subject, 'data' => $data,
+        ]);
+        try {
+            Mail::mailer('outreach')->to($prospect->email)->send(new \App\Mail\OutreachFollowUpMail($prospect, $data, $subject));
+        } catch (Throwable $e) {
+            Log::error('Outreach follow-up failed', ['prospect_id' => $prospect->id, 'error' => $e->getMessage()]);
+            $log->forceFill(['error' => mb_substr($e->getMessage(), 0, 1000)])->save();
+
+            return 'Напомнянето не беше изпратено: ' . $e->getMessage();
+        }
+        $log->forceFill(['sent_at' => now()])->save();
+        $prospect->forceFill(['followup_sent_at' => now()])->save();
+
+        return null;
+    }
+
     private function deliver(OutreachProspect $prospect, string $subject, array $data, int $userId): ?string
     {
         if (! Outreach::configured()) {
@@ -220,5 +301,13 @@ class OutreachController extends Controller
         $prospect->forceFill(['status' => $validated['status']])->save();
 
         return back()->with('success', $prospect->displayName() . ': ' . OutreachProspect::STATUSES[$validated['status']] . '.');
+    }
+
+    /** Проявен интерес: прави запитване с данните на бизнеса и отваря го (повторно натискане отваря същото). */
+    public function toLead(Request $request, OutreachProspect $prospect)
+    {
+        $lead = \App\Support\Admin\LeadConverter::fromProspect($prospect, $request->user());
+
+        return redirect()->route('admin.projects.show', $lead)->with('success', 'Запитването е създадено. Запишете следващата стъпка.');
     }
 }

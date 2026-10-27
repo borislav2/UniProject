@@ -7,6 +7,12 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    {{-- Админът може да се добави към началния екран на телефона като приложение (отваря „Днес“). --}}
+    <link rel="manifest" href="{{ asset('admin.webmanifest') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+    <meta name="theme-color" content="#0f1a2b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Creatium">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
     <style>
@@ -29,20 +35,25 @@
             </div>
             @php
                 $unreadInquiries = \App\Models\Project::where('source', 'website')->whereNull('read_at')->count();
+                $urgentToday = \App\Support\Admin\Today::urgentCount();
+                $latePayments = \App\Models\Project::subscribers()->with('payments')->get()->filter(fn ($client) => $client->paymentState()['state'] === 'late')->count();
                 $callbacksToday = \App\Models\OutreachCall::whereNotNull('callback_on')->whereDate('callback_on', '<=', today())->count();
                 // [група, [route, pattern, икона, текст, брояч]]
                 $menu = [
                     null => [
+                        ['admin.today', 'admin.today', 'calendar', 'Днес', $urgentToday],
                         ['admin.dashboard', 'admin.dashboard', 'tachometer-alt', 'Табло', 0],
                     ],
                     'Клиенти' => [
                         ['admin.inquiries.index', 'admin.inquiries.*', 'envelope', 'Запитвания', $unreadInquiries],
                         ['admin.projects.index', 'admin.projects.*', 'project-diagram', 'Проекти', 0],
+                        ['admin.clients.index', 'admin.clients.*', 'users', 'Абонаменти', $latePayments],
                         ['admin.client-emails.index', 'admin.client-emails.*', 'paper-plane', 'Имейли до клиенти', 0],
                         ['admin.chats.index', 'admin.chats.*', 'quote-left', 'Чат разговори', 0],
                     ],
                     'Продажби' => [
                         ['admin.outreach.index', 'admin.outreach.*', 'magnifying-glass', 'Потенциални клиенти', $callbacksToday],
+                        ['admin.stats', 'admin.stats', 'chart-line', 'Статистика', 0],
                         ['admin.reviews.index', 'admin.reviews.*', 'reply', 'Отговори на отзиви', 0],
                     ],
                     'Сайт' => [
@@ -55,6 +66,7 @@
                         ['admin.categories.index', 'admin.categories.*', 'tags', 'Категории на проекти', 0],
                         ['admin.technologies.index', 'admin.technologies.*', 'cogs', 'Технологии', 0],
                         auth()->user()->isAdmin() ? ['admin.users.index', 'admin.users.*', 'users', 'Потребители', 0] : null,
+                        ['admin.health', 'admin.health', 'cogs', 'Здраве на системата', 0],
                         ['admin.profile.edit', 'admin.profile.*', 'user-gear', 'Моят профил', 0],
                     ])),
                 ];
@@ -90,6 +102,10 @@
                         </svg>
                     </button>
                     <h2 class="text-lg md:text-2xl font-semibold text-gray-800 truncate">@yield('title', 'Админ')</h2>
+                    <form action="{{ route('admin.search') }}" method="GET" class="ml-auto hidden md:flex" role="search">
+                        <input type="search" name="q" value="{{ request()->routeIs('admin.search') ? request('q') : '' }}" placeholder="Търсене (Ctrl+K)" class="w-56 lg:w-72 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" data-global-search>
+                    </form>
+                    <a href="{{ route('admin.search') }}" class="ml-auto md:hidden p-2 text-gray-600" aria-label="Търсене"><x-icon name="search" /></a>
                     <a href="{{ route('home') }}" target="_blank" rel="noopener" class="hidden sm:flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors whitespace-nowrap text-sm">
                         <x-icon name="home" class="mr-2" />Към сайта
                     </a>
@@ -97,7 +113,7 @@
             </header>
 
             <!-- Content -->
-            <main class="flex-1 p-4 md:p-6">
+            <main class="flex-1 p-4 pb-24 md:p-6">
                 @if(session('success'))
                     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                         {{ session('success') }}
@@ -125,7 +141,24 @@
             </main>
         </div>
     </div>
+    {{-- Долно меню на телефона: най-честите неща с палеца. --}}
+    <nav class="md:hidden fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)] text-[11px] font-semibold text-gray-600" aria-label="Бързо меню">
+        @foreach([
+            ['admin.today', 'admin.today', 'calendar', 'Днес', $urgentToday],
+            ['admin.inquiries.index', 'admin.inquiries.*', 'envelope', 'Запитвания', $unreadInquiries],
+            ['admin.outreach.calls.next', 'admin.outreach.calls.*', 'phone', 'Обаждания', 0],
+            ['admin.search', 'admin.search', 'search', 'Търсене', 0],
+        ] as [$route, $pattern, $icon, $label, $count])
+            <a href="{{ route($route) }}" class="relative flex flex-col items-center gap-1 py-2 {{ request()->routeIs($pattern) ? 'text-brand-700' : '' }}">
+                <x-icon name="{{ $icon }}" class="text-lg" />{{ $label }}
+                @if($count > 0)<span class="absolute right-3 top-1 rounded-full bg-blue-500 px-1.5 text-[10px] text-white">{{ $count }}</span>@endif
+            </a>
+        @endforeach
+        <button type="button" class="flex flex-col items-center gap-1 py-2" data-bottom-menu><svg class="h-[18px] w-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>Меню</button>
+    </nav>
+
     <script>
+        document.querySelector('[data-bottom-menu]')?.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
         const menuToggle = document.getElementById('menu-toggle');
         const sidebar = document.querySelector('.sidebar');
         const overlay = document.querySelector('.sidebar-overlay');
@@ -139,6 +172,15 @@
         });
 
         overlay?.addEventListener('click', closeSidebar);
+
+        // Ctrl+K (или Cmd+K) отваря търсенето отвсякъде.
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                const box = document.querySelector('[data-global-search]');
+                if (box && box.offsetParent !== null) { box.focus(); box.select(); } else { location.href = @json(route('admin.search')); }
+            }
+        });
         sidebar?.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', closeSidebar);
         });

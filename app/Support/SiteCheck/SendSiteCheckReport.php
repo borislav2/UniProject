@@ -54,5 +54,6 @@ class SendSiteCheckReport
         } catch (\Throwable $e) {
             Log::error('Lead notification email failed: ' . $e->getMessage(), ['project_id' => $lead->id]);
         }
+        \App\Support\Notify\Telegram::newLead($lead, 'Проверка на сайт', defer: false);
     }
 }
