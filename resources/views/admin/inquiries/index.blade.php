@@ -46,7 +46,7 @@
 
             <dl class="mt-4 grid gap-3 text-sm sm:grid-cols-2">
                 @if($inquiry->client_phone)
-                    <div><dt class="text-gray-500">Телефон</dt><dd class="font-semibold"><a href="tel:{{ preg_replace('/[^0-9+]/', '', $inquiry->client_phone) }}" class="text-blue-600 hover:underline">{{ $inquiry->client_phone }}</a></dd></div>
+                    <div><dt class="text-gray-500">Телефон</dt><dd><x-phone :number="$inquiry->client_phone" /></dd></div>
                 @endif
                 @if($inquiry->client_email)
                     <div><dt class="text-gray-500">Имейл</dt><dd class="font-semibold"><a href="mailto:{{ $inquiry->client_email }}" class="text-blue-600 hover:underline">{{ $inquiry->client_email }}</a></dd></div>

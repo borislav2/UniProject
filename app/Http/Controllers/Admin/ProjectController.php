@@ -99,9 +99,9 @@ class ProjectController extends Controller
     
     public function show(Project $project)
     {
-        $project->load(['category', 'technologies']);
-        
-        return view('admin.projects.show', compact('project'));
+        $project->load(['category', 'technologies', 'notes.user']);
+
+        return view('admin.projects.show', ['project' => $project, 'timeline' => $this->timeline($project)]);
     }
     
     public function edit(Project $project)
@@ -176,6 +176,7 @@ class ProjectController extends Controller
             'next_action' => 'nullable|string|max:255',
             'next_action_at' => 'nullable|date',
             'lost_reason' => 'nullable|string|max:255',
+            'note' => 'nullable|string|max:2000',
         ]);
 
         $closed = in_array($data['stage'], ['won', 'lost'], true);
@@ -189,6 +190,9 @@ class ProjectController extends Controller
         if ($project->stage !== $data['stage']) {
             $values['stage_changed_at'] = now();
         }
+        if ($values['next_action_at']) {
+            $values['next_action_at'] = $values['next_action_at']->copy()->second(0);
+        }
         // Спечелен започва работа, загубен се отказва: така и филтрите по статус остават верни.
         if ($data['stage'] === 'won' && $project->status === 'Planning') {
             $values['status'] = 'In Progress';
@@ -196,9 +200,61 @@ class ProjectController extends Controller
         if ($data['stage'] === 'lost') {
             $values['status'] = 'Cancelled';
         }
+        $stageChanged = $project->stage !== $data['stage'];
+        $nextChanged = $project->next_action !== $values['next_action'] || $project->next_action_at?->toDateTimeString() !== $values['next_action_at']?->toDateTimeString();
         $project->forceFill($values)->save();
 
+        // История: бележката от разговора и смяната на етапа/следващата стъпка.
+        if (filled($data['note'] ?? null)) {
+            $project->notes()->create(['user_id' => $request->user()->id, 'kind' => 'call', 'body' => trim($data['note'])]);
+        }
+        if ($stageChanged || $nextChanged) {
+            $text = 'Етап: ' . $project->stageLabel() . ($project->lost_reason ? ' (' . $project->lost_reason . ')' : '');
+            if ($project->next_action_at) {
+                $text .= '. Следваща стъпка: ' . ($project->next_action ?: 'свържете се') . ' на ' . $project->next_action_at->timezone('Europe/Sofia')->format('d.m.Y H:i');
+            }
+            $project->notes()->create(['user_id' => $request->user()->id, 'kind' => 'stage', 'body' => $text]);
+        }
+
         return back()->with('success', 'Запазено: ' . $project->stageLabel() . ($project->next_action_at ? ', следваща стъпка ' . $project->next_action_at->timezone('Europe/Sofia')->format('d.m H:i') : '') . '.');
+    }
+
+    /** Ръчна бележка или запис за разговор в историята на проекта. */
+    public function note(Request $request, Project $project)
+    {
+        $data = $request->validate([
+            'kind' => 'required|in:note,call',
+            'body' => 'required|string|max:2000',
+        ], ['body.required' => 'Напишете бележката.']);
+        $project->notes()->create(['user_id' => $request->user()->id] + $data);
+
+        return back()->with('success', 'Бележката е добавена.');
+    }
+
+    /** Историята на клиента на едно място: бележки и етапи, изпратени имейли, разговорът с Крео, писмото до бизнеса и кликовете. */
+    private function timeline(Project $project): \Illuminate\Support\Collection
+    {
+        $items = collect([['at' => $project->created_at, 'kind' => 'Създаден', 'text' => $project->source === 'website' ? 'Запитване от сайта' . ($project->lead_channel ? ' (' . $project->lead_channel . ')' : '') : 'Проектът е създаден', 'user' => null, 'url' => null]]);
+
+        foreach ($project->notes as $note) {
+            $items->push(['at' => $note->created_at, 'kind' => \App\Models\ProjectNote::KINDS[$note->kind] ?? $note->kind, 'text' => $note->body, 'user' => $note->user?->name, 'url' => null]);
+        }
+        foreach (\App\Models\ClientEmail::where('project_id', $project->id)->get() as $email) {
+            $items->push(['at' => $email->sent_at ?? $email->created_at, 'kind' => 'Имейл', 'text' => ($email->error ? 'Неизпратен: ' : 'Изпратен: ') . $email->subject . ' → ' . $email->to_email, 'user' => null, 'url' => null]);
+        }
+        foreach (\App\Models\ChatConversation::where('lead_id', $project->id)->get() as $chat) {
+            $items->push(['at' => $chat->created_at, 'kind' => 'Крео', 'text' => 'Разговор в чата на сайта', 'user' => null, 'url' => route('admin.chats.show', $chat)]);
+        }
+        foreach (\App\Models\OutreachProspect::where('project_id', $project->id)->get() as $prospect) {
+            if ($prospect->sent_at) {
+                $items->push(['at' => $prospect->sent_at, 'kind' => 'Писмо', 'text' => 'Първо писмо до ' . $prospect->email, 'user' => null, 'url' => null]);
+            }
+            if ($prospect->clicked_at) {
+                $items->push(['at' => $prospect->last_clicked_at, 'kind' => 'Клик', 'text' => 'Кликна: ' . (\App\Models\OutreachProspect::CLICK_LINKS[$prospect->last_click_link] ?? $prospect->last_click_link) . ($prospect->click_count > 1 ? " ({$prospect->click_count}×)" : ''), 'user' => null, 'url' => null]);
+            }
+        }
+
+        return $items->filter(fn ($item) => $item['at'])->sortByDesc('at')->values();
     }
 
     public function search(Request $request)

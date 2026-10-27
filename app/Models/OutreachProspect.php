@@ -40,7 +40,7 @@ class OutreachProspect extends Model
     protected $fillable = [
         'email', 'first_name', 'last_name', 'company', 'title', 'website', 'industry', 'city',
         'personalization', 'findings', 'site_checked_at', 'check_note', 'email_status', 'score', 'status', 'sent_at', 'unsubscribed_at',
-        'clicked_at', 'last_clicked_at', 'click_count', 'last_click_link',
+        'clicked_at', 'last_clicked_at', 'click_count', 'last_click_link', 'phone', 'project_id',
     ];
 
     protected $casts = ['sent_at' => 'datetime', 'unsubscribed_at' => 'datetime', 'score' => 'integer', 'findings' => 'array', 'site_checked_at' => 'datetime',

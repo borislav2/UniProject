@@ -45,12 +45,19 @@
                             <x-icon name="phone" /> {{ $phone['label'] }}
                             <span class="text-xs font-normal opacity-80">{{ $phone['mobile'] ? 'мобилен' : 'стационарен' }}</span>
                         </a>
+                        @if($phone['mobile'])
+                            <div class="flex justify-center gap-2 text-xs">
+                                <a href="{{ \App\Support\Phone::viber($phone['label']) }}" class="rounded-md bg-purple-100 px-2 py-1 font-semibold text-purple-800 hover:bg-purple-200">Viber</a>
+                                <a href="{{ \App\Support\Phone::whatsapp($phone['label']) }}" target="_blank" rel="noopener" class="rounded-md bg-emerald-100 px-2 py-1 font-semibold text-emerald-800 hover:bg-emerald-200">WhatsApp</a>
+                            </div>
+                        @endif
                     @else
                         <span class="text-sm text-gray-500">{{ $phone['label'] }}</span>
                     @endif
                 @endforeach
             </div>
             @if($call->note)<p class="mt-4 rounded bg-gray-50 p-3 text-sm text-gray-700"><strong>Бележка:</strong> {{ $call->note }}</p>@endif
+            <div class="mt-4 text-center">@if($call->project_id)<a href="{{ route('admin.projects.show', $call->project_id) }}" class="inline-flex items-center rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-800 hover:bg-blue-100">Запитване →</a>@else<form action="{{ route('admin.outreach.calls.lead', $call) }}" method="POST" class="inline">@csrf<button class="rounded-lg border border-blue-300 px-2.5 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-50" title="Прояви интерес: направи запитване с етапи и следваща стъпка">Има интерес → направи запитване</button></form>@endif</div>
 
             <form action="{{ route('admin.outreach.calls.update', $call) }}" method="POST" class="mt-6 space-y-4 border-t border-gray-100 pt-5">
                 @csrf @method('PATCH')

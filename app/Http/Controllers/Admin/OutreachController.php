@@ -225,4 +225,12 @@ class OutreachController extends Controller
 
         return back()->with('success', $prospect->displayName() . ': ' . OutreachProspect::STATUSES[$validated['status']] . '.');
     }
+
+    /** Проявен интерес: прави запитване с данните на бизнеса и отваря го (повторно натискане отваря същото). */
+    public function toLead(Request $request, OutreachProspect $prospect)
+    {
+        $lead = \App\Support\Admin\LeadConverter::fromProspect($prospect, $request->user());
+
+        return redirect()->route('admin.projects.show', $lead)->with('success', 'Запитването е създадено. Запишете следващата стъпка.');
+    }
 }

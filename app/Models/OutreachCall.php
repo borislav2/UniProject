@@ -57,7 +57,7 @@ class OutreachCall extends Model
     /** След толкова обаждания без отговор бизнесът излиза от опашката. */
     public const MAX_NO_ANSWER = 2;
 
-    protected $fillable = ['external_id', 'name', 'phone', 'industry', 'city', 'source_url', 'status', 'note', 'called_at', 'callback_on'];
+    protected $fillable = ['external_id', 'name', 'phone', 'industry', 'city', 'source_url', 'status', 'note', 'called_at', 'callback_on', 'project_id'];
 
     protected $casts = ['called_at' => 'datetime', 'callback_on' => 'date', 'is_mobile' => 'boolean', 'attempts' => 'integer'];
 

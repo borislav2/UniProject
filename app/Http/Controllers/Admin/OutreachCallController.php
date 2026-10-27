@@ -201,4 +201,12 @@ class OutreachCallController extends Controller
     {
         return array_filter(['city' => $filters['city'], 'industry' => $filters['industry'], 'mobile' => $filters['mobile']]);
     }
+
+    /** Проявен интерес: прави запитване с данните на бизнеса и отваря го (повторно натискане отваря същото). */
+    public function toLead(Request $request, OutreachCall $call)
+    {
+        $lead = \App\Support\Admin\LeadConverter::fromCall($call, $request->user());
+
+        return redirect()->route('admin.projects.show', $lead)->with('success', 'Запитването е създадено. Запишете следващата стъпка.');
+    }
 }

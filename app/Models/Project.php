@@ -126,6 +126,11 @@ class Project extends Model
         return $this->service ? (config('creatium.contact_topics')[$this->service] ?? $this->service) : null;
     }
 
+    public function notes()
+    {
+        return $this->hasMany(ProjectNote::class)->latest();
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

@@ -27,6 +27,7 @@
             <button type="button" class="rounded-full border border-gray-300 bg-white px-2.5 py-0.5 text-xs hover:bg-gray-100" data-days="{{ $days }}">{{ $label }}</button>
         @endforeach
     </div>
+    <textarea name="note" rows="2" maxlength="2000" placeholder="Бележка от разговора (по желание): какво каза, какво иска, бюджет…" class="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2">{{ old('note') }}</textarea>
     <input type="text" name="lost_reason" value="{{ old('lost_reason', $project->lost_reason) }}" maxlength="255" placeholder="Защо загубихме? (цена, избра друг, не отговаря…)" class="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 {{ $project->stage === 'lost' ? '' : 'hidden' }}" data-lost>
 
     <div class="mt-3 flex flex-wrap items-center justify-between gap-2">

@@ -129,6 +129,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('outreach-calls/next', [OutreachCallController::class, 'next'])->name('outreach.calls.next');
     Route::get('outreach-calls/back', [OutreachCallController::class, 'back'])->name('outreach.calls.back');
     Route::post('outreach-calls/{call}/skip', [OutreachCallController::class, 'skip'])->name('outreach.calls.skip');
+    Route::post('outreach-calls/{call}/lead', [OutreachCallController::class, 'toLead'])->name('outreach.calls.lead');
     Route::get('outreach', [OutreachController::class, 'index'])->name('outreach.index');
     Route::post('outreach/import', [OutreachController::class, 'import'])->name('outreach.import');
     Route::post('outreach/import-server', [OutreachController::class, 'importServer'])->name('outreach.import-server');
@@ -138,9 +139,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('outreach/{prospect}/preview', [OutreachController::class, 'preview'])->name('outreach.preview');
     Route::post('outreach/{prospect}/send', [OutreachController::class, 'send'])->middleware('throttle:20,1')->name('outreach.send');
     Route::patch('outreach/{prospect}', [OutreachController::class, 'update'])->name('outreach.update');
+    Route::post('outreach/{prospect}/lead', [OutreachController::class, 'toLead'])->name('outreach.lead');
 
     Route::get('projects/search', [ProjectController::class, 'search'])->name('projects.search');
     Route::patch('projects/{project}/pipeline', [ProjectController::class, 'pipeline'])->name('projects.pipeline');
+    Route::post('projects/{project}/notes', [ProjectController::class, 'note'])->name('projects.notes');
     Route::resource('projects', ProjectController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('technologies', TechnologyController::class);

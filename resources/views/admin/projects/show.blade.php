@@ -34,7 +34,7 @@
         @if($project->client_phone)
             <div>
                 <h4 class="text-sm font-medium text-gray-500">Телефон</h4>
-                <a href="tel:{{ preg_replace('/[^\d+]/', '', $project->client_phone) }}" class="text-lg font-semibold text-blue-600 hover:underline">{{ $project->client_phone }}</a>
+                <x-phone :number="$project->client_phone" class="text-lg" />
             </div>
         @endif
         @if($project->client_email)
@@ -173,6 +173,28 @@
         </div>
     </div>
 </div>
+
+<section class="mt-6 rounded-lg bg-white p-6 shadow">
+    <h3 class="text-lg font-semibold text-gray-800">История</h3>
+    <form action="{{ route('admin.projects.notes', $project) }}" method="POST" class="mt-3 flex flex-col gap-2 sm:flex-row">
+        @csrf
+        <select name="kind" class="rounded-lg border border-gray-300 px-3 py-2 text-sm" aria-label="Вид">
+            <option value="call">Разговор</option>
+            <option value="note">Бележка</option>
+        </select>
+        <textarea name="body" rows="1" required maxlength="2000" placeholder="Какво говорихте, какво иска клиентът, бюджет, срок…" class="min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm"></textarea>
+        <button class="rounded-lg bg-gray-800 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700">Добави</button>
+    </form>
+    <ol class="mt-5 space-y-4 border-l-2 border-gray-100 pl-4">
+        @foreach($timeline as $item)
+            <li class="relative">
+                <span class="absolute -left-[1.4rem] top-1.5 h-2.5 w-2.5 rounded-full bg-brand-500"></span>
+                <p class="text-xs text-gray-500"><span class="font-semibold text-gray-700">{{ $item['kind'] }}</span> · {{ $item['at']->timezone('Europe/Sofia')->format('d.m.Y H:i') }}@if($item['user']) · {{ $item['user'] }}@endif</p>
+                <p class="whitespace-pre-line text-sm text-gray-800">{{ $item['text'] }}@if($item['url']) <a href="{{ $item['url'] }}" class="text-blue-600 hover:underline">Отвори</a>@endif</p>
+            </li>
+        @endforeach
+    </ol>
+</section>
 
 <div class="mt-6">
     <a href="{{ route('admin.projects.index') }}" class="text-blue-600 hover:underline">

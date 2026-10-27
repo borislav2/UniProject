@@ -86,6 +86,7 @@
                         <span class="font-semibold text-gray-900">{{ $prospect->displayName() }}</span>
                         <span class="block text-xs text-gray-500">{{ collect([\App\Models\OutreachCall::INDUSTRIES[mb_strtolower((string) $prospect->industry)] ?? $prospect->industry, $prospect->city])->filter()->join(' · ') }}</span>
                         @if($prospect->website)<a href="{{ $prospect->website }}" target="_blank" rel="noopener" class="block text-xs text-blue-600 hover:underline">{{ parse_url($prospect->website, PHP_URL_HOST) ?: $prospect->website }}</a>@endif
+                        @if($prospect->phone)<x-phone :number="$prospect->phone" class="mt-1 text-xs" />@endif
                     </td>
                     <td class="px-4 py-3">{{ $prospect->email }}<span class="block text-xs {{ in_array($prospect->email_status, \App\Models\OutreachProspect::SENDABLE_EMAIL_STATUSES, true) ? 'text-green-700' : 'text-red-600' }}">{{ \App\Models\OutreachProspect::EMAIL_STATUSES[$prospect->email_status] ?? ($prospect->email_status ?: 'непроверен') }}</span>@if($prospect->check_note)<span class="block text-xs text-gray-500">{{ $prospect->check_note }}</span>@endif</td>
                     <td class="px-4 py-3 max-w-md text-gray-600">
@@ -101,6 +102,7 @@
                     <td class="px-4 py-3">{{ \App\Models\OutreachProspect::STATUSES[$prospect->status] ?? $prospect->status }}@if($prospect->sent_at)<span class="block text-xs text-gray-500">{{ $prospect->sent_at->format('d.m.Y') }}</span>@endif
                         @if($prospect->clicked_at)<span class="mt-1 block rounded bg-green-50 px-1.5 py-0.5 text-xs font-semibold text-green-800" title="Първи клик: {{ $prospect->clicked_at->timezone('Europe/Sofia')->format('d.m.Y H:i') }}">Кликна: {{ \App\Models\OutreachProspect::CLICK_LINKS[$prospect->last_click_link] ?? $prospect->last_click_link }} · {{ $prospect->last_clicked_at->timezone('Europe/Sofia')->format('d.m H:i') }}@if($prospect->click_count > 1) ({{ $prospect->click_count }}×)@endif</span>@endif</td>
                     <td class="px-4 py-3 whitespace-nowrap text-right">
+                        <div class="mb-1">@if($prospect->project_id)<a href="{{ route('admin.projects.show', $prospect->project_id) }}" class="inline-flex items-center rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-800 hover:bg-blue-100">Запитване →</a>@else<form action="{{ route('admin.outreach.lead', $prospect) }}" method="POST" class="inline">@csrf<button class="rounded-lg border border-blue-300 px-2.5 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-50" title="Прояви интерес: направи запитване с етапи и следваща стъпка">→ Запитване</button></form>@endif</div>
                         @if($prospect->canBeEmailed())
                             <a href="{{ route('admin.outreach.compose', $prospect) }}" class="inline-flex items-center gap-1 rounded-lg bg-brand-950 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-800"><x-icon name="paper-plane" /> Напиши</a>
                         @endif

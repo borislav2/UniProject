@@ -135,6 +135,7 @@ class ProspectFinder
 
         $values = [
             'company' => $business->name,
+            'phone' => $business->phone,
             'website' => $business->website,
             'industry' => $business->category,
             'city' => $business->city,

@@ -4,7 +4,6 @@
 
 @php
     $sofia = fn ($at) => $at->timezone('Europe/Sofia');
-    $tel = fn ($phone) => 'tel:' . preg_replace('/[^\d+]/', '', (string) $phone);
     $waiting = function ($at) {
         $hours = (int) $at->diffInHours(now());
         return $hours < 1 ? 'току-що' : ($hours < 24 ? "чака {$hours} ч" : 'чака ' . intdiv($hours, 24) . ' дни');
@@ -31,7 +30,7 @@
                         <p class="font-semibold text-gray-900">{{ $at->isToday() ? 'Днес' : 'Утре' }}, {{ $at->format('H:i') }} · <a href="{{ route('admin.projects.show', $item) }}" class="hover:text-blue-600">{{ $item->name }}</a></p>
                         <p class="text-sm text-gray-500">{{ \Illuminate\Support\Str::limit($item->serviceLabel(), 70) }}</p>
                     </div>
-                    @if($item->client_phone)<a href="{{ $tel($item->client_phone) }}" class="rounded-lg bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-700">{{ $item->client_phone }}</a>@endif
+                    <x-phone :number="$item->client_phone" button class="text-sm" />
                 </div>
             @endforeach
         </div>
@@ -50,7 +49,7 @@
                     <p class="mt-1 line-clamp-2 text-sm text-gray-700">{{ $lead->description }}</p>
                 </div>
                 <div class="flex flex-wrap gap-2 text-sm">
-                    @if($lead->client_phone)<a href="{{ $tel($lead->client_phone) }}" class="rounded-lg bg-green-600 px-3 py-1.5 font-semibold text-white hover:bg-green-700">{{ $lead->client_phone }}</a>@endif
+                    <x-phone :number="$lead->client_phone" button class="text-sm" />
                     <a href="{{ route('admin.client-emails.index', ['project' => $lead->id]) }}" class="rounded-lg border border-gray-300 px-3 py-1.5 font-semibold text-gray-700 hover:bg-gray-50">Имейл</a>
                 </div>
             </div>
@@ -71,7 +70,7 @@
                     <span class="ml-1 rounded-full px-2 py-0.5 text-xs font-semibold {{ $lead->stageClass() }}">{{ $lead->stageLabel() }}</span>
                     <p class="mt-1 text-sm {{ $sofia($lead->next_action_at)->isToday() ? 'text-gray-800' : 'font-semibold text-red-700' }}">→ {{ $lead->next_action ?: 'Свържете се' }} · {{ $sofia($lead->next_action_at)->isToday() ? 'днес ' . $sofia($lead->next_action_at)->format('H:i') : 'от ' . $sofia($lead->next_action_at)->format('d.m') }}</p>
                 </div>
-                @if($lead->client_phone)<a href="{{ $tel($lead->client_phone) }}" class="rounded-lg bg-green-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-green-700">{{ $lead->client_phone }}</a>@endif
+                <x-phone :number="$lead->client_phone" button class="text-sm" />
             </div>
             <details class="mt-3"><summary class="cursor-pointer text-sm font-semibold text-blue-600">Готово? Запишете следващата стъпка</summary><div class="mt-2">@include('admin.projects._pipeline', ['project' => $lead])</div></details>
         </article>
@@ -91,7 +90,11 @@
                             <p class="font-semibold text-gray-900">{{ $prospect->displayName() }}</p>
                             <p class="text-gray-500">Кликна: {{ \App\Models\OutreachProspect::CLICK_LINKS[$prospect->last_click_link] ?? $prospect->last_click_link }} · {{ $sofia($prospect->last_clicked_at)->format('d.m H:i') }}@if($prospect->click_count > 1) ({{ $prospect->click_count }}×)@endif</p>
                         </div>
-                        <a href="mailto:{{ $prospect->email }}" class="text-blue-600 hover:underline">{{ $prospect->email }}</a>
+                        <div class="flex flex-wrap items-center gap-2">
+                            @if($prospect->phone)<x-phone :number="$prospect->phone" />@endif
+                            <a href="mailto:{{ $prospect->email }}" class="text-blue-600 hover:underline">{{ $prospect->email }}</a>
+                            @if($prospect->project_id)<a href="{{ route('admin.projects.show', $prospect->project_id) }}" class="inline-flex items-center rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-800 hover:bg-blue-100">Запитване →</a>@else<form action="{{ route('admin.outreach.lead', $prospect) }}" method="POST" class="inline">@csrf<button class="rounded-lg border border-blue-300 px-2.5 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-50" title="Прояви интерес: направи запитване с етапи и следваща стъпка">→ Запитване</button></form>@endif
+                        </div>
                     </li>
                 @endforeach
             </ul>
@@ -109,7 +112,7 @@
                         <a href="{{ route('admin.projects.show', $lead) }}" class="font-semibold text-gray-900 hover:text-blue-600">{{ $lead->name }}</a>
                         <span class="ml-1 rounded-full px-2 py-0.5 text-xs font-semibold {{ $lead->stageClass() }}">{{ $lead->stageLabel() }}</span>
                     </div>
-                    @if($lead->client_phone)<a href="{{ $tel($lead->client_phone) }}" class="text-sm font-semibold text-blue-600 hover:underline">{{ $lead->client_phone }}</a>@endif
+                    <x-phone :number="$lead->client_phone" button class="text-sm" />
                 </div>
                 <details class="mt-3"><summary class="cursor-pointer text-sm font-semibold text-blue-600">Запишете следваща стъпка</summary><div class="mt-2">@include('admin.projects._pipeline', ['project' => $lead])</div></details>
             </article>
