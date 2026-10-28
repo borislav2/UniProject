@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ClientEmail extends Model
 {
-    protected $fillable = ['project_id', 'outreach_prospect_id', 'user_id', 'template', 'to_email', 'subject', 'data', 'sent_at', 'error'];
+    protected $fillable = ['project_id', 'outreach_prospect_id', 'user_id', 'template', 'to_email', 'subject', 'attachment_name', 'data', 'sent_at', 'error'];
 
     protected $casts = [
         'data' => 'array',

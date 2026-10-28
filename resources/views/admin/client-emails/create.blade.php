@@ -19,7 +19,7 @@
 @endif
 
 <div class="grid gap-6 xl:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
-    <form id="client-email-form" action="{{ route('admin.client-emails.store', $tpl['key']) }}" method="POST" class="bg-white rounded-lg shadow p-6 space-y-4 self-start"
+    <form id="client-email-form" action="{{ route('admin.client-emails.store', $tpl['key']) }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-lg shadow p-6 space-y-4 self-start"
           data-preview="{{ route('admin.client-emails.preview', $tpl['key']) }}">
         @csrf
         @if($project)<input type="hidden" name="project_id" value="{{ $project->id }}">@endif
@@ -52,6 +52,13 @@
             @endforeach
         </div>
 
+        <div class="border-t border-gray-200 pt-4">
+            <label for="attachment" class="block text-sm font-semibold text-gray-700 mb-1">Прикачен PDF <span class="font-normal text-gray-400">(по желание)</span></label>
+            <input id="attachment" type="file" name="attachment" accept="application/pdf,.pdf" class="block w-full text-sm text-gray-700 file:mr-3 file:rounded-lg file:border-0 file:bg-gray-100 file:px-4 file:py-2 file:font-semibold file:text-gray-700 hover:file:bg-gray-200" data-attachment>
+            <p class="mt-1 text-xs text-gray-500">Оферта, договор, презентация: само PDF, до 10 MB. Не се вижда в прегледа, но тръгва с имейла.@if($errors->any()) <strong class="text-red-600">Ако сте избрали файл, изберете го отново.</strong>@endif</p>
+            @error('attachment')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+        </div>
+
         <div class="flex flex-wrap gap-3 pt-2">
             <button type="submit" name="send" value="1" class="inline-flex items-center gap-2 bg-brand-950 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-brand-800"><x-icon name="paper-plane" /> Изпрати</button>
             <button type="submit" formaction="{{ route('admin.client-emails.preview', $tpl['key']) }}" formtarget="email-preview" formnovalidate class="inline-flex items-center gap-2 border border-gray-300 px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-gray-50"><x-icon name="eye" /> Обнови прегледа</button>
@@ -71,11 +78,14 @@
     var timer;
     function refresh() {
         var action = form.action, target = form.target;
+        var file = form.querySelector('[data-attachment]');
+        file.disabled = true; // прегледът не се нуждае от файла: не го качваме при всяко натискане на клавиш
         form.action = form.dataset.preview;
         form.target = 'email-preview';
         HTMLFormElement.prototype.submit.call(form);
         form.action = action;
         form.target = target;
+        file.disabled = false;
     }
     form.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(refresh, 600); });
     form.addEventListener('submit', function (e) {

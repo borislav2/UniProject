@@ -196,6 +196,32 @@ class ClientEmailsTest extends TestCase
         $this->assertSame('demo-site', ClientEmail::sole()->template);
     }
 
+    public function test_a_pdf_can_be_attached_and_other_files_are_refused(): void
+    {
+        Mail::fake();
+        $user = $this->admin();
+        $data = ['client_name' => 'Г-н Каракашев', 'business' => 'Каракашев Ауто', 'sender' => 'Борислав', 'demo_url' => 'https://creatiumlab.com/demo/avtoservis'];
+
+        $this->actingAs($user)->get('/admin/emails/demo-site')->assertSee('enctype="multipart/form-data"', false)->assertSee('name="attachment"', false);
+
+        $this->actingAs($user)->post('/admin/emails/demo-site', [
+            'to' => 'office@karakashev.bg', 'subject' => 'Демо', 'data' => $data,
+            'attachment' => \Illuminate\Http\UploadedFile::fake()->create('virus.exe', 10, 'application/octet-stream'),
+        ])->assertSessionHasErrors('attachment');
+        Mail::assertNothingSent();
+
+        $pdf = \Illuminate\Http\UploadedFile::fake()->createWithContent('Оферта Каракашев<>.pdf', "%PDF-1.4\n%test\n");
+        $this->actingAs($user)->post('/admin/emails/demo-site', [
+            'to' => 'office@karakashev.bg', 'subject' => 'Демо', 'data' => $data, 'attachment' => $pdf,
+        ])->assertRedirect('/admin/emails');
+
+        Mail::assertSent(ClientTemplateMail::class, function (ClientTemplateMail $mail) {
+            return $mail->hasAttachment(\Illuminate\Mail\Attachment::fromData(fn () => "%PDF-1.4\n%test\n", 'Оферта Каракашев.pdf')->withMime('application/pdf'));
+        });
+        $this->assertSame('Оферта Каракашев.pdf', ClientEmail::sole()->attachment_name);
+        $this->actingAs($user)->get('/admin/emails')->assertSee('+ Оферта Каракашев.pdf');
+    }
+
     public function test_validation_blocks_bad_input(): void
     {
         Mail::fake();
