@@ -164,6 +164,38 @@ class ClientEmailsTest extends TestCase
         $this->assertSame('first@salon.bg', $lead->fresh()->client_email);
     }
 
+    public function test_demo_site_email_links_the_demo_and_needs_a_real_link(): void
+    {
+        Mail::fake();
+        $user = $this->admin();
+        $lead = $this->lead(['name' => 'Запитване от Каракашев Ауто']);
+
+        $this->actingAs($user)->get('/admin/emails/demo-site?project=' . $lead->id)->assertOk()
+            ->assertSee('value="Каракашев Ауто"', false)
+            ->assertSee('type="url"', false)
+            ->assertSee('value="' . route('demo.show', 'avtoservis') . '"', false);
+
+        $data = ['client_name' => 'Г-н Каракашев', 'business' => 'Каракашев Ауто', 'sender' => 'Борислав', 'demo_url' => 'https://creatiumlab.com/demo/avtoservis',
+            'call_note' => 'Искате клиентите да записват час за ремонт онлайн.', 'follow_up' => 'Ще ви се обадя в четвъртък.'];
+        $this->actingAs($user)->post('/admin/emails/demo-site/preview', ['data' => $data])->assertOk()
+            ->assertSee('Г-н Каракашев, ето демото за Каракашев Ауто')
+            ->assertSee('href="https://creatiumlab.com/demo/avtoservis"', false)
+            ->assertSee('От разговора ни')->assertSee('записват час за ремонт онлайн')
+            ->assertSee('Ще ви се обадя в четвъртък.')->assertSee('Това е демо.');
+        $this->actingAs($user)->post('/admin/emails/demo-site/preview', ['data' => ['call_note' => '', 'follow_up' => '']])->assertDontSee('От разговора ни');
+
+        $this->actingAs($user)->post('/admin/emails/demo-site', [
+            'to' => 'office@karakashev.bg', 'subject' => 'Демо', 'data' => ['demo_url' => 'javascript:alert(1)'] + $data,
+        ])->assertSessionHasErrors('data.demo_url');
+        Mail::assertNothingSent();
+
+        $this->actingAs($user)->post('/admin/emails/demo-site', [
+            'to' => 'office@karakashev.bg', 'subject' => ClientEmails::find('demo-site')['subject'], 'project_id' => $lead->id, 'data' => $data,
+        ])->assertRedirect('/admin/emails');
+        Mail::assertSent(ClientTemplateMail::class, fn (ClientTemplateMail $mail) => $mail->hasSubject('Демо на сайта за Каракашев Ауто | Creatium Lab'));
+        $this->assertSame('demo-site', ClientEmail::sole()->template);
+    }
+
     public function test_validation_blocks_bad_input(): void
     {
         Mail::fake();

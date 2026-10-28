@@ -43,7 +43,7 @@
                     @if(($field['type'] ?? 'text') === 'textarea')
                         <textarea id="f-{{ $name }}" name="data[{{ $name }}]" rows="3" maxlength="1000" @if($required) required @endif class="{{ $input }}">{{ old('data.' . $name, $defaults[$name] ?? '') }}</textarea>
                     @else
-                        <input id="f-{{ $name }}" name="data[{{ $name }}]" type="{{ ($field['type'] ?? 'text') === 'date' ? 'date' : 'text' }}"
+                        <input id="f-{{ $name }}" name="data[{{ $name }}]" type="{{ in_array($field['type'] ?? 'text', ['date', 'url'], true) ? $field['type'] : 'text' }}"
                                value="{{ old('data.' . $name, $defaults[$name] ?? '') }}" @if($required) required @endif
                                @if(($field['type'] ?? 'text') === 'date') min="{{ now()->toDateString() }}" @else maxlength="255" @endif class="{{ $input }}">
                     @endif

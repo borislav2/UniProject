@@ -72,6 +72,20 @@ class ClientEmails
                     'valid_until' => ['label' => 'Параметрите и срокът са валидни до', 'type' => 'date', 'required' => true],
                 ],
             ],
+            'demo-site' => [
+                'label' => 'Демо сайт',
+                'description' => 'След разговор по телефона: линк към демото, на какво да обърнат внимание и какво следва.',
+                'subject' => 'Демо на сайта за {business} | Creatium Lab',
+                'view' => 'emails.client.demo-site',
+                'fields' => $common + [
+                    'demo_url' => ['label' => 'Линк към демото', 'type' => 'url', 'required' => true, 'default' => route('demo.show', 'avtoservis'),
+                        'help' => 'Пълният адрес с https://. Готовите демота са на creatiumlab.com/demo/… (avtoservis, restorant, salon, dentalen-centar, pokrivi, onlain-magazin).'],
+                    'call_note' => ['label' => 'Какво си казахме по телефона', 'type' => 'textarea', 'required' => false,
+                        'help' => 'По желание: какво искат, какво им е важно. Показва се като „От разговора ни“. Празно = не се показва.'],
+                    'follow_up' => ['label' => 'Какво следва', 'required' => false, 'default' => 'Ще ви се обадим след няколко дни, за да чуем впечатленията ви.',
+                        'help' => 'По желание: едно изречение за следващата стъпка.'],
+                ],
+            ],
             'monthly-report' => [
                 'label' => 'Месечен отчет',
                 'description' => 'За клиентите на абонамент: какво направихме през месеца, резултати, състояние на сайта и план за следващия.',
@@ -106,7 +120,7 @@ class ClientEmails
         return strtr($subject, ['{client_name}' => $data['client_name'] ?? '', '{business}' => $data['business'] ?? '']);
     }
 
-    /** Валидиращи правила: текст до 255 знака, дълъг текст (textarea) до 1000, датите са дати от днес нататък. */
+    /** Валидиращи правила: текст до 255 знака, дълъг текст (textarea) до 2000, датите са дати от днес нататък, линковете са http(s). */
     public static function rules(array $template): array
     {
         $rules = [];
@@ -116,6 +130,7 @@ class ClientEmails
                 ($field['required'] ?? true) ? 'required' : 'nullable',
                 $type === 'date' ? 'date' : 'string',
                 match ($type) { 'date' => 'after_or_equal:today', 'textarea' => 'max:2000', default => 'max:255' },
+                $type === 'url' ? 'url:http,https' : null,
             ]);
         }
 
