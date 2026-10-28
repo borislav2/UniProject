@@ -173,7 +173,7 @@ class ClientEmailsTest extends TestCase
         $this->actingAs($user)->get('/admin/emails/demo-site?project=' . $lead->id)->assertOk()
             ->assertSee('value="Каракашев Ауто"', false)
             ->assertSee('type="url"', false)
-            ->assertSee('value="' . route('demo.show', 'avtoservis') . '"', false);
+            ->assertSee(route('demo.show', 'avtoservis'));
 
         $data = ['client_name' => 'Г-н Каракашев', 'business' => 'Каракашев Ауто', 'sender' => 'Борислав', 'demo_url' => 'https://creatiumlab.com/demo/avtoservis',
             'call_note' => 'Искате клиентите да записват час за ремонт онлайн.', 'follow_up' => 'Ще ви се обадя в четвъртък.'];
@@ -182,7 +182,12 @@ class ClientEmailsTest extends TestCase
             ->assertSee('href="https://creatiumlab.com/demo/avtoservis"', false)
             ->assertSee('От разговора ни')->assertSee('записват час за ремонт онлайн')
             ->assertSee('Ще ви се обадя в четвъртък.')->assertSee('Това е демо.');
-        $this->actingAs($user)->post('/admin/emails/demo-site/preview', ['data' => ['call_note' => '', 'follow_up' => '']])->assertDontSee('От разговора ни');
+        $this->actingAs($user)->post('/admin/emails/demo-site/preview', ['data' => ['call_note' => '', 'follow_up' => '']])->assertDontSee('От разговора ни')
+            ->assertSee('Демото е в прикачения PDF файл')->assertDontSee('Вижте демото');
+
+        $this->actingAs($user)->post('/admin/emails/demo-site', [
+            'to' => 'office@karakashev.bg', 'subject' => 'Демо', 'data' => ['demo_url' => ''] + $data,
+        ])->assertSessionHasErrors(['data.demo_url' => 'Сложете линк към демото или прикачете PDF с него.']);
 
         $this->actingAs($user)->post('/admin/emails/demo-site', [
             'to' => 'office@karakashev.bg', 'subject' => 'Демо', 'data' => ['demo_url' => 'javascript:alert(1)'] + $data,
@@ -200,7 +205,7 @@ class ClientEmailsTest extends TestCase
     {
         Mail::fake();
         $user = $this->admin();
-        $data = ['client_name' => 'Г-н Каракашев', 'business' => 'Каракашев Ауто', 'sender' => 'Борислав', 'demo_url' => 'https://creatiumlab.com/demo/avtoservis'];
+        $data = ['client_name' => 'Г-н Каракашев', 'business' => 'Каракашев Ауто', 'sender' => 'Борислав', 'demo_url' => ''];
 
         $this->actingAs($user)->get('/admin/emails/demo-site')->assertSee('enctype="multipart/form-data"', false)->assertSee('name="attachment"', false);
 
@@ -216,7 +221,8 @@ class ClientEmailsTest extends TestCase
         ])->assertRedirect('/admin/emails');
 
         Mail::assertSent(ClientTemplateMail::class, function (ClientTemplateMail $mail) {
-            return $mail->hasAttachment(\Illuminate\Mail\Attachment::fromData(fn () => "%PDF-1.4\n%test\n", 'Оферта Каракашев.pdf')->withMime('application/pdf'));
+            return $mail->hasAttachment(\Illuminate\Mail\Attachment::fromData(fn () => "%PDF-1.4\n%test\n", 'Оферта Каракашев.pdf')->withMime('application/pdf'))
+                && str_contains($mail->render(), 'Демото е в прикачения PDF файл');
         });
         $this->assertSame('Оферта Каракашев.pdf', ClientEmail::sole()->attachment_name);
         $this->actingAs($user)->get('/admin/emails')->assertSee('+ Оферта Каракашев.pdf');
