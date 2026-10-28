@@ -36,8 +36,10 @@ class ClientEmailController extends Controller
         if ($project) {
             $defaults['client_name'] = str_replace('Запитване от ', '', $project->name);
         }
-        if ($project && $tpl['key'] === 'monthly-report') {
+        if ($project && in_array($tpl['key'], ['monthly-report', 'demo-site'], true)) {
             $defaults['business'] = str_replace('Запитване от ', '', $project->name);
+        }
+        if ($project && $tpl['key'] === 'monthly-report') {
             $problems = \App\Support\Admin\SiteMonitor::problems($project);
             if ($project->monitor_checked_at) {
                 $defaults['site_status'] = $problems ? implode('; ', $problems) : 'Сайтът работи без прекъсвания'
