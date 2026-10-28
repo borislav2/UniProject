@@ -43,7 +43,7 @@
                 <tr>
                     <td class="px-4 py-3 whitespace-nowrap text-gray-600">{{ $email->created_at->format('d.m.Y H:i') }}</td>
                     <td class="px-4 py-3">{{ $email->to_email }}</td>
-                    <td class="px-4 py-3">{{ $email->templateLabel() }}</td>
+                    <td class="px-4 py-3">{{ $email->templateLabel() }}@if($email->attachment_name)<span class="block text-xs text-gray-500" title="Прикачен PDF">+ {{ $email->attachment_name }}</span>@endif</td>
                     <td class="px-4 py-3">
                         @if($email->project)
                             <a href="{{ route('admin.projects.show', $email->project) }}" class="text-blue-600 hover:underline">{{ str_replace('Запитване от ', '', $email->project->name) }}</a>

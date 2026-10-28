@@ -86,7 +86,11 @@ class ClientEmailController extends Controller
             'to' => 'required|email:rfc|max:255',
             'subject' => 'required|string|max:255',
             'project_id' => 'nullable|exists:projects,id',
+            'attachment' => 'nullable|file|mimes:pdf|mimetypes:application/pdf|max:10240',
         ] + ClientEmails::rules($tpl), [
+            'attachment.mimes' => 'Може да се прикачи само PDF файл.',
+            'attachment.mimetypes' => 'Може да се прикачи само PDF файл.',
+            'attachment.max' => 'PDF файлът е по-голям от 10 MB.',
             'to.required' => 'Въведете имейла на клиента.',
             'to.email' => 'Имейлът на клиента не е валиден.',
             'data.valid_until.after_or_equal' => 'Датата на валидност не може да е в миналото.',
@@ -95,17 +99,24 @@ class ClientEmailController extends Controller
         $data = array_map(fn ($v) => is_string($v) ? trim($v) : $v, $validated['data']);
         $validated['subject'] = ClientEmails::subject($validated['subject'], $data);
 
+        $pdf = null;
+        if ($file = $request->file('attachment')) {
+            $name = preg_replace('/[^\pL\pN ._-]+/u', '', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+            $pdf = ['name' => (trim($name) ?: 'prilozhenie') . '.pdf', 'content' => $file->get()];
+        }
+
         $log = ClientEmail::create([
             'project_id' => $validated['project_id'] ?? null,
             'user_id' => $request->user()->id,
             'template' => $tpl['key'],
             'to_email' => $validated['to'],
             'subject' => $validated['subject'],
+            'attachment_name' => $pdf['name'] ?? null,
             'data' => $data,
         ]);
 
         try {
-            Mail::to($validated['to'])->send(new ClientTemplateMail($tpl, $data, $validated['subject']));
+            Mail::to($validated['to'])->send(new ClientTemplateMail($tpl, $data, $validated['subject'], $pdf));
         } catch (Throwable $e) {
             Log::error('Client email failed', ['client_email_id' => $log->id, 'error' => $e->getMessage()]);
             $log->forceFill(['error' => mb_substr($e->getMessage(), 0, 1000)])->save();
