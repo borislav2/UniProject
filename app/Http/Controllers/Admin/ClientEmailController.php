@@ -97,6 +97,9 @@ class ClientEmailController extends Controller
         ], collect($tpl['fields'])->mapWithKeys(fn ($f, $name) => ["data.$name" => '„' . $f['label'] . '“'])->all());
 
         $data = array_map(fn ($v) => is_string($v) ? trim($v) : $v, $validated['data']);
+        if (($link = $tpl['link_or_pdf'] ?? null) && empty($data[$link]) && ! $request->hasFile('attachment')) {
+            return back()->withInput()->withErrors(['data.' . $link => 'Сложете линк към демото или прикачете PDF с него.']);
+        }
         $validated['subject'] = ClientEmails::subject($validated['subject'], $data);
 
         $pdf = null;

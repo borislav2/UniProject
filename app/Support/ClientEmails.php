@@ -77,9 +77,10 @@ class ClientEmails
                 'description' => 'След разговор по телефона: линк към демото, на какво да обърнат внимание и какво следва.',
                 'subject' => 'Демо на сайта за {business} | Creatium Lab',
                 'view' => 'emails.client.demo-site',
+                'link_or_pdf' => 'demo_url', // трябва линк към демото или прикачен PDF
                 'fields' => $common + [
-                    'demo_url' => ['label' => 'Линк към демото', 'type' => 'url', 'required' => true, 'default' => route('demo.show', 'avtoservis'),
-                        'help' => 'Пълният адрес с https://. Готовите демота са на creatiumlab.com/demo/… (avtoservis, restorant, salon, dentalen-centar, pokrivi, onlain-magazin).'],
+                    'demo_url' => ['label' => 'Линк към демото', 'type' => 'url', 'required' => false,
+                        'help' => 'Пълният адрес с https://, напр. ' . route('demo.show', 'avtoservis') . ' (готови демота: avtoservis, restorant, salon, dentalen-centar, pokrivi, onlain-magazin). Ако демото е в прикачения PDF, оставете празно.'],
                     'call_note' => ['label' => 'Какво си казахме по телефона', 'type' => 'textarea', 'required' => false,
                         'help' => 'По желание: какво искат, какво им е важно. Показва се като „От разговора ни“. Празно = не се показва.'],
                     'follow_up' => ['label' => 'Какво следва', 'required' => false, 'default' => 'Ще ви се обадим след няколко дни, за да чуем впечатленията ви.',
