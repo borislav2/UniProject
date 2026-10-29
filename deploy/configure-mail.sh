@@ -19,6 +19,15 @@ FROM_ADDRESS="${3:-$ACCOUNT}"
 PORT="${MAIL_PORT_OVERRIDE:-587}"
 NOTIFY="${CREATIUM_NOTIFY_OVERRIDE:-info@creatiumlab.com}"
 
+# Проверка на аргументите: грешно поставен ред (напр. пътят на папката като трети аргумент)
+# иначе записва невалиден подател в .env и всяко писмо пада с „does not comply with RFC 2822“.
+is_email() { [[ "$1" =~ ^[^@[:space:]/]+@[^@[:space:]/]+\.[^@[:space:]/]+$ ]]; }
+for pair in "акаунт за вход:$ACCOUNT" "подател:$FROM_ADDRESS" "получател на известията:$NOTIFY"; do
+    label="${pair%%:*}" value="${pair#*:}"
+    is_email "$value" || { echo "Невалиден имейл за ${label}: \"${value}\". Пример: bash deploy/configure-mail.sh smtp.gmail.com team@creatiumlab.com"; exit 1; }
+done
+[[ "$HOST" == *.* && "$HOST" != */* ]] || { echo "Невалиден SMTP хост: \"${HOST}\". Пример: smtp.gmail.com"; exit 1; }
+
 read -r -s -p "Парола на приложение за ${ACCOUNT} (не се показва): " PASS
 echo
 PASS="${PASS// /}"   # Google я показва на групи с интервали
