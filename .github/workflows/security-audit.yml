@@ -1,0 +1,44 @@
+name: Security audit
+
+# Проверява PHP и JavaScript библиотеките за известни уязвимости:
+# всеки понеделник, ръчно и при всяка промяна на composer.lock / package-lock.json.
+# Ако нещо се намери, задачата пада и GitHub изпраща имейл. Оправя се с
+# `composer update <пакет> --with-all-dependencies` или `npm audit fix`, след което се пускат тестовете.
+# Отделно е от Tests, за да не спира деплоя заради ново съобщение за чужда библиотека.
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [composer.lock, package-lock.json]
+  pull_request:
+    paths: [composer.lock, package-lock.json]
+
+permissions:
+  contents: read
+
+jobs:
+  composer:
+    runs-on: ubuntu-latest
+    name: Composer audit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          coverage: none
+      - name: Audit PHP dependencies
+        run: composer audit --locked --no-interaction
+
+  npm:
+    runs-on: ubuntu-latest
+    name: npm audit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Audit JavaScript dependencies
+        run: npm audit --audit-level=moderate

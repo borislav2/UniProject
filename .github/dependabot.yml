@@ -1,0 +1,15 @@
+# Dependabot само за поправки на сигурността: open-pull-requests-limit 0 спира обикновените
+# обновявания, а при известна уязвимост Dependabot отваря PR с поправката
+# (ако в Settings → Code security е включено „Dependabot security updates“).
+version: 2
+updates:
+  - package-ecosystem: composer
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
