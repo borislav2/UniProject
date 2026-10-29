@@ -159,6 +159,17 @@ class MarketingTest extends TestCase
         $this->get('/en/packages')->assertSee('"name":"Home","item":"' . url('/en') . '"', false);
     }
 
+    public function test_www_redirects_to_the_main_domain_in_production(): void
+    {
+        config(['app.url' => 'https://creatiumlab.com']);
+
+        $this->get('http://www.creatiumlab.com/uslugi?utm_source=x')->assertOk();
+
+        $this->app->detectEnvironment(fn () => 'production');
+        $this->get('http://www.creatiumlab.com/en/about?utm_source=x')->assertStatus(301)->assertRedirect('https://creatiumlab.com/en/about?utm_source=x');
+        $this->get('http://creatiumlab.com/uslugi')->assertOk();
+    }
+
     public function test_search_console_verification_meta(): void
     {
         config(['creatium.google_site_verification' => 'abcDEF123_-xyz']);
