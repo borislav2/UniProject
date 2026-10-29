@@ -287,6 +287,15 @@
                 </div>
             </div>
 
+            @if($locale === 'bg')
+                <nav class="border-t border-white/10 py-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-400" aria-label="Сайт за бранш">
+                    <span class="font-semibold text-gray-300">Сайт за:</span>
+                    @foreach(config('creatium.industry_pages') as $industrySlug => $industry)
+                        <a href="{{ route('industry', $industrySlug) }}" class="hover:text-white">{{ $industry['menu'] }}</a>
+                    @endforeach
+                </nav>
+            @endif
+
             <div class="border-t border-white/10 py-6 flex flex-col md:flex-row justify-between gap-4 text-gray-400 text-sm">
                 <p>&copy; {{ date('Y') }} Creatium Lab. {{ __('Всички права запазени.') }}</p>
                 <div class="flex flex-wrap gap-x-6 gap-y-2">

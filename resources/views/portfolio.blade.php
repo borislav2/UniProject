@@ -57,6 +57,10 @@
                         <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="mt-auto pt-5 inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">
                             {{ __('Отвори демото') }} <x-icon name="arrow-up-right-from-square" class="text-xs" />
                         </a>
+                        @php($industrySlug = app()->getLocale() === 'bg' ? collect(config('creatium.industry_pages'))->search(fn ($page) => $page['demo'] === $demo['slug']) : false)
+                        @if($industrySlug !== false)
+                            <a href="{{ route('industry', $industrySlug) }}" class="mt-2 text-sm text-gray-600 underline decoration-gray-300 underline-offset-4 hover:text-brand-700 dark:text-gray-300 dark:hover:text-white">{{ config("creatium.industry_pages.$industrySlug.title") }}</a>
+                        @endif
                     </div>
                 </article>
             @endforeach

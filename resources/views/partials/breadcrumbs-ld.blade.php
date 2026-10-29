@@ -1,6 +1,7 @@
 {{--
     BreadcrumbList за Google: в резултатите вместо адреса се показва пътят „Creatium Lab › Услуги › …“.
-    Страница без родител: Начало › страницата. Услуга и статия: Начало › Услуги / Блог › страницата
+    Страница без родител: Начало › страницата. Услуга и статия: Начало › Услуги / Блог › страницата;
+    страница за бранш: Начало › Изработка на сайт › страницата
     (името на последната идва от @section('breadcrumb') или от заглавието).
 --}}
 @php
@@ -11,7 +12,10 @@
     ];
     $crumbParents = ['services.show' => 'services', 'blog.category' => 'blog.index', 'blog.show' => 'blog.index'];
     $crumbs = [];
-    if (isset($crumbLabels[$routeName])) {
+    if ($routeName === 'industry') {
+        $crumbs[] = [config('creatium.service_pages.website.menu'), \App\Http\Controllers\PageController::serviceUrl('website', 'bg')];
+        $crumbs[] = [trim($__env->yieldContent('breadcrumb')), $canonicalUrl];
+    } elseif (isset($crumbLabels[$routeName])) {
         $crumbs[] = [$crumbLabels[$routeName], $canonicalUrl];
     } elseif (isset($crumbParents[$routeName]) && ($parentUrl = rescue(fn () => lroute($crumbParents[$routeName]), null, false))) {
         $crumbs[] = [$crumbLabels[$crumbParents[$routeName]], $parentUrl];
