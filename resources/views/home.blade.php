@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', __('Уебсайтове и маркетинг за бизнеса в България'))
-@section('meta_description', __('Сайтове, SEO и имейл кампании за малки и средни бизнеси в България. Правим нови сайтове, поддържаме съществуващи и се грижим да ви намират в Google.'))
+@section('title', __('Изработка на сайт и SEO за малък бизнес от €450'))
+@section('meta_description', __('Сайт, който носи запитвания, плюс видимост в Google, Google Maps и ChatGPT. За малки бизнеси в България: демо преди старта и безплатна консултация.'))
 
 @push('head')
 @php
@@ -19,9 +19,14 @@
         'address' => ['@type' => 'PostalAddress', 'addressLocality' => __($contact['city']), 'addressCountry' => 'BG'],
         'areaServed' => ['@type' => 'Country', 'name' => __('България')],
         'sameAs' => array_values(array_filter([$contact['facebook'] ?? null])),
+        'priceRange' => '€450 – €850+',
+        'knowsAbout' => [__('Изработка на сайт'), 'SEO', __('Google Business профил'), __('Имейл маркетинг'), __('Видимост в AI асистенти')],
     ];
+    // WebSite: името на сайта, което Google показва над резултата.
+    $site = ['@context' => 'https://schema.org', '@type' => 'WebSite', 'name' => 'Creatium Lab', 'url' => lroute('home'), 'inLanguage' => app()->getLocale() === 'en' ? 'en' : 'bg'];
 @endphp
 <script type="application/ld+json">{!! json_encode(array_filter($ld), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
+<script type="application/ld+json">{!! json_encode($site, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
 @endpush
 
 @php

@@ -22,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($this->app->environment('production')) {
             URL::forceScheme('https');
+            // Каноничните адреси, hreflang и sitemap винаги сочат домейна от APP_URL (без www).
+            URL::forceRootUrl(config('app.url'));
         }
     }
 }
