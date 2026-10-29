@@ -146,6 +146,19 @@ class MarketingTest extends TestCase
         $this->assertSame('GTM-ABC1234', $config['gtm_id']);
     }
 
+    public function test_pages_have_breadcrumbs_and_the_home_page_names_the_site(): void
+    {
+        $this->get('/')->assertSee('"@type":"WebSite","name":"Creatium Lab"', false)->assertDontSee('BreadcrumbList');
+        $this->get('/paketi')->assertSee('"@type":"BreadcrumbList"', false)
+            ->assertSee('{"@type":"ListItem","position":1,"name":"Начало","item":"' . url('/') . '"}', false)
+            ->assertSee('"name":"Пакети и цени","item":"' . url('/paketi') . '"', false);
+
+        $slug = config('creatium.service_pages.website.slug');
+        $this->get('/uslugi/' . $slug)->assertSee('"position":2,"name":"Услуги","item":"' . url('/uslugi') . '"', false)
+            ->assertSee('"position":3,"name":"' . config('creatium.service_pages.website.menu') . '"', false);
+        $this->get('/en/packages')->assertSee('"name":"Home","item":"' . url('/en') . '"', false);
+    }
+
     public function test_search_console_verification_meta(): void
     {
         config(['creatium.google_site_verification' => 'abcDEF123_-xyz']);

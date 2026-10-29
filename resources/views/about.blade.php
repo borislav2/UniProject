@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', __('За нас'))
+@section('title', __('За нас: екипът зад вашия сайт и маркетинг'))
 @section('meta_description', __('Creatium Lab прави сайтове и маркетинг за малки бизнеси в България: от първата страница до клиентите, които я намират в Google.'))
 
 @php

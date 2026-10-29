@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', __('Безплатна проверка на сайт'))
+@section('title', __('Безплатна проверка на сайт: SEO, скорост и Google'))
 @section('meta_description', __('Въведете адреса на сайта си и получете безплатен отчет на имейла: HTTPS, скорост на сървъра, заглавия за Google, телефон, sitemap и още.'))
 
 @php

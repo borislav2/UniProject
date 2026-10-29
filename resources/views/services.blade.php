@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', __('Услуги: сайт, SEO и AI видимост, имейл маркетинг, поддръжка'))
-@section('meta_description', __('Уеб платформа, която продава, GEO и SEO позициониране, автоматизиран имейл маркетинг и техническа грижа 24/7. Четирите елемента на един работещ търговски канал.'))
+@section('title', __('Изработка на сайт, SEO, Google профил и имейл маркетинг'))
+@section('meta_description', __('Сайт, който продава, SEO и видимост в ChatGPT, Google профил и отзиви, имейл кампании и поддръжка. Всичко за онлайн клиенти, от един екип.'))
 
 @section('content')
 @php($cardPages = ['websites' => 'website', 'geo-seo' => 'seo', 'email' => 'email', 'monitoring' => 'support'])

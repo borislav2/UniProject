@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', __('Контакти'))
-@section('meta_description', __('Пишете или се обадете на Creatium Lab.'))
+@section('title', __('Контакти и безплатна консултация'))
+@section('meta_description', __('Обадете се, пишете или запазете час за безплатен разговор. Кажете ни какъв е бизнесът ви и ще ви предложим какво да направим за повече клиенти.'))
 
 @section('content')
 @include('partials/page-header', ['heading' => __('Контакти')])

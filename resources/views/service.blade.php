@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
 @section('title', $page['title'])
+@section('breadcrumb', $page['menu'])
 
 @section('content')
 @include('partials/page-header', ['eyebrow' => __('Услуги'), 'heading' => $page['title'], 'sub' => $page['lead']])
