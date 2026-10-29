@@ -73,6 +73,9 @@ foreach (['bg', 'en'] as $locale) {
 Route::post('/chat', [ChatController::class, 'send'])->middleware('throttle:20,1')->name('chat.send');
 Route::get('/chat/{conversation}', [ChatController::class, 'history'])->whereUuid('conversation')->middleware('throttle:60,1')->name('chat.history');
 
+// „Изработка на сайт за ресторант“ и т.н.: страници за браншове, само на български (creatium.industry_pages)
+Route::get('/izrabotka-na-sait-za-{slug}', [PageController::class, 'industry'])->where('slug', '[a-z-]+')->name('industry');
+
 // Demo sites shown on the Projects page (Bulgarian only, not indexed)
 Route::get('/demo/{slug}', [DemoController::class, 'show'])->where('slug', '[a-z-]+')->name('demo.show');
 

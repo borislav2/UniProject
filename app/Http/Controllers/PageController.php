@@ -41,6 +41,27 @@ class PageController extends Controller
         ]);
     }
 
+    /** „Изработка на сайт за …“: страница за бранш (само на български), с демото, проблемите, пакета и въпросите му. */
+    public function industry(string $slug)
+    {
+        $page = site('industry_pages')[$slug] ?? null;
+        $demo = $page ? collect(site('demos'))->firstWhere('slug', $page['demo']) : null;
+        abort_unless($page && $demo, 404);
+
+        $alternates = ['bg' => route('industry', $slug), 'en' => self::serviceUrl('website', 'en')];
+
+        return view('industry', [
+            'slug' => $slug,
+            'page' => $page,
+            'demo' => $demo,
+            'plan' => $demo['package']['name'] ? collect(site('plans')['items'])->firstWhere('name', $demo['package']['name']) : null,
+            'others' => collect(site('industry_pages'))->except($slug),
+            'pageAlternates' => $alternates,
+            'hreflangAlternates' => [],
+            'seo' => ['meta_title' => $page['seo_title'], 'meta_description' => $page['seo_description']],
+        ]);
+    }
+
     /** Адресът на услуга на даден език (slug-ът е различен за всеки език). */
     public static function serviceUrl(string $key, ?string $locale = null): string
     {
@@ -139,6 +160,11 @@ class PageController extends Controller
             }
         }
 
+        // Страниците за браншове са само на български.
+        foreach (array_keys(config('creatium.industry_pages')) as $slug) {
+            $urls[] = ['loc' => route('industry', $slug), 'alternates' => []];
+        }
+
         // Blog posts and categories: alternates only between languages that really exist.
         $posts = ! $blog ? collect() : Post::where('status', 'published')->where('published_at', '<=', now())->latest('published_at')->get();
         foreach ($posts as $post) {
@@ -187,6 +213,12 @@ class PageController extends Controller
             $lines[] = '- [' . $service['title'] . '](' . self::serviceUrl($key, 'bg') . '): ' . $service['lead'];
         }
         $lines[] = '- [Безплатна проверка на сайт](' . lroute('site-check', [], 'bg') . '): въвеждате адреса и имейл и получавате отчет за минута.';
+        $lines[] = '';
+        $lines[] = '## Сайт за бранш';
+        $lines[] = '';
+        foreach (site('industry_pages') as $slug => $industry) {
+            $lines[] = '- [' . $industry['title'] . '](' . route('industry', $slug) . '): ' . $industry['lead'];
+        }
         $lines[] = '';
         $lines[] = '## Пакети и цени';
         $lines[] = '';
