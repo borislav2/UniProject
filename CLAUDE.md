@@ -31,7 +31,7 @@ Local DB: set `DB_CONNECTION=sqlite` and `DB_DATABASE=<abs path>/database/databa
 
 `npm run dev` (and `composer dev`, which runs it) writes `public/hot`; while that file exists `@vite` points at the dev server and the built CSS is not used. Never leave it on a server (`deploy/deploy.sh` deletes it).
 
-CI (`.github/workflows/tests.yml`) runs `php artisan test` on PHP 8.2/8.3/8.4 after copying `.env.example`; tests call `withoutVite()` (see `tests/TestCase.php`), so no build is needed for tests. `.github/workflows/security-audit.yml` runs `composer audit --locked` and `npm audit` every Monday, on demand and when a lock file changes (separate from Tests, so it never blocks a deploy; a failure means: update the named package and run the tests). `.github/dependabot.yml` sets `open-pull-requests-limit: 0`, so Dependabot opens only security-fix PRs (when „Dependabot security updates“ is on in the repo settings).
+CI (`.github/workflows/tests.yml`) runs `php artisan test` on PHP 8.2/8.3/8.4 after copying `.env.example` (`composer.json` pins `config.platform.php` to 8.2.0, so `composer update` never locks a package that needs a newer PHP); tests call `withoutVite()` (see `tests/TestCase.php`), so no build is needed for tests. `.github/workflows/security-audit.yml` runs `composer audit --locked` and `npm audit` every Monday, on demand and when a lock file changes (separate from Tests, so it never blocks a deploy; a failure means: update the named package and run the tests). `.github/dependabot.yml` sets `open-pull-requests-limit: 0`, so Dependabot opens only security-fix PRs (when „Dependabot security updates“ is on in the repo settings).
 
 ## Architecture
 
