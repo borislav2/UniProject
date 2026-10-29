@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Mail\Attachment;
+use App\Mail\Concerns\AddsPlainTextPart;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
@@ -11,6 +12,8 @@ use Illuminate\Mail\Mailables\Envelope;
 /** Имейл до клиент по шаблон от App\Support\ClientEmails (изпраща се от админ панела). */
 class ClientTemplateMail extends Mailable
 {
+    use AddsPlainTextPart;
+
     /** @param  array{name: string, content: string}|null  $pdf  прикачен PDF (оферта, договор), по желание */
     public function __construct(public array $template, public array $data, public string $mailSubject, public ?array $pdf = null)
     {

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Mail\Concerns\AddsPlainTextPart;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
@@ -10,6 +11,8 @@ use Illuminate\Mail\Mailables\Envelope;
 /** Отчетът от безплатната проверка на сайт (App\Support\SiteCheck\SiteChecker) до човека, който я е поискал. */
 class SiteCheckReportMail extends Mailable
 {
+    use AddsPlainTextPart;
+
     public function __construct(public array $report)
     {
     }

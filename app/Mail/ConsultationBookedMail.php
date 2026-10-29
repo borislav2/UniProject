@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Project;
+use App\Mail\Concerns\AddsPlainTextPart;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
@@ -11,6 +12,8 @@ use Illuminate\Mail\Mailables\Envelope;
 /** Потвърждение до клиента, когато във формата е избрал ден и час за консултация. */
 class ConsultationBookedMail extends Mailable
 {
+    use AddsPlainTextPart;
+
     public function __construct(public Project $lead)
     {
     }

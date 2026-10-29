@@ -2,12 +2,15 @@
 
 namespace App\Mail;
 
+use App\Mail\Concerns\AddsPlainTextPart;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
 class MailTestMail extends Mailable
 {
+    use AddsPlainTextPart;
+
     public function envelope(): Envelope
     {
         return new Envelope(subject: 'Тестово писмо от Creatium Lab');

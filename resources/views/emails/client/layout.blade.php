@@ -1,4 +1,5 @@
-{{-- Обща рамка за имейлите до клиенти (шаблоните в App\Support\ClientEmails). Само inline стилове и таблици: така изглеждат еднакво в Gmail, Outlook и на телефон. --}}
+{{-- Обща рамка за имейлите до клиенти (шаблоните в App\Support\ClientEmails). Само inline стилове и таблици: така изглеждат еднакво в Gmail, Outlook и на телефон.
+     Логото е вградено в писмото (cid), за да се вижда и когато пощата блокира външни картинки; в прегледа в админа идва от сайта. --}}
 @php
     $f = 'font-family:Arial,Helvetica,sans-serif;';
     $contact = config('creatium.contact');
@@ -18,7 +19,7 @@
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:14px;overflow:hidden;">
 
 <tr><td bgcolor="#0f1a2b" style="background:#0f1a2b;background-image:linear-gradient(135deg,#0f1a2b 0%,#22406a 55%,#2d63a3 100%);padding:32px 36px 36px;">
-<img src="{{ asset('images/logo-white.png') }}" width="190" height="27" alt="Creatium Lab" style="display:block;border:0;width:190px;height:auto;">
+<img src="{{ isset($message) && $message instanceof \Illuminate\Mail\Message ? $message->embed(public_path('images/logo-white.png')) : asset('images/logo-white.png') }}" width="190" height="27" alt="Creatium Lab" style="display:block;border:0;width:190px;height:auto;">
 <div style="height:28px;line-height:28px;font-size:0;">&nbsp;</div>
 <div style="{{ $f }}font-size:12px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:#9cc0eb;">@yield('eyebrow')</div>
 <div style="{{ $f }}font-size:26px;line-height:1.25;font-weight:bold;color:#ffffff;padding-top:8px;">@yield('headline')</div>
