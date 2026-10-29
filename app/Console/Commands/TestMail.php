@@ -41,8 +41,8 @@ class TestMail extends Command
                 $this->line('    Пишете я внимателно: телефонната клавиатура слага главна буква или поправя думи.');
                 $this->line(' 2. Паролата е създадена за друг акаунт. Трябва да е за същия акаунт, с който влизате (MAIL_USERNAME).');
                 $this->line(' 3. Няма двустепенна проверка или админът на Workspace не разрешава пароли на приложения.');
-                $this->line(' 4. info@ е псевдоним/група, а не потребител. Влезте с истински акаунт, а info@ задайте за подател:');
-                $this->line('    bash deploy/configure-mail.sh smtp.gmail.com акаунт@creatiumlab.com info@creatiumlab.com');
+                $this->line(' 4. Входът е с псевдоним (напр. info@), а не с потребител. Влезте с основния акаунт team@:');
+                $this->line('    bash deploy/configure-mail.sh smtp.gmail.com team@creatiumlab.com');
             }
 
             return self::FAILURE;
