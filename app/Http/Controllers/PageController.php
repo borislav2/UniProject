@@ -91,7 +91,10 @@ class PageController extends Controller
 
     public function about()
     {
-        return view('about', ['about' => site('about'), 'team' => site('team'), 'trust' => site('home_trust')]);
+        // Ключове, добавени след последната редакция в админа (напр. story), идват от config.
+        $about = (array) site('about') + (array) app(\App\Support\Content::class)->default('about', app()->getLocale());
+
+        return view('about', ['about' => $about, 'team' => site('team'), 'trust' => site('home_trust')]);
     }
 
     /** Често задавани въпроси: отделна страница, по теми („group“), с FAQPage данни за Google. */
@@ -202,9 +205,9 @@ class PageController extends Controller
         $lines = [
             '# Creatium Lab',
             '',
-            '> ' . __('Правим сайтове за малки бизнеси и се грижим хората да ги намират в Google.') . ' ' . site('services_page')['intro'],
+            '> ' . __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.') . ' ' . site('services_page')['intro'],
             '',
-            'Екип в ' . __($contact['city']) . ', България, който работи с малки бизнеси. Сайт на български: ' . lroute('home', [], 'bg') . ', на английски: ' . lroute('home', [], 'en'),
+            'Екип в ' . __($contact['city']) . ', България, който работи с бизнеси. Сайт на български: ' . lroute('home', [], 'bg') . ', на английски: ' . lroute('home', [], 'en'),
             '',
             '## Услуги',
             '',

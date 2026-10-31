@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
-@section('title', $category ? __('Блог: :category', ['category' => $category->trOrBg('name')]) : __('Блог: съвети за сайт, SEO и Google за малък бизнес'))
+@section('title', $category ? __('Блог: :category', ['category' => $category->trOrBg('name')]) : __('Блог: съвети за сайт, SEO и Google за вашия бизнес'))
 @section('breadcrumb', $category ? $category->trOrBg('name') : '')
-@section('meta_description', $category ? __('Статии от категория „:category“: практични съвети за малки и средни бизнеси, просто и с примери.', ['category' => $category->trOrBg('name')]) : __('Статии за сайтове, SEO, Google Business и имейл кампании за малки и средни бизнеси. Пишем просто и с примери.'))
+@section('meta_description', $category ? __('Статии от категория „:category“: практични съвети за бизнеси, просто и с примери.', ['category' => $category->trOrBg('name')]) : __('Статии за сайтове, SEO, Google Business и имейл кампании за бизнеси. Пишем просто и с примери.'))
 
 @section('content')
 @include('partials/page-header', ['eyebrow' => $category ? __('Блог') : null, 'heading' => $category ? $category->trOrBg('name') : __('Блог'), 'sub' => __('Статии за сайтове, Google и имейл кампании. Пишем просто и с примери.')])

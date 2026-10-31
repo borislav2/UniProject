@@ -29,8 +29,8 @@
 
         // SEO: values from the controller (blog posts) or the admin's per-page settings override the view's defaults.
         $seo = array_filter($seo ?? [], 'filled') ?: app(\App\Support\Content::class)->seo($routeName);
-        $pageTitle = $seo['meta_title'] ?? trim($__env->yieldContent('title', __('Сайтове и дигитален маркетинг за малки бизнеси'))) . ' | Creatium Lab';
-        $pageDescription = $seo['meta_description'] ?? trim($__env->yieldContent('meta_description', __('Правим сайтове за малки бизнеси и се грижим хората да ги намират в Google.')));
+        $pageTitle = $seo['meta_title'] ?? trim($__env->yieldContent('title', __('Сайтове и дигитален маркетинг за бизнеси'))) . ' | Creatium Lab';
+        $pageDescription = $seo['meta_description'] ?? trim($__env->yieldContent('meta_description', __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.')));
         $canonicalUrl = $seo['canonical_url'] ?? ($canonical ?? url()->current());
         $ogImage = isset($seo['og_image']) ? asset($seo['og_image']) : asset('images/og-image.png');
 
@@ -105,14 +105,14 @@
         <!-- End Google Tag Manager (noscript) -->
     @endif
     @php
-        // Главно меню: Услуги ▾ · Пакети · Проекти · За нас ▾ и бутон „Безплатна консултация“.
+        // Главно меню: Услуги ▾ · Пакети · Проекти · За нас ▾ и бутон „Консултация“.
         $is = fn (...$patterns) => collect($patterns)->contains(fn ($p) => request()->routeIs($p, 'en.' . $p));
         $serviceLinks = [[__('Всички услуги'), lroute('services'), $is('services'), 'list-ul']];
         foreach (site('service_pages') as $key => $servicePage) {
             $serviceLinks[] = [$servicePage['menu'], \App\Http\Controllers\PageController::serviceUrl($key), request()->routeIs('services.show', 'en.services.show') && request()->route('slug') === $servicePage['slug'], $servicePage['icon']];
         }
         $serviceLinks[] = [__('Безплатна проверка на сайт'), lroute('site-check'), $is('site-check'), 'gauge-high'];
-        $aboutLinks = [[__('Кои сме'), lroute('about'), $is('about'), 'users']];
+        $aboutLinks = [[__('Кои сме ние'), lroute('about'), $is('about'), 'users']];
         if (config('creatium.blog_enabled')) {
             $aboutLinks[] = [__('Блог'), lroute('blog.index'), $is('blog.*'), 'newspaper'];
         }
@@ -164,7 +164,7 @@
                         @endif
                     @endforeach
 
-                    <a href="{{ $consultationUrl }}" class="btn-shine ml-2 whitespace-nowrap rounded-xl bg-brand-950 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800">{{ __('Безплатна консултация') }}</a>
+                    <a href="{{ $consultationUrl }}" class="btn-shine ml-2 whitespace-nowrap rounded-xl bg-brand-950 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800">{{ __('Консултация') }}</a>
 
                     <div class="ml-3 flex items-center rounded-lg border border-gray-200 p-0.5 text-xs font-bold" role="group" aria-label="{{ __('Език') }}">
                         @foreach($languages as $code => [$short, $name])
@@ -224,7 +224,7 @@
                         <a href="{{ $item['href'] }}" class="block px-3 py-2.5 rounded-lg font-medium {{ $item['active'] ? 'text-brand-700 bg-brand-50' : 'text-gray-700 hover:bg-gray-50' }}">{{ $item['label'] }}</a>
                     @endif
                 @endforeach
-                <a href="{{ $consultationUrl }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold">{{ __('Безплатна консултация') }}</a>
+                <a href="{{ $consultationUrl }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold">{{ __('Консултация') }}</a>
                 @auth
                     <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-gray-500">{{ __('Административен панел') }}</a>
                     <form action="{{ route('logout') }}" method="POST">
@@ -247,7 +247,7 @@
             <div class="grid grid-cols-1 md:grid-cols-12 gap-10 py-14">
                 <div class="md:col-span-4">
                     <img src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="223px" alt="Creatium Lab" width="445" height="64" class="h-8 w-auto" loading="lazy" decoding="async">
-                    <p class="mt-5 max-w-sm text-gray-400 leading-relaxed">{{ __('Правим сайтове за малки бизнеси и се грижим хората да ги намират в Google.') }}</p>
+                    <p class="mt-5 max-w-sm text-gray-400 leading-relaxed">{{ __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.') }}</p>
                 </div>
 
                 <div class="md:col-span-3">
