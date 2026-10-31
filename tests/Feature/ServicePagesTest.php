@@ -46,7 +46,7 @@ class ServicePagesTest extends TestCase
     {
         $this->get('/')->assertOk()
             ->assertSee('data-dropdown', false)
-            ->assertSeeInOrder(['Услуги', 'Изработка на сайт', 'Google профил и отзиви', 'Безплатна проверка на сайт', 'Пакети', 'Проекти', 'За нас', 'Кои сме', 'Често задавани въпроси', 'Контакти', 'Безплатна консултация'])
+            ->assertSeeInOrder(['Услуги', 'Изработка на сайт', 'Google профил и отзиви', 'Безплатна проверка на сайт', 'Пакети', 'Проекти', 'За нас', 'Кои сме ние', 'Често задавани въпроси', 'Контакти', 'Консултация'])
             ->assertSee('href="' . url('/kontakti') . '#konsultatsiya"', false)
             ->assertSee('href="' . url('/vaprosi') . '"', false);
 

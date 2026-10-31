@@ -57,6 +57,13 @@ return [
     'about' => [
         'subtitle' => '',
         'paragraphs' => [],
+        'story_title' => 'Why we do it',
+        'story' => [
+            'We have been building websites and doing digital marketing for 4 years.',
+            'We started because we kept seeing the same thing: a business pays one company for the website and another for advertising, and nobody is responsible for whether customers come. The website is "done", the ads are "running", and the phone does not ring.',
+            'So we work as one team: Borislav builds the website and the technical side, and Vladimir makes sure people find you and get in touch. We are responsible for the whole way, from the first page to the first enquiry.',
+            'We are with you all the way: from the idea to the day the website brings customers, and after that.',
+        ],
     ],
 
     'home_hero' => [
@@ -140,19 +147,19 @@ return [
         ],
         'principles_eyebrow' => 'How we think',
         'principles_title' => 'One system instead of five contractors.',
-        'principles_text' => 'The website, Google, emails and maintenance work together when one team builds them. These are the rules we work by.',
+        'principles_text' => 'We have been doing this for 4 years. The website, Google, emails and maintenance work together when one team builds them. These are the rules we work by.',
         'principle_items' => [
             ['title' => 'Customer first, decoration second', 'text' => 'Every page leads to one action: a call, an inquiry or a purchase. The design serves that.'],
             ['title' => 'We measure, we don\'t guess', 'text' => 'Every website starts with Google Analytics and Search Console. You see where inquiries come from.'],
-            ['title' => 'No middlemen', 'text' => 'You work directly with the people who build your website and marketing. Your questions don\'t go through account managers.'],
+            ['title' => 'We are with you all the way to launch', 'text' => 'You work directly with the people who build your website and marketing. Your questions don\'t go through account managers.'],
             ['title' => 'Everything is in your name', 'text' => 'The domain, profiles and access are yours from day one. If you ever leave, you take everything.'],
         ],
         'demos_eyebrow' => 'Industries',
         'demos_title' => 'We have thought about your industry.',
-        'demos_text' => 'We built demo websites for businesses we want to work with. Each of them solves the problems of its industry.',
+        'demos_text' => 'We built websites for businesses from different industries. Each of them solves the problems of its industry.',
         'blog_eyebrow' => 'Insights and advice',
         'blog_title' => 'We write about what works.',
-        'blog_text' => 'Practical articles about websites, Google, AI search and email, without jargon.',
+        'blog_text' => 'Practical articles about websites, Google, AI search and email.',
         'contact_eyebrow' => 'The next step',
     ],
 
@@ -160,7 +167,7 @@ return [
         'website' => [
             'slug' => 'website-design', 'icon' => 'code', 'menu' => 'Website design',
             'title' => 'A website that sells',
-            'seo_title' => 'Website design for small businesses | Creatium Lab',
+            'seo_title' => 'Website design for your business | Creatium Lab',
             'seo_description' => 'A fast, modern website with enquiry forms, bookings and online payments. Demo preview before launch, fixed price from €450.',
             'lead' => 'A fast, modern website that turns visitors into enquiries. You see it on a demo before it goes live.',
             'problems' => ['The site is slow or breaks on phones', 'People can\'t find how to call or write to you', 'Every change waits weeks for a developer'],
@@ -230,7 +237,7 @@ return [
         'email' => [
             'slug' => 'email-marketing', 'icon' => 'envelope-open-text', 'menu' => 'Email marketing',
             'title' => 'Email marketing and automation',
-            'seo_title' => 'Email marketing and automation for small businesses | Creatium Lab',
+            'seo_title' => 'Email marketing and automation for your business | Creatium Lab',
             'seo_description' => 'Automatic emails after an enquiry, booking or purchase. Bring customers back without manual work.',
             'lead' => 'Finding a new customer is expensive. Email brings back the ones who already know you, automatically.',
             'problems' => ['Customers come once and forget you', 'You answer enquiries by hand, and late', 'Your contact list sits unused'],

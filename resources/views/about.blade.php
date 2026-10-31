@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', __('За нас: екипът зад вашия сайт и маркетинг'))
-@section('meta_description', __('Creatium Lab прави сайтове и маркетинг за малки бизнеси в България: от първата страница до клиентите, които я намират в Google.'))
+@section('meta_description', __('Creatium Lab прави сайтове и маркетинг за бизнеси в България: от първата страница до клиентите, които я намират в Google.'))
 
 @php
     // Номерацията на секциите следва реда им; текстът „За нас“ може да е празен в админа.
@@ -10,13 +10,13 @@
 @endphp
 
 @section('content')
-@include('partials/page-header', ['eyebrow' => 'Creatium Lab', 'heading' => __('За нас'), 'sub' => filled($about['subtitle'] ?? null) ? $about['subtitle'] : __('Creatium Lab прави сайтове и маркетинг за малки бизнеси в България: от първата страница до клиентите, които я намират в Google.')])
+@include('partials/page-header', ['eyebrow' => 'Creatium Lab', 'heading' => __('За нас'), 'sub' => filled($about['subtitle'] ?? null) ? $about['subtitle'] : __('Creatium Lab прави сайтове и маркетинг за бизнеси в България: от първата страница до клиентите, които я намират в Google.')])
 
 @if(!empty($about['paragraphs']))
 <section class="py-20 md:py-28 bg-white dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-10 lg:gap-16">
         <div class="lg:col-span-4 reveal">
-            <p class="kicker kicker-light">{{ $number() }} {{ __('Кои сме') }}</p>
+            <p class="kicker kicker-light">{{ $number() }} {{ __('Кои сме ние') }}</p>
         </div>
         <div class="lg:col-span-8 space-y-6 text-lg md:text-xl leading-relaxed text-gray-700 dark:text-gray-200 reveal">
             @foreach($about['paragraphs'] as $paragraph)
@@ -27,12 +27,30 @@
 </section>
 @endif
 
+{{-- Защо го правим: историята на екипа (about.story, редактира се от админа) --}}
+@if(!empty($about['story']))
+<section class="py-20 md:py-28 {{ !empty($about['paragraphs']) ? 'bg-brand-50/60 dark:bg-ink-900' : 'bg-white dark:bg-ink-950' }}">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-10 lg:gap-16">
+        <div class="lg:col-span-4 reveal">
+            <p class="kicker kicker-light">{{ $number() }} {{ $about['story_title'] ?? __('Защо го правим') }}</p>
+        </div>
+        <div class="lg:col-span-8 space-y-6 text-lg md:text-xl leading-relaxed text-gray-700 dark:text-gray-200 reveal">
+            @foreach($about['story'] as $paragraph)
+                <p class="{{ $loop->first ? 'text-2xl md:text-3xl font-bold tracking-tight text-brand-950 dark:text-white leading-snug' : '' }}">{{ $paragraph }}</p>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
 {{-- The team --}}
-<section class="relative py-20 md:py-28 bg-brand-50/60 dark:bg-ink-900">
+@php
+    $teamOnWhite = ! empty($about['story']) && ! empty($about['paragraphs']);
+@endphp
+<section class="relative py-20 md:py-28 {{ $teamOnWhite ? 'bg-white dark:bg-ink-950' : 'bg-brand-50/60 dark:bg-ink-900' }}">
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="reveal max-w-3xl">
             <p class="kicker kicker-light">{{ $number() }} {{ __('Екипът') }}</p>
-            <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ __('Говорите с хората, които правят работата.') }}</h2>
         </div>
         <div class="mt-12 grid md:grid-cols-2 gap-6">
             @foreach($team as $member)

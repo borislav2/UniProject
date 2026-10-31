@@ -38,7 +38,7 @@
 @endif
 
 <tr><td bgcolor="#0f1a2b" style="background:#0f1a2b;padding:22px 36px;{{ $f }}font-size:13px;line-height:1.7;color:#9fb3cc;">
-<strong style="color:#ffffff;">Creatium Lab</strong> · {{ __('Сайтове и дигитален маркетинг за малки бизнеси') }}<br>
+<strong style="color:#ffffff;">Creatium Lab</strong> · {{ __('Сайтове и дигитален маркетинг за бизнеси') }}<br>
 @foreach($phones as $phone)<a href="tel:{{ $tel($phone) }}" style="color:#9cc0eb;text-decoration:none;">{{ $phone }}</a>@unless($loop->last) &nbsp;·&nbsp; @endunless @endforeach<br>
 <a href="mailto:{{ $contact['email'] }}" style="color:#9cc0eb;text-decoration:none;">{{ $contact['email'] }}</a> &nbsp;·&nbsp; <a href="{{ lroute('home') }}" style="color:#9cc0eb;text-decoration:none;">{{ parse_url(url('/'), PHP_URL_HOST) }}</a>
 </td></tr>

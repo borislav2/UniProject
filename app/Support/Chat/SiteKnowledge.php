@@ -17,7 +17,7 @@ class SiteKnowledge
         $out = [];
 
         $out[] = '# Creatium Lab';
-        $out[] = __('Правим сайтове за малки бизнеси и се грижим хората да ги намират в Google.') . ' ' . (site('services_page')['intro'] ?? '');
+        $out[] = __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.') . ' ' . (site('services_page')['intro'] ?? '');
         $out[] = 'Website: ' . lroute('home');
 
         $out[] = "\n## " . __('Услуги');
