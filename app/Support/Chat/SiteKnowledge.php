@@ -20,6 +20,41 @@ class SiteKnowledge
         $out[] = __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.') . ' ' . (site('services_page')['intro'] ?? '');
         $out[] = 'Website: ' . lroute('home');
 
+        // За нас: кои сме, историята и хората (Крео трябва да може да каже кои са собствениците).
+        $about = app(\App\Support\Content::class)->withDefaults('about');
+        $out[] = "\n## " . __('Кои сме ние') . ' (' . lroute('about') . ')';
+        foreach (array_merge((array) ($about['paragraphs'] ?? []), (array) ($about['story'] ?? [])) as $paragraph) {
+            $out[] = $paragraph;
+        }
+        $team = site('team') ?? [];
+        if ($team) {
+            $out[] = 'Founders and owners of Creatium Lab (the whole team; they do the work themselves, the client talks directly to them):';
+            foreach ($team as $person) {
+                $out[] = '- ' . trim(($person['name'] ?? '') . ', ' . ($person['role'] ?? ''), ', ') . ': ' . ($person['description'] ?? '')
+                    . (! empty($person['bio']) ? ' ' . implode(' ', (array) $person['bio']) : '')
+                    . (! empty($person['skills']) ? ' Skills: ' . implode(', ', (array) $person['skills']) . '.' : '');
+            }
+        }
+        $legal = config('creatium.legal');
+        $out[] = 'Company: ' . $legal['company'] . ($legal['eik'] ? ', EIK ' . $legal['eik'] : '') . ($legal['address'] ? ', ' . $legal['address'] : '') . '.';
+
+        $problem = app(\App\Support\Content::class)->withDefaults('home_problem');
+        if (filled($problem['solution_title'] ?? null)) {
+            $out[] = "\n## " . $problem['solution_title'];
+            $out[] = (string) ($problem['solution_text'] ?? '');
+            foreach ((array) ($problem['stats'] ?? []) as $stat) {
+                $out[] = '- ' . $stat['value'] . ' ' . $stat['text'] . ' (source: ' . $stat['source'] . ')';
+            }
+        }
+        $values = app(\App\Support\Content::class)->withDefaults('home_trust');
+        if (filled($values['fit_text'] ?? null)) {
+            $out[] = "\n## " . ($values['fit_eyebrow'] ?? 'Values') . ': ' . ($values['fit_title'] ?? '');
+            $out[] = $values['fit_text'];
+            if (filled($values['principles_text'] ?? null)) {
+                $out[] = $values['principles_text'];
+            }
+        }
+
         $out[] = "\n## " . __('Услуги');
         foreach (site('service_pages') ?? [] as $key => $page) {
             $out[] = "\n### " . $page['title'] . ' (' . PageController::serviceUrl($key) . ')';
@@ -91,6 +126,8 @@ class SiteKnowledge
         $out[] = 'Location: ' . __($contact['city']) . ', ' . __('България') . '; we work with businesses across Bulgaria.';
         $out[] = 'Free consultation (' . config('creatium.booking.minutes') . ' minutes, pick a day and time on weekdays): ' . lroute('contact') . '#konsultatsiya';
         $out[] = 'Contact form: ' . lroute('contact');
+        $out[] = 'Get a quote for a package (short form, the team replies within one working day): ' . lroute('packages') . '#oferta';
+        $out[] = 'Calculator of how much more a better website could bring (on the home page): ' . lroute('home') . '#kalkulator';
         $out[] = 'Free website check (report by email in about a minute): ' . lroute('site-check');
         $out[] = 'We reply to inquiries within one working day.';
 
