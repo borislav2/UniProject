@@ -20,10 +20,11 @@
     })->filter()->values();
 @endphp
 @if($funnelSteps->count() >= 2)
-    <div class="reveal mt-12 grid gap-8 lg:grid-cols-12 lg:items-start" style="--reveal-delay: 80ms" data-funnel
+    <div class="reveal mt-12 grid gap-8 lg:grid-cols-12" style="--reveal-delay: 80ms" data-funnel
          data-stages='@json($funnelSteps->pluck('stage'))'>
-        <div class="lg:col-span-5 lg:sticky lg:top-28">
-            <div class="rounded-3xl bg-white/[0.03] p-4 ring-1 ring-white/10 sm:p-5">
+        {{-- Фунията се разтяга на височината на списъка вдясно, за да няма празно място под нея. --}}
+        <div class="flex flex-col lg:col-span-5">
+            <div class="flex flex-1 flex-col rounded-3xl bg-white/[0.03] p-4 ring-1 ring-white/10 sm:p-5">
                 <div class="flex flex-wrap items-center justify-between gap-3">
                     <span class="inline-flex items-center gap-2 rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300" data-funnel-status role="status">
                         <span class="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true"></span><span data-funnel-status-text>{{ __('Двигателят работи') }}</span>
@@ -33,8 +34,10 @@
                         <span class="text-xs text-gray-400">{{ __('стигат до вас като клиенти') }}</span>
                     </span>
                 </div>
-                <canvas class="mt-3 block h-[380px] w-full sm:h-[460px]" data-funnel-canvas role="img"
+                <div class="relative mt-3 flex-1" style="min-height: 380px">
+                <canvas class="absolute inset-0 block h-full w-full" data-funnel-canvas role="img"
                         aria-label="{{ __('Фуния: клиентите падат отгоре и минават през всяко ниво, докато стигнат до вас.') }}"></canvas>
+                </div>
                 {{-- На телефон превключвателите до текстовете са далеч под фунията: тук са същите, наблизо. --}}
                 <div class="mt-3 grid grid-cols-2 gap-2 lg:hidden">
                     @foreach($funnelSteps as $step)
@@ -59,7 +62,7 @@
                         </div>
                         <button type="button" role="switch" aria-checked="true" aria-label="{{ $step['name'] }}" data-funnel-toggle="{{ $loop->index }}"
                                 class="relative h-7 w-12 shrink-0 rounded-full bg-emerald-500/80 ring-1 ring-white/20 transition-colors aria-[checked=false]:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300">
-                            <span class="absolute left-1 top-1 h-5 w-5 translate-x-5 rounded-full bg-white shadow transition-transform" data-funnel-knob></span>
+                            <span class="absolute left-1 top-1 h-5 w-5 rounded-full bg-white shadow transition-transform" style="transform: translateX(1.25rem)" data-funnel-knob></span>
                         </button>
                     </div>
                     <p class="mt-3 text-sm leading-relaxed text-gray-300">{{ $step['does'] }}</p>
@@ -194,6 +197,7 @@
         }
         size(); render();
         window.addEventListener('resize', size);
+        if (window.ResizeObserver) new ResizeObserver(size).observe(canvas);
         requestAnimationFrame(frame);
     })();
     </script>
