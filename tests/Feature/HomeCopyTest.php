@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\ContentBlock;
+use App\Models\Post;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -30,5 +31,23 @@ class HomeCopyTest extends TestCase
             ->assertSeeInOrder(['Кои сме ние', 'Нашият текст от админа.', 'Защо го правим', 'От 4 години правим сайтове и дигитален маркетинг.', 'Екипът'])
             ->assertDontSee('Говорите с хората, които правят работата.');
         $this->get('/en/about')->assertOk()->assertSee('Why we do it')->assertSee('for 4 years');
+    }
+
+    public function test_long_post_titles_drop_the_brand_suffix_and_an_empty_english_blog_is_not_indexed(): void
+    {
+        Post::create([
+            'title' => ['bg' => '4-те автоматични имейла, които всеки онлайн магазин трябва да има'],
+            'slug' => ['bg' => '4-te-avtomatichni-imeyla'],
+            'body' => ['bg' => 'Текст.'],
+            'status' => 'published',
+            'published_at' => now()->subDay(),
+        ]);
+
+        $this->get('/blog/4-te-avtomatichni-imeyla')->assertSee('<title>4-те автоматични имейла, които всеки онлайн магазин трябва да има</title>', false);
+        $this->get('/paketi')->assertSee('| Creatium Lab</title>', false);
+
+        $this->get('/en/blog')->assertOk()->assertSee('<meta name="robots" content="noindex, follow">', false);
+        $this->get('/blog')->assertDontSee('noindex', false)->assertDontSee('hreflang="en" href="' . url('/en/blog') . '"', false);
+        $this->get('/sitemap.xml')->assertSee('<loc>' . url('/blog') . '</loc>', false)->assertDontSee('<loc>' . url('/en/blog') . '</loc>', false);
     }
 }

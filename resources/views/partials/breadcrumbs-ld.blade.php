@@ -3,6 +3,7 @@
     Страница без родител: Начало › страницата. Услуга и статия: Начало › Услуги / Блог › страницата;
     страница за бранш: Начало › Изработка на сайт › страницата
     (името на последната идва от @section('breadcrumb') или от заглавието).
+    Ключът се пише '@' . 'context', защото Blade иначе чете @context като своя директива.
 --}}
 @php
     $crumbLabels = [
@@ -29,5 +30,5 @@
             $items[] = ['@type' => 'ListItem', 'position' => $i + 1, 'name' => html_entity_decode($name, ENT_QUOTES), 'item' => $url];
         }
     @endphp
-    <script type="application/ld+json">{!! json_encode(['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => $items], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
+    <script type="application/ld+json">{!! json_encode(['@' . 'context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => $items], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
 @endif

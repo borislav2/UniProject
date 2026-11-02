@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Support\Uploads;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Category;
@@ -79,10 +80,11 @@ class ProjectController extends Controller
             'billing_day' => 'nullable|integer|min:1|max:31',
             'technologies' => 'nullable|array',
             'technologies.*' => 'exists:technologies,id',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240'
+            'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240',
+            'screenshot' => 'nullable|' . Uploads::IMAGE_RULE,
         ]);
         
-        $data = $request->except('technologies', 'file');
+        $data = $request->except('technologies', 'file', 'screenshot', 'remove_screenshot');
         $data['is_public'] = $request->boolean('is_public');
         
         if ($request->hasFile('file')) {
@@ -92,6 +94,11 @@ class ProjectController extends Controller
             $data['file_path'] = 'uploads/projects/' . $fileName;
         }
         
+        // Снимка на сайта за публичното портфолио (/proekti).
+        if ($request->hasFile('screenshot')) {
+            $data['screenshot'] = Uploads::storeImage($request->file('screenshot'), 'portfolio');
+        }
+
         $project = Project::create($data);
         
         if ($request->has('technologies')) {
@@ -136,10 +143,11 @@ class ProjectController extends Controller
             'billing_day' => 'nullable|integer|min:1|max:31',
             'technologies' => 'nullable|array',
             'technologies.*' => 'exists:technologies,id',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240'
+            'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240',
+            'screenshot' => 'nullable|' . Uploads::IMAGE_RULE,
         ]);
         
-        $data = $request->except('technologies', 'file');
+        $data = $request->except('technologies', 'file', 'screenshot', 'remove_screenshot');
         $data['is_public'] = $request->boolean('is_public');
         
         if ($request->hasFile('file')) {
@@ -154,6 +162,11 @@ class ProjectController extends Controller
             $data['file_path'] = 'uploads/projects/' . $fileName;
         }
         
+        if ($request->hasFile('screenshot') || $request->boolean('remove_screenshot')) {
+            Uploads::delete($project->screenshot);
+            $data['screenshot'] = $request->hasFile('screenshot') ? Uploads::storeImage($request->file('screenshot'), 'portfolio') : null;
+        }
+
         $project->update($data);
         
         $project->technologies()->sync($request->technologies ?? []);

@@ -25,6 +25,7 @@ class Project extends Model
         'service',
         'business_size',
         'website_url',
+        'screenshot',
         'read_at',
         'email_sent_at',
         'consultation_at',
