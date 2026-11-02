@@ -17,6 +17,7 @@
     </a>
 </div>
 
+<p class="mb-3 text-sm text-gray-600">Проектите, които правим за клиенти: създадени тук или спечелени запитвания (етап „Спечелен“). Запитванията са в <a href="{{ route('admin.inquiries.index') }}" class="font-semibold text-blue-600 hover:underline">„Запитвания“</a>.</p>
 <nav class="mb-4 flex flex-wrap gap-2 text-sm">
     @foreach($filters as $key => [$label, $count])
         <a href="{{ route('admin.projects.index', array_filter(['filter' => $key])) }}" class="rounded-full px-4 py-1.5 font-semibold {{ ($filter ?? '') === $key && ! isset($search) ? 'bg-gray-800 text-white' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50' }}">{{ $label }} ({{ $count }})</a>

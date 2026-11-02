@@ -165,6 +165,16 @@ class Project extends Model
             ->where(fn ($q) => $q->whereNull('service')->orWhereNotIn('service', [self::SITE_CHECK_SERVICE, self::CHAT_SERVICE]));
     }
 
+    /**
+     * Проекти за клиенти: създадените в админа и спечелените запитвания. Запитванията (отворени или загубени)
+     * от сайта и от писмата/обажданията са в „Запитвания“ и „Проверки на сайт“, не тук.
+     */
+    public function scopeClientProjects(Builder $query): Builder
+    {
+        return $query->where(fn ($q) => $q->where('stage', 'won')
+            ->orWhere(fn ($q) => $q->whereNull('stage')->where(fn ($q) => $q->whereNull('source')->orWhereNotIn('source', ['website', 'outreach']))));
+    }
+
     /** Хората, които са пуснали безплатната проверка на сайта си. */
     public function scopeSiteChecks(Builder $query): Builder
     {
