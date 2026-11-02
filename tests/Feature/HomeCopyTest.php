@@ -24,7 +24,7 @@ class HomeCopyTest extends TestCase
             ->assertSee('Източник')
             ->assertSee('thinkwithgoogle.com', false)->assertSee('deloitte.com', false)->assertDontSee('Технологична инфраструктура')
             ->assertSee('id="kalkulator"', false)
-            ->assertSee('Разликата за вашия бизнес')
+            ->assertSee('Подобрението за вашия бизнес')->assertSee('Видимост: посещения на месец')->assertDontSee('на година')
             ->assertSee('Изработка на сайтове и дигитален маркетинг от €450')
             ->assertDontSee('Готова система, не визитка')
             ->assertDontSee('Изработка на уебсайтове и дигитален маркетинг')

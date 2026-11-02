@@ -155,14 +155,25 @@
                         <h3 class="display text-3xl md:text-4xl">{{ $problem['system_title'] }}</h3>
                         <p class="mt-4 leading-relaxed text-gray-300">{{ $problem['system_text'] }}</p>
                     </div>
-                    <ul class="grid gap-3 sm:grid-cols-2 lg:col-span-8">
-                        @foreach($problem['system_items'] as $item)
-                            <li class="flex items-start gap-3 rounded-3xl bg-white/[0.05] p-4 ring-1 ring-white/10">
-                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-500/25"><x-icon :name="$item['icon'] ?? 'check'" class="text-sm text-brand-200" /></span>
-                                <span><span class="block font-bold">{{ $item['title'] }}</span><span class="mt-0.5 block text-sm leading-snug text-gray-300">{{ $item['text'] }}</span></span>
-                            </li>
-                        @endforeach
-                    </ul>
+                    {{-- Частите като една верига, която води до успешен бизнес: никоя не стои сама. --}}
+                    <div class="lg:col-span-8">
+                        <ol class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                            @foreach($problem['system_items'] as $item)
+                                <li class="relative flex items-start gap-3 rounded-3xl bg-white/[0.05] p-4 ring-1 ring-white/10">
+                                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-500/25"><x-icon :name="$item['icon'] ?? 'check'" class="text-sm text-brand-200" /></span>
+                                    <span><span class="block font-bold">{{ $item['title'] }}</span><span class="mt-0.5 block text-sm leading-snug text-gray-300">{{ $item['text'] }}</span></span>
+                                    @unless($loop->last)<span class="absolute -bottom-3 left-1/2 z-10 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full bg-brand-500 text-xs font-extrabold text-white ring-4 ring-brand-950 sm:hidden" aria-hidden="true">+</span>@endunless
+                                </li>
+                            @endforeach
+                        </ol>
+                        @if(filled($problem['system_result'] ?? null))
+                            <div class="mt-4 flex items-center gap-3">
+                                <span class="h-px flex-1 bg-gradient-to-r from-transparent to-emerald-400/60" aria-hidden="true"></span>
+                                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-400/15 px-4 py-2 text-sm font-extrabold text-emerald-300 ring-1 ring-emerald-400/40"><x-icon name="rocket" class="text-xs" /> = {{ $problem['system_result'] }}</span>
+                                <span class="h-px flex-1 bg-gradient-to-l from-transparent to-emerald-400/60" aria-hidden="true"></span>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         @endif
