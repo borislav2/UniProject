@@ -126,18 +126,21 @@
         </div>
 
         @if(! empty($problem['stats']))
-            {{-- Числата за печалбата: заоблени карти с икона, голямо число и какво значи за вас (без ред „Източник“, по желание на собствениците; източниците остават в config). --}}
-            <div class="mt-14 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {{-- Числата за бизнеса: всяка карта е центрирана (икона, число, текст) и е свързана с останалите с нишка. --}}
+            @if(filled($problem['stats_label'] ?? null))
+                <p class="reveal mt-14 text-center text-sm font-bold uppercase tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ $problem['stats_label'] }}</p>
+            @endif
+            <div class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 @foreach($problem['stats'] as $stat)
-                    <article class="reveal card-hover flex flex-col rounded-[2rem] bg-brand-50/70 p-6 ring-1 ring-brand-100 dark:bg-white/[0.04] dark:ring-white/10" style="--reveal-delay: {{ $loop->index * 80 }}ms">
-                        <div class="flex items-center justify-between gap-3">
-                            <span class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-gradient"><x-icon :name="$stat['icon'] ?? 'chart-line'" class="text-white" /></span>
-                            <span class="display text-4xl text-brand-700 dark:text-brand-300">{{ $stat['value'] }}</span>
-                        </div>
-                        <p class="mt-5 font-semibold leading-snug text-brand-950 dark:text-white">{{ $stat['text'] }}</p>
+                    <article class="reveal card-hover relative flex flex-col items-center rounded-[2rem] bg-brand-50/70 px-6 pb-6 pt-7 text-center ring-1 ring-brand-100 dark:bg-white/[0.04] dark:ring-white/10" style="--reveal-delay: {{ $loop->index * 80 }}ms">
+                        <span class="flex h-16 w-16 items-center justify-center rounded-full bg-brand-gradient shadow-lg shadow-brand-900/20 ring-8 ring-white/70 dark:ring-white/5"><x-icon :name="$stat['icon'] ?? 'chart-line'" class="text-xl text-white" /></span>
+                        <span class="display mt-4 block text-5xl text-brand-700 dark:text-brand-300">{{ $stat['value'] }}</span>
+                        <p class="mt-4 text-lg font-bold leading-snug text-brand-950 text-balance dark:text-white">{{ $stat['text'] }}</p>
                         @if(filled($stat['meaning'] ?? null))
-                            <p class="mt-3 flex-1 rounded-2xl bg-white px-4 py-3 text-sm leading-relaxed text-gray-700 dark:bg-white/5 dark:text-gray-300"><span class="font-bold text-brand-700 dark:text-brand-300">{{ __('За вас:') }}</span> {{ $stat['meaning'] }}</p>
+                            <p class="mt-4 w-full flex-1 rounded-2xl bg-white px-4 py-3 text-left text-sm leading-relaxed text-gray-700 ring-1 ring-brand-100 dark:bg-white/5 dark:text-gray-300 dark:ring-white/10"><span class="block text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300">{{ __('За вас') }}</span>{{ $stat['meaning'] }}</p>
                         @endif
+                        {{-- Нишката между картите: показва, че числата са части от една верига. --}}
+                        @unless($loop->last)<span class="absolute -right-4 top-[3.75rem] z-10 hidden h-0.5 w-4 bg-gradient-to-r from-brand-400 to-brand-500 xl:block" aria-hidden="true"></span>@endunless
                     </article>
                 @endforeach
             </div>
@@ -169,6 +172,16 @@
                                 <span class="inline-flex items-center gap-2 rounded-full bg-emerald-400/15 px-4 py-2 text-sm font-extrabold text-emerald-300 ring-1 ring-emerald-400/40"><x-icon name="rocket" class="text-xs" /> = {{ $problem['system_result'] }}</span>
                                 <span class="h-px flex-1 bg-gradient-to-l from-transparent to-emerald-400/60" aria-hidden="true"></span>
                             </div>
+                        @endif
+                        @if(! empty($problem['system_trust']))
+                            <ul class="mt-6 grid gap-3 sm:grid-cols-3">
+                                @foreach($problem['system_trust'] as $point)
+                                    <li class="flex items-center gap-3 rounded-2xl bg-white/[0.06] px-4 py-3 text-sm font-semibold text-white ring-1 ring-white/10">
+                                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-400/15"><x-icon :name="$point['icon'] ?? 'check'" class="text-xs text-emerald-300" /></span>
+                                        <span class="leading-snug">{{ $point['text'] }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
                         @endif
                     </div>
                 </div>
