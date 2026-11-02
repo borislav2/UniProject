@@ -75,18 +75,12 @@
                         @endforeach
                     </details>
 
-                    <a href="{{ lroute('contact') }}#contact-form" class="btn-shine relative mt-8 self-end lg:self-auto lg:mt-8 w-full text-center px-6 py-3.5 rounded-xl font-semibold transition-colors {{ $dark ? 'bg-white text-brand-950 hover:bg-brand-50' : 'border border-gray-200 text-brand-950 hover:border-brand-400 hover:text-brand-700 dark:border-white/15 dark:text-white dark:hover:border-brand-400' }}">{{ $plans['button'] }}</a>
+                    <a href="{{ lroute('packages') }}?paket={{ $loop->index }}#oferta" class="btn-shine relative mt-8 self-end lg:self-auto lg:mt-8 w-full text-center px-6 py-3.5 rounded-xl font-semibold transition-colors {{ $dark ? 'bg-white text-brand-950 hover:bg-brand-50' : 'border border-gray-200 text-brand-950 hover:border-brand-400 hover:text-brand-700 dark:border-white/15 dark:text-white dark:hover:border-brand-400' }}">{{ $plans['button'] }}</a>
                 </article>
             @endforeach
         </div>
 
-        <div class="reveal mt-10 flex flex-col items-center gap-4 rounded-3xl border border-gray-200 p-7 text-center sm:flex-row sm:justify-between sm:text-left dark:border-white/10">
-            <div>
-                <h2 class="text-xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ __('Не сте сигурни кой пакет ви трябва?') }}</h2>
-                <p class="mt-1 text-gray-600 dark:text-gray-300">{{ __('На кратък разговор ще ви кажем кое има смисъл за вашия бизнес и кое не.') }}</p>
-            </div>
-            <a href="{{ lroute('contact') }}#konsultatsiya" class="btn-shine shrink-0 inline-flex items-center gap-2 rounded-xl bg-brand-950 px-6 py-3.5 font-semibold text-white hover:bg-brand-800 dark:bg-white dark:text-brand-950">{{ __('Безплатна консултация') }} <x-icon name="arrow-right" class="text-sm" /></a>
-        </div>
+        @include('partials/quote-form', ['plans' => $plans, 'selectedPlan' => $selectedPlan])
     </div>
 </section>
 @endsection

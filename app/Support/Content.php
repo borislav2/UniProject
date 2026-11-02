@@ -94,6 +94,17 @@ class Content
         return $path === null ? $value : data_get($value, $path);
     }
 
+    /**
+     * Like get(), but keys added to the config after the admin last saved the block still come through
+     * (the admin's values win for every key it has).
+     */
+    public function withDefaults(string $key, ?string $locale = null): array
+    {
+        $locale ??= app()->getLocale();
+
+        return (array) $this->get($key, $locale) + (array) $this->default($key, $locale);
+    }
+
     /** The value from the config files, ignoring admin edits. */
     public function default(string $key, string $locale): mixed
     {

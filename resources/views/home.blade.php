@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', __('Изработка на сайт и SEO за вашия бизнес от €450'))
-@section('meta_description', __('Сайт, който носи запитвания, плюс видимост в Google, Google Maps и ChatGPT. За бизнеси в България: демо преди старта и безплатна консултация.'))
+@section('title', __('Изработка на сайтове и дигитален маркетинг от €450'))
+@section('meta_description', __('Сайт, който носи запитвания, плюс видимост в Google, Google Maps и ChatGPT. За бизнеси в България: демо преди старта и калкулатор на ползата.'))
 
 @push('head')
 @php
@@ -53,16 +53,18 @@
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-header pb-14 md:pb-20 grid lg:grid-cols-12 gap-12 lg:gap-12 items-center">
         <div class="lg:col-span-7">
-            <p class="rise-in kicker">{{ $trust['eyebrow'] }}</p>
-            <h1 class="rise-text mt-6" style="--d: 80ms">
+            @if(filled($trust['eyebrow'] ?? null))
+                <p class="rise-in kicker mb-6">{{ $trust['eyebrow'] }}</p>
+            @endif
+            <h1 class="rise-text" style="--d: 80ms">
                 <span class="display block text-[2.6rem] leading-[1.05] sm:text-6xl xl:text-7xl">{!! $title !!}</span>
                 @if(filled($hero['highlight'] ?? null))
                     <span class="mt-5 block text-xl sm:text-2xl font-bold tracking-tight leading-snug text-brand-200">{{ $hero['highlight'] }}</span>
                 @endif
             </h1>
             <div class="rise-text mt-10 flex flex-col sm:flex-row gap-3" style="--d: 260ms">
-                <a href="{{ lroute('contact') }}#konsultatsiya" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
-                    <x-icon name="calendar" class="text-sm" /> {{ $hero['button'] }}
+                <a href="#kalkulator" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
+                    <x-icon name="calculator" class="text-sm" /> {{ $hero['button'] }}
                 </a>
                 <a href="{{ lroute('services') }}" class="relative edge glass inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white hover:bg-white/10 transition-colors">
                     {{ __('Вижте услугите') }}
@@ -116,30 +118,54 @@
     </div>
 </section>
 
-{{-- 01 Problem vs synergy --}}
-<section id="problemat" class="relative py-20 md:py-28 bg-white scroll-mt-24 dark:bg-ink-950">
+{{-- 01 The solution: what we do, numbers with sources, and the two halves of the system (owners, November 2026) --}}
+<section id="reshenieto" class="relative py-20 md:py-28 bg-white scroll-mt-24 dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <p class="reveal kicker kicker-light">{{ $number() }} {{ __('Проблемът') }}</p>
-        <h2 class="reveal display mt-5 max-w-3xl text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $problem['title'] }}</h2>
-        <div class="mt-12 grid lg:grid-cols-3 gap-6">
-            @foreach($problem['scenarios'] as $scenario)
-                @if($loop->last)
-                    <article class="reveal relative overflow-hidden rounded-3xl bg-brand-950 text-white p-8 shadow-2xl shadow-brand-950/30 dark:bg-brand-900/60 dark:ring-1 dark:ring-brand-400/30" style="--reveal-delay: {{ $loop->index * 100 }}ms">
-                        <div class="absolute inset-0 bg-grid-light" aria-hidden="true"></div>
-                        <div class="absolute -top-24 -right-24 w-64 h-64 rounded-full bg-brand-500/30 blur-3xl" aria-hidden="true"></div>
-                        <div class="relative">
-                            <span class="inline-flex items-center gap-2 rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300"><x-icon name="circle-check" class="text-[11px]" /> {{ $scenario['label'] }}</span>
-                            <h3 class="mt-5 text-2xl font-extrabold tracking-tight">{{ $scenario['title'] }}</h3>
-                            @foreach(preg_split('/\R\s*\R/u', trim($scenario['text'])) as $paragraph)<p class="mt-3 first-of-type:mt-4 text-gray-300 leading-relaxed">{{ $paragraph }}</p>@endforeach
+        <div class="grid lg:grid-cols-12 gap-10 lg:gap-16">
+            <div class="lg:col-span-6 reveal">
+                <p class="kicker kicker-light">{{ $number() }} {{ $problem['eyebrow'] ?? __('Решението') }}</p>
+                <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $problem['solution_title'] }}</h2>
+            </div>
+            <div class="lg:col-span-6 reveal space-y-4 text-lg text-gray-600 leading-relaxed dark:text-gray-300" style="--reveal-delay: 100ms">
+                @foreach(preg_split('/\R\s*\R/u', trim((string) $problem['solution_text'])) as $paragraph)<p>{{ $paragraph }}</p>@endforeach
+            </div>
+        </div>
+
+        @if(! empty($problem['stats']))
+            <dl class="reveal mt-14 grid sm:grid-cols-2 lg:grid-cols-5 gap-px overflow-hidden rounded-3xl border border-gray-200 bg-gray-200 dark:border-white/10 dark:bg-white/10">
+                @foreach($problem['stats'] as $stat)
+                    <div class="flex flex-col bg-white p-6 dark:bg-ink-950">
+                        <dt class="order-2 mt-2 flex-1 text-sm leading-snug text-gray-600 dark:text-gray-300">{{ $stat['text'] }}</dt>
+                        <dd class="order-1 display text-3xl md:text-4xl text-brand-950 dark:text-white">{{ $stat['value'] }}</dd>
+                        <dd class="order-3 mt-4 text-xs text-gray-500 dark:text-gray-400">
+                            {{ __('Източник') }}: @if(filled($stat['url'] ?? null))<a href="{{ $stat['url'] }}" target="_blank" rel="noopener nofollow" class="underline underline-offset-2 hover:text-brand-700 dark:hover:text-white">{{ $stat['source'] }}</a>@else{{ $stat['source'] }}@endif
+                        </dd>
+                    </div>
+                @endforeach
+            </dl>
+        @endif
+
+        <div class="mt-14 grid lg:grid-cols-2 gap-6">
+            @foreach([['code', 'tech', 1], ['chart-line', 'growth', 2]] as [$icon, $group, $n])
+                <article class="reveal card-hover rounded-3xl border border-gray-200 bg-white p-7 md:p-9 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ ($n - 1) * 100 }}ms">
+                    <div class="flex items-start gap-5">
+                        <div class="w-14 h-14 shrink-0 rounded-2xl bg-brand-gradient flex items-center justify-center">
+                            <x-icon :name="$icon" class="text-white text-lg" />
                         </div>
-                    </article>
-                @else
-                    <article class="reveal card-hover rounded-3xl border border-gray-200 bg-white p-8 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ $loop->index * 100 }}ms">
-                        <span class="inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-red-700 dark:bg-red-500/10 dark:text-red-300"><x-icon name="triangle-exclamation" class="text-[11px]" /> {{ $scenario['label'] }}</span>
-                        <h3 class="mt-5 text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $scenario['title'] }}</h3>
-                        @foreach(preg_split('/\R\s*\R/u', trim($scenario['text'])) as $paragraph)<p class="mt-3 first-of-type:mt-4 text-gray-600 leading-relaxed dark:text-gray-300">{{ $paragraph }}</p>@endforeach
-                    </article>
-                @endif
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ $engine[$group . '_tag'] }}</p>
+                            <h3 class="mt-1 text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $engine[$group . '_title'] }}</h3>
+                        </div>
+                    </div>
+                    <ul class="mt-8 space-y-5">
+                        @foreach($engine[$group . '_items'] as $item)
+                            <li class="flex items-start gap-3.5">
+                                <span class="mt-1 w-5 h-5 shrink-0 rounded-full bg-brand-50 flex items-center justify-center dark:bg-white/10"><x-icon name="check" class="text-[10px] text-brand-600 dark:text-brand-300" /></span>
+                                <span><span class="block font-bold text-brand-950 dark:text-white">{{ $item['title'] }}</span><span class="mt-1 block text-gray-600 leading-relaxed dark:text-gray-300">{{ $item['text'] }}</span></span>
+                            </li>
+                        @endforeach
+                    </ul>
+                </article>
             @endforeach
         </div>
     </div>
@@ -159,82 +185,38 @@
             </a>
         </div>
 
-        @include('partials/engine-diagram', ['cards' => $engineCards, 'center' => $trust['engine_center']])
+        <p class="reveal mt-6 max-w-3xl text-lg text-gray-300 leading-relaxed">{{ __('Двигателят работи само когато всички части са изправни. Изключете една и вижте какво става.') }}</p>
 
-        <div class="mt-14 grid lg:grid-cols-2 gap-6">
-            @foreach([['code', 'tech', 1], ['chart-line', 'growth', 2]] as [$icon, $group, $n])
-                <article class="reveal relative edge glass overflow-hidden rounded-3xl p-7 md:p-9" style="--reveal-delay: {{ ($n - 1) * 100 }}ms">
-                    <div class="flex items-start gap-5">
-                        <div class="w-14 h-14 shrink-0 rounded-2xl bg-brand-gradient ring-1 ring-white/20 flex items-center justify-center">
-                            <x-icon :name="$icon" class="text-white text-lg" />
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold uppercase tracking-[0.18em] text-brand-300">{{ $engine[$group . '_tag'] }}</p>
-                            <h3 class="mt-1 text-2xl font-extrabold tracking-tight">{{ $engine[$group . '_title'] }}</h3>
-                        </div>
-                    </div>
-                    <ul class="mt-8 space-y-5">
-                        @foreach($engine[$group . '_items'] as $item)
-                            <li class="flex items-start gap-3.5">
-                                <span class="mt-1 w-5 h-5 shrink-0 rounded-full bg-white/10 flex items-center justify-center"><x-icon name="check" class="text-[10px] text-brand-200" /></span>
-                                <span><span class="block font-bold">{{ $item['title'] }}</span><span class="mt-1 block text-gray-400 leading-relaxed">{{ $item['text'] }}</span></span>
-                            </li>
-                        @endforeach
-                    </ul>
-                </article>
-            @endforeach
-        </div>
+        @include('partials/engine-diagram', ['cards' => $engineCards, 'center' => $trust['engine_center']])
     </div>
 </section>
 
-{{-- 03 Who we work with (and who we don't) --}}
-<section id="s-kogo-rabotim" class="relative py-20 md:py-28 bg-brand-50/60 scroll-mt-24 dark:bg-ink-900">
+{{-- 03 Calculator: what a better website and marketing could mean in customers and revenue --}}
+@include('partials/calculator', ['number' => $number()])
+
+{{-- 04 Our values (owners, November 2026): the projects we take on and the principles we work by --}}
+<section id="tsennosti" class="relative py-20 md:py-28 bg-brand-50/60 scroll-mt-24 dark:bg-ink-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-12 lg:gap-16">
         <div class="lg:col-span-5 reveal lg:sticky lg:top-32 self-start">
             <p class="kicker kicker-light">{{ $number() }} {{ $trust['fit_eyebrow'] }}</p>
             <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $trust['fit_title'] }}</h2>
             <p class="mt-6 text-lg text-gray-600 leading-relaxed dark:text-gray-300">{{ $trust['fit_text'] }}</p>
-        </div>
-        <div class="lg:col-span-7">
-            @if(filled($trust['fit_list_label'] ?? null))
-                <p class="reveal mb-4 text-sm font-bold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">{{ $trust['fit_list_label'] }}</p>
+            @if(filled($trust['principles_text'] ?? null))
+                <p class="mt-4 text-lg font-semibold text-brand-950 leading-relaxed dark:text-white">{{ $trust['principles_text'] }}</p>
             @endif
-            <ol class="reveal divide-y divide-gray-200 border-y border-gray-200 dark:divide-white/10 dark:border-white/10">
-                @foreach($trust['fit_items'] as $item)
-                    <li class="group relative flex gap-6 py-6 md:py-7 pl-5 md:pl-6">
-                        <span class="absolute left-0 top-6 bottom-6 w-[3px] rounded-full bg-brand-200 transition-colors group-hover:bg-brand-600 dark:bg-white/10 dark:group-hover:bg-brand-300" aria-hidden="true"></span>
-                        <span class="pt-1 text-sm font-bold tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
-                        <span>
-                            <span class="block text-xl md:text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $item['title'] }}</span>
-                            <span class="mt-2 block text-gray-600 leading-relaxed dark:text-gray-300">{{ $item['text'] }}</span>
-                        </span>
-                    </li>
-                @endforeach
-            </ol>
         </div>
-    </div>
-</section>
-
-{{-- 04 Principles: large numerals --}}
-<section id="printsipi" class="relative py-20 md:py-28 bg-white scroll-mt-24 dark:bg-ink-950">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="reveal max-w-3xl">
-            <p class="kicker kicker-light">{{ $number() }} {{ $trust['principles_eyebrow'] }}</p>
-            <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $trust['principles_title'] }}</h2>
-            <p class="mt-6 text-lg text-gray-600 leading-relaxed dark:text-gray-300">{{ $trust['principles_text'] }}</p>
-        </div>
-        <div class="mt-14 grid md:grid-cols-2 border-t border-l border-gray-200 dark:border-white/10">
+        <ol class="lg:col-span-7 reveal divide-y divide-gray-200 border-y border-gray-200 dark:divide-white/10 dark:border-white/10">
             @foreach($trust['principle_items'] as $item)
-                <article class="reveal p-8 md:p-10 border-r border-b border-gray-200 dark:border-white/10" style="--reveal-delay: {{ ($loop->index % 2) * 100 }}ms">
-                    <div class="flex items-center gap-6">
-                        <span class="numeral">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
-                        <span class="h-px flex-1 bg-gray-200 dark:bg-white/10" aria-hidden="true"></span>
-                    </div>
-                    <h3 class="mt-8 text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $item['title'] }}</h3>
-                    <p class="mt-3 text-gray-600 leading-relaxed dark:text-gray-300">{{ $item['text'] }}</p>
-                </article>
+                <li class="group relative flex gap-6 py-6 md:py-7 pl-5 md:pl-6">
+                    <span class="absolute left-0 top-6 bottom-6 w-[3px] rounded-full bg-brand-200 transition-colors group-hover:bg-brand-600 dark:bg-white/10 dark:group-hover:bg-brand-300" aria-hidden="true"></span>
+                    <span class="pt-1 text-sm font-bold tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                    <span>
+                        <span class="block text-xl md:text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $item['title'] }}</span>
+                        <span class="mt-2 block text-gray-600 leading-relaxed dark:text-gray-300">{{ $item['text'] }}</span>
+                    </span>
+                </li>
             @endforeach
-        </div>
+        </ol>
     </div>
 </section>
 

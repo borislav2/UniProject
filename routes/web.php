@@ -63,6 +63,10 @@ foreach (['bg', 'en'] as $locale) {
             ->middleware('throttle:5,10')
             ->name('contact.submit');
 
+        Route::post($locale === 'en' ? '/packages/quote' : '/paketi/oferta', [\App\Http\Controllers\QuoteController::class, 'store'])
+            ->middleware('throttle:5,10')
+            ->name('quote.submit');
+
         Route::post($locale === 'en' ? '/website-check' : '/proverka-na-sait', [SiteCheckController::class, 'submit'])
             ->middleware('throttle:5,10')
             ->name('site-check.submit');

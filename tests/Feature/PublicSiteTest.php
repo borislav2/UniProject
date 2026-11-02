@@ -108,18 +108,21 @@ class PublicSiteTest extends TestCase
     {
         $this->get('/')
             ->assertSeeTextInOrder([
-                'Сайт, който продава. Маркетинг, който докарва клиенти.',
-                'Целият ви дигитален двигател – в една работеща система.',
-                'Планирайте консултация', 'Нова резервация',
-                'Къде губите клиенти?', 'Сценарий 1', 'Сценарий 2', 'Решението',
-                'Компонентите на вашия дигитален двигател', 'Технологична инфраструктура', 'Маркетинг, анализиране и позициониране',
+                'Дигитални решения, които движат бизнеса ви напред.',
+                'Персонализирани сайтове. Брандиран маркетинг. Стратегически решения за повече клиенти.',
+                'Изчислете ползата за бизнеса си', 'Нова резервация',
+                'Сайт и маркетинг, които работят като едно.', 'Източник', 'Технологична инфраструктура', 'Маркетинг, анализиране и позициониране',
+                'Компонентите на вашия дигитален двигател', 'Работи',
+                'Колко повече може да ви носи сайтът?', 'Разликата за вашия бизнес',
+                'Работим за растежа на вашия бизнес.',
                 'Управляем и структуриран път. От концепцията до пазарния старт', 'Стратегически анализ', 'Регулярна поддръжка и надграждане',
                 'Готови ли сте за дигитална система, която работи за вашите продажби?', 'За директна връзка',
             ])
-            ->assertSee('<span class="text-accent">продава</span>', false)
-            ->assertSeeTextInOrder(['Готова система, не визитка', 'Google + Meta', 'Моментално', '1 клик', 'Конверсия', '01 / Проблемът', '02 / Дигиталният двигател', 'Уеб архитектура и инфраструктура', 'Бизнес анализиране и SEO/GEO позициониране', 'Маркетингова автоматизация и конверсии', 'Оперативна сигурност и непрекъсваемост', '03 / С кого работим', '04 / Как мислим', '05 / Браншове', '06 / Работен процес'])
+            ->assertSee('<span class="text-accent">напред</span>', false)
+            ->assertSeeTextInOrder(['Google + Meta', 'Моментално', '1 клик', 'Конверсия', '01 / Решението', '02 / Дигиталният двигател', 'Уеб архитектура и инфраструктура', 'Бизнес анализиране и SEO/GEO позициониране', 'Маркетингова автоматизация и конверсии', 'Оперативна сигурност и непрекъсваемост', '03 / Калкулатор', '04 / Нашите ценности', '05 / Браншове', '06 / Работен процес'])
+            ->assertDontSee('Готова система, не визитка')
             ->assertDontSee('отзива в Google')
-            ->assertSee('href="' . url('/kontakti') . '#konsultatsiya" class="btn-shine btn-glow', false)
+            ->assertSee('href="' . url('/') . '#kalkulator"', false)
             ->assertSee('id="konsultatsiya"', false)
             ->assertDontSee('Стандарти на работа')
             ->assertDontSee('Бъди разпознаваем.')
@@ -131,8 +134,8 @@ class PublicSiteTest extends TestCase
         $this->get('/paketi')->assertOk()
             ->assertSee('Не купувате просто сайт.')
             ->assertSeeInOrder(['Стартов двигател', '€450', '€150 / месец', 'Активен Маркетинг &amp; Растеж', 'Най-предпочитан', '€850', '€400 / месец', 'Индивидуална Маркетинг Мащабируемост'], false)
-            ->assertSee('Поискайте оферта за този пакет');
-        $this->get('/en/packages')->assertOk()->assertSee('Starter Engine')->assertSee('Request a quote for this package');
+            ->assertSee('Получете оферта');
+        $this->get('/en/packages')->assertOk()->assertSee('Starter Engine')->assertSee('Get a quote');
     }
 
     public function test_contact_form_asks_for_project_status_and_email(): void
@@ -224,9 +227,9 @@ class PublicSiteTest extends TestCase
         $this->get('/en/privacy')->assertSee('company ID (EIK) 123456789');
     }
 
-    public function test_packages_page_links_to_contact(): void
+    public function test_packages_page_links_to_the_quote_form(): void
     {
-        $this->get('/paketi')->assertOk()->assertSee('Поискайте оферта за този пакет')->assertSee(route('contact') . '#contact-form', false);
+        $this->get('/paketi')->assertOk()->assertSee('Получете оферта')->assertSee(route('packages') . '?paket=0#oferta', false);
     }
 
     public function test_sitemap_lists_new_pages(): void
@@ -328,7 +331,7 @@ class PublicSiteTest extends TestCase
     public function test_presentation_page_and_pdf_download(): void
     {
         $this->get('/prezentatsiya')->assertOk()->assertSee('noindex', false)
-            ->assertSeeText('Къде създаваме най-висока стойност')->assertSeeText('Стартов двигател')->assertSeeText('creatiumlab.com');
+            ->assertSeeText('Работим за растежа на вашия бизнес.')->assertSeeText('Стартов двигател')->assertSeeText('creatiumlab.com');
         $this->get('/en/presentation')->assertOk()->assertSeeText('Starter Engine');
 
         $this->assertFileExists(public_path('files/creatium-lab-prezentatsiya.pdf'));
