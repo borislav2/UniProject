@@ -1,6 +1,7 @@
 {{--
     Чатът на сайта: бутон долу вдясно и прозорец. Говори с ChatController (POST /chat, GET /chat/{id}).
-    Номерът на разговора се пази в localStorage (creatium-chat), за да продължи на следващата страница.
+    Номерът на разговора се пази в sessionStorage (creatium-chat): продължава на следващата страница в същия раздел,
+    а презареждане на страницата или „Нов разговор“ започват отначало.
     Текстът от сървъра се показва като текст (textContent); само адресите стават връзки.
 --}}
 @php
@@ -18,7 +19,8 @@
                 <p id="chat-title" class="font-extrabold leading-tight">{{ __('Крео') }}</p>
                 <p class="text-xs text-gray-400">{{ __('Асистентът на Creatium Lab') }}</p>
             </div>
-            <button type="button" class="ml-auto w-9 h-9 shrink-0 rounded-xl flex items-center justify-center text-gray-300 hover:bg-white/10 hover:text-white" data-chat-close aria-label="{{ __('Затвори чата') }}"><x-icon name="chevron-down" /></button>
+            <button type="button" class="ml-auto shrink-0 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-gray-300 hover:bg-white/10 hover:text-white" data-chat-new title="{{ __('Започни нов разговор') }}"><x-icon name="plus" class="mr-1 text-[10px]" />{{ __('Нов разговор') }}</button>
+            <button type="button" class="w-9 h-9 shrink-0 rounded-xl flex items-center justify-center text-gray-300 hover:bg-white/10 hover:text-white" data-chat-close aria-label="{{ __('Затвори чата') }}"><x-icon name="chevron-down" /></button>
         </div>
 
         <div class="flex-1 overflow-y-auto overscroll-contain px-4 py-5 space-y-3 bg-gray-50/70 dark:bg-ink-950" data-chat-log aria-live="polite">
@@ -72,7 +74,14 @@
         var input = root.querySelector('[data-chat-input]'), sendBtn = root.querySelector('[data-chat-send]');
         var suggestions = root.querySelector('[data-chat-suggestions]');
         var KEY = 'creatium-chat', conversation = null, loaded = false, busy = false;
-        try { conversation = localStorage.getItem(KEY); } catch (e) {}
+        var initialLog = log.innerHTML;
+        // Разговорът е за раздела: продължава между страниците, но презареждане започва нов (старият localStorage се чисти).
+        try {
+            localStorage.removeItem(KEY);
+            var nav = (window.performance && performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
+            if (nav.type === 'reload') sessionStorage.removeItem(KEY);
+            conversation = sessionStorage.getItem(KEY);
+        } catch (e) {}
 
         function push(event, extra) { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: event }, extra || {})); }
 
@@ -150,7 +159,7 @@
                 return r.json();
             }).then(function (data) {
                 conversation = data.conversation;
-                try { localStorage.setItem(KEY, conversation); } catch (e) {}
+                try { sessionStorage.setItem(KEY, conversation); } catch (e) {}
                 dots.remove();
                 bubble('assistant', data.reply);
                 if (data.lead) push('generate_lead', { lead_service: 'Чат' });
@@ -179,7 +188,16 @@
         toggle.addEventListener('click', function () { hideTeaser(true); open(panel.classList.contains('hidden')); });
         root.querySelector('[data-chat-close]').addEventListener('click', function () { open(false); toggle.focus(); });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.classList.contains('hidden')) { open(false); toggle.focus(); } });
-        suggestions.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) send(b.textContent); });
+        log.addEventListener('click', function (e) { var b = e.target.closest('[data-chat-suggestions] button'); if (b) send(b.textContent); });
+        root.querySelector('[data-chat-new]').addEventListener('click', function () {
+            if (busy) return;
+            conversation = null; loaded = true;
+            try { sessionStorage.removeItem(KEY); } catch (e) {}
+            log.innerHTML = initialLog;
+            suggestions = log.querySelector('[data-chat-suggestions]');
+            input.focus();
+            push('chat_new');
+        });
         form.addEventListener('submit', function (e) { e.preventDefault(); send(input.value); });
         input.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input.value); } });
         input.addEventListener('input', function () { input.style.height = ''; input.style.height = Math.min(input.scrollHeight, 128) + 'px'; });

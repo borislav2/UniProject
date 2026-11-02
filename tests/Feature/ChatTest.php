@@ -241,6 +241,47 @@ class ChatTest extends TestCase
         $this->assertNull(ChatConversation::firstOrFail()->api_messages, 'Mistral history comes from the visible messages');
     }
 
+    public function test_mistral_retries_a_rate_limit_and_leaves_faq_replies_out_of_the_history(): void
+    {
+        config(['services.anthropic.key' => null, 'services.mistral.key' => 'm-key', 'creatium.chat.provider' => 'mistral']);
+        Http::fake(['api.mistral.ai/*' => Http::sequence()
+            ->push(['message' => 'Rate limit exceeded'], 429)
+            ->push(['choices' => [['finish_reason' => 'stop', 'message' => ['role' => 'assistant', 'content' => 'Около две седмици.']]]])
+            ->push(['choices' => [['finish_reason' => 'stop', 'message' => ['role' => 'assistant', 'content' => 'Да, правим и онлайн магазини.']]]])]);
+
+        // Предишен ход, на който е отговорил шаблонът: не трябва да стига до модела.
+        $first = $this->send('Колко време отнема?')->json();
+        $this->assertSame('Около две седмици.', $first['reply'], 'the 429 is retried');
+        $chat = ChatConversation::firstOrFail();
+        $chat->messages()->where('role', 'assistant')->update(['source' => 'faq']);
+
+        $reply = $this->send('Правите ли онлайн магазини?', $first['conversation'])->assertOk()->json('reply');
+        $this->assertSame('Да, правим и онлайн магазини.', $reply);
+
+        $last = Http::recorded()->last()[0]->data();
+        $this->assertSame('mistral-large-latest', $last['model']);
+        $this->assertSame(['system', 'user'], array_column($last['messages'], 'role'));
+        $this->assertStringContainsString('Правите ли онлайн магазини?', $last['messages'][1]['content']);
+        $this->assertStringContainsString('Write correct, literate Bulgarian', $last['messages'][0]['content']);
+    }
+
+    public function test_mistral_always_sees_the_latest_question_in_a_long_conversation(): void
+    {
+        config(['services.anthropic.key' => null, 'services.mistral.key' => 'm-key', 'creatium.chat.provider' => 'mistral']);
+        Http::fake(['api.mistral.ai/*' => Http::response(['choices' => [['finish_reason' => 'stop', 'message' => ['role' => 'assistant', 'content' => 'Отговор.']]]])]);
+
+        $conversation = null;
+        foreach (range(1, 9) as $i) {
+            $conversation = $this->send("Въпрос номер $i", $conversation)->json('conversation');
+        }
+
+        // Преди историята взимаше първите съобщения и новият въпрос не стигаше до модела.
+        $messages = Http::recorded()->last()[0]->data()['messages'];
+        $this->assertSame('Въпрос номер 9', end($messages)['content']);
+        $this->assertStringNotContainsString('Въпрос номер 1"', json_encode($messages, JSON_UNESCAPED_UNICODE));
+        $this->assertLessThanOrEqual(13, count($messages));
+    }
+
     public function test_a_mistral_error_falls_back_to_the_faq(): void
     {
         config(['services.anthropic.key' => null, 'services.mistral.key' => 'm-key', 'creatium.chat.provider' => 'mistral']);

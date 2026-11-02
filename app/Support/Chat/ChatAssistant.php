@@ -26,6 +26,8 @@ Your job is to answer their questions about Creatium Lab's services, packages, p
 
 How to answer:
 - Reply in the visitor's language (usually Bulgarian; English on the English site or when they write in English). Talk like a helpful person from the team, not like a form: natural, warm, everyday language and the polite "вие" in Bulgarian.
+- Write correct, literate Bulgarian: proper grammar, agreement and punctuation, Cyrillic only, no anglicisms or literal translations from English, no robotic phrasing. Read your reply once more before sending it and fix anything a native speaker would not say.
+- Always answer the visitor's latest message. If they change the topic, follow the new topic; don't repeat or paste an earlier answer, and don't answer a question they did not ask.
 - Think about what the visitor actually needs behind the question and answer that. Connect the facts: if they describe their business (a salon, a restaurant, a shop), say which package or service fits them and why, in their terms (more calls, bookings, customers from Google). If the question is vague, answer what you can and ask one short follow-up question.
 - Keep replies short: one to four sentences, or a short list when comparing packages. Plain text only: no Markdown headings, bold or tables. You may include a link from the site information as a plain URL.
 - Use the facts in <site_info>; you may reason from them and combine them. If the answer is truly not there (a custom price, a specific integration, availability on a date), say so honestly and offer to have the team get back to them. Never invent prices, discounts, timelines, guarantees, clients, results or statistics, and don't promise positions in Google or recommendations by AI assistants.
@@ -209,13 +211,9 @@ PROMPT;
             $system .= "\n\nThe visitor's contact details were already saved in this conversation. Call save_contact again only to correct them.";
         }
 
-        $history = $chat->messages()->latest('id')->take(20)->get(['role', 'text'])->reverse()->values();
-        while ($history->isNotEmpty() && $history->first()->role !== 'user') {
-            $history->shift();
-        }
         $messages = [['role' => 'system', 'content' => $system]];
-        foreach ($history as $message) {
-            $messages[] = ['role' => $message->role === 'user' ? 'user' : 'assistant', 'content' => $message->text];
+        foreach (self::mistralHistory($chat) as $message) {
+            $messages[] = $message;
         }
 
         $replyText = '';
@@ -244,6 +242,33 @@ PROMPT;
         return $replyText !== '' ? $replyText : null;
     }
 
+    /**
+     * Историята за Mistral: последните 12 видими съобщения, без резервните отговори от честите въпроси
+     * (иначе моделът ги повтаря), с поредни съобщения на посетителя слети в едно. Започва и завършва с посетителя.
+     *
+     * @return list<array{role: string, content: string}>
+     */
+    private static function mistralHistory(ChatConversation $chat): array
+    {
+        $history = [];
+        foreach ($chat->messages()->reorder('id', 'desc')->take(12)->get(['role', 'text', 'source'])->reverse() as $message) {
+            if ($message->role !== 'user' && $message->source !== 'ai') {
+                continue;
+            }
+            $role = $message->role === 'user' ? 'user' : 'assistant';
+            if ($history && end($history)['role'] === $role) {
+                $history[array_key_last($history)]['content'] .= "\n\n" . $message->text;
+            } else {
+                $history[] = ['role' => $role, 'content' => $message->text];
+            }
+        }
+        while ($history && $history[0]['role'] !== 'user') {
+            array_shift($history);
+        }
+
+        return $history;
+    }
+
     /** Текстът от отговор на Mistral: низ или списък от части (само частите „text“, без „thinking“). */
     private static function mistralText(mixed $content): string
     {
@@ -264,17 +289,19 @@ PROMPT;
     {
         $tool = self::TOOLS[0];
 
+        // Безплатният план връща 429 при няколко заявки за секунда: един повторен опит след кратка пауза.
         return Http::withToken(config('services.mistral.key'))
             ->acceptJson()
             ->connectTimeout(10)
             ->timeout(45)
+            ->retry(2, 1500, fn ($e) => $e instanceof \Illuminate\Http\Client\RequestException && in_array($e->response->status(), [429, 500, 502, 503], true), throw: true)
             ->post(rtrim(config('services.mistral.base_url'), '/') . '/chat/completions', [
                 'model' => config('services.mistral.model'),
                 'messages' => $messages,
                 'tools' => [['type' => 'function', 'function' => ['name' => $tool['name'], 'description' => $tool['description'], 'parameters' => $tool['inputSchema']]]],
                 'tool_choice' => 'auto',
                 'max_tokens' => 1000,
-                'temperature' => 0.3,
+                'temperature' => 0.4,
             ])
             ->throw()
             ->json('choices.0') ?? [];
