@@ -144,6 +144,12 @@ return [
         ],
         'engine_eyebrow' => 'The digital engine',
         'engine_center' => 'Digital engine',
+        'funnel' => [
+            ['card' => 'geo-seo', 'stage' => 'They find you', 'does' => 'People find you on Google, Google Maps and AI assistants when they search for what you offer.', 'without' => 'Nobody reaches the website. The site, the forms and the emails sit empty, however good they are.'],
+            ['card' => 'websites', 'stage' => 'They visit the site', 'does' => 'The website welcomes them: fast, clear and easy on a phone, with prices and answers to their questions.', 'without' => 'People find you but leave. Google pushes slow and awkward sites down, so visibility drops too.'],
+            ['card' => 'email', 'stage' => 'They enquire and buy', 'does' => 'A call button, a short form and automatic emails turn a visit into an enquiry and a customer who comes back.', 'without' => 'Visits do not become customers. Visibility and the website run idle, and the advertising is paid for nothing.'],
+            ['card' => 'monitoring', 'stage' => 'They reach you', 'does' => 'Maintenance keeps the site online and protected, and every enquiry reaches your phone and email.', 'without' => 'A site that is down or hacked: Google drops it, the forms stop sending and everything above it stops.'],
+        ],
         'fit_eyebrow' => 'Our values',
         'fit_title' => 'We work for the growth of your business.',
         'fit_text' => 'We take on projects where we can guarantee a direct effect on the growth of the business. We work with businesses that have a product, a service or a dream, but need to be seen by more people.',

@@ -185,7 +185,7 @@
             </a>
         </div>
 
-        <p class="reveal mt-6 max-w-3xl text-lg text-gray-300 leading-relaxed">{{ __('Двигателят работи само когато всички части са изправни. Изключете една и вижте какво става.') }}</p>
+        <p class="reveal mt-6 max-w-3xl text-lg text-gray-300 leading-relaxed">{{ __('Всеки клиент минава през всички нива на фунията, отгоре надолу. Всяко ниво подава хората на следващото, затова спре ли едно, до вас не стига никой. Изключете едно и вижте.') }}</p>
 
         @include('partials/engine-diagram', ['cards' => $engineCards, 'center' => $trust['engine_center']])
     </div>
