@@ -11,7 +11,13 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($projects as $project)
-                <article class="border border-gray-200 rounded-2xl p-7 card-hover bg-white reveal dark:border-white/10 dark:bg-white/[0.03]">
+                <article class="group flex flex-col overflow-hidden border border-gray-200 rounded-2xl card-hover bg-white reveal dark:border-white/10 dark:bg-white/[0.03]">
+                    @if($project->screenshot)
+                        <div class="relative aspect-[8/5] overflow-hidden bg-gray-100 dark:bg-white/5">
+                            <img src="{{ asset($project->screenshot) }}" alt="{{ $project->name }}" width="960" height="600" loading="lazy" class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
+                        </div>
+                    @endif
+                    <div class="flex flex-1 flex-col p-7">
                     <span class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-300">{{ $project->category->name }}</span>
                     <h2 class="text-xl font-bold text-brand-950 mt-2 mb-2 dark:text-white">{{ $project->name }}</h2>
                     <p class="text-gray-600 mb-4 dark:text-gray-300">{{ $project->description }}</p>
@@ -27,6 +33,7 @@
                             @endforeach
                         </div>
                     @endif
+                    </div>
                 </article>
             @endforeach
         </div>

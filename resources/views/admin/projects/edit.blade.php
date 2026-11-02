@@ -139,6 +139,21 @@
         </div>
 
         <div class="mt-6">
+            <label for="screenshot" class="block text-sm font-medium text-gray-700 mb-2">Снимка на сайта (за портфолиото)</label>
+            @if($project->screenshot)
+                <div class="mb-2 flex items-center gap-4">
+                    <img src="{{ asset($project->screenshot) }}" alt="" class="h-20 w-32 rounded border object-cover object-top">
+                    <label class="flex items-center text-sm text-gray-600"><input type="checkbox" name="remove_screenshot" value="1" class="mr-2">Махни снимката</label>
+                </div>
+            @endif
+            <input type="file" name="screenshot" id="screenshot" accept="image/jpeg,image/png,image/webp" class="w-full text-sm">
+            <p class="text-xs text-gray-500 mt-1">Хоризонтална снимка на горната част на сайта, около 1600×1000 (jpg, png или webp, до 5 MB). Показва се на /proekti.</p>
+            @error('screenshot')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="mt-6">
             <label for="technologies" class="block text-sm font-medium text-gray-700 mb-2">Технологии</label>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 @foreach($technologies as $technology)
