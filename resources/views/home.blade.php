@@ -126,7 +126,7 @@
         </div>
 
         @if(! empty($problem['stats']))
-            {{-- Числата за печалбата: заоблени карти с икона, голямо число, какво значи за вас и източник. --}}
+            {{-- Числата за печалбата: заоблени карти с икона, голямо число и какво значи за вас (без ред „Източник“, по желание на собствениците; източниците остават в config). --}}
             <div class="mt-14 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 @foreach($problem['stats'] as $stat)
                     <article class="reveal card-hover flex flex-col rounded-[2rem] bg-brand-50/70 p-6 ring-1 ring-brand-100 dark:bg-white/[0.04] dark:ring-white/10" style="--reveal-delay: {{ $loop->index * 80 }}ms">
@@ -138,9 +138,6 @@
                         @if(filled($stat['meaning'] ?? null))
                             <p class="mt-3 flex-1 rounded-2xl bg-white px-4 py-3 text-sm leading-relaxed text-gray-700 dark:bg-white/5 dark:text-gray-300"><span class="font-bold text-brand-700 dark:text-brand-300">{{ __('За вас:') }}</span> {{ $stat['meaning'] }}</p>
                         @endif
-                        <p class="mt-4 text-xs text-gray-500 dark:text-gray-400">
-                            {{ __('Източник') }}: @if(filled($stat['url'] ?? null))<a href="{{ $stat['url'] }}" target="_blank" rel="noopener nofollow" class="underline underline-offset-2 hover:text-brand-700 dark:hover:text-white">{{ $stat['source'] }}</a>@else{{ $stat['source'] }}@endif
-                        </p>
                     </article>
                 @endforeach
             </div>
