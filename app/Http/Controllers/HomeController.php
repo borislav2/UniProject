@@ -21,11 +21,11 @@ class HomeController extends Controller
     {
         return view('home', [
             'hero' => site('home_hero'),
-            'problem' => site('home_problem'),
+            'problem' => app(\App\Support\Content::class)->withDefaults('home_problem'),
             'engine' => site('home_engine'),
             'process' => site('home_process'),
             'contactBlock' => site('home_contact'),
-            'trust' => site('home_trust'),
+            'trust' => app(\App\Support\Content::class)->withDefaults('home_trust'),
             'engineCards' => site('services_page.cards') ?? [],
             'demos' => site('demos') ?? [],
             'posts' => config('creatium.blog_enabled') ? Post::visible()->with('category')->latest('published_at')->take(3)->get() : collect(),
@@ -154,7 +154,7 @@ class HomeController extends Controller
     }
 
     /** „vashiyatsait.bg“ → https://vashiyatsait.bg; anything that is not a web address is left out. */
-    private static function siteUrl(?string $value): ?string
+    public static function siteUrl(?string $value): ?string
     {
         $value = trim((string) $value);
         if ($value === '') {

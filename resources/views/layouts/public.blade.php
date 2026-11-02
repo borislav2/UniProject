@@ -110,7 +110,7 @@
         <!-- End Google Tag Manager (noscript) -->
     @endif
     @php
-        // Главно меню: Услуги ▾ · Пакети · Проекти · За нас ▾ и бутон „Консултация“.
+        // Главно меню: Услуги ▾ · Пакети · Проекти · За нас ▾ и бутон „Изчислете ползата“ към калкулатора.
         $is = fn (...$patterns) => collect($patterns)->contains(fn ($p) => request()->routeIs($p, 'en.' . $p));
         $serviceLinks = [[__('Всички услуги'), lroute('services'), $is('services'), 'list-ul']];
         foreach (site('service_pages') as $key => $servicePage) {
@@ -129,7 +129,8 @@
             ['label' => __('Проекти'), 'href' => lroute('portfolio'), 'active' => $is('portfolio')],
             ['label' => __('За нас'), 'children' => $aboutLinks, 'active' => $is('about', 'blog.*', 'contact')],
         ];
-        $consultationUrl = lroute('contact') . '#konsultatsiya';
+        // Бутонът в менюто води към калкулатора на началната страница (собствениците, ноември 2026).
+        $calculatorUrl = lroute('home') . '#kalkulator';
         $languages = ['bg' => ['BG', 'Български'], 'en' => ['EN', 'English']];
     @endphp
 
@@ -169,7 +170,7 @@
                         @endif
                     @endforeach
 
-                    <a href="{{ $consultationUrl }}" class="btn-shine ml-2 whitespace-nowrap rounded-xl bg-brand-950 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800">{{ __('Консултация') }}</a>
+                    <a href="{{ $calculatorUrl }}" class="btn-shine ml-2 whitespace-nowrap rounded-xl bg-brand-950 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800">{{ __('Изчислете ползата') }}</a>
 
                     <div class="ml-3 flex items-center rounded-lg border border-gray-200 p-0.5 text-xs font-bold" role="group" aria-label="{{ __('Език') }}">
                         @foreach($languages as $code => [$short, $name])
@@ -229,7 +230,7 @@
                         <a href="{{ $item['href'] }}" class="block px-3 py-2.5 rounded-lg font-medium {{ $item['active'] ? 'text-brand-700 bg-brand-50' : 'text-gray-700 hover:bg-gray-50' }}">{{ $item['label'] }}</a>
                     @endif
                 @endforeach
-                <a href="{{ $consultationUrl }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold">{{ __('Консултация') }}</a>
+                <a href="{{ $calculatorUrl }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold">{{ __('Изчислете ползата') }}</a>
                 @auth
                     <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-gray-500">{{ __('Административен панел') }}</a>
                     <form action="{{ route('logout') }}" method="POST">

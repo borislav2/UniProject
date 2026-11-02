@@ -46,8 +46,8 @@ class ServicePagesTest extends TestCase
     {
         $this->get('/')->assertOk()
             ->assertSee('data-dropdown', false)
-            ->assertSeeInOrder(['Услуги', 'Изработка на сайт', 'Google профил и отзиви', 'Безплатна проверка на сайт', 'Пакети', 'Проекти', 'За нас', 'Кои сме ние', 'Често задавани въпроси', 'Контакти', 'Консултация'])
-            ->assertSee('href="' . url('/kontakti') . '#konsultatsiya"', false)
+            ->assertSeeInOrder(['Услуги', 'Изработка на сайт', 'Google профил и отзиви', 'Безплатна проверка на сайт', 'Пакети', 'Проекти', 'За нас', 'Кои сме ние', 'Често задавани въпроси', 'Контакти', 'Изчислете ползата'])
+            ->assertSee('href="' . url('/') . '#kalkulator"', false)
             ->assertSee('href="' . url('/vaprosi') . '"', false);
 
         $this->get('/sitemap.xml')->assertOk()
@@ -61,7 +61,7 @@ class ServicePagesTest extends TestCase
             ->assertSee('Вижте подробно какво включва')
             ->assertSee('Google профил и отзиви')
             // Пълният текст на всяка точка е запазен.
-            ->assertSee('Модерен UI/UX дизайн, оптимизиран за мобилни устройства и незабавно зареждане.')
-            ->assertSee('Не сте сигурни кой пакет ви трябва?');
+            ->assertSee('Дизайн по вашата идентичност, бърз на всеки телефон.')
+            ->assertSee('Получете оферта');
     }
 }

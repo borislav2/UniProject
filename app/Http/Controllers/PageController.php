@@ -73,8 +73,13 @@ class PageController extends Controller
 
     public function packages()
     {
+        $plans = site('plans');
+        $selected = request()->integer('paket', -1);
+
         return view('packages', [
-            'plans' => site('plans'),
+            'plans' => $plans,
+            // „Получете оферта“ под всеки пакет води към формата с избрания пакет (?paket=N#oferta).
+            'selectedPlan' => array_key_exists($selected, $plans['items'] ?? []) ? $selected : null,
         ]);
     }
 
@@ -92,7 +97,7 @@ class PageController extends Controller
     public function about()
     {
         // Ключове, добавени след последната редакция в админа (напр. story), идват от config.
-        $about = (array) site('about') + (array) app(\App\Support\Content::class)->default('about', app()->getLocale());
+        $about = app(\App\Support\Content::class)->withDefaults('about');
 
         return view('about', ['about' => $about, 'team' => site('team'), 'trust' => site('home_trust')]);
     }

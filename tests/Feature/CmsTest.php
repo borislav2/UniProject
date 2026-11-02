@@ -191,10 +191,10 @@ class CmsTest extends TestCase
         $this->put('/admin/content/home_hero', ['locale' => 'bg', 'content' => ['title' => 'Нов заглавен текст.'] + $hero])->assertRedirect()->assertSessionHasNoErrors();
 
         $this->get('/')->assertSee('Нов заглавен текст.')->assertSee($hero['highlight']);
-        $this->get('/en')->assertSeeText('A website that sells.');
+        $this->get('/en')->assertSeeText('Digital solutions that move your business forward.');
 
         $this->delete('/admin/content/home_hero', ['locale' => 'bg']);
-        $this->get('/')->assertSeeText('Сайт, който продава.');
+        $this->get('/')->assertSeeText('Дигитални решения, които движат бизнеса ви напред.');
     }
 
     public function test_team_profiles_can_be_edited_in_the_admin(): void
