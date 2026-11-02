@@ -57,6 +57,25 @@ class ChatTest extends TestCase
         $this->send('Здравейте')->assertNotFound();
     }
 
+    public function test_kreo_knows_the_owners_industries_and_small_talk_even_without_ai(): void
+    {
+        $faq = fn (string $q) => \App\Support\Chat\FaqResponder::answer($q);
+
+        $this->assertStringContainsString('Борислав Костадинов', $faq('Кои са собствениците?'));
+        $this->assertStringContainsString('Владимир Цончев', $faq('кой стои зад вас'));
+        $this->assertStringContainsString('От 4 години', $faq('Откога работите?'));
+        $this->assertStringContainsString('izrabotka-na-sait-za-kozmetichen-salon', $faq('Здравейте, искам сайт за салон'));
+        $this->assertStringContainsString('Аз съм Крео', $faq('Здравейте!'));
+        $this->assertStringContainsString('proverka-na-sait', $faq('Може ли да проверите сайта ми?'));
+
+        // AI-ят получава екипа, историята и статистиките.
+        $knowledge = SiteKnowledge::text();
+        $this->assertStringContainsString('Борислав Костадинов', $knowledge);
+        $this->assertStringContainsString('Founders and owners', $knowledge);
+        $this->assertStringContainsString('От 4 години', $knowledge);
+        $this->assertStringContainsString('НСИ', $knowledge);
+    }
+
     public function test_without_a_key_it_answers_from_the_faq_and_saves_a_phone_as_an_inquiry(): void
     {
         Mail::fake();
