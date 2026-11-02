@@ -68,7 +68,9 @@ class BlogController extends Controller
             ->sortBy(fn ($c) => $c->trOrBg('name'));
 
         $alternates = $this->indexUrls();
-        $hreflang = $alternates;
+        // Докато няма статии на английски, /en/blog е празна: без hreflang към нея и с noindex.
+        $hasEnglish = Post::visible('en')->exists();
+        $hreflang = $hasEnglish ? $alternates : [];
         if ($category) {
             $hreflang = [];
             foreach (['bg', 'en'] as $l) {
@@ -86,6 +88,7 @@ class BlogController extends Controller
             'pageAlternates' => $alternates,
             'hreflangAlternates' => $posts->currentPage() > 1 ? [] : $hreflang,
             'canonical' => $posts->currentPage() > 1 ? $posts->url($posts->currentPage()) : null,
+            'noindex' => app()->getLocale() === 'en' && ! $hasEnglish,
         ]);
     }
 

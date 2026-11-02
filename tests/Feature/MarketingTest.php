@@ -170,6 +170,23 @@ class MarketingTest extends TestCase
         $this->get('http://creatiumlab.com/uslugi')->assertOk();
     }
 
+    public function test_every_structured_data_block_is_valid_json_with_the_schema_org_context(): void
+    {
+        preg_match_all('#<loc>(.*?)</loc>#', $this->get('/sitemap.xml')->getContent(), $locs);
+        $this->assertNotEmpty($locs[1]);
+
+        foreach ($locs[1] as $url) {
+            $html = $this->get(parse_url($url, PHP_URL_PATH) ?? '/')->assertOk()->getContent();
+            preg_match_all('#<script type="application/ld\+json">(.*?)</script>#s', $html, $blocks);
+            foreach ($blocks[1] as $json) {
+                $data = json_decode($json, true);
+                $this->assertIsArray($data, "Invalid JSON-LD on $url");
+                // Blade compiles a bare @context as its own directive; the key must survive as text.
+                $this->assertSame('https://schema.org', $data['@context'] ?? null, "Missing @context on $url");
+            }
+        }
+    }
+
     public function test_search_console_verification_meta(): void
     {
         config(['creatium.google_site_verification' => 'abcDEF123_-xyz']);

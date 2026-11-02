@@ -116,9 +116,10 @@
     </div>
 </section>
 
+{{-- '@' . 'context': Blade иначе чете @context като своя директива и поврежда ключа. --}}
 <script type="application/ld+json">
 {!! json_encode([
-    '@context' => 'https://schema.org',
+    '@' . 'context' => 'https://schema.org',
     '@graph' => [
         [
             '@type' => 'Service',

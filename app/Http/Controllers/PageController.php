@@ -149,7 +149,12 @@ class PageController extends Controller
         $pages = array_values(array_filter(['home', 'services', 'site-check', 'packages', 'portfolio', 'blog.index', 'about', 'faq', 'contact', 'privacy', 'terms', 'cookies'], fn ($name) => $blog || $name !== 'blog.index'));
         $urls = [];
 
+        $englishBlog = $blog && Post::visible('en')->exists();
         foreach ($pages as $name) {
+            if ($name === 'blog.index' && ! $englishBlog) {
+                $urls[] = ['loc' => lroute($name, [], 'bg'), 'alternates' => []];
+                continue;
+            }
             $alternates = ['bg' => lroute($name, [], 'bg'), 'en' => lroute($name, [], 'en')];
             foreach ($alternates as $url) {
                 $urls[] = ['loc' => $url, 'alternates' => $alternates];
