@@ -93,16 +93,10 @@
                 </p>
             </div>
         @endif
-        <dl class="rise-text grid grid-cols-2 lg:grid-cols-4 border-y border-white/10" style="--d: 320ms">
+        {{-- Четири заоблени карти с една обща мисъл: стойност и един ред текст; „link“ прави текста връзка. --}}
+        <dl class="rise-text grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4" style="--d: 320ms">
             @foreach($trust['proof'] as $fact)
-                {{-- Отстъпи по позиция: първата колона на всеки ред е подравнена с надписа, другите имат линия вляво. --}}
-                <div @class([
-                    'py-6 border-white/10',
-                    'pr-4 sm:pr-6' => $loop->index % 2 === 0,
-                    'pl-4 sm:pl-6 pr-2 border-l' => $loop->index % 2 === 1,
-                    'border-t lg:border-t-0' => $loop->index >= 2,
-                    'lg:pl-6 lg:border-l' => $loop->index === 2,
-                ])>
+                <div class="relative edge glass rounded-[2rem] px-5 py-6 sm:px-7 sm:py-7">
                     <dt class="sr-only">{{ \Illuminate\Support\Str::ucfirst(trim((string) $fact['text'])) }}</dt>
                     <dd class="display text-2xl sm:text-3xl md:text-4xl">{{ $fact['value'] }}</dd>
                     <dd class="mt-2 text-sm sm:text-base font-medium text-gray-200 leading-snug">
@@ -132,42 +126,46 @@
         </div>
 
         @if(! empty($problem['stats']))
-            <dl class="reveal mt-14 grid sm:grid-cols-2 lg:grid-cols-5 gap-px overflow-hidden rounded-3xl border border-gray-200 bg-gray-200 dark:border-white/10 dark:bg-white/10">
+            {{-- Числата за печалбата: заоблени карти с икона, голямо число, какво значи за вас и източник. --}}
+            <div class="mt-14 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 @foreach($problem['stats'] as $stat)
-                    <div class="flex flex-col bg-white p-6 dark:bg-ink-950">
-                        <dt class="order-2 mt-2 flex-1 text-sm leading-snug text-gray-600 dark:text-gray-300">{{ $stat['text'] }}</dt>
-                        <dd class="order-1 display text-3xl md:text-4xl text-brand-950 dark:text-white">{{ $stat['value'] }}</dd>
-                        <dd class="order-3 mt-4 text-xs text-gray-500 dark:text-gray-400">
+                    <article class="reveal card-hover flex flex-col rounded-[2rem] bg-brand-50/70 p-6 ring-1 ring-brand-100 dark:bg-white/[0.04] dark:ring-white/10" style="--reveal-delay: {{ $loop->index * 80 }}ms">
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-gradient"><x-icon :name="$stat['icon'] ?? 'chart-line'" class="text-white" /></span>
+                            <span class="display text-4xl text-brand-700 dark:text-brand-300">{{ $stat['value'] }}</span>
+                        </div>
+                        <p class="mt-5 font-semibold leading-snug text-brand-950 dark:text-white">{{ $stat['text'] }}</p>
+                        @if(filled($stat['meaning'] ?? null))
+                            <p class="mt-3 flex-1 rounded-2xl bg-white px-4 py-3 text-sm leading-relaxed text-gray-700 dark:bg-white/5 dark:text-gray-300"><span class="font-bold text-brand-700 dark:text-brand-300">{{ __('За вас:') }}</span> {{ $stat['meaning'] }}</p>
+                        @endif
+                        <p class="mt-4 text-xs text-gray-500 dark:text-gray-400">
                             {{ __('Източник') }}: @if(filled($stat['url'] ?? null))<a href="{{ $stat['url'] }}" target="_blank" rel="noopener nofollow" class="underline underline-offset-2 hover:text-brand-700 dark:hover:text-white">{{ $stat['source'] }}</a>@else{{ $stat['source'] }}@endif
-                        </dd>
-                    </div>
+                        </p>
+                    </article>
                 @endforeach
-            </dl>
+            </div>
         @endif
 
-        <div class="mt-14 grid lg:grid-cols-2 gap-6">
-            @foreach([['code', 'tech', 1], ['chart-line', 'growth', 2]] as [$icon, $group, $n])
-                <article class="reveal card-hover rounded-3xl border border-gray-200 bg-white p-7 md:p-9 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ ($n - 1) * 100 }}ms">
-                    <div class="flex items-start gap-5">
-                        <div class="w-14 h-14 shrink-0 rounded-2xl bg-brand-gradient flex items-center justify-center">
-                            <x-icon :name="$icon" class="text-white text-lg" />
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold uppercase tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ $engine[$group . '_tag'] }}</p>
-                            <h3 class="mt-1 text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $engine[$group . '_title'] }}</h3>
-                        </div>
+        @if(! empty($problem['system_items']))
+            {{-- Една карта: сайтът и маркетингът като една система, без разделение на изработка и маркетинг. --}}
+            <div class="reveal relative mt-6 overflow-hidden rounded-[2rem] surface-night on-dark p-7 text-white md:p-10">
+                <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_top_right,black_20%,transparent_70%)]" aria-hidden="true"></div>
+                <div class="relative grid gap-8 lg:grid-cols-12 lg:items-center">
+                    <div class="lg:col-span-4">
+                        <h3 class="display text-3xl md:text-4xl">{{ $problem['system_title'] }}</h3>
+                        <p class="mt-4 leading-relaxed text-gray-300">{{ $problem['system_text'] }}</p>
                     </div>
-                    <ul class="mt-8 space-y-5">
-                        @foreach($engine[$group . '_items'] as $item)
-                            <li class="flex items-start gap-3.5">
-                                <span class="mt-1 w-5 h-5 shrink-0 rounded-full bg-brand-50 flex items-center justify-center dark:bg-white/10"><x-icon name="check" class="text-[10px] text-brand-600 dark:text-brand-300" /></span>
-                                <span><span class="block font-bold text-brand-950 dark:text-white">{{ $item['title'] }}</span><span class="mt-1 block text-gray-600 leading-relaxed dark:text-gray-300">{{ $item['text'] }}</span></span>
+                    <ul class="grid gap-3 sm:grid-cols-2 lg:col-span-8">
+                        @foreach($problem['system_items'] as $item)
+                            <li class="flex items-start gap-3 rounded-3xl bg-white/[0.05] p-4 ring-1 ring-white/10">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-500/25"><x-icon :name="$item['icon'] ?? 'check'" class="text-sm text-brand-200" /></span>
+                                <span><span class="block font-bold">{{ $item['title'] }}</span><span class="mt-0.5 block text-sm leading-snug text-gray-300">{{ $item['text'] }}</span></span>
                             </li>
                         @endforeach
                     </ul>
-                </article>
-            @endforeach
-        </div>
+                </div>
+            </div>
+        @endif
     </div>
 </section>
 

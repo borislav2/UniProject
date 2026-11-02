@@ -200,13 +200,23 @@ return [
         'eyebrow' => 'Решението',
         'solution_title' => 'Сайт и маркетинг, които работят като едно.',
         'solution_text' => "Поемаме целия процес: от сайта и свързването на формите към вашия имейл или CRM до рекламите и видимостта в Google.\n\nНосим отговорност за цялата система, от първото посещение до първото запитване.",
-        // Числата са с източник; показват се в „01 / Решението“ с връзка към източника.
+        // Числата за бизнеса и печалбата (собствениците, ноември 2026), всяко с източник и „за вас“ (meaning).
         'stats' => [
-            ['value' => '86,5%', 'text' => 'от българите ползват интернет редовно', 'source' => 'НСИ, 2025', 'url' => 'https://www.nsi.bg/en/press-release/ict-usage-in-households-and-by-individuals-8878'],
-            ['value' => '51,2%', 'text' => 'от българите са пазарували онлайн през последната година', 'source' => 'НСИ, 2025', 'url' => 'https://www.nsi.bg/en/press-release/ict-usage-in-households-and-by-individuals-8878'],
-            ['value' => 'под 60%', 'text' => 'от фирмите в България имат сайт, при 79% средно за ЕС', 'source' => 'Eurostat, 2025', 'url' => 'https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Digital_economy_and_society_statistics_-_enterprises'],
-            ['value' => '76%', 'text' => 'от хората, които търсят нещо наблизо от телефона, посещават такъв бизнес до 24 часа', 'source' => 'Google', 'url' => 'https://www.thinkwithgoogle.com/data/mobile-near-me-searches/'],
-            ['value' => '53%', 'text' => 'от посещенията от телефон се прекъсват, ако страницата зарежда над 3 секунди', 'source' => 'Google, 2016', 'url' => 'https://www.thinkwithgoogle.com/intl/en-gb/marketing-strategies/app-and-mobile/mobile-page-speed-new-industry-benchmarks/'],
+            ['icon' => 'location-dot', 'value' => '28%', 'text' => 'от търсенията на бизнес наблизо от телефона завършват с покупка', 'meaning' => 'Да ви намерят в Google значи продажби, не само посещения.', 'source' => 'Google', 'url' => 'https://www.thinkwithgoogle.com/data/local-search-conversion-statistics/'],
+            ['icon' => 'store', 'value' => '+70%', 'text' => 'повече посещения имат бизнесите с пълен профил в Google, а клиентите са 50% по-склонни да купят', 'meaning' => 'Профил със снимки, отзиви и работно време носи клиенти без платена реклама.', 'source' => 'Google', 'url' => 'https://support.google.com/business/answer/10515606'],
+            ['icon' => 'gauge-high', 'value' => '+8,4%', 'text' => 'повече продажби, когато сайтът стане само 0,1 секунди по-бърз на телефон', 'meaning' => 'Бързият сайт не е подробност: всяка десета от секундата е пари.', 'source' => 'Deloitte, 2020', 'url' => 'https://www.deloitte.com/ie/en/services/consulting/research/milliseconds-make-millions.html'],
+            ['icon' => 'envelope-open-text', 'value' => '38 €', 'text' => 'връща средно всяко 1 €, вложено в имейли към клиентите', 'meaning' => 'Който вече е купил, купува отново, ако му напомните навреме.', 'source' => 'Litmus', 'url' => 'https://www.litmus.com/press/litmus-research-finds-email-marketing-roi-is-38-to-1'],
+        ],
+        // Една карта: сайтът и маркетингът като една система, без разделение.
+        'system_title' => 'Сайт и маркетинг в една система',
+        'system_text' => 'Не купувате отделно сайт и отделно реклама. Правим и двете заедно и отговаряме за резултата.',
+        'system_items' => [
+            ['icon' => 'rocket', 'title' => 'Бърз сайт с вашия бранд', 'text' => 'Отваря се мигновено на телефон и води към обаждане.'],
+            ['icon' => 'magnifying-glass', 'title' => 'Видимост в Google и AI', 'text' => 'SEO и Google профил, по които ви намират.'],
+            ['icon' => 'chart-line', 'title' => 'Реклама, която се измерва', 'text' => 'Google и Meta, с проследено всяко запитване.'],
+            ['icon' => 'phone-volume', 'title' => 'Запитвания директно при вас', 'text' => 'Форми и бутон за обаждане към имейл, телефон или CRM.'],
+            ['icon' => 'envelope-open-text', 'title' => 'Имейли, които връщат клиенти', 'text' => 'Автоматични писма след запитване и покупка.'],
+            ['icon' => 'shield-halved', 'title' => 'Грижа всеки месец', 'text' => 'Сигурност, архиви, промени и отчет.'],
         ],
         'title' => 'Къде губите клиенти?',
         'scenarios' => [

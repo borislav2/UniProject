@@ -22,7 +22,7 @@ class HomeCopyTest extends TestCase
             ->assertSee('Поемаме проекти, в които можем да гарантираме директно отражение върху растежа на бизнеса.')
             ->assertSee('Сайт и маркетинг, които работят като едно.')
             ->assertSee('Източник')
-            ->assertSee('nsi.bg', false)
+            ->assertSee('thinkwithgoogle.com', false)->assertSee('deloitte.com', false)->assertDontSee('Технологична инфраструктура')
             ->assertSee('id="kalkulator"', false)
             ->assertSee('Разликата за вашия бизнес')
             ->assertSee('Изработка на сайтове и дигитален маркетинг от €450')
