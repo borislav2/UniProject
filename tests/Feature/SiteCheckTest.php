@@ -121,6 +121,10 @@ class SiteCheckTest extends TestCase
         $this->assertSame('https://firma.bg', $lead->website_url);
         $this->assertStringContainsString('оценка 100 от 100', $lead->description);
         $this->assertNotNull($lead->email_sent_at);
+        // Резултатът се пази цял за страницата „Проверки на сайт“.
+        $this->assertSame(100, $lead->site_check_report['score']);
+        $this->assertTrue($lead->site_check_report['sent']);
+        $this->assertSame(100, $lead->siteCheckSummary()['score']);
         $this->get('/proverka-na-sait')->assertSee('Проверката започна');
     }
 

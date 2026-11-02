@@ -43,7 +43,7 @@ class AdminUsabilityTest extends TestCase
 
         $this->actingAs($admin)->get('/admin')->assertOk()
             ->assertSee('Табло')
-            ->assertSee('Непрочетени запитвания')
+            ->assertSee('Непрочетени')->assertSee('Продажбите този месец')->assertSee('Екипът')->assertSee('Колко бързо отговаряме')
             ->assertSee('Запитване: Мария')
             ->assertSee('Изграждане на нова дигитална система')
             ->assertSee('tel:0888123456', false)

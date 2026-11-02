@@ -20,7 +20,7 @@ class Today
     /** Непрочетени запитвания, най-старите първи (те чакат най-дълго). */
     public static function unread()
     {
-        return Project::where('source', 'website')->whereNull('read_at')->oldest()->get();
+        return Project::with('assignee')->where('source', 'website')->whereNull('read_at')->oldest()->get();
     }
 
     /** Прочетени, още отворени запитвания, на които не сме записали следваща стъпка. */
@@ -59,6 +59,13 @@ class Today
             ->map(fn ($client) => ['client' => $client, 'payment' => $client->paymentState(), 'problems' => SiteMonitor::problems($client)])
             ->filter(fn ($row) => $row['payment']['state'] === 'late' || $row['problems'])
             ->values();
+    }
+
+    /** Колко чака човека: непрочетени и стъпки до края на днес, които са негови или без човек. */
+    public static function urgentCountFor(int $userId): int
+    {
+        return Project::where('source', 'website')->whereNull('read_at')->forMember($userId)->count()
+            + Project::openLeads()->forMember($userId)->whereNotNull('next_action_at')->where('next_action_at', '<=', now('Europe/Sofia')->endOfDay()->utc())->count();
     }
 
     /** Броячът в менюто: неща, които не търпят отлагане. */

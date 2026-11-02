@@ -77,7 +77,7 @@ class AdminToolsTest extends TestCase
         $this->lead(['name' => 'Запитване от Ничий клиент']);
 
         $this->actingAs($me)->patch("/admin/projects/{$mine->id}/pipeline", ['stage' => 'contacted', 'assigned_to' => $me->id]);
-        $this->actingAs($me)->patch("/admin/projects/{$theirs->id}/pipeline", ['stage' => 'contacted', 'assigned_to' => $partner->id]);
+        $this->actingAs($partner)->patch("/admin/projects/{$theirs->id}/pipeline", ['stage' => 'contacted', 'assigned_to' => $partner->id]);
         $this->assertSame([$me->id, $partner->id], [$mine->fresh()->assigned_to, $theirs->fresh()->assigned_to]);
 
         $this->actingAs($me)->get('/admin/dnes?mine=1')->assertSee('Моят клиент')->assertSee('Ничий клиент')->assertDontSee('Неговият клиент');

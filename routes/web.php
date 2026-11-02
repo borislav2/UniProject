@@ -116,6 +116,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('inquiries/read-all', [InquiryController::class, 'readAll'])->name('inquiries.read-all');
     Route::post('inquiries/{project}/read', [InquiryController::class, 'read'])->name('inquiries.read');
     Route::post('inquiries/{project}/unread', [InquiryController::class, 'unread'])->name('inquiries.unread');
+    Route::post('inquiries/{project}/take', [InquiryController::class, 'take'])->name('inquiries.take');
+    Route::get('proverki', [InquiryController::class, 'siteChecks'])->name('site-checks.index');
 
     // Emails to clients from templates (App\Support\ClientEmails)
     Route::get('emails', [ClientEmailController::class, 'index'])->name('client-emails.index');

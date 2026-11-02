@@ -34,7 +34,8 @@
                 <p class="mt-2 text-xs uppercase tracking-wider text-gray-400">Административен панел</p>
             </div>
             @php
-                $unreadInquiries = \App\Models\Project::where('source', 'website')->whereNull('read_at')->count();
+                $unreadInquiries = \App\Models\Project::formLeads()->whereNull('read_at')->count();
+                $unreadChecks = \App\Models\Project::siteChecks()->whereNull('read_at')->count();
                 $urgentToday = \App\Support\Admin\Today::urgentCount();
                 $latePayments = \App\Models\Project::subscribers()->with('payments')->get()->filter(fn ($client) => $client->paymentState()['state'] === 'late')->count();
                 $callbacksToday = \App\Models\OutreachCall::whereNotNull('callback_on')->whereDate('callback_on', '<=', today())->count();
@@ -46,6 +47,7 @@
                     ],
                     'Клиенти' => [
                         ['admin.inquiries.index', 'admin.inquiries.*', 'envelope', 'Запитвания', $unreadInquiries],
+                        ['admin.site-checks.index', 'admin.site-checks.*', 'globe', 'Проверки на сайт', $unreadChecks],
                         ['admin.projects.index', 'admin.projects.*', 'project-diagram', 'Проекти', 0],
                         ['admin.clients.index', 'admin.clients.*', 'users', 'Абонаменти', $latePayments],
                         ['admin.client-emails.index', 'admin.client-emails.*', 'paper-plane', 'Имейли до клиенти', 0],

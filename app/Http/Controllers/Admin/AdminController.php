@@ -7,11 +7,17 @@ use App\Models\ChatConversation;
 use App\Models\OutreachCall;
 use App\Models\Post;
 use App\Models\Project;
+use App\Models\User;
+use App\Support\Admin\SalesMetrics;
+use App\Support\Admin\TeamActivity;
 use App\Support\Outreach\Outreach;
 
 class AdminController extends Controller
 {
-    /** Таблото: какво чака днес (запитвания, консултации, обаждания, писма), после общата картина. */
+    /**
+     * Таблото: какво чака днес, после продажбите този месец спрямо миналия, екипът тази седмица (по човек),
+     * бързината на отговор, последните запитвания, консултациите и откъде идват клиентите.
+     */
     public function dashboard()
     {
         $leads = Project::where('source', 'website');
@@ -23,10 +29,19 @@ class AdminController extends Controller
             ->orderByDesc('total')
             ->get();
 
+        $weekStart = now('Europe/Sofia')->startOfWeek()->utc();
+        $team = User::orderBy('name')->get(['id', 'name'])->map(fn (User $user) => [
+            'user' => $user,
+            'work' => TeamActivity::workload($user->id),
+            'week' => TeamActivity::counts($user->id, $weekStart),
+            'today' => TeamActivity::counts($user->id, TeamActivity::startOfToday())['total'],
+        ]);
+
         return view('admin.dashboard', [
-            'unread' => (clone $leads)->whereNull('read_at')->count(),
+            'unread' => Project::formLeads()->whereNull('read_at')->count(),
+            'unreadChecks' => Project::siteChecks()->whereNull('read_at')->count(),
             'overdue' => Project::openLeads()->whereNotNull('next_action_at')->where('next_action_at', '<', now())->count(),
-            'recentLeads' => (clone $leads)->latest()->take(5)->get(),
+            'recentLeads' => (clone $leads)->with('assignee')->latest()->take(6)->get(),
             'consultations' => Project::whereNotNull('consultation_at')
                 ->whereBetween('consultation_at', [now()->subHour(), now()->addDays(14)])
                 ->orderBy('consultation_at')->take(6)->get(),
@@ -44,6 +59,11 @@ class AdminController extends Controller
             'nextPost' => Post::where('status', 'published')->where('published_at', '>', now())->orderBy('published_at')->first(),
             'mailNotConfigured' => in_array(config('mail.default'), ['log', 'array'], true),
             'leadChannels' => $leadChannels,
+            'months' => SalesMetrics::months(),
+            'pipeline' => SalesMetrics::pipeline(),
+            'response' => SalesMetrics::responseTime(),
+            'kinds' => SalesMetrics::kinds(),
+            'team' => $team,
         ]);
     }
 }
