@@ -60,12 +60,19 @@ class AdminUsabilityTest extends TestCase
         $this->project(['name' => 'Сайт в работа', 'status' => 'In Progress']);
         $this->project(['name' => 'Готов сайт', 'status' => 'Completed']);
 
+        $this->project(['name' => 'Спечелено запитване', 'source' => 'website', 'stage' => 'won', 'status' => 'In Progress']);
+        $this->project(['name' => 'Загубено запитване', 'source' => 'website', 'stage' => 'lost', 'status' => 'Cancelled']);
+
+        // Проекти = само работата за клиенти: запитванията (отворени или загубени) са в „Запитвания“.
         $this->actingAs($admin)->get('/admin/projects')->assertOk()
-            ->assertSee('Отворени запитвания (1)')->assertSee('В работа (1)')->assertSee('Завършени (1)')
+            ->assertSee('Всички (3)')->assertSee('В работа (2)')->assertSee('Завършени (1)')
+            ->assertSee('Спечелено запитване')->assertDontSee('Ново запитване от сайта')->assertDontSee('Загубено запитване')
+            ->assertDontSee('Отворени запитвания')
             ->assertSee('Завършен')->assertDontSee('>Completed<', false);
 
         $this->actingAs($admin)->get('/admin/projects?filter=active')->assertOk()
             ->assertSee('Сайт в работа')->assertDontSee('Готов сайт')->assertDontSee('Ново запитване от сайта');
+        $this->actingAs($admin)->get('/admin/projects?filter=leads')->assertRedirect(route('admin.inquiries.index'));
     }
 
     public function test_project_search_finds_the_client_phone(): void

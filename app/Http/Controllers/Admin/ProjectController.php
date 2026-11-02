@@ -14,7 +14,6 @@ class ProjectController extends Controller
 {
     /** Филтри над списъка: ключ => [текст, условие]. */
     private const FILTERS = [
-        'leads' => 'Отворени запитвания',
         'active' => 'В работа',
         'done' => 'Завършени',
         'mine' => 'Моите',
@@ -22,8 +21,12 @@ class ProjectController extends Controller
 
     public function index(Request $request)
     {
+        // Запитванията вече са в „Запитвания“: старите линкове ?filter=leads водят там.
+        if ($request->query('filter') === 'leads') {
+            return redirect()->route('admin.inquiries.index');
+        }
         $filter = array_key_exists($request->query('filter'), self::FILTERS) ? $request->query('filter') : null;
-        $projects = $this->filtered(Project::query(), $filter)
+        $projects = $this->filtered(Project::clientProjects(), $filter)
             ->with(['category', 'technologies', 'assignee'])
             ->orderBy('created_at', 'desc')
             ->paginate(15)
@@ -35,7 +38,6 @@ class ProjectController extends Controller
     private function filtered($query, ?string $filter)
     {
         return match ($filter) {
-            'leads' => $query->openLeads()->orderByRaw('next_action_at is null')->orderBy('next_action_at'),
             'active' => $query->whereIn('status', ['In Progress', 'On Hold']),
             'done' => $query->where('status', 'Completed'),
             'mine' => $query->where('assigned_to', auth()->id()),
@@ -45,9 +47,9 @@ class ProjectController extends Controller
 
     private function filterCounts(): array
     {
-        $counts = ['' => ['Всички', Project::count()]];
+        $counts = ['' => ['Всички', Project::clientProjects()->count()]];
         foreach (self::FILTERS as $key => $label) {
-            $counts[$key] = [$label, $this->filtered(Project::query(), $key)->count()];
+            $counts[$key] = [$label, $this->filtered(Project::clientProjects(), $key)->count()];
         }
 
         return $counts;
@@ -290,7 +292,7 @@ class ProjectController extends Controller
             return redirect()->route('admin.projects.index');
         }
         
-        $projects = Project::search($search)
+        $projects = Project::clientProjects()->search($search)
             ->with(['category', 'technologies'])
             ->orderBy('created_at', 'desc')
             ->paginate(15)

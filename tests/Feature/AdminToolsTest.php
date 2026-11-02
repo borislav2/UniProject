@@ -81,8 +81,11 @@ class AdminToolsTest extends TestCase
         $this->assertSame([$me->id, $partner->id], [$mine->fresh()->assigned_to, $theirs->fresh()->assigned_to]);
 
         $this->actingAs($me)->get('/admin/dnes?mine=1')->assertSee('Моят клиент')->assertSee('Ничий клиент')->assertDontSee('Неговият клиент');
+        // Спечелените стават проекти: „Моите“ в Проекти показва моите.
+        $this->actingAs($me)->patch("/admin/projects/{$mine->id}/pipeline", ['stage' => 'won', 'assigned_to' => $me->id]);
+        $this->actingAs($partner)->patch("/admin/projects/{$theirs->id}/pipeline", ['stage' => 'won', 'assigned_to' => $partner->id]);
         $this->actingAs($me)->get('/admin/projects?filter=mine')->assertSee('Моят клиент')->assertDontSee('Неговият клиент')->assertDontSee('Ничий клиент');
-        $this->actingAs($me)->get('/admin/projects')->assertSee('Владимир');
+        $this->actingAs($me)->get('/admin/projects')->assertSee('Владимир')->assertDontSee('Ничий клиент');
     }
 
     public function test_next_call_screen_shows_keyboard_shortcuts(): void
