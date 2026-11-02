@@ -73,7 +73,7 @@ class ChatTest extends TestCase
         $this->assertStringContainsString('Борислав Костадинов', $knowledge);
         $this->assertStringContainsString('Founders and owners', $knowledge);
         $this->assertStringContainsString('От 4 години', $knowledge);
-        $this->assertStringContainsString('НСИ', $knowledge);
+        $this->assertStringContainsString('Deloitte', $knowledge);
     }
 
     public function test_without_a_key_it_answers_from_the_faq_and_saves_a_phone_as_an_inquiry(): void
