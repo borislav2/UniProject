@@ -173,16 +173,7 @@
                                 <span class="h-px flex-1 bg-gradient-to-l from-transparent to-emerald-400/60" aria-hidden="true"></span>
                             </div>
                         @endif
-                        @if(! empty($problem['system_trust']))
-                            <ul class="mt-6 grid gap-3 sm:grid-cols-3">
-                                @foreach($problem['system_trust'] as $point)
-                                    <li class="flex items-center gap-3 rounded-2xl bg-white/[0.06] px-4 py-3 text-sm font-semibold text-white ring-1 ring-white/10">
-                                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-400/15"><x-icon :name="$point['icon'] ?? 'check'" class="text-xs text-emerald-300" /></span>
-                                        <span class="leading-snug">{{ $point['text'] }}</span>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
+                       
                     </div>
                 </div>
             </div>
