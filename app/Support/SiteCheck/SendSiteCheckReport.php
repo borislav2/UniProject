@@ -30,6 +30,7 @@ class SendSiteCheckReport
         }
 
         $notes = [];
+        $sent = false;
         if ($report) {
             $problems = collect($report['checks'])->where('status', '!=', 'ok')->pluck('title');
             $notes[] = "Проверка на сайт {$domain}: оценка {$report['score']} от 100.";
@@ -38,6 +39,7 @@ class SendSiteCheckReport
             try {
                 Mail::to($email)->send(new SiteCheckReportMail($report));
                 $notes[] = "Отчетът е изпратен на {$email}.";
+                $sent = true;
             } catch (\Throwable $e) {
                 Log::error('Site check report email failed: ' . $e->getMessage(), ['project_id' => $lead->id]);
                 $notes[] = "Отчетът НЕ беше изпратен на {$email}: " . $e->getMessage();
@@ -46,7 +48,17 @@ class SendSiteCheckReport
             $notes[] = "Проверката на {$domain} не успя (вижте лога). Отчет не е изпратен, свържете се с клиента на {$email}.";
         }
 
-        $lead->forceFill(['description' => implode("\n\n", $notes)])->save();
+        // Резултатът се пази цял: страницата „Проверки на сайт“ го показва като обобщение най-отгоре.
+        $lead->forceFill([
+            'description' => implode("\n\n", $notes),
+            'site_check_report' => $report ? [
+                'domain' => $domain,
+                'score' => $report['score'],
+                'checks' => collect($report['checks'])->map(fn ($c) => ['status' => $c['status'], 'title' => $c['title'], 'detail' => $c['detail'] ?? ''])->values()->all(),
+                'sent' => $sent,
+                'checked_at' => now()->toIso8601String(),
+            ] : ['domain' => $domain, 'failed' => true, 'checked_at' => now()->toIso8601String()],
+        ])->save();
 
         try {
             Mail::to(config('creatium.notify_email'))->send(new NewLeadMail($lead));

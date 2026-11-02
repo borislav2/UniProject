@@ -68,6 +68,7 @@ class Project extends Model
         'monitor_alerted_at' => 'datetime',
         'ssl_expires_at' => 'datetime',
         'domain_expires_at' => 'datetime',
+        'site_check_report' => 'array',
     ];
 
     /** Етапите на продажбата за запитванията. Отворените са тези, които още чакат действие от нас. */
@@ -116,6 +117,102 @@ class Project extends Model
     public function scopeOpenLeads(Builder $query): Builder
     {
         return $query->whereIn('stage', self::OPEN_STAGES);
+    }
+
+    /**
+     * Откъде е дошло запитването от сайта: формата за контакт, „Получете оферта“ от пакетите,
+     * безплатната проверка на сайт или Крео (чата). [текст, цвят на етикета]
+     */
+    public const LEAD_KINDS = [
+        'form' => ['Форма за контакт', 'bg-sky-100 text-sky-800'],
+        'quote' => ['Оферта за пакет', 'bg-emerald-100 text-emerald-800'],
+        'site-check' => ['Проверка на сайт', 'bg-amber-100 text-amber-800'],
+        'chat' => ['Крео (чат)', 'bg-fuchsia-100 text-fuchsia-800'],
+    ];
+
+    public const SITE_CHECK_SERVICE = 'Проверка на сайт';
+
+    public const CHAT_SERVICE = 'Запитване от чата';
+
+    public function leadKind(): ?string
+    {
+        if ($this->source !== 'website') {
+            return null;
+        }
+
+        return match (true) {
+            $this->service === self::SITE_CHECK_SERVICE => 'site-check',
+            $this->service === self::CHAT_SERVICE => 'chat',
+            str_starts_with((string) $this->service, 'Оферта: ') => 'quote',
+            default => 'form',
+        };
+    }
+
+    public function leadKindLabel(): ?string
+    {
+        return self::LEAD_KINDS[$this->leadKind()][0] ?? null;
+    }
+
+    public function leadKindClass(): string
+    {
+        return self::LEAD_KINDS[$this->leadKind()][1] ?? 'bg-gray-100 text-gray-700';
+    }
+
+    /** Запитвания от формите на сайта (контакт и оферта за пакет), без проверките на сайт и чата. */
+    public function scopeFormLeads(Builder $query): Builder
+    {
+        return $query->where('source', 'website')
+            ->where(fn ($q) => $q->whereNull('service')->orWhereNotIn('service', [self::SITE_CHECK_SERVICE, self::CHAT_SERVICE]));
+    }
+
+    /** Хората, които са пуснали безплатната проверка на сайта си. */
+    public function scopeSiteChecks(Builder $query): Builder
+    {
+        return $query->where('source', 'website')->where('service', self::SITE_CHECK_SERVICE);
+    }
+
+    /** Запитвания на човека от екипа и неразпределените (за да не остане нищо без човек). */
+    public function scopeForMember(Builder $query, ?int $userId): Builder
+    {
+        return $userId ? $query->where(fn ($q) => $q->where('assigned_to', $userId)->orWhereNull('assigned_to')) : $query;
+    }
+
+    /**
+     * Обобщението на безплатната проверка: оценка и точките по статус. Старите запитвания нямат записан резултат,
+     * затова оценката и списъкът „За оправяне“ се четат от описанието.
+     */
+    public function siteCheckSummary(): ?array
+    {
+        if ($this->leadKind() !== 'site-check') {
+            return null;
+        }
+        $report = $this->site_check_report;
+        if (is_array($report) && isset($report['score'])) {
+            $checks = collect($report['checks'] ?? []);
+
+            return [
+                'domain' => $report['domain'] ?? $this->website_url,
+                'score' => (int) $report['score'],
+                'fail' => $checks->where('status', 'fail')->values()->all(),
+                'warn' => $checks->where('status', 'warn')->values()->all(),
+                'ok' => $checks->where('status', 'ok')->count(),
+                'sent' => (bool) ($report['sent'] ?? false),
+                'failed' => false,
+            ];
+        }
+        if (is_array($report) && ! empty($report['failed'])) {
+            return ['domain' => $report['domain'] ?? $this->website_url, 'score' => null, 'fail' => [], 'warn' => [], 'ok' => 0, 'sent' => false, 'failed' => true];
+        }
+
+        $text = (string) $this->description;
+        if (! preg_match('/оценка (\d+) от 100/u', $text, $score)) {
+            return ['domain' => $this->website_url, 'score' => null, 'fail' => [], 'warn' => [], 'ok' => 0, 'sent' => false, 'failed' => str_contains($text, 'не успя'), 'pending' => str_contains($text, 'тече')];
+        }
+        $problems = preg_match('/За оправяне:\n((?:- .+\n?)+)/u', $text, $m)
+            ? array_map(fn ($line) => ['status' => 'fail', 'title' => ltrim($line, '- '), 'detail' => ''], array_filter(explode("\n", trim($m[1]))))
+            : [];
+
+        return ['domain' => $this->website_url, 'score' => (int) $score[1], 'fail' => array_values($problems), 'warn' => [], 'ok' => null, 'sent' => str_contains($text, 'Отчетът е изпратен'), 'failed' => false];
     }
     
     /** Статусите в базата са на английски (валидират се така); в админа се показват на български. */

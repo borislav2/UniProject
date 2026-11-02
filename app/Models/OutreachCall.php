@@ -59,7 +59,7 @@ class OutreachCall extends Model
 
     protected $fillable = ['external_id', 'name', 'phone', 'industry', 'city', 'source_url', 'status', 'note', 'called_at', 'callback_on', 'project_id'];
 
-    protected $casts = ['called_at' => 'datetime', 'callback_on' => 'date', 'is_mobile' => 'boolean', 'attempts' => 'integer'];
+    protected $casts = ['called_by' => 'integer', 'called_at' => 'datetime', 'callback_on' => 'date', 'is_mobile' => 'boolean', 'attempts' => 'integer'];
 
     public function project()
     {
@@ -77,6 +77,12 @@ class OutreachCall extends Model
             'by_status' => $byStatus,
             'goal' => max(1, (int) config('creatium.outreach.daily_call_goal')),
         ];
+    }
+
+    /** Кой от екипа се обади последно (записва се при резултат от обаждането). */
+    public function caller()
+    {
+        return $this->belongsTo(User::class, 'called_by');
     }
 
     protected static function booted(): void

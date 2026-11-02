@@ -159,6 +159,7 @@ class OutreachCallController extends Controller
         $calledToday = $call->called_at && $call->called_at->timezone('Europe/Sofia')->toDateString() === OutreachCall::today();
         if ($validated['status'] !== 'new' && ! $calledToday) {
             $call->called_at = now();
+            $call->called_by = $request->user()->id;
             $call->attempts = min(255, $call->attempts + 1);
         }
         $call->save();
