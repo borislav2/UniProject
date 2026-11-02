@@ -56,7 +56,8 @@ return [
     // Чатът на сайта с Mistral (безплатен план: изключете използването на данните за обучение в акаунта).
     'mistral' => [
         'key' => env('MISTRAL_API_KEY'),
-        'model' => env('MISTRAL_MODEL') ?: 'mistral-medium-latest',
+        // Large пише по-грамотно на български от Medium; MISTRAL_MODEL го сменя.
+        'model' => env('MISTRAL_MODEL') ?: 'mistral-large-latest',
         'base_url' => env('MISTRAL_BASE_URL') ?: 'https://api.mistral.ai/v1',
     ],
 
