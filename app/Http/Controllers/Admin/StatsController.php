@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClientEmail;
+use App\Models\LinkedinProspect;
 use App\Models\OutreachCall;
 use App\Models\OutreachProspect;
 use App\Models\Project;
@@ -38,6 +39,18 @@ class StatsController extends Controller
             ['Спечелени', (clone $called)->whereHas('project', fn ($q) => $q->where('stage', 'won'))->count()],
         ];
 
+        // LinkedIn: от контактите, добавени в периода, колко са стигнали докъде (времената се пазят и когато статусът се смени по-късно).
+        $added = LinkedinProspect::where('created_at', '>=', $from);
+        $linkedin = [
+            ['Добавени контакти', (clone $added)->count()],
+            ['Покана изпратена', (clone $added)->whereNotNull('invited_at')->count()],
+            ['Приета покана', (clone $added)->whereNotNull('connected_at')->count()],
+            ['Писано', (clone $added)->whereNotNull('messaged_at')->count()],
+            ['Отговорили', (clone $added)->whereNotNull('replied_at')->count()],
+            ['Запитване', (clone $added)->whereNotNull('project_id')->count()],
+            ['Спечелени', (clone $added)->whereHas('project', fn ($q) => $q->where('stage', 'won'))->count()],
+        ];
+
         // Запитвания (сайт, Крео, проверка на сайт и превърнатите потенциални клиенти) по канал.
         $leads = Project::whereNotNull('stage')->where('created_at', '>=', $from)->get(['id', 'stage', 'lead_channel', 'lost_reason']);
         $channels = $leads->groupBy(fn ($lead) => $lead->lead_channel ?: 'Директно')->map(fn ($group, $channel) => [
@@ -50,6 +63,6 @@ class StatsController extends Controller
         $pipeline = collect(Project::STAGES)->map(fn ($stage, $key) => [$stage[0], $leads->where('stage', $key)->count()])->values();
         $lostReasons = $leads->where('stage', 'lost')->map(fn ($lead) => trim((string) $lead->lost_reason) ?: 'Без причина')->countBy()->sortDesc();
 
-        return view('admin.stats', compact('days', 'emails', 'followups', 'calls', 'channels', 'pipeline', 'lostReasons'));
+        return view('admin.stats', compact('days', 'emails', 'followups', 'calls', 'linkedin', 'channels', 'pipeline', 'lostReasons'));
     }
 }

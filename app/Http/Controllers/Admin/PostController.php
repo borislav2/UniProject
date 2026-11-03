@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\PostCategory;
 use App\Support\Facebook\FacebookPublisher;
+use App\Support\LinkedIn\LinkedInPublisher;
 use App\Support\Uploads;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -67,6 +68,24 @@ class PostController extends Controller
         }
 
         return back()->with('success', 'Статията е публикувана във Facebook.');
+    }
+
+    /** „Пусни в LinkedIn“: веднага, извън реда (и повторен опит след грешка). */
+    public function linkedin(Post $post, LinkedInPublisher $publisher)
+    {
+        if (! $post->isVisible('bg')) {
+            return back()->with('error', 'Статията още не е публикувана на сайта на български.');
+        }
+        if ($post->linkedin_post_id) {
+            return back()->with('error', 'Статията вече е в LinkedIn.');
+        }
+
+        $post->forceFill(['linkedin_error' => null])->save();
+        if ($error = $publisher->publish($post)) {
+            return back()->with('error', 'LinkedIn: ' . $error);
+        }
+
+        return back()->with('success', 'Статията е публикувана в LinkedIn.');
     }
 
     public function destroy(Post $post)

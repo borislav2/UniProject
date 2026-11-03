@@ -3,6 +3,7 @@
 namespace App\Support\Admin;
 
 use App\Models\ClientEmail;
+use App\Models\LinkedinProspect;
 use App\Models\OutreachCall;
 use App\Models\Project;
 use App\Models\ProjectNote;
@@ -11,7 +12,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Какво е направил човек от екипа за даден период: бележки и разговори по запитванията, смени на етапа,
- * имейли до клиенти, писма до бизнеси и обаждания от списъка. „Днес“ показва деня, таблото седмицата по хора.
+ * имейли до клиенти, писма до бизнеси, обаждания от списъка и покани и съобщения в LinkedIn. „Днес“ показва деня, таблото седмицата по хора.
  */
 class TeamActivity
 {
@@ -70,7 +71,22 @@ class TeamActivity
                 'user' => $call->caller?->name,
             ]);
 
-        return $notes->concat($emails)->concat($calls)->sortByDesc('at')->values();
+        // LinkedIn: кой е пуснал покана и кой е писал (колоните invited_by / messaged_by се пишат при смяна на статуса).
+        $linkedin = collect(['invited' => ['linkedin-invite', 'Покана в LinkedIn'], 'messaged' => ['linkedin-message', 'Съобщение в LinkedIn']])
+            ->flatMap(fn ($meta, $step) => LinkedinProspect::with($step === 'invited' ? 'inviter:id,name' : 'messenger:id,name')
+                ->when($userId, fn ($q) => $q->where($step . '_by', $userId))
+                ->whereNotNull($step . '_by')
+                ->whereBetween($step . '_at', [$from, $to])->get()
+                ->map(fn (LinkedinProspect $p) => [
+                    'at' => $p->{$step . '_at'},
+                    'type' => $meta[0],
+                    'label' => $meta[1],
+                    'text' => $p->name . ($p->company ? ' (' . $p->company . ')' : ''),
+                    'url' => $p->project_id ? route('admin.projects.show', $p->project_id) : route('admin.linkedin.index', ['q' => $p->name]),
+                    'user' => ($step === 'invited' ? $p->inviter : $p->messenger)?->name,
+                ]));
+
+        return $notes->concat($emails)->concat($calls)->concat($linkedin)->sortByDesc('at')->values();
     }
 
     /** Броячи за периода: обаждания (до бизнеси и разговори по запитванията), имейли, писма до бизнеси, смени на етапа, спечелени. */
@@ -82,6 +98,8 @@ class TeamActivity
             'calls' => $entries->whereIn('type', ['call', 'outreach-call'])->count(),
             'emails' => $entries->where('type', 'email')->count(),
             'outreach' => $entries->where('type', 'outreach')->count(),
+            'linkedin_invites' => $entries->where('type', 'linkedin-invite')->count(),
+            'linkedin_messages' => $entries->where('type', 'linkedin-message')->count(),
             'stages' => $entries->where('type', 'stage')->count(),
             'notes' => $entries->where('type', 'note')->count(),
             'total' => $entries->count(),

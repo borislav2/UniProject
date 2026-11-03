@@ -26,6 +26,7 @@
                 <li>How you got to the site (for example from Google or from an ad), if the site receives it from your browser or from the link you followed. We store it with your inquiry so we know which channels work.</li>
                 <li>Technical data needed to run and secure the site: IP address and request data in the server logs.</li>
                 <li>If we have written to you as a business: the business name, its publicly listed email address, website and city, taken from public sources (your website, Google Maps or OpenStreetMap), and whether you clicked a link in our email (which link and when). We do not track whether you open the email.</li>
+                <li>If we have looked you up on LinkedIn: your name, job title, company and the contact details visible on your public profile. We process them under our legitimate interest (Art. 6(1)(f) GDPR) to offer you our services; you can object and ask us to delete your data by writing to {{ $contact['email'] }}.</li>
                 @if(config('creatium.gtm_id'))
                     <li>Data about your visit from analytics and advertising tools, only if you have allowed them (see section 6).</li>
                 @endif

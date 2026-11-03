@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ChatController as AdminChatController;
 use App\Http\Controllers\Admin\ClientEmailController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\InquiryController;
+use App\Http\Controllers\Admin\LinkedinController;
 use App\Http\Controllers\Admin\OutreachCallController;
 use App\Http\Controllers\Admin\OutreachController;
 use App\Http\Controllers\Admin\OutreachSearchController;
@@ -145,6 +146,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('outreach-calls/back', [OutreachCallController::class, 'back'])->name('outreach.calls.back');
     Route::post('outreach-calls/{call}/skip', [OutreachCallController::class, 'skip'])->name('outreach.calls.skip');
     Route::post('outreach-calls/{call}/lead', [OutreachCallController::class, 'toLead'])->name('outreach.calls.lead');
+    Route::get('linkedin', [LinkedinController::class, 'index'])->name('linkedin.index');
+    Route::post('linkedin', [LinkedinController::class, 'store'])->middleware('throttle:60,1')->name('linkedin.store');
+    Route::post('linkedin/bulk', [LinkedinController::class, 'bulk'])->middleware('throttle:20,1')->name('linkedin.bulk');
+    Route::patch('linkedin/{prospect}', [LinkedinController::class, 'update'])->name('linkedin.update');
+    Route::delete('linkedin/{prospect}', [LinkedinController::class, 'destroy'])->name('linkedin.destroy');
+    Route::post('linkedin/{prospect}/lead', [LinkedinController::class, 'toLead'])->name('linkedin.lead');
     Route::get('outreach', [OutreachController::class, 'index'])->name('outreach.index');
     Route::post('outreach/import', [OutreachController::class, 'import'])->name('outreach.import');
     Route::post('outreach/import-server', [OutreachController::class, 'importServer'])->name('outreach.import-server');
@@ -167,6 +174,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Site content: blog, page texts, SEO
     Route::post('posts/{post}/facebook', [PostController::class, 'facebook'])->middleware('throttle:10,1')->name('posts.facebook');
+    Route::post('posts/{post}/linkedin', [PostController::class, 'linkedin'])->middleware('throttle:10,1')->name('posts.linkedin');
     Route::resource('posts', PostController::class)->except('show');
     Route::resource('post-categories', PostCategoryController::class)->except(['show', 'create']);
     Route::get('content', [ContentController::class, 'index'])->name('content.index');

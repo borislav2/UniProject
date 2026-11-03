@@ -61,6 +61,15 @@ return [
         'base_url' => env('MISTRAL_BASE_URL') ?: 'https://api.mistral.ai/v1',
     ],
 
+    // Публикуване на статиите от блога в страницата на фирмата в LinkedIn (tools/linkedin/README.md). Ключът изтича на 60 дни.
+    'linkedin' => [
+        'organization_id' => env('LINKEDIN_ORGANIZATION_ID'),
+        'token' => env('LINKEDIN_ACCESS_TOKEN'),
+        'token_expires' => env('LINKEDIN_TOKEN_EXPIRES'),
+        'version' => env('LINKEDIN_API_VERSION') ?: '202608',
+        'api_url' => env('LINKEDIN_API_URL') ?: 'https://api.linkedin.com/rest',
+    ],
+
     // Публикуване на статиите от блога във Facebook страницата. Ключът се взима с php artisan creatium:facebook-connect.
     'facebook' => [
         'page_id' => env('FACEBOOK_PAGE_ID'),

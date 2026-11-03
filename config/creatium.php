@@ -94,6 +94,8 @@ return [
         'search_call_list' => (bool) env('OUTREACH_SEARCH_CALL_LIST', false),
         // Целта за обаждания на ден в брояча на „Без сайт (за обаждане)“.
         'daily_call_goal' => (int) env('OUTREACH_DAILY_CALL_GOAL', 40),
+        // Покани в LinkedIn на ден (LinkedIn пуска около 100 на седмица). Брояч в „Потенциални клиенти“ → „LinkedIn“.
+        'linkedin_daily_invites' => (int) env('OUTREACH_LINKEDIN_DAILY_INVITES', 15),
     ],
 
     // Безплатна проверка на сайт (/proverka-na-sait). audit_price_note е текстът за цената на подробния одит в имейла
