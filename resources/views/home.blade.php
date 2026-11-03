@@ -63,7 +63,7 @@
                 @endif
             </h1>
             <div class="rise-text mt-10 flex flex-col sm:flex-row gap-3" style="--d: 260ms">
-                <a href="#kalkulator" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
+                <a href="{{ lroute('services') }}#kalkulator" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
                     <x-icon name="calculator" class="text-sm" /> {{ $hero['button'] }}
                 </a>
                 <a href="{{ lroute('services') }}" class="relative edge glass inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white hover:bg-white/10 transition-colors">
@@ -93,22 +93,18 @@
                 </p>
             </div>
         @endif
-        {{-- Четири заоблени карти с една обща мисъл: стойност и един ред текст; „link“ прави текста връзка. --}}
-        <dl class="rise-text grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4" style="--d: 320ms">
-            @foreach($trust['proof'] as $fact)
-                <div class="relative edge glass rounded-[2rem] px-5 py-6 sm:px-7 sm:py-7">
-                    <dt class="sr-only">{{ \Illuminate\Support\Str::ucfirst(trim((string) $fact['text'])) }}</dt>
-                    <dd class="display text-2xl sm:text-3xl md:text-4xl">{{ $fact['value'] }}</dd>
-                    <dd class="mt-2 text-sm sm:text-base font-medium text-gray-200 leading-snug">
-                        @if(filled($fact['link'] ?? null))
-                            <a href="{{ url($fact['link']) }}" class="group underline-offset-4 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300 rounded-sm">{{ \Illuminate\Support\Str::ucfirst(trim((string) $fact['text'])) }}&nbsp;<x-icon name="arrow-right" class="inline text-[10px] text-brand-300 transition-transform group-hover:translate-x-0.5" /></a>
-                        @else
-                            {{ \Illuminate\Support\Str::ucfirst(trim((string) $fact['text'])) }}
-                        @endif
-                    </dd>
-                </div>
-            @endforeach
-        </dl>
+        {{-- Четирите квадрата (home_trust.proof_cards): малка икона, получер заглавие и текст под него. --}}
+        @if(! empty($trust['proof_cards']))
+            <div class="rise-text grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4" style="--d: 320ms">
+                @foreach($trust['proof_cards'] as $card)
+                    <div class="relative edge glass rounded-[2rem] px-6 py-6 sm:py-7">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-500/25"><x-icon :name="$card['icon'] ?? 'check'" class="text-sm text-brand-200" /></span>
+                        <h3 class="mt-4 text-base font-extrabold leading-snug sm:text-lg">{{ $card['title'] }}</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-gray-300">{{ $card['text'] }}</p>
+                    </div>
+                @endforeach
+            </div>
+        @endif
     </div>
 </section>
 
@@ -125,43 +121,43 @@
             </div>
         </div>
 
-        @if(! empty($problem['stats']))
-            {{-- Числата за бизнеса: всяка карта е центрирана (икона, число, текст) и е свързана с останалите с нишка. --}}
-            @if(filled($problem['stats_label'] ?? null))
-                <p class="reveal mt-14 text-center text-sm font-bold uppercase tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ $problem['stats_label'] }}</p>
+        @if(! empty($problem['guide_items']))
+            {{-- Принципите, по които ви напътстваме: центрирани карти (икона, заглавие, текст), без числа. --}}
+            @if(filled($problem['guide_label'] ?? null))
+                <p class="reveal mt-14 text-center text-sm font-bold uppercase tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ $problem['guide_label'] }}</p>
             @endif
             <div class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                @foreach($problem['stats'] as $stat)
-                    <article class="reveal card-hover relative flex flex-col items-center rounded-[2rem] bg-brand-50/70 px-6 pb-6 pt-7 text-center ring-1 ring-brand-100 dark:bg-white/[0.04] dark:ring-white/10" style="--reveal-delay: {{ $loop->index * 80 }}ms">
-                        <span class="flex h-16 w-16 items-center justify-center rounded-full bg-brand-gradient shadow-lg shadow-brand-900/20 ring-8 ring-white/70 dark:ring-white/5"><x-icon :name="$stat['icon'] ?? 'chart-line'" class="text-xl text-white" /></span>
-                        <span class="display mt-4 block text-5xl text-brand-700 dark:text-brand-300">{{ $stat['value'] }}</span>
-                        <p class="mt-4 text-lg font-bold leading-snug text-brand-950 text-balance dark:text-white">{{ $stat['text'] }}</p>
-                        @if(filled($stat['meaning'] ?? null))
-                            <p class="mt-4 w-full flex-1 rounded-2xl bg-white px-4 py-3 text-left text-sm leading-relaxed text-gray-700 ring-1 ring-brand-100 dark:bg-white/5 dark:text-gray-300 dark:ring-white/10"><span class="block text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300">{{ __('За вас') }}</span>{{ $stat['meaning'] }}</p>
-                        @endif
-                        {{-- Нишката между картите: показва, че числата са части от една верига. --}}
-                        @unless($loop->last)<span class="absolute -right-4 top-[3.75rem] z-10 hidden h-0.5 w-4 bg-gradient-to-r from-brand-400 to-brand-500 xl:block" aria-hidden="true"></span>@endunless
+                @foreach($problem['guide_items'] as $item)
+                    <article class="reveal card-hover relative flex flex-col items-center rounded-[2rem] bg-brand-50/70 px-6 pb-8 pt-7 text-center ring-1 ring-brand-100 dark:bg-white/[0.04] dark:ring-white/10" style="--reveal-delay: {{ $loop->index * 80 }}ms">
+                        <span class="flex h-16 w-16 items-center justify-center rounded-full bg-brand-gradient shadow-lg shadow-brand-900/20 ring-8 ring-white/70 dark:ring-white/5"><x-icon :name="$item['icon'] ?? 'check'" class="text-xl text-white" /></span>
+                        <h3 class="mt-5 text-lg font-bold leading-snug text-brand-950 text-balance dark:text-white">{{ $item['title'] }}</h3>
+                        <p class="mt-3 leading-relaxed text-gray-700 dark:text-gray-300">{{ $item['text'] }}</p>
                     </article>
                 @endforeach
             </div>
         @endif
 
-        @if(! empty($problem['system_items']))
+        @if(! empty($problem['system_steps']))
             {{-- Една карта: сайтът и маркетингът като една система, без разделение на изработка и маркетинг. --}}
             <div class="reveal relative mt-6 overflow-hidden rounded-[2rem] surface-night on-dark p-7 text-white md:p-10">
                 <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_top_right,black_20%,transparent_70%)]" aria-hidden="true"></div>
-                <div class="relative grid gap-8 lg:grid-cols-12 lg:items-center">
-                    <div class="lg:col-span-4">
-                        <h3 class="display text-3xl md:text-4xl">{{ $problem['system_title'] }}</h3>
-                        <p class="mt-4 leading-relaxed text-gray-300">{{ $problem['system_text'] }}</p>
+                <div class="relative grid gap-8">
+                    <div class="grid gap-4 lg:grid-cols-12 lg:items-end lg:gap-10">
+                        <h3 class="display text-3xl md:text-4xl lg:col-span-6">{{ $problem['system_title'] }}</h3>
+                        <p class="leading-relaxed text-gray-300 lg:col-span-6">{{ $problem['system_text'] }}</p>
                     </div>
                     {{-- Частите като една верига, която води до успешен бизнес: никоя не стои сама. --}}
-                    <div class="lg:col-span-8">
-                        <ol class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                            @foreach($problem['system_items'] as $item)
+                    <div>
+                        <ol class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                            @foreach($problem['system_steps'] as $item)
                                 <li class="relative flex items-start gap-3 rounded-3xl bg-white/[0.05] p-4 ring-1 ring-white/10">
                                     <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-500/25"><x-icon :name="$item['icon'] ?? 'check'" class="text-sm text-brand-200" /></span>
-                                    <span><span class="block font-bold">{{ $item['title'] }}</span><span class="mt-0.5 block text-sm leading-snug text-gray-300">{{ $item['text'] }}</span></span>
+                                    <span class="min-w-0">
+                                        <span class="block text-xs font-bold uppercase tracking-[0.16em] text-brand-300">{{ $loop->iteration }}</span>
+                                        <span class="block font-bold">{{ $item['title'] }}</span>
+                                        @if(filled($item['subtitle'] ?? null))<span class="mt-0.5 block text-sm font-semibold leading-snug text-brand-200">{{ $item['subtitle'] }}</span>@endif
+                                        <span class="mt-1.5 block text-sm leading-snug text-gray-300">{{ $item['text'] }}</span>
+                                    </span>
                                     @unless($loop->last)<span class="absolute -bottom-3 left-1/2 z-10 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full bg-brand-500 text-xs font-extrabold text-white ring-4 ring-brand-950 sm:hidden" aria-hidden="true">+</span>@endunless
                                 </li>
                             @endforeach
@@ -181,42 +177,44 @@
     </div>
 </section>
 
-{{-- 02 The engine: one system, drawn as a hub with the four components --}}
+{{-- 02 The engine: the funnel with seven levels (owners, November 2026) --}}
 <section id="dvigatel" class="relative py-20 md:py-28 surface-night grain on-dark text-white scroll-mt-24 overflow-hidden">
     <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]" aria-hidden="true"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 reveal">
             <div>
                 <p class="kicker">{{ $number() }} {{ $trust['engine_eyebrow'] }}</p>
-                <h2 class="display mt-5 max-w-3xl text-4xl md:text-5xl">{{ $engine['title'] }}</h2>
+                <h2 class="display mt-5 max-w-3xl text-4xl md:text-5xl">{{ $trust['engine_title'] }}</h2>
+                @if(filled($trust['engine_subtitle'] ?? null))
+                    <p class="mt-4 max-w-3xl text-xl font-semibold text-brand-200">{{ $trust['engine_subtitle'] }}</p>
+                @endif
             </div>
             <a href="{{ lroute('services') }}" class="group shrink-0 inline-flex items-center gap-2 font-semibold text-brand-200 hover:text-white">
-                {{ __('Вижте услугите') }} <x-icon name="arrow-right" class="text-xs transition-transform group-hover:translate-x-1" />
+                {{ $trust['engine_button'] }} <x-icon name="arrow-right" class="text-xs transition-transform group-hover:translate-x-1" />
             </a>
         </div>
 
-        <p class="reveal mt-6 max-w-3xl text-lg text-gray-300 leading-relaxed">{{ __('Всеки клиент минава през всички нива на фунията, отгоре надолу. Всяко ниво подава хората на следващото, затова спре ли едно, до вас не стига никой. Изключете едно и вижте.') }}</p>
+        @if(filled($trust['engine_text'] ?? null))
+            <p class="reveal mt-6 max-w-3xl text-lg text-gray-300 leading-relaxed">{{ $trust['engine_text'] }}</p>
+        @endif
 
-        @include('partials/engine-diagram', ['cards' => $engineCards, 'center' => $trust['engine_center']])
+        @include('partials/engine-diagram', ['cards' => [], 'center' => ''])
     </div>
 </section>
 
-{{-- 03 Calculator: what a better website and marketing could mean in customers and revenue --}}
-@include('partials/calculator', ['number' => $number()])
-
-{{-- 04 Our values (owners, November 2026): the projects we take on and the principles we work by --}}
+{{-- 03 Our values (owners, November 2026): the projects we take on and the principles we work by --}}
 <section id="tsennosti" class="relative py-20 md:py-28 bg-brand-50/60 scroll-mt-24 dark:bg-ink-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-12 lg:gap-16">
         <div class="lg:col-span-5 reveal lg:sticky lg:top-32 self-start">
             <p class="kicker kicker-light">{{ $number() }} {{ $trust['fit_eyebrow'] }}</p>
-            <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $trust['fit_title'] }}</h2>
-            <p class="mt-6 text-lg text-gray-600 leading-relaxed dark:text-gray-300">{{ $trust['fit_text'] }}</p>
-            @if(filled($trust['principles_text'] ?? null))
-                <p class="mt-4 text-lg font-semibold text-brand-950 leading-relaxed dark:text-white">{{ $trust['principles_text'] }}</p>
+            <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $trust['values_title'] }}</h2>
+            @if(filled($trust['values_subtitle'] ?? null))
+                <p class="mt-4 text-xl font-semibold text-brand-700 dark:text-brand-200">{{ $trust['values_subtitle'] }}</p>
             @endif
+            <p class="mt-6 text-lg text-gray-600 leading-relaxed dark:text-gray-300">{{ $trust['values_text'] }}</p>
         </div>
         <ol class="lg:col-span-7 reveal divide-y divide-gray-200 border-y border-gray-200 dark:divide-white/10 dark:border-white/10">
-            @foreach($trust['principle_items'] as $item)
+            @foreach($trust['value_items'] as $item)
                 <li class="group relative flex gap-6 py-6 md:py-7 pl-5 md:pl-6">
                     <span class="absolute left-0 top-6 bottom-6 w-[3px] rounded-full bg-brand-200 transition-colors group-hover:bg-brand-600 dark:bg-white/10 dark:group-hover:bg-brand-300" aria-hidden="true"></span>
                     <span class="pt-1 text-sm font-bold tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
@@ -230,7 +228,7 @@
     </div>
 </section>
 
-{{-- 05 Industries: the demo websites --}}
+{{-- 04 Industries: the demo websites --}}
 @if(! empty($demos))
 <section id="branshove" class="relative py-20 md:py-28 surface-night grain on-dark text-white scroll-mt-24 overflow-hidden">
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -238,11 +236,15 @@
             <div class="lg:col-span-7">
                 <p class="kicker">{{ $number() }} {{ $trust['demos_eyebrow'] }}</p>
                 <h2 class="display mt-5 text-4xl md:text-5xl">{{ $trust['demos_title'] }}</h2>
+                @if(filled($trust['demos_subtitle'] ?? null))
+                    <p class="mt-4 text-xl font-semibold text-brand-200">{{ $trust['demos_subtitle'] }}</p>
+                @endif
                 <p class="mt-6 text-lg text-gray-400 leading-relaxed">{{ $trust['demos_text'] }}</p>
             </div>
-            <dl class="lg:col-span-5 flex gap-10 lg:justify-end">
-                <div><dd class="display text-5xl">{{ count($demos) }}</dd><dt class="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-gray-400">{{ __('демо сайта') }}</dt></div>
-                <div><dd class="display text-5xl">{{ collect($demos)->pluck('industry')->unique()->count() }}</dd><dt class="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-gray-400">{{ __('бранша') }}</dt></div>
+            {{-- Двете числа се смятат от демо сайтовете; етикетите и текстовете са на собствениците. --}}
+            <dl class="lg:col-span-5 grid gap-3 sm:grid-cols-2">
+                <div class="relative edge glass rounded-2xl p-5"><dd class="display text-5xl">{{ count($demos) }}</dd><dt class="mt-2 text-sm font-bold text-white">{{ $trust['demos_count_label'] }}</dt><dd class="mt-1.5 text-sm leading-snug text-gray-400">{{ $trust['demos_count_text'] }}</dd></div>
+                <div class="relative edge glass rounded-2xl p-5"><dd class="display text-5xl">{{ collect($demos)->pluck('industry')->unique()->count() }}</dd><dt class="mt-2 text-sm font-bold text-white">{{ $trust['industries_count_label'] }}</dt><dd class="mt-1.5 text-sm leading-snug text-gray-400">{{ $trust['industries_count_text'] }}</dd></div>
             </dl>
         </div>
 
@@ -266,13 +268,19 @@
 </section>
 @endif
 
-{{-- 06 Process: large numerals in a grid --}}
+{{-- 05 Process: large numerals in a grid --}}
 <section id="proces" class="relative py-20 md:py-28 bg-brand-50/60 scroll-mt-24 dark:bg-ink-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="reveal flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
             <div class="max-w-3xl">
                 <p class="kicker kicker-light">{{ $number() }} {{ __('Работен процес') }}</p>
                 <h2 class="display mt-5 text-4xl md:text-5xl text-brand-950 dark:text-white">{{ $process['title'] }}</h2>
+                @if(filled($process['subtitle'] ?? null))
+                    <p class="mt-4 text-xl font-semibold text-brand-700 dark:text-brand-200">{{ $process['subtitle'] }}</p>
+                @endif
+                @if(filled($process['text'] ?? null))
+                    <p class="mt-6 text-lg text-gray-600 leading-relaxed dark:text-gray-300">{{ $process['text'] }}</p>
+                @endif
             </div>
         </div>
         <ol class="mt-14 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -282,7 +290,8 @@
                         <span class="numeral text-5xl">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
                         <span class="h-px flex-1 bg-gray-200 dark:bg-white/10" aria-hidden="true"></span>
                     </div>
-                    <h3 class="mt-6 text-xl font-extrabold tracking-tight text-brand-950 dark:text-white"><span class="sr-only">{{ __('Стъпка :n', ['n' => $loop->iteration]) }}: </span>{{ $step['title'] }}</h3>
+                    <p class="mt-6 text-xs font-bold uppercase tracking-[0.18em] text-brand-600 dark:text-brand-300">{{ __('Стъпка :n', ['n' => $loop->iteration]) }}</p>
+                    <h3 class="mt-1 text-xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $step['title'] }}</h3>
                     <p class="mt-2 text-gray-600 leading-relaxed dark:text-gray-300">{{ $step['text'] }}</p>
                 </li>
             @endforeach
@@ -290,7 +299,7 @@
     </div>
 </section>
 
-{{-- 07 Blog --}}
+{{-- 06 Blog --}}
 @if($posts->isNotEmpty())
 <section id="statii" class="relative py-20 md:py-28 bg-white scroll-mt-24 dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

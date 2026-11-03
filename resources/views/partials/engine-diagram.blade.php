@@ -1,34 +1,26 @@
 {{--
     „Дигиталният двигател“ като фуния (собствениците, ноември 2026): топчетата са клиенти, които падат отгоре
-    и минават през четирите нива (home_trust.funnel: намират ви → доверяват ви се → пишат и купуват → стигат до вас).
-    Всяко ниво е компонент от services_page.cards (име, икона, линк към /uslugi) с текст какво реално се случва на тази
-    стъпка (does, works) и какво става, ако спре (without, alert_*).
+    и минават през седемте нива от home_trust.funnel_levels (Откриване → Ангажиране → Обмисляне → Продажба →
+    Въвеждане и поддръжка → Задържане и развитие → Лоялност и препоръки).
+    Всяко ниво има: stage + tag (английската дума), works_title / works_text (какво правим), lesson („Урок за фунията“),
+    off_title / off_text (какво става, ако спре) и икона.
     Изключите ли ниво, то се затваря, клиентите изпадат, а ЦЯЛАТА секция става червена като известие за проблем,
-    с обяснение какво реално се случва; включите ли го пак, всичко е нормално. Без JavaScript се вижда списъкът.
-    $cards: services_page.cards; $center: не се ползва вече, остава за съвместимост. Слага се върху тъмна секция (on-dark).
+    с off_title / off_text на първото спряно ниво; включите ли го пак, всичко е нормално. Без JavaScript се вижда списъкът.
+    $cards и $center: не се ползват вече, остават за съвместимост. Слага се върху тъмна секция (on-dark).
 --}}
 @php
     $funnelTrust = app(\App\Support\Content::class)->withDefaults('home_trust');
-    $cardsBySlug = collect($cards)->keyBy('slug');
-    $funnelSteps = collect($funnelTrust['funnel'] ?? [])->map(function ($step) use ($cardsBySlug) {
-        $card = $cardsBySlug[$step['card'] ?? ''] ?? null;
-        if (! $card) {
-            return null;
-        }
-        preg_match('/^(.+?)\s*\((.+)\)\s*$/u', $card['label'], $m);
-
-        return $step + ['name' => $m[1] ?? $card['label'], 'tag' => $m[2] ?? null, 'icon' => $card['icon'], 'slug' => $card['slug']];
-    })->filter()->values();
+    $funnelSteps = collect($funnelTrust['funnel_levels'] ?? [])->filter(fn ($s) => filled($s['stage'] ?? null))->values();
     $funnelOkTitle = $funnelTrust['funnel_ok_title'] ?? __('Всичко работи');
-    $funnelOkText = $funnelTrust['funnel_ok_text'] ?? __('Всички нива работят: хората ви намират, влизат, пишат ви и запитването стига до вас. Изключете едно ниво и вижте какво става.');
+    $funnelOkText = $funnelTrust['funnel_ok_text'] ?? '';
     // Данните за скрипта: какво реално се случва, когато спре всяко ниво.
     $funnelData = [
         'stages' => $funnelSteps->pluck('stage')->all(),
         'ok' => ['title' => $funnelOkTitle, 'text' => $funnelOkText],
         'alerts' => $funnelSteps->map(fn ($s) => [
-            'title' => $s['alert_title'] ?? $s['stage'],
-            'text' => $s['alert_text'] ?? ($s['without'] ?? ''),
-            'points' => array_values((array) ($s['alert_points'] ?? [])),
+            'title' => $s['off_title'] ?? $s['stage'],
+            'text' => $s['off_text'] ?? '',
+            'points' => [],
         ])->all(),
     ];
 @endphp
@@ -46,12 +38,12 @@
                         <span class="text-xs text-gray-400">{{ __('стигат до вас като клиенти') }}</span>
                     </span>
                 </div>
-                <div class="relative mt-3 flex-1" style="min-height: 380px">
+                <div class="relative mt-3 min-h-[440px] flex-1 sm:min-h-[500px] lg:min-h-[600px]">
                     <canvas class="absolute inset-0 block h-full w-full" data-funnel-canvas role="img"
                             aria-label="{{ __('Фуния: клиентите падат отгоре и минават през всяко ниво, докато стигнат до вас.') }}"></canvas>
                 </div>
                 {{-- На телефон превключвателите до текстовете са далеч под фунията: тук са същите, наблизо. --}}
-                <div class="mt-3 grid grid-cols-2 gap-2 lg:hidden">
+                <div class="mt-3 grid grid-cols-1 gap-2 min-[420px]:grid-cols-2 lg:hidden">
                     @foreach($funnelSteps as $step)
                         <button type="button" role="switch" aria-checked="true" data-funnel-toggle="{{ $loop->index }}"
                                 class="rounded-xl px-3 py-2 text-left text-xs font-bold ring-1 ring-emerald-400/40 bg-emerald-400/10 text-emerald-200 aria-[checked=false]:bg-red-500/15 aria-[checked=false]:text-red-200 aria-[checked=false]:ring-red-400/50">
@@ -77,29 +69,25 @@
             @foreach($funnelSteps as $step)
                 <li class="edge glass rounded-2xl p-5 transition-[box-shadow,background-color] duration-500" data-funnel-step="{{ $loop->index }}">
                     <div class="flex items-start gap-4">
-                        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-500/20"><x-icon :name="$step['icon']" class="text-brand-200" /></span>
+                        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-500/20"><x-icon :name="$step['icon'] ?? 'check'" class="text-brand-200" /></span>
                         <div class="min-w-0 flex-1">
                             <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-bold uppercase tracking-[0.16em] text-brand-300">
                                 <span>{{ $loop->iteration }} · {{ $step['stage'] }}</span>
+                                @if(filled($step['tag'] ?? null))<span class="text-[11px] font-semibold normal-case tracking-normal text-gray-400">{{ $step['tag'] }}</span>@endif
                                 <span class="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[10px] tracking-wider text-emerald-300" data-funnel-badge>{{ __('Работи') }}</span>
                             </p>
-                            <a href="{{ lroute('services') }}#{{ $step['slug'] }}" class="mt-0.5 block text-lg font-extrabold leading-snug hover:text-brand-100">{{ $step['name'] }}</a>
+                            <h3 class="mt-1 text-lg font-extrabold leading-snug">{{ $step['works_title'] ?? '' }}</h3>
                         </div>
-                        <button type="button" role="switch" aria-checked="true" aria-label="{{ $step['name'] }}" data-funnel-toggle="{{ $loop->index }}"
+                        <button type="button" role="switch" aria-checked="true" aria-label="{{ $step['stage'] }}" data-funnel-toggle="{{ $loop->index }}"
                                 class="relative h-7 w-12 shrink-0 rounded-full bg-emerald-500/80 ring-1 ring-white/20 transition-colors aria-[checked=false]:bg-red-500/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300">
                             <span class="absolute left-1 top-1 h-5 w-5 rounded-full bg-white shadow transition-transform" style="transform: translateX(1.25rem)" data-funnel-knob></span>
                         </button>
                     </div>
-                    <p class="mt-3 leading-relaxed text-gray-200">{{ $step['does'] }}</p>
-                    @if(! empty($step['works']))
-                        <p class="mt-3 text-xs font-bold uppercase tracking-wider text-gray-400">{{ __('Какво правим за вас') }}</p>
-                        <ul class="mt-1.5 space-y-1.5 text-sm text-gray-300">
-                            @foreach($step['works'] as $work)
-                                <li class="flex items-start gap-2"><x-icon name="check" class="mt-1 text-[10px] text-emerald-300" /><span>{{ $work }}</span></li>
-                            @endforeach
-                        </ul>
+                    @if(filled($step['works_text'] ?? null))<p class="mt-3 leading-relaxed text-gray-200">{{ $step['works_text'] }}</p>@endif
+                    @if(filled($step['lesson'] ?? null))
+                        <p class="mt-3 rounded-xl bg-white/[0.05] px-3 py-2 text-sm leading-relaxed text-gray-300"><span class="font-semibold text-brand-200">{{ __('Урок за фунията') }}:</span> {{ $step['lesson'] }}</p>
                     @endif
-                    <p class="mt-3 rounded-xl bg-red-500/[0.07] px-3 py-2 text-sm leading-relaxed text-gray-300" data-funnel-without><span class="font-semibold text-red-300">{{ __('Ако спре:') }}</span> <span data-funnel-without-text>{{ $step['without'] }}</span></p>
+                    <p class="mt-3 rounded-xl bg-red-500/[0.07] px-3 py-2 text-sm leading-relaxed text-gray-300" data-funnel-without><span class="font-semibold text-red-300">{{ __('Ако спре:') }}</span> <strong class="font-bold text-gray-100">{{ $step['off_title'] ?? '' }}</strong>@if(filled($step['off_text'] ?? null))<span class="mt-0.5 block" data-funnel-without-text>{{ $step['off_text'] }}</span>@endif</p>
                     <p class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
                         <span>{{ __('Получава хора от:') }} <strong class="text-gray-200">{{ $loop->first ? __('търсенията в Google и AI') : $funnelSteps[$loop->index - 1]['stage'] }}</strong></span>
                         <span>{{ __('Подава ги на:') }} <strong class="text-gray-200">{{ $loop->last ? __('вас, като нов клиент') : $funnelSteps[$loop->index + 1]['stage'] }}</strong></span>
@@ -146,8 +134,8 @@
         }
         // Геометрия: фунията заема горните ~80%, отдолу гърлото и „Клиенти“.
         function geo() {
-            var top = 34, bottom = H - 78, lh = (bottom - top) / n, cx = W / 2;
-            return { top: top, bottom: bottom, lh: lh, cx: cx, wTop: W * 0.46, wBottom: Math.max(22, W * 0.07) };
+            var top = 30, bottom = H - 62, lh = (bottom - top) / n, cx = W / 2;
+            return { top: top, bottom: bottom, lh: lh, cx: cx, wTop: W * 0.46, wBottom: Math.max(40, W * 0.2) };
         }
         function half(g, y) { var t = Math.max(0, Math.min(1, (y - g.top) / (g.bottom - g.top))); return g.wTop + (g.wBottom - g.wTop) * t; }
         function firstOff() { return on.indexOf(false); }
@@ -184,13 +172,13 @@
             } else {
                 var a = data.alerts[off];
                 panelTitle.textContent = T.problem + ' ' + a.title; panelText.textContent = a.text;
-                a.points.forEach(function (p) {
+                (a.points || []).forEach(function (p) {
                     var li = document.createElement('li'); li.className = 'flex items-start gap-2 text-red-100';
                     var x = document.createElement('span'); x.textContent = '✕'; x.className = 'mt-px text-xs font-extrabold text-red-300';
                     var t = document.createElement('span'); t.textContent = p;
                     li.appendChild(x); li.appendChild(t); panelPoints.appendChild(li);
                 });
-                panelPoints.classList.toggle('hidden', !a.points.length);
+                panelPoints.classList.toggle('hidden', !(a.points && a.points.length));
                 setClasses(panel, ['bg-red-500/20', 'ring-red-400/60'], ['bg-white/[0.04]', 'ring-white/10']);
             }
         }
@@ -218,14 +206,15 @@
                 ctx.fillStyle = ok ? 'rgba(59,119,189,' + (0.16 + i * 0.06) + ')' : 'rgba(248,113,113,0.18)';
                 ctx.fill();
                 ctx.lineWidth = 1.5; ctx.strokeStyle = ok ? 'rgba(143,181,224,0.55)' : 'rgba(248,113,113,0.9)'; ctx.stroke();
-                ctx.textAlign = 'center'; ctx.font = '800 12px Manrope Variable, Manrope, system-ui, sans-serif';
+                ctx.textAlign = 'center'; ctx.font = '800 11px Manrope Variable, Manrope, system-ui, sans-serif';
                 ctx.fillStyle = ok ? 'rgba(232,238,248,0.92)' : 'rgba(254,202,202,1)';
-                ctx.fillText((i + 1) + ' · ' + stages[i], g.cx, y0 + g.lh / 2 + 4);
+                // Дългите имена се свиват до ширината на нивото (поне 90px), за да се четат и в тясната част.
+                ctx.fillText((i + 1) + ' · ' + stages[i], g.cx, y0 + g.lh / 2 + (ok ? 4 : -1), Math.max(90, 2 * half(g, y0 + g.lh / 2) - 14));
                 if (!ok) {
                     // Затворен капак най-горе на нивото.
                     ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(248,113,113,0.95)';
                     ctx.beginPath(); ctx.moveTo(g.cx - half(g, y0) + 4, y0); ctx.lineTo(g.cx + half(g, y0) - 4, y0); ctx.stroke();
-                    ctx.font = '700 10px Manrope Variable, Manrope, system-ui, sans-serif'; ctx.fillText('✕ ' + T.closed, g.cx, y0 + g.lh / 2 + 18);
+                    ctx.font = '700 10px Manrope Variable, Manrope, system-ui, sans-serif'; ctx.fillText('✕ ' + T.closed, g.cx, y0 + g.lh / 2 + 12);
                 }
             }
             // Гърлото и „Клиенти“.
@@ -241,14 +230,16 @@
             balls.forEach(function (b) {
                 b.vy += grav * 16; b.x += b.vx * k; b.y += b.vy * k;
                 if (!b.out && b.y > g.top && b.y < g.bottom) {
-                    var lvl = Math.floor((b.y - g.top) / g.lh), prevY = b.y - b.vy * k, boundary = g.top + lvl * g.lh;
-                    if (!on[lvl] && prevY < boundary + 2) {
+                    // b.lvl = последното ниво, в което топчето е влязло: проверката не зависи от скоростта (бързо топче не прескача капака).
+                    var lvl = Math.floor((b.y - g.top) / g.lh), boundary = g.top + lvl * g.lh;
+                    if (!on[lvl] && (b.lvl === undefined || b.lvl < lvl)) {
                         // Удря затворения капак и изпада от фунията.
                         b.out = true; b.y = boundary - 1; b.vy = -1.2 - Math.random(); b.vx = (b.x < g.cx ? -1 : 1) * (1.5 + Math.random() * 2);
                     } else {
                         var h = half(g, b.y) - b.r - 2;
                         if (Math.abs(b.x - g.cx) > h) { b.x = g.cx + Math.sign(b.x - g.cx) * h; b.vx *= -0.35; }
                         b.vx += (g.cx - b.x) * 0.0006 * k; b.vy = Math.min(b.vy, 2.6);
+                        b.lvl = lvl;
                     }
                 }
                 if (!b.out && b.y >= g.bottom) { b.x += (g.cx - b.x) * 0.2; }

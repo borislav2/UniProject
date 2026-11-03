@@ -67,6 +67,9 @@
     </div>
 </section>
 
+{{-- Калкулаторът на подобрението (преди това на началната страница; собствениците, ноември 2026) --}}
+@include('partials/calculator', ['number' => ''])
+
 <section class="py-16 md:py-24 bg-white dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p class="reveal kicker kicker-light">03 / {{ __('Следващата стъпка') }}</p>

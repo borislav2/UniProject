@@ -46,13 +46,43 @@ class SiteKnowledge
                 $out[] = '- ' . $stat['value'] . ' ' . $stat['text'] . ' (source: ' . $stat['source'] . ')';
             }
         }
-        $values = app(\App\Support\Content::class)->withDefaults('home_trust');
-        if (filled($values['fit_text'] ?? null)) {
-            $out[] = "\n## " . ($values['fit_eyebrow'] ?? 'Values') . ': ' . ($values['fit_title'] ?? '');
-            $out[] = $values['fit_text'];
-            if (filled($values['principles_text'] ?? null)) {
-                $out[] = $values['principles_text'];
+        foreach ((array) ($problem['guide_items'] ?? []) as $i => $item) {
+            if ($i === 0 && filled($problem['guide_label'] ?? null)) {
+                $out[] = $problem['guide_label'] . ':';
             }
+            $out[] = '- ' . $item['title'] . ': ' . $item['text'];
+        }
+        if (filled($problem['system_title'] ?? null) && ! empty($problem['system_steps'])) {
+            $out[] = "\n## " . $problem['system_title'];
+            $out[] = (string) ($problem['system_text'] ?? '');
+            foreach ($problem['system_steps'] as $i => $step) {
+                $out[] = ($i + 1) . '. ' . $step['title'] . ' (' . ($step['subtitle'] ?? '') . '): ' . $step['text'];
+            }
+            if (filled($problem['system_result'] ?? null)) {
+                $out[] = '= ' . $problem['system_result'];
+            }
+        }
+
+        // Дигиталният двигател: седемте нива на фунията и какво става, ако едно спре.
+        $values = app(\App\Support\Content::class)->withDefaults('home_trust');
+        if (! empty($values['funnel_levels'])) {
+            $out[] = "\n## " . ($values['engine_title'] ?? 'Digital engine') . ' (' . lroute('services') . ')';
+            $out[] = trim(($values['engine_subtitle'] ?? '') . '. ' . ($values['engine_text'] ?? ''), '. ');
+            foreach ($values['funnel_levels'] as $i => $level) {
+                $out[] = ($i + 1) . '. ' . $level['stage'] . (filled($level['tag'] ?? null) ? ' (' . $level['tag'] . ')' : '') . ': ' . ($level['works_title'] ?? '') . '. ' . ($level['works_text'] ?? '')
+                    . ' ' . ($level['lesson'] ?? '') . ' If it stops: ' . ($level['off_title'] ?? '') . '. ' . ($level['off_text'] ?? '');
+            }
+        }
+        if (filled($values['values_text'] ?? null)) {
+            $out[] = "\n## " . ($values['fit_eyebrow'] ?? 'Values') . ': ' . ($values['values_title'] ?? '');
+            $out[] = trim(($values['values_subtitle'] ?? '') . '. ' . $values['values_text'], '. ');
+            foreach ((array) ($values['value_items'] ?? []) as $item) {
+                $out[] = '- ' . $item['title'] . ': ' . $item['text'];
+            }
+        }
+        if (! empty($values['demos_text'])) {
+            $out[] = "\n## " . ($values['demos_title'] ?? 'Industries');
+            $out[] = trim(($values['demos_subtitle'] ?? '') . '. ' . $values['demos_text'], '. ');
         }
 
         $out[] = "\n## " . __('Услуги');
@@ -86,20 +116,17 @@ class SiteKnowledge
             }
         }
 
-        $process = site('home_process') ?? [];
+        $process = app(\App\Support\Content::class)->withDefaults('home_process');
         if (! empty($process['steps'])) {
             $out[] = "\n## " . __('Работен процес');
+            if (filled($process['text'] ?? null)) {
+                $out[] = trim(($process['subtitle'] ?? '') . '. ' . $process['text'], '. ');
+            }
             foreach ($process['steps'] as $i => $step) {
                 $out[] = ($i + 1) . '. ' . $step['title'] . ': ' . $step['text'];
             }
         }
 
-        if (! empty($trust['fit_items'])) {
-            $out[] = "\n## " . ($trust['fit_eyebrow'] ?? 'Who we work with');
-            foreach ($trust['fit_items'] as $item) {
-                $out[] = '- ' . $item['title'] . ': ' . $item['text'];
-            }
-        }
         if (! empty($trust['principle_items'])) {
             $out[] = "\n## " . ($trust['principles_eyebrow'] ?? 'Principles');
             foreach ($trust['principle_items'] as $item) {
@@ -127,7 +154,7 @@ class SiteKnowledge
         $out[] = 'Free consultation (' . config('creatium.booking.minutes') . ' minutes, pick a day and time on weekdays): ' . lroute('contact') . '#konsultatsiya';
         $out[] = 'Contact form: ' . lroute('contact');
         $out[] = 'Get a quote for a package (short form, the team replies within one working day): ' . lroute('packages') . '#oferta';
-        $out[] = 'Calculator of how much more a better website could bring (on the home page): ' . lroute('home') . '#kalkulator';
+        $out[] = 'Calculator of how much a better digital presence could improve visits and enquiries (on the Services page): ' . lroute('services') . '#kalkulator';
         $out[] = 'Free website check (report by email in about a minute): ' . lroute('site-check');
         $out[] = 'We reply to inquiries within one working day.';
 

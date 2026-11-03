@@ -18,15 +18,15 @@ class LocalizationTest extends TestCase
         }
 
         $this->get('/en')
-            ->assertSeeText('Digital solutions that move your business forward.')
-            ->assertSee('The components of your digital engine')
+            ->assertSeeText('Digital solutions built with your success in mind.')
+            ->assertSee('The anatomy of your digital engine')
             ->assertSee('Calculate the gain')
             ->assertSee('Start your project');
     }
 
     public function test_bulgarian_stays_the_default(): void
     {
-        $this->get('/')->assertSee('<html lang="bg">', false)->assertSeeText('Дигитални решения, които движат бизнеса ви напред.');
+        $this->get('/')->assertSee('<html lang="bg">', false)->assertSeeText('Дигитални решения, изградени с мисъл за вашия успех.');
     }
 
     public function test_pages_link_to_their_other_language(): void
