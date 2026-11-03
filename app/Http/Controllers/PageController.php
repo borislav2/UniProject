@@ -54,7 +54,7 @@ class PageController extends Controller
             'slug' => $slug,
             'page' => $page,
             'demo' => $demo,
-            'plan' => $demo['package']['name'] ? collect(site('plans')['items'])->firstWhere('name', $demo['package']['name']) : null,
+            'plan' => $demo['package']['name'] ? \App\Support\Plans::find(site('plans')['items'], $demo['package']['name']) : null,
             'others' => collect(site('industry_pages'))->except($slug),
             'pageAlternates' => $alternates,
             'hreflangAlternates' => [],
@@ -73,11 +73,14 @@ class PageController extends Controller
 
     public function packages()
     {
-        $plans = site('plans');
+        // New top-level keys (trust, compare, steps...) show even after an older admin save of the block.
+        $plans = app(\App\Support\Content::class)->withDefaults('plans');
         $selected = request()->integer('paket', -1);
+        $faq = \App\Support\Plans::faq($plans, (array) site('questions'));
 
         return view('packages', [
             'plans' => $plans,
+            'faq' => $faq,
             // „Получете оферта“ под всеки пакет води към формата с избрания пакет (?paket=N#oferta).
             'selectedPlan' => array_key_exists($selected, $plans['items'] ?? []) ? $selected : null,
         ]);

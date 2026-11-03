@@ -65,7 +65,7 @@ class ClientEmailsTest extends TestCase
     {
         $this->actingAs($this->admin())->get('/admin/emails')->assertOk()
             ->assertSee('Отговор на запитване')
-            ->assertSee('Оферта: Стартов двигател')->assertSee('Оферта: Активен Маркетинг &amp; Растеж', false)
+            ->assertSee('Оферта: Стартов двигател')->assertSee('Оферта: Активен маркетинг и растеж')
             ->assertDontSee('пакет Бизнес')
             ->assertSee('Имейли до клиенти')
             ->assertSee('Още няма изпратени имейли.');
@@ -110,7 +110,7 @@ class ClientEmailsTest extends TestCase
         $this->actingAs($user)->post('/admin/emails/offer-start/preview', ['data' => ['business' => 'Мотор Про', 'price' => '450', 'monthly_price' => '150']])
             ->assertSee('Мотор Про')->assertDontSee('Предложението е валидно до')->assertDontSee('Поемаме ограничен брой');
         $this->actingAs($user)->post('/admin/emails/inquiry-reply/preview', ['data' => []])
-            ->assertSee('С какво се отличава нашият подход')->assertSee('Стартов двигател')->assertSee('Индивидуално Партньорство')
+            ->assertSee('С какво се отличава нашият подход')->assertSee('Стартов двигател')->assertSee('Индивидуален маркетинг и мащабиране')
             ->assertSee('ПРЕПОРЪЧАН')->assertSee('В какъв времеви рамков период планирате старта на проекта?')
             ->assertSee('С уважение,');
     }

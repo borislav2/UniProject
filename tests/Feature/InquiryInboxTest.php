@@ -99,7 +99,7 @@ class InquiryInboxTest extends TestCase
 
         $this->actingAs($this->admin())->get('/admin/inquiries')
             ->assertSee('Имейлът до info@creatiumlab.com не е изпратен')
-            ->assertSee('изпратен ' . now()->format('d.m.Y'));
+            ->assertSee('изпратен ' . now('Europe/Sofia')->format('d.m.Y'));
     }
 
     public function test_warning_is_shown_while_mail_is_only_logged(): void

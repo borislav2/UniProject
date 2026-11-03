@@ -1,6 +1,6 @@
 {{-- Под всяко демо: трудностите на бранша, какво прави сайтът за тях, подходящ пакет и въпроси (данните са в creatium.demos). --}}
 @php
-    $package = $demo['package']['name'] ? collect(site('plans')['items'])->firstWhere('name', $demo['package']['name']) : null;
+    $package = \App\Support\Plans::find(site('plans')['items'], $demo['package']['name']);
 @endphp
 <section id="za-bransha" class="scroll-mt-20 bg-[#f5f8fc] text-gray-900 border-t border-gray-200 font-sans">
     <div class="max-w-6xl mx-auto px-4 py-16 md:py-20">
