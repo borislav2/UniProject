@@ -59,12 +59,17 @@ class Content
         'fit_eyebrow' => '„С кого работим“: надзаглавие', 'fit_title' => '„С кого работим“: заглавие', 'fit_text' => '„С кого работим“: текст', 'fit_items' => '„С кого работим“: подходящи бизнеси',
         'principles_eyebrow' => 'Принципи: надзаглавие', 'principles_title' => 'Принципи: заглавие', 'principles_text' => 'Принципи: текст', 'principle_items' => 'Принципи',
         'demos_eyebrow' => 'Браншове: надзаглавие', 'demos_title' => 'Браншове: заглавие', 'demos_text' => 'Браншове: текст',
+        'proof_cards' => 'Четирите квадрата под началото', 'guide_label' => 'Принципите: надпис над картите', 'guide_items' => 'Принципите, по които ви напътстваме', 'system_steps' => 'Системата: стъпки (1–6)',
+        'engine_title' => 'Двигателят: заглавие', 'engine_subtitle' => 'Двигателят: подзаглавие', 'engine_button' => 'Двигателят: текст на връзката към услугите', 'engine_text' => 'Двигателят: въвеждащ текст', 'funnel_levels' => 'Двигателят: седемте нива на фунията',
+        'stage' => 'Име на нивото', 'works_title' => 'Когато работи: заглавие', 'works_text' => 'Когато работи: текст', 'lesson' => 'Урок за фунията', 'off_title' => 'Ако спре: заглавие', 'off_text' => 'Ако спре: текст', 'funnel_ok_title' => 'Фуния: заглавие, когато всичко работи', 'funnel_ok_text' => 'Фуния: текст, когато всичко работи',
+        'values_title' => 'Ценности: заглавие', 'values_subtitle' => 'Ценности: подзаглавие', 'values_text' => 'Ценности: текст', 'value_items' => 'Ценности (4 принципа)',
+        'demos_subtitle' => 'Браншове: подзаглавие', 'demos_count_label' => 'Браншове: етикет на първото число (демо платформи)', 'demos_count_text' => 'Браншове: текст под първото число', 'industries_count_label' => 'Браншове: етикет на второто число (бранша)', 'industries_count_text' => 'Браншове: текст под второто число',
         'blog_eyebrow' => 'Блог: надзаглавие', 'blog_title' => 'Блог: заглавие', 'blog_text' => 'Блог: текст', 'contact_eyebrow' => 'Контакти: надзаглавие',
         'items' => 'Пакети', 'badge' => 'Етикет (напр. „Най-предпочитан“)', 'audience' => 'За кого е', 'prices' => 'Цени (по една на ред)', 'build_title' => 'Първа част: заглавие', 'build_items' => 'Първа част (по един на ред, „Заглавие: текст“)', 'monthly_title' => 'Месечна част: заглавие', 'monthly_items' => 'Месечна част (по един на ред, „Заглавие: текст“)',
     ];
 
     /** Fields shown as a multi-line text box. */
-    public const LONG_FIELDS = ['text', 'intro', 'description', 'details', 'a', 'subtitle', 'fit_text', 'principles_text', 'demos_text', 'blog_text'];
+    public const LONG_FIELDS = ['text', 'intro', 'description', 'details', 'a', 'subtitle', 'fit_text', 'principles_text', 'demos_text', 'blog_text', 'engine_text', 'values_text', 'works_text', 'off_text', 'lesson', 'funnel_ok_text', 'demos_count_text', 'industries_count_text'];
 
     /** An empty copy of a config structure, used for "add item" in the admin form. */
     public static function blank(mixed $template): mixed

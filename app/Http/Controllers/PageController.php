@@ -13,7 +13,7 @@ class PageController extends Controller
     {
         return view('services', [
             'page' => site('services_page'),
-            'trust' => site('home_trust'),
+            'trust' => app(\App\Support\Content::class)->withDefaults('home_trust'),
         ]);
     }
 

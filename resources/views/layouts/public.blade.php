@@ -130,7 +130,7 @@
             ['label' => __('За нас'), 'children' => $aboutLinks, 'active' => $is('about', 'blog.*', 'contact')],
         ];
         // Бутонът в менюто води към калкулатора на началната страница (собствениците, ноември 2026).
-        $calculatorUrl = lroute('home') . '#kalkulator';
+        $calculatorUrl = lroute('services') . '#kalkulator';
         $languages = ['bg' => ['BG', 'Български'], 'en' => ['EN', 'English']];
     @endphp
 

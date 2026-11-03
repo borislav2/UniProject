@@ -20,13 +20,11 @@ class HomeController extends Controller
     public function index()
     {
         return view('home', [
-            'hero' => site('home_hero'),
+            'hero' => app(\App\Support\Content::class)->withDefaults('home_hero'),
             'problem' => app(\App\Support\Content::class)->withDefaults('home_problem'),
-            'engine' => site('home_engine'),
-            'process' => site('home_process'),
+            'process' => app(\App\Support\Content::class)->withDefaults('home_process'),
             'contactBlock' => site('home_contact'),
             'trust' => app(\App\Support\Content::class)->withDefaults('home_trust'),
-            'engineCards' => site('services_page.cards') ?? [],
             'demos' => site('demos') ?? [],
             'posts' => config('creatium.blog_enabled') ? Post::visible()->with('category')->latest('published_at')->take(3)->get() : collect(),
             'reviews' => config('creatium.google_reviews'),
