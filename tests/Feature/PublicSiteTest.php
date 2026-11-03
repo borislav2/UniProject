@@ -132,7 +132,7 @@ class PublicSiteTest extends TestCase
     {
         $this->get('/paketi')->assertOk()
             ->assertSee('Не купувате просто сайт.')
-            ->assertSeeInOrder(['Стартов двигател', '€450', '€150 / месец', 'Активен Маркетинг &amp; Растеж', 'Най-предпочитан', '€850', '€400 / месец', 'Индивидуална Маркетинг Мащабируемост'], false)
+            ->assertSeeInOrder(['Стартов двигател', '€450', '€150', '/ месец', 'Активен маркетинг и растеж', 'Препоръчваме', '€850', '€400', '/ месец', 'Индивидуален маркетинг и мащабиране'], false)
             ->assertSee('Получете оферта');
         $this->get('/en/packages')->assertOk()->assertSee('Starter Engine')->assertSee('Get a quote');
     }
@@ -201,12 +201,12 @@ class PublicSiteTest extends TestCase
     {
         $this->get('/vaprosi')->assertOk()
             ->assertSee('"@type":"FAQPage"', false)
-            ->assertSeeInOrder(['Цени и плащане', 'Как се определя инвестицията за проекта?', 'Включени ли са хостингът и домейнът?',
+            ->assertSeeInOrder(['Цени и плащане', 'Как се определя цената на проекта?', 'Включени ли са хостингът и домейнът?',
                 'Изработка и срокове', 'Ще видя ли сайта, преди да бъде пуснат?', 'Google, реклама и AI', 'Гарантирате ли първо място в Google?',
                 'След пускането', 'Колко бързо отговаряте?'])
             ->assertSee('href="#ceni-i-plashtane"', false);
         $this->get('/en/faq')->assertOk()->assertSee('Frequently asked questions')->assertSee('How is the project budget set?')->assertSee('Prices and payment');
-        $this->get('/za-nas')->assertSee('href="' . url('/vaprosi') . '"', false)->assertDontSee('Как се определя инвестицията');
+        $this->get('/za-nas')->assertSee('href="' . url('/vaprosi') . '"', false)->assertDontSee('Как се определя цената на проекта');
         $this->get('/sitemap.xml')->assertSee(url('/vaprosi'))->assertSee(url('/en/faq'));
     }
 
