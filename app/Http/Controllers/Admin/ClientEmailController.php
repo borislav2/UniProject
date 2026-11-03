@@ -30,7 +30,7 @@ class ClientEmailController extends Controller
         $project = $this->project($request);
 
         $defaults = collect($tpl['fields'])->map(fn ($field) => $field['default'] ?? '')->all();
-        if (array_key_exists('valid_until', $defaults)) {
+        if ($tpl['key'] === 'offer-active') {
             $defaults['valid_until'] = now()->addDays(7)->toDateString();
         }
         if ($project) {
@@ -47,7 +47,21 @@ class ClientEmailController extends Controller
             }
         }
 
+        // „Използвай отново“: полетата и темата на вече изпратен имейл със същия шаблон.
+        $subject = $tpl['subject'];
+        $from = $request->query('from') ? ClientEmail::find($request->query('from')) : null;
+        if ($from && $from->template === $tpl['key']) {
+            foreach (array_intersect_key((array) $from->data, $tpl['fields']) as $name => $value) {
+                $defaults[$name] = is_scalar($value) ? (string) $value : '';
+            }
+            if (! empty($defaults['valid_until']) && strtotime($defaults['valid_until']) < strtotime(now()->toDateString())) {
+                $defaults['valid_until'] = ''; // датата вече е минала
+            }
+            $subject = $from->subject ?: $subject;
+        }
+
         return view('admin.client-emails.create', [
+            'subject' => $subject,
             'tpl' => $tpl,
             'project' => $project,
             'defaults' => $defaults,
@@ -68,7 +82,7 @@ class ClientEmailController extends Controller
             }
             $data[$name] = $value;
         }
-        if (($tpl['fields']['valid_until'] ?? null) && strtotime($data['valid_until']) === false) {
+        if (($data['valid_until'] ?? '') !== '' && strtotime($data['valid_until']) === false) {
             $data['valid_until'] = now()->addDays(7)->toDateString();
         }
 
@@ -96,7 +110,11 @@ class ClientEmailController extends Controller
             'data.valid_until.after_or_equal' => 'Датата на валидност не може да е в миналото.',
         ], collect($tpl['fields'])->mapWithKeys(fn ($f, $name) => ["data.$name" => '„' . $f['label'] . '“'])->all());
 
-        $data = array_map(fn ($v) => is_string($v) ? trim($v) : $v, $validated['data']);
+        // Пълните данни на всички полета се пазят в историята (за „Използвай отново“); празните са ''.
+        $data = [];
+        foreach (array_keys($tpl['fields']) as $name) {
+            $data[$name] = trim((string) ($validated['data'][$name] ?? ''));
+        }
         if (($link = $tpl['link_or_pdf'] ?? null) && empty($data[$link]) && ! $request->hasFile('attachment')) {
             return back()->withInput()->withErrors(['data.' . $link => 'Сложете линк към демото или прикачете PDF с него.']);
         }

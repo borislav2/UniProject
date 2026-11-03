@@ -3,7 +3,7 @@
 @section('title', $tpl['label'])
 
 @php($input = 'w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500')
-@php($fields = collect($tpl['fields'])->except('sender')->put('sender', $tpl['fields']['sender']))
+@php($groups = \App\Support\ClientEmails::groups($tpl['fields']))
 
 @section('content')
 <a href="{{ route('admin.client-emails.index', $project ? ['project' => $project->id] : []) }}" class="inline-block mb-4 text-sm text-blue-600 hover:underline">← Всички шаблони</a>
@@ -31,26 +31,32 @@
         </div>
         <div>
             <label for="subject" class="block text-sm font-semibold text-gray-700 mb-1">Тема <span class="text-red-500">*</span></label>
-            <input id="subject" name="subject" value="{{ old('subject', $tpl['subject']) }}" required maxlength="255" class="{{ $input }}">
+            <input id="subject" name="subject" value="{{ old('subject', $subject) }}" required maxlength="255" class="{{ $input }}">
             <p class="mt-1 text-xs text-gray-500">{client_name} и {business} се попълват автоматично от полетата по-долу.</p>
         </div>
 
-        <div class="border-t border-gray-200 pt-4 space-y-4">
-            @foreach($fields as $name => $field)
-                @php($required = $field['required'] ?? true)
-                <div>
-                    <label for="f-{{ $name }}" class="block text-sm font-semibold text-gray-700 mb-1">{{ $field['label'] }} @if($required)<span class="text-red-500">*</span>@else<span class="font-normal text-gray-400">(по желание)</span>@endif</label>
-                    @if(($field['type'] ?? 'text') === 'textarea')
-                        <textarea id="f-{{ $name }}" name="data[{{ $name }}]" rows="3" maxlength="1000" @if($required) required @endif class="{{ $input }}">{{ old('data.' . $name, $defaults[$name] ?? '') }}</textarea>
-                    @else
-                        <input id="f-{{ $name }}" name="data[{{ $name }}]" type="{{ in_array($field['type'] ?? 'text', ['date', 'url'], true) ? $field['type'] : 'text' }}"
-                               value="{{ old('data.' . $name, $defaults[$name] ?? '') }}" @if($required) required @endif
-                               @if(($field['type'] ?? 'text') === 'date') min="{{ now()->toDateString() }}" @else maxlength="255" @endif class="{{ $input }}">
-                    @endif
-                    @if(! empty($field['help']))<p class="mt-1 text-xs text-gray-500">{{ $field['help'] }}</p>@endif
-                </div>
-            @endforeach
-        </div>
+        @if(count($groups) === 1 && array_key_first($groups) === '')
+            @php($plain = collect($groups[''])->except('sender')->put('sender', $tpl['fields']['sender']))
+            <div class="border-t border-gray-200 pt-4 space-y-4">
+                @foreach($plain as $name => $field)
+                    @include('admin.client-emails._field')
+                @endforeach
+            </div>
+        @else
+            <div class="border-t border-gray-200 pt-4 space-y-3">
+                @foreach($groups as $group => $groupFields)
+                    @php($hasError = collect($groupFields)->keys()->contains(fn ($n) => $errors->has('data.' . $n)))
+                    <details class="rounded-lg border border-gray-200" @if($loop->index < 2 || $hasError) open @endif>
+                        <summary class="cursor-pointer select-none px-4 py-3 text-sm font-bold text-gray-900 bg-gray-50 rounded-lg">{{ $group }} <span class="font-normal text-gray-400">({{ count($groupFields) }})</span></summary>
+                        <div class="space-y-4 border-t border-gray-200 p-4">
+                            @foreach($groupFields as $name => $field)
+                                @include('admin.client-emails._field')
+                            @endforeach
+                        </div>
+                    </details>
+                @endforeach
+            </div>
+        @endif
 
         <div class="border-t border-gray-200 pt-4">
             <label for="attachment" class="block text-sm font-semibold text-gray-700 mb-1">Прикачен PDF <span class="font-normal text-gray-400">(по желание)</span></label>
@@ -87,6 +93,8 @@
         form.target = target;
         file.disabled = false;
     }
+    // Невалидно поле в затворена група: отваряме групата, за да се види съобщението.
+    form.addEventListener('invalid', function (e) { var d = e.target.closest('details'); if (d) d.open = true; }, true);
     form.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(refresh, 600); });
     form.addEventListener('submit', function (e) {
         if (e.submitter && e.submitter.name === 'send' && !confirm('Да изпратим ли имейла до ' + document.getElementById('to').value + '?')) {
