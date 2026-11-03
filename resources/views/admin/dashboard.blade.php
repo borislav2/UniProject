@@ -126,6 +126,7 @@
                     <th class="px-3 py-2 text-right">Обаждания</th>
                     <th class="px-3 py-2 text-right">Имейли</th>
                     <th class="px-3 py-2 text-right">Писма до бизнеси</th>
+                    <th class="px-3 py-2 text-right">LinkedIn</th>
                     <th class="px-3 py-2 text-right">Етапи</th>
                     <th class="px-3 py-2 text-right">Спечелени (месец)</th>
                     <th class="px-5 py-2 text-right">Днес</th>
@@ -141,6 +142,7 @@
                         <td class="px-3 py-2.5 text-right">{{ $row['week']['calls'] }}</td>
                         <td class="px-3 py-2.5 text-right">{{ $row['week']['emails'] }}</td>
                         <td class="px-3 py-2.5 text-right">{{ $row['week']['outreach'] }}</td>
+                        <td class="px-3 py-2.5 text-right" title="покани / съобщения">{{ $row['week']['linkedin_invites'] }} / {{ $row['week']['linkedin_messages'] }}</td>
                         <td class="px-3 py-2.5 text-right">{{ $row['week']['stages'] }}</td>
                         <td class="px-3 py-2.5 text-right {{ $row['work']['won_month'] ? 'font-semibold text-green-700' : 'text-gray-400' }}">{{ $row['work']['won_month'] }}</td>
                         <td class="px-5 py-2.5 text-right"><a href="{{ route('admin.today', ['user' => $row['user']->id]) }}" class="text-blue-600 hover:underline">{{ $row['today'] }} действия</a></td>

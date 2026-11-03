@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ChatConversation;
+use App\Models\LinkedinProspect;
 use App\Models\OutreachCall;
 use App\Models\OutreachProspect;
 use App\Models\Post;
@@ -45,6 +46,11 @@ class SearchController extends Controller
                     'title' => $p->displayName(), 'meta' => collect([OutreachProspect::STATUSES[$p->status] ?? $p->status, $p->email, $p->phone])->filter()->join(' · '),
                     'url' => $p->project_id ? route('admin.projects.show', $p->project_id) : route('admin.outreach.compose', $p),
                 ]),
+                'LinkedIn' => LinkedinProspect::where(fn ($w) => $w->where('name', 'like', $like)->orWhere('company', 'like', $like)->orWhere('profile_url', 'like', $like))
+                    ->latest()->limit(10)->get()->map(fn ($p) => [
+                        'title' => $p->name, 'meta' => collect([$p->statusLabel(), $p->title, $p->company, $p->city])->filter()->join(' · '),
+                        'url' => $p->project_id ? route('admin.projects.show', $p->project_id) : route('admin.linkedin.index', ['q' => $p->name]),
+                    ]),
                 'Обаждания' => OutreachCall::where(function ($w) use ($like, $phoneMatch) {
                     $w->where('name', 'like', $like)->orWhere('note', 'like', $like);
                     $phoneMatch($w, 'phone');

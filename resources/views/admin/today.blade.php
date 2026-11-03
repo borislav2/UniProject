@@ -102,6 +102,26 @@
     @endforelse
 </section>
 
+@if($linkedinDue->isNotEmpty())
+    <section class="mb-6">
+        <h2 class="mb-2 text-lg font-semibold text-gray-800">LinkedIn: време е да напишете <span class="text-sm font-normal text-gray-500">(<a href="{{ route('admin.linkedin.index', ['due' => 1]) }}" class="text-blue-600 hover:underline">всички за днес →</a>)</span></h2>
+        <div class="overflow-hidden rounded-lg bg-white shadow">
+            <ul class="divide-y">
+                @foreach($linkedinDue->take(15) as $contact)
+                    <li class="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
+                        <div class="min-w-0">
+                            <a href="{{ $contact->profile_url }}" target="_blank" rel="noopener noreferrer" class="font-semibold text-gray-900 hover:text-blue-600">{{ $contact->name }}</a>
+                            <span class="ml-1 rounded-full px-2 py-0.5 text-xs font-semibold {{ $contact->statusClass() }}">{{ $contact->statusLabel() }}</span>
+                            <p class="{{ $contact->next_action_at->toDateString() < now('Europe/Sofia')->toDateString() ? 'font-semibold text-red-700' : 'text-gray-500' }}">{{ $contact->next_action_at->toDateString() < now('Europe/Sofia')->toDateString() ? 'от ' . $contact->next_action_at->format('d.m') : 'днес' }}@if($contact->note) · {{ \Illuminate\Support\Str::limit($contact->note, 90) }}@endif</p>
+                        </div>
+                        <a href="{{ route('admin.linkedin.index', ['due' => 1, 'q' => $contact->name]) }}" class="text-blue-600 hover:underline">Отбележи →</a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </section>
+@endif
+
 @if($followups)
     <a href="{{ route('admin.outreach.index', ['followup' => 1]) }}" class="mb-6 flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-900 hover:bg-amber-100">
         <span>{{ $followups }} {{ $followups === 1 ? 'бизнес чака' : 'бизнеса чакат' }} напомняне (без отговор {{ config('creatium.outreach.followup_after_days') }}+ дни)</span><span>Напомни →</span>
@@ -173,8 +193,8 @@
 {{-- Направено днес: разговори, имейли, писма, смени на етапа. --}}
 <section class="mb-6">
     <h2 class="mb-2 text-lg font-semibold text-gray-800">Направено днес <span class="text-sm font-normal text-gray-500">({{ $member ? ($member->id === auth()->id() ? 'от вас' : 'от ' . $member->name) : 'от целия екип' }})</span></h2>
-    <div class="mb-3 grid grid-cols-2 gap-3 text-sm sm:grid-cols-5">
-        @foreach([['calls', 'Обаждания', 'text-green-700'], ['emails', 'Имейли до клиенти', 'text-blue-700'], ['outreach', 'Писма до бизнеси', 'text-indigo-700'], ['stages', 'Сменени етапи', 'text-purple-700'], ['notes', 'Бележки', 'text-gray-700']] as [$key, $label, $color])
+    <div class="mb-3 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4 lg:grid-cols-7">
+        @foreach([['calls', 'Обаждания', 'text-green-700'], ['emails', 'Имейли до клиенти', 'text-blue-700'], ['outreach', 'Писма до бизнеси', 'text-indigo-700'], ['linkedin_invites', 'Покани в LinkedIn', 'text-sky-700'], ['linkedin_messages', 'Съобщения в LinkedIn', 'text-sky-700'], ['stages', 'Сменени етапи', 'text-purple-700'], ['notes', 'Бележки', 'text-gray-700']] as [$key, $label, $color])
             <div class="rounded-lg bg-white p-3 shadow"><p class="text-gray-500">{{ $label }}</p><p class="text-2xl font-bold {{ $doneCounts[$key] ? $color : 'text-gray-300' }}">{{ $doneCounts[$key] }}</p></div>
         @endforeach
     </div>
@@ -183,7 +203,7 @@
     @else
         <ol class="divide-y overflow-hidden rounded-lg bg-white shadow">
             @foreach($done->take(60) as $entry)
-                @php $dot = ['call' => 'bg-green-500', 'outreach-call' => 'bg-green-500', 'email' => 'bg-blue-500', 'outreach' => 'bg-indigo-500', 'stage' => 'bg-purple-500', 'note' => 'bg-gray-400'][$entry['type']] ?? 'bg-gray-400'; @endphp
+                @php $dot = ['call' => 'bg-green-500', 'outreach-call' => 'bg-green-500', 'email' => 'bg-blue-500', 'outreach' => 'bg-indigo-500', 'linkedin-invite' => 'bg-sky-500', 'linkedin-message' => 'bg-sky-500', 'stage' => 'bg-purple-500', 'note' => 'bg-gray-400'][$entry['type']] ?? 'bg-gray-400'; @endphp
                 <li class="flex items-start gap-3 px-4 py-2.5 text-sm">
                     <span class="w-11 shrink-0 font-mono text-gray-500">{{ $entry['at']->timezone('Europe/Sofia')->format('H:i') }}</span>
                     <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full {{ $dot }}"></span>

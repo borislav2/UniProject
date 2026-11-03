@@ -3,6 +3,7 @@
 namespace App\Support\Admin;
 
 use App\Models\Category;
+use App\Models\LinkedinProspect;
 use App\Models\OutreachCall;
 use App\Models\OutreachProspect;
 use App\Models\Project;
@@ -52,6 +53,31 @@ class LeadConverter
 
         $lead = self::create($call->name, implode("\n\n", $lines), 'Обаждания', ['client_phone' => $call->phone], $user);
         $call->forceFill(['project_id' => $lead->id, 'status' => in_array($call->status, ['new', 'no_answer'], true) ? 'interested' : $call->status])->save();
+
+        return $lead;
+    }
+
+    public static function fromLinkedin(LinkedinProspect $prospect, ?User $user = null): Project
+    {
+        if ($prospect->project_id && ($existing = Project::find($prospect->project_id))) {
+            return $existing;
+        }
+
+        $lines = ['Потенциален клиент от LinkedIn (' . $prospect->statusLabel() . ').', 'Профил: ' . $prospect->profile_url];
+        if ($about = collect([$prospect->title, $prospect->company, $prospect->city, $prospect->industry])->filter()->join(', ')) {
+            $lines[] = $about . '.';
+        }
+        if ($prospect->note) {
+            $lines[] = 'Бележка: ' . $prospect->note;
+        }
+
+        $lead = self::create($prospect->name . ($prospect->company && $prospect->kind === 'person' ? ' (' . $prospect->company . ')' : ''), implode("\n\n", $lines), 'LinkedIn', [
+            'client_email' => $prospect->email,
+            'client_phone' => $prospect->phone,
+            'website_url' => $prospect->website,
+            'assigned_to' => $prospect->assigned_to,
+        ], $user);
+        $prospect->forceFill(['project_id' => $lead->id])->save();
 
         return $lead;
     }

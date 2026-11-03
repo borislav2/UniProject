@@ -2,6 +2,7 @@
 
 namespace App\Support\Admin;
 
+use App\Models\LinkedinProspect;
 use App\Models\OutreachCall;
 use App\Models\OutreachProspect;
 use App\Models\Project;
@@ -14,6 +15,14 @@ class Today
     {
         return Project::openLeads()->whereNotNull('next_action_at')
             ->where('next_action_at', '<=', now('Europe/Sofia')->endOfDay()->utc())
+            ->orderBy('next_action_at')->get();
+    }
+
+    /** LinkedIn контакти с „Напомни на“ за днес или по-рано: на човека или без човек (null = всички). */
+    public static function linkedinDue(?int $userId = null)
+    {
+        return LinkedinProspect::due()
+            ->when($userId, fn ($q) => $q->where(fn ($w) => $w->where('assigned_to', $userId)->orWhereNull('assigned_to')))
             ->orderBy('next_action_at')->get();
     }
 
@@ -65,7 +74,8 @@ class Today
     public static function urgentCountFor(int $userId): int
     {
         return Project::where('source', 'website')->whereNull('read_at')->forMember($userId)->count()
-            + Project::openLeads()->forMember($userId)->whereNotNull('next_action_at')->where('next_action_at', '<=', now('Europe/Sofia')->endOfDay()->utc())->count();
+            + Project::openLeads()->forMember($userId)->whereNotNull('next_action_at')->where('next_action_at', '<=', now('Europe/Sofia')->endOfDay()->utc())->count()
+            + self::linkedinDue($userId)->count();
     }
 
     /** Броячът в менюто: неща, които не търпят отлагане. */
@@ -73,6 +83,7 @@ class Today
     {
         return Project::where('source', 'website')->whereNull('read_at')->count()
             + Project::openLeads()->whereNotNull('next_action_at')->where('next_action_at', '<=', now('Europe/Sofia')->endOfDay()->utc())->count()
-            + self::callbacks();
+            + self::callbacks()
+            + LinkedinProspect::due()->count();
     }
 }

@@ -37,6 +37,7 @@ class TodayController extends Controller
             'withoutNextStep' => $only(Today::withoutNextStep()),
             'consultations' => $only(Today::consultations()),
             'callbacks' => Today::callbacks(),
+            'linkedinDue' => Today::linkedinDue($userId),
             'calls' => OutreachCall::todayStats(),
             'hot' => Today::hotProspects(),
             'clientIssues' => Today::clientIssues(),

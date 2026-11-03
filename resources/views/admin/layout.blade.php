@@ -39,6 +39,7 @@
                 $urgentToday = \App\Support\Admin\Today::urgentCount();
                 $latePayments = \App\Models\Project::subscribers()->with('payments')->get()->filter(fn ($client) => $client->paymentState()['state'] === 'late')->count();
                 $callbacksToday = \App\Models\OutreachCall::whereNotNull('callback_on')->whereDate('callback_on', '<=', today())->count();
+                $linkedinDue = \App\Models\LinkedinProspect::due()->count();
                 // [група, [route, pattern, икона, текст, брояч]]
                 $menu = [
                     null => [
@@ -54,7 +55,7 @@
                         ['admin.chats.index', 'admin.chats.*', 'quote-left', 'Чат разговори', 0],
                     ],
                     'Продажби' => [
-                        ['admin.outreach.index', 'admin.outreach.*', 'magnifying-glass', 'Потенциални клиенти', $callbacksToday],
+                        ['admin.outreach.index', ['admin.outreach.*', 'admin.linkedin.*'], 'magnifying-glass', 'Потенциални клиенти', $callbacksToday + $linkedinDue],
                         ['admin.stats', 'admin.stats', 'chart-line', 'Статистика', 0],
                         ['admin.reviews.index', 'admin.reviews.*', 'reply', 'Отговори на отзиви', 0],
                     ],
@@ -77,7 +78,7 @@
                 @foreach($menu as $group => $items)
                     @if($group)<p class="mt-5 px-4 pb-1 text-xs uppercase tracking-wider text-gray-400">{{ $group }}</p>@endif
                     @foreach($items as [$route, $pattern, $icon, $label, $count])
-                        <a href="{{ route($route) }}" class="flex items-center justify-between gap-2 px-4 py-2 hover:bg-gray-700 {{ request()->routeIs($pattern) ? 'bg-gray-700' : '' }}" @if(request()->routeIs($pattern)) aria-current="page" @endif>
+                        <a href="{{ route($route) }}" class="flex items-center justify-between gap-2 px-4 py-2 hover:bg-gray-700 {{ request()->routeIs(...(array) $pattern) ? 'bg-gray-700' : '' }}" @if(request()->routeIs(...(array) $pattern)) aria-current="page" @endif>
                             <span><x-icon name="{{ $icon }}" class="mr-2" /> {{ $label }}</span>
                             @if($count > 0)<span class="rounded-full bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">{{ $count }}</span>@endif
                         </a>
@@ -151,7 +152,7 @@
             ['admin.outreach.calls.next', 'admin.outreach.calls.*', 'phone', 'Обаждания', 0],
             ['admin.search', 'admin.search', 'search', 'Търсене', 0],
         ] as [$route, $pattern, $icon, $label, $count])
-            <a href="{{ route($route) }}" class="relative flex flex-col items-center gap-1 py-2 {{ request()->routeIs($pattern) ? 'text-brand-700' : '' }}">
+            <a href="{{ route($route) }}" class="relative flex flex-col items-center gap-1 py-2 {{ request()->routeIs(...(array) $pattern) ? 'text-brand-700' : '' }}">
                 <x-icon name="{{ $icon }}" class="text-lg" />{{ $label }}
                 @if($count > 0)<span class="absolute right-3 top-1 rounded-full bg-blue-500 px-1.5 text-[10px] text-white">{{ $count }}</span>@endif
             </a>

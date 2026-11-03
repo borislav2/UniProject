@@ -23,6 +23,31 @@
     </div>
 @endif
 
+@php($li = \App\Support\LinkedIn\LinkedInPublisher::class)
+@if(! $li::configured())
+    <div class="mb-6 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700">
+        <strong>LinkedIn не е свързан.</strong> Статиите могат да излизат сами в страницата на фирмата в LinkedIn. Свързва се на сървъра с <code class="rounded bg-gray-100 px-1">php artisan creatium:linkedin-connect</code> (стъпките са в <code class="rounded bg-gray-100 px-1">tools/linkedin/README.md</code>).
+    </div>
+@elseif($li::expired())
+    <div class="mb-6 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <strong>Ключът за LinkedIn е изтекъл</strong> ({{ $li::expiresOn()->format('d.m.Y') }}): статиите не излизат. Подновете го с <code class="rounded bg-white px-1">php artisan creatium:linkedin-connect</code>.
+    </div>
+@elseif($paused = $li::paused())
+    <div class="mb-6 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <strong>Публикуването в LinkedIn е спряно:</strong> {{ $paused }}. Ключът вероятно е невалиден: свържете страницата пак с <code class="rounded bg-white px-1">php artisan creatium:linkedin-connect</code>.
+    </div>
+@else
+    @php($left = $li::daysLeft())
+    <div class="mb-6 rounded-lg border {{ $left !== null && $left < 10 ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-green-200 bg-green-50 text-green-800' }} px-4 py-3 text-sm">
+        Свързано с LinkedIn страницата (организация {{ config('services.linkedin.organization_id') }}): новите статии излизат веднага, по-старите по една на ден (09:00–20:00).
+        @if($left !== null)
+            Ключът изтича след <strong>{{ $left }} {{ $left === 1 ? 'ден' : 'дни' }}</strong> ({{ $li::expiresOn()->format('d.m.Y') }})@if($left < 10): подновете го с <code class="rounded bg-white px-1">php artisan creatium:linkedin-connect</code>@endif.
+        @else
+            Няма записана дата на изтичане (LINKEDIN_TOKEN_EXPIRES): ключът важи 60 дни.
+        @endif
+    </div>
+@endif
+
 <div class="bg-white rounded-lg shadow overflow-x-auto">
     <table class="min-w-full divide-y divide-gray-200 text-sm">
         <thead class="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
@@ -33,6 +58,7 @@
                 <th class="px-6 py-3">Статус</th>
                 <th class="px-6 py-3">Дата</th>
                 <th class="px-6 py-3">Facebook</th>
+                <th class="px-6 py-3">LinkedIn</th>
                 <th class="px-6 py-3"></th>
             </tr>
         </thead>
@@ -69,6 +95,25 @@
                                 <form action="{{ route('admin.posts.facebook', $post) }}" method="POST" class="inline">
                                     @csrf
                                     <button class="ml-2 text-xs font-semibold text-brand-700 hover:underline">{{ $post->facebook_error ? 'Опитай пак' : 'Пусни сега' }}</button>
+                                </form>
+                            @endif
+                        @else
+                            <span class="text-xs text-gray-400">—</span>
+                        @endif
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        @if($post->linkedin_post_id)
+                            <a href="{{ $li::postUrl($post) }}" target="_blank" rel="noopener" class="px-2 py-0.5 rounded-full text-xs bg-blue-100 text-blue-800 hover:underline" title="{{ $post->linkedin_posted_at?->timezone('Europe/Sofia')->format('d.m.Y H:i') }}">Публикувана</a>
+                        @elseif($post->isVisible('bg'))
+                            @if($post->linkedin_error)
+                                <span class="px-2 py-0.5 rounded-full text-xs bg-red-100 text-red-800" title="{{ $post->linkedin_error }}">Грешка</span>
+                            @else
+                                <span class="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-700">Чака ред</span>
+                            @endif
+                            @if($li::ready())
+                                <form action="{{ route('admin.posts.linkedin', $post) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button class="ml-2 text-xs font-semibold text-brand-700 hover:underline">{{ $post->linkedin_error ? 'Опитай пак' : 'Пусни сега' }}</button>
                                 </form>
                             @endif
                         @else

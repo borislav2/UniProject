@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Support\Admin\SiteMonitor;
 use App\Support\Chat\ChatAssistant;
 use App\Support\Facebook\FacebookPublisher;
+use App\Support\LinkedIn\LinkedInPublisher;
 use App\Support\Notify\Telegram;
 use App\Support\Outreach\Outreach;
 use Illuminate\Support\Carbon;
@@ -47,6 +48,19 @@ class HealthController extends Controller
         $add('Сайт', 'Блог във Facebook', ! FacebookPublisher::configured() ? 'off' : ($paused ? 'warn' : 'ok'),
             ! FacebookPublisher::configured() ? 'Не е свързан: статиите не излизат във Facebook сами.' : ($paused ? 'Спряно временно: ' . $paused : 'Статиите излизат автоматично.'),
             ! FacebookPublisher::configured() || $paused ? 'php artisan creatium:facebook-connect (tools/facebook/README.md)' : null);
+        $liDays = LinkedInPublisher::daysLeft();
+        $liPaused = LinkedInPublisher::paused();
+        $liState = ! LinkedInPublisher::configured() ? 'off' : (LinkedInPublisher::expired() || $liPaused || ($liDays !== null && $liDays < 10) ? 'warn' : 'ok');
+        $add('Сайт', 'Блог в LinkedIn', $liState,
+            match (true) {
+                ! LinkedInPublisher::configured() => 'Не е свързан: статиите не излизат в LinkedIn сами.',
+                LinkedInPublisher::expired() => 'Ключът е изтекъл на ' . LinkedInPublisher::expiresOn()->format('d.m.Y') . ': статиите не излизат.',
+                (bool) $liPaused => 'Спряно временно: ' . $liPaused,
+                $liDays === null => 'Статиите излизат автоматично (няма записана дата на изтичане на ключа).',
+                $liDays < 10 => "Ключът изтича след {$liDays} " . ($liDays === 1 ? 'ден' : 'дни') . ': подновете го.',
+                default => "Статиите излизат автоматично, ключът изтича след {$liDays} дни.",
+            },
+            $liState !== 'ok' ? 'php artisan creatium:linkedin-connect (tools/linkedin/README.md)' : null);
         $add('Сайт', 'Google Tag Manager', filled(config('creatium.gtm_id')) ? 'ok' : 'warn',
             filled(config('creatium.gtm_id')) ? 'Контейнер ' . config('creatium.gtm_id') . ', зарежда се след съгласие.' : 'Няма GTM: няма статистика и рекламно проследяване.');
         $sites = SiteMonitor::watched()->get();
