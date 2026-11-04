@@ -70,6 +70,9 @@ class SiteCrawler
 
     private array $queryVariants = [];
 
+    /** Хостове, които отговарят на ботове с грешки или вход; връзките към тях не се проверяват. */
+    private const UNCHECKABLE_HOSTS = ['linkedin.com', 'facebook.com', 'instagram.com', 'x.com', 'twitter.com', 'tiktok.com', 'youtube.com', 'google.com', 'maps.app.goo.gl'];
+
     private array $sitemapKeys = [];
 
     private array $resources = [];
@@ -536,6 +539,11 @@ class SiteCrawler
             if ($checked >= self::MAX_EXTERNAL || ! $this->timeLeft()) {
                 break;
             }
+            // Социалните мрежи отговарят на ботове с грешки (LinkedIn 999/404, Facebook вход), затова не ги проверяваме.
+            $host = strtolower((string) parse_url($link['url'], PHP_URL_HOST));
+            if (preg_match('/(^|\.)(' . implode('|', array_map('preg_quote', self::UNCHECKABLE_HOSTS)) . ')$/', $host)) {
+                continue;
+            }
             $checked++;
             $r = $this->checker->fetch($link['url'], method: 'HEAD');
             if ($r['response'] && in_array($r['response']->status(), [400, 403, 405, 501], true)) {
@@ -545,7 +553,8 @@ class SiteCrawler
                 continue;
             }
             $status = $r['response']?->status() ?? 0;
-            if ($status === 0 || in_array($status, [404, 410], true) || $status >= 500) {
+            // Без отговор (0) не значи счупено: много сайтове бавят или режат ботове. Брои се само ясният отговор „няма я“.
+            if (in_array($status, [404, 410], true) || $status >= 500) {
                 $this->add('broken_external', $link['url'], $link['from'], $status ? 'HTTP ' . $status : null);
             }
         }
@@ -554,6 +563,14 @@ class SiteCrawler
     }
 
     // ---------------------------------------------------------------- checks
+
+    /** Еднакъв ли е адресът без параметрите (?…). */
+    private function samePath(string $a, string $b): bool
+    {
+        $strip = fn ($u) => strtok($this->key($u), '?');
+
+        return $strip($a) === $strip($b);
+    }
 
     private function analyzedPages(): array
     {
@@ -586,6 +603,19 @@ class SiteCrawler
         $titles = $descriptions = $h1s = [];
         foreach ($pages as $key => $p) {
             $url = $p['url'];
+            // Скрита от Google страница (noindex): само се отбелязва; останалите SEO проверки нямат смисъл за нея.
+            if ($p['noindex']) {
+                $this->add('noindex', $url);
+                if ($p['sitemap']) {
+                    $this->add('sitemap_bad', $url, null, 'noindex');
+                }
+                continue;
+            }
+            // Вариант на страница (например ?paket=1), който сочи с canonical към същия адрес без параметри:
+            // това е правилната настройка, а не дублирано съдържание, затова не се проверява отделно.
+            if ($p['canonical'] !== null && $this->key($p['canonical']) !== $key && $this->samePath($p['canonical'], $url)) {
+                continue;
+            }
             if ($p['ms'] > self::SLOW_MS) {
                 $this->add('slow_pages', $url, null, number_format($p['ms'] / 1000, 1, '.', '') . ' s');
             }
@@ -634,9 +664,6 @@ class SiteCrawler
                 }
             }
 
-            if ($p['noindex']) {
-                $this->add('noindex', $url);
-            }
             if ($p['images_no_alt'] > 0) {
                 $this->add('images_no_alt', $url, null, $p['images_no_alt'] . '/' . $p['images']);
             }
@@ -653,9 +680,6 @@ class SiteCrawler
                 $this->add('no_og', $url);
             }
 
-            if ($p['sitemap'] && $p['noindex']) {
-                $this->add('sitemap_bad', $url, null, 'noindex');
-            }
             $canonicalSelf = $p['canonical'] === null || $this->key($p['canonical']) === $key;
             if ($hasSitemap && ! $p['sitemap'] && ! isset($this->sitemapKeys[$key]) && ! $p['noindex'] && $canonicalSelf) {
                 $this->add('missing_from_sitemap', $url);

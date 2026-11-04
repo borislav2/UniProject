@@ -31,7 +31,7 @@
         $seo = array_filter($seo ?? [], 'filled') ?: app(\App\Support\Content::class)->seo($routeName);
         // „ | Creatium Lab“ отпада, когато заглавието стане над 70 знака (Google иначе го реже по средата).
         $baseTitle = trim($__env->yieldContent('title', __('Сайтове и дигитален маркетинг за бизнеси')));
-        $pageTitle = $seo['meta_title'] ?? (mb_strlen($baseTitle) + 15 > 70 ? $baseTitle : $baseTitle . ' | Creatium Lab');
+        $pageTitle = $seo['meta_title'] ?? (mb_strlen($baseTitle) + 15 > 60 ? $baseTitle : $baseTitle . ' | Creatium Lab');
         $pageDescription = $seo['meta_description'] ?? trim($__env->yieldContent('meta_description', __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.')));
         $canonicalUrl = $seo['canonical_url'] ?? ($canonical ?? url()->current());
         $ogImage = isset($seo['og_image']) ? asset($seo['og_image']) : asset('images/og-image.png');

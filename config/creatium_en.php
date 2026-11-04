@@ -446,7 +446,7 @@ return [
         'email' => [
             'slug' => 'email-marketing', 'icon' => 'envelope-open-text', 'menu' => 'Email marketing',
             'title' => 'Email marketing and automation',
-            'seo_title' => 'Email marketing and automation for your business | Creatium Lab',
+            'seo_title' => 'Email marketing and automation for your business',
             'seo_description' => 'Automatic emails after an enquiry, booking or purchase. Bring customers back without manual work.',
             'lead' => 'Finding a new customer is expensive. Email brings back the ones who already know you, automatically.',
             'problems' => ['Customers come once and forget you', 'You answer enquiries by hand, and late', 'Your contact list sits unused'],
@@ -469,7 +469,7 @@ return [
         'support' => [
             'slug' => 'maintenance-and-hosting', 'icon' => 'shield-halved', 'menu' => 'Maintenance and hosting',
             'title' => 'Maintenance, hosting and monitoring',
-            'seo_title' => 'Website maintenance, hosting and 24/7 monitoring | Creatium Lab',
+            'seo_title' => 'Website maintenance, hosting and 24/7 monitoring',
             'seo_description' => '24/7 monitoring, daily backups, security and fast response. Hosting, domain and site changes in one monthly plan.',
             'lead' => 'Your website works every day, and we look after it. You don\'t have to think about the tech.',
             'problems' => ['The site goes down and you hear it from a customer', 'An expired domain or certificate', 'Prices need changing and nobody can do it'],
