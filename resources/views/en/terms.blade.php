@@ -17,22 +17,30 @@
             <p>Sending an inquiry through the form does not commit you to anything and does not create a contract. After our call we send you a written offer with the scope, price and timeline. Work starts once you confirm it. Packages and prices on the site are indicative; the ones in the confirmed offer apply.</p>
         </div>
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">3. Intellectual property</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">3. Subscription, guarantee and ads</h2>
+            <ul class="list-disc pl-5 space-y-2">
+                <li><strong class="text-gray-900 dark:text-white">Subscription price.</strong> The monthly price in the confirmed offer is fixed for the first 6 months. After that it may change, and we tell you in advance before the new price applies. With yearly billing the price holds for the whole paid year.</li>
+                <li><strong class="text-gray-900 dark:text-white">Guarantee.</strong> If the website has no traffic 60 days after launch, we refund what you have paid. Visits are measured with Google Analytics, which we set up at the start and you have access to. The exact terms of the guarantee are set out in the contract.</li>
+                <li><strong class="text-gray-900 dark:text-white">Ad budget.</strong> The ad budget for Facebook and Instagram is not included in the price. You pay it directly to Meta. We monitor the ads and tell you what they bring.</li>
+            </ul>
+        </div>
+        <div>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">4. Intellectual property</h2>
             <p>The text, design, logo and other content on the site belong to Creatium Lab and may not be copied or used without our written permission.</p>
         </div>
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">4. Liability</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">5. Liability</h2>
             <p>We try to keep the information accurate and up to date, but we do not guarantee that the site will run without interruptions or errors. We are not responsible for the content of external sites we link to.</p>
         </div>
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">5. Personal data and cookies</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">6. Personal data and cookies</h2>
             <p>How we process your personal data is described in the <a href="{{ lroute('privacy') }}" class="text-brand-600 underline dark:text-brand-300">Privacy policy</a>, and which cookies we use in the <a href="{{ lroute('cookies') }}" class="text-brand-600 underline dark:text-brand-300">Cookie policy</a>.</p>
         </div>
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">6. Governing law</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">7. Governing law</h2>
             <p>These terms are governed by Bulgarian law. Questions: <a href="mailto:{{ $contact['email'] }}" class="text-brand-600 underline dark:text-brand-300">{{ $contact['email'] }}</a>.</p>
         </div>
-        <p class="text-sm text-gray-500 dark:text-gray-400">Last updated: 3 October 2026</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Last updated: 4 November 2026</p>
     </div>
 </section>
 @endsection

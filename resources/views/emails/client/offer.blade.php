@@ -147,7 +147,7 @@
 </tr>
 <tr><td colspan="2" style="padding:0 24px 16px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-@foreach([['Срок', $t('deadline')], ['Плащане', $t('payment')]] as [$label, $value])
+@foreach([['Срок', $t('deadline')], ['Плащане', $t('payment')], ['Абонамент', $t('subscription_terms')], ['Гаранция', $t('guarantee')], ['Реклама', $t('ad_budget')]] as [$label, $value])
 @if($value !== '')
 <tr><td valign="top" width="80" style="padding:10px 12px 10px 0;border-top:1px solid #2a4468;{{ $f }}font-size:13px;color:#c5d6ec;">{{ $label }}</td><td valign="top" style="padding:10px 0;border-top:1px solid #2a4468;{{ $f }}font-size:14px;line-height:1.5;font-weight:bold;color:#ffffff;">{{ $value }}</td></tr>
 @endif
