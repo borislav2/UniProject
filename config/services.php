@@ -40,6 +40,11 @@ return [
         'key' => env('SERPER_API_KEY'),
     ],
 
+    // Скорост на телефон в безплатната проверка на сайт (Google PageSpeed Insights API, по желание).
+    'pagespeed' => [
+        'key' => env('PAGESPEED_API_KEY'),
+    ],
+
     // Проверка на имейлите от търсенето на бизнеси (по желание; reoon.com, 600 безплатни на месец).
     'reoon' => [
         'key' => env('REOON_API_KEY'),

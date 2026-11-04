@@ -14,16 +14,20 @@ use Illuminate\Support\Facades\Mail;
  */
 class SendSiteCheckReport
 {
-    public function __construct(private SiteChecker $checker)
+    public function __construct(private SiteAudit $audit)
     {
     }
 
     public function __invoke(Project $lead, string $domain, string $email, string $locale): void
     {
         app()->setLocale($locale);
+        // Обхождането на сайта е по-дълго от една заявка; изпълнява се след отговора и не бива да се прекъсва от лимита на PHP.
+        if (function_exists('set_time_limit')) {
+            @set_time_limit((int) config('creatium.site_check.crawl_seconds', 60) + 180);
+        }
 
         try {
-            $report = $this->checker->check($domain);
+            $report = $this->audit->run($domain);
         } catch (\Throwable $e) {
             Log::error('Site check failed: ' . $e->getMessage(), ['project_id' => $lead->id, 'domain' => $domain]);
             $report = null;
@@ -32,7 +36,7 @@ class SendSiteCheckReport
         $notes = [];
         $sent = false;
         if ($report) {
-            $problems = collect($report['checks'])->where('status', '!=', 'ok')->pluck('title');
+            $problems = collect(SiteAudit::items($report))->pluck('title');
             $notes[] = "Проверка на сайт {$domain}: оценка {$report['score']} от 100.";
             $notes[] = $problems->isEmpty() ? 'Без открити проблеми.' : "За оправяне:\n- " . $problems->implode("\n- ");
 
@@ -54,6 +58,10 @@ class SendSiteCheckReport
             'site_check_report' => $report ? [
                 'domain' => $domain,
                 'score' => $report['score'],
+                'home_score' => $report['home_score'] ?? $report['score'],
+                'crawl' => $report['crawl'] ?? null,
+                'issues' => $report['issues'] ?? [],
+                'pagespeed' => $report['pagespeed'] ?? null,
                 'checks' => collect($report['checks'])->map(fn ($c) => ['status' => $c['status'], 'title' => $c['title'], 'detail' => $c['detail'] ?? ''])->values()->all(),
                 'sent' => $sent,
                 'checked_at' => now()->toIso8601String(),

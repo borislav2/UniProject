@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', __('Безплатна проверка на сайт: SEO, скорост и Google'))
-@section('meta_description', __('Въведете адреса на сайта си и получете безплатен отчет на имейла: HTTPS, скорост на сървъра, заглавия за Google, телефон, sitemap и още.'))
+@section('meta_description', __('Въведете адреса на сайта си и получете безплатен отчет на имейла: обхождаме до :n страници за счупени връзки, заглавия за Google, скорост, HTTPS, sitemap и още.', ['n' => config('creatium.site_check.crawl_limit')]))
 
 @php
     $checks = [
@@ -12,18 +12,20 @@
         ['eye', __('Видим ли е за Google'), __('Дали сайтът не е скрит по погрешка и има ли карта на сайта.')],
         ['robot', __('Данни за Google и AI'), __('Описан ли е бизнесът така, че машините да го разберат, и не спира ли сайтът ChatGPT и другите AI асистенти.')],
         ['link', __('Споделяне на линк'), __('Какво се показва, когато някой изпрати линка ви.')],
-        ['image', __('Снимки'), __('Имат ли описания, които Google разбира.')],
+        ['image', __('Снимки'), __('Имат ли описания, които Google разбира, и не са ли твърде тежки.')],
+        ['triangle-exclamation', __('Счупени връзки и грешки'), __('Страници, които не се отварят, пренасочвания и връзки към несъществуващи адреси.')],
+        ['clipboard-list', __('Всички страници, не само първата'), __('Заглавия и описания без повторения, основни заглавия, достатъчно текст и страници, скрити от Google.')],
     ];
 @endphp
 
 @section('content')
-@include('partials/page-header', ['eyebrow' => __('Безплатно'), 'heading' => __('Проверка на сайт'), 'sub' => __('Въведете адреса на сайта и имейл. До няколко минути ще получите отчет какво работи и какво да оправите.')])
+@include('partials/page-header', ['eyebrow' => __('Безплатно'), 'heading' => __('Проверка на сайт'), 'sub' => __('Въведете адреса на сайта и имейл. Обхождаме до :n страници и до няколко минути получавате отчет на имейла какво работи и какво да оправите.', ['n' => config('creatium.site_check.crawl_limit')])])
 
 <section class="py-16 md:py-24 bg-brand-50/60 dark:bg-ink-900">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-12 items-start">
         <div class="lg:col-span-6">
             <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ __('Какво проверяваме') }}</h2>
-            <p class="mt-3 text-gray-600 leading-relaxed dark:text-gray-300">{{ __('Автоматично, на началната страница. Отчетът е на разбираем език, с обяснение какво значи всеки резултат.') }}</p>
+            <p class="mt-3 text-gray-600 leading-relaxed dark:text-gray-300">{{ __('Автоматично обхождаме до :n страници на сайта ви. Отчетът е на разбираем език, с обяснение какво значи всеки резултат и къде е проблемът.', ['n' => config('creatium.site_check.crawl_limit')]) }}</p>
             <ul class="mt-8 grid sm:grid-cols-2 gap-x-6 gap-y-6">
                 @foreach($checks as [$icon, $title, $text])
                     <li class="flex items-start gap-3">
@@ -42,7 +44,7 @@
                             <x-icon name="paper-plane" class="text-green-600 text-xl dark:text-green-400" />
                         </div>
                         <h2 class="text-xl font-bold mb-2">{{ __('Проверката започна') }}</h2>
-                        <p class="text-gray-600 dark:text-gray-300">{{ __('Ще изпратим отчета на :email до няколко минути. Ако не го виждате, проверете папка „Спам“ или „Промоции“.', ['email' => session('site_check_sent')]) }}</p>
+                        <p class="text-gray-600 dark:text-gray-300">{{ __('Ще изпратим отчета на :email до няколко минути: обхождането на целия сайт отнема малко повече време. Ако не го виждате, проверете папка „Спам“ или „Промоции“.', ['email' => session('site_check_sent')]) }}</p>
                         <a href="{{ lroute('site-check') }}" class="mt-6 inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">{{ __('Проверете друг сайт') }} <x-icon name="arrow-right" class="text-xs" /></a>
                     </div>
                 @else

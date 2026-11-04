@@ -260,7 +260,70 @@ class SiteChecker
         return array_values($blocked);
     }
 
-    private function parse(string $html): \DOMDocument
+    /**
+     * Правилата на robots.txt за даден бот: групата на неговото име, а ако няма такава, групата за „*“.
+     * Връща ['disallow' => [...], 'allow' => [...]] (пътища с евентуални „*“ и „$“).
+     */
+    public function robotsRules(string $robots, string $agent): array
+    {
+        $agent = strtolower($agent);
+        $groups = [];
+        $current = null;
+        $inRules = false;
+        foreach (preg_split('/\R/', $robots) as $line) {
+            $line = trim(preg_replace('/#.*/', '', $line));
+            if (preg_match('/^user-agent\s*:\s*(.+)$/i', $line, $m)) {
+                if ($inRules || $current === null) {
+                    $groups[] = ['agents' => [], 'disallow' => [], 'allow' => []];
+                    $current = array_key_last($groups);
+                    $inRules = false;
+                }
+                $groups[$current]['agents'][] = strtolower(trim($m[1]));
+            } elseif ($current !== null && preg_match('/^(dis)?allow\s*:\s*(.*)$/i', $line, $m)) {
+                $inRules = true;
+                if ($m[2] !== '') {
+                    $groups[$current][strtolower($m[1]) === 'dis' ? 'disallow' : 'allow'][] = $m[2];
+                }
+            }
+        }
+
+        foreach ([$agent, '*'] as $wanted) {
+            $rules = ['disallow' => [], 'allow' => []];
+            $found = false;
+            foreach ($groups as $group) {
+                $match = $wanted === '*' ? in_array('*', $group['agents'], true)
+                    : collect($group['agents'])->contains(fn ($a) => $a !== '*' && str_contains($agent, $a));
+                if ($match) {
+                    $found = true;
+                    $rules['disallow'] = array_merge($rules['disallow'], $group['disallow']);
+                    $rules['allow'] = array_merge($rules['allow'], $group['allow']);
+                }
+            }
+            if ($found) {
+                return $rules;
+            }
+        }
+
+        return ['disallow' => [], 'allow' => []];
+    }
+
+    /** Дали правилата позволяват път (с query). Печели най-дългото съвпадение, при равенство „Allow“. */
+    public static function robotsAllows(array $rules, string $pathWithQuery): bool
+    {
+        $best = [-1, true];
+        foreach (['disallow' => false, 'allow' => true] as $type => $allowed) {
+            foreach ($rules[$type] as $rule) {
+                $regex = '#^' . str_replace(['\\*', '\\$'], ['.*', '$'], preg_quote($rule, '#')) . '#';
+                if (preg_match($regex, $pathWithQuery) && (strlen($rule) > $best[0] || (strlen($rule) === $best[0] && $allowed))) {
+                    $best = [strlen($rule), $allowed];
+                }
+            }
+        }
+
+        return $best[1];
+    }
+
+    public function parse(string $html): \DOMDocument
     {
         $doc = new \DOMDocument;
         $previous = libxml_use_internal_errors(true);
@@ -274,10 +337,11 @@ class SiteChecker
     /**
      * Безопасно изтегляне: само публични IPv4 адреси, портове 80/443, пренасочванията се проверяват наново.
      *
-     * @return array{response: ?Response, url: string, ms: int, error: ?string}
+     * @return array{response: ?Response, url: string, ms: int, error: ?string, redirects?: int, chain?: array}
      */
-    public function fetch(string $url, bool $follow = true): array
+    public function fetch(string $url, bool $follow = true, string $method = 'GET'): array
     {
+        $chain = [];
         for ($redirects = 0; ; $redirects++) {
             $parts = parse_url($url);
             $scheme = strtolower($parts['scheme'] ?? '');
@@ -306,7 +370,7 @@ class SiteChecker
                     ])
                     ->connectTimeout(5)
                     ->timeout(10)
-                    ->get($url);
+                    ->send($method, $url);
             } catch (\Throwable $e) {
                 return ['response' => null, 'url' => $url, 'ms' => (int) ((hrtime(true) - $started) / 1e6), 'error' => $e->getMessage()];
             }
@@ -314,8 +378,9 @@ class SiteChecker
 
             $location = $response->header('Location');
             if (! $follow || ! $response->redirect() || $location === '' || $redirects >= self::MAX_REDIRECTS) {
-                return ['response' => $response, 'url' => $url, 'ms' => $ms, 'error' => null];
+                return ['response' => $response, 'url' => $url, 'ms' => $ms, 'error' => null, 'redirects' => $redirects, 'chain' => $chain];
             }
+            $chain[] = $url;
             $url = (string) UriResolver::resolve(new Uri($url), new Uri($location));
         }
     }
