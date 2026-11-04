@@ -104,4 +104,17 @@ class PackagesPageTest extends TestCase
             ->assertDontSee('Общо за първата година: €2 250')
             ->assertDontSee('id="izbor"', false);
     }
+
+    public function test_guarantee_six_month_price_and_ad_budget_terms_are_shown(): void
+    {
+        $this->get('/paketi')->assertOk()
+            ->assertSee('Гаранция: връщаме парите')
+            ->assertSee('Ако 60 дни след пускането на сайта нямате трафик, връщаме парите, които сте платили.')
+            ->assertSee('Абонаментната цена е фиксирана за първите 6 месеца.')
+            ->assertSee('Бюджетът за реклама във Facebook и Instagram се плаща от вас директно на Meta.')
+            ->assertSee('Рекламният бюджет включен ли е в цената?');
+        $this->get('/en/packages')->assertOk()
+            ->assertSee('Guarantee: we refund you')
+            ->assertSee('The subscription price is fixed for the first 6 months.');
+    }
 }

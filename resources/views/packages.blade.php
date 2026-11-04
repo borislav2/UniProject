@@ -202,6 +202,24 @@
     </div>
 </section>
 
+{{-- Гаранция (собствениците, ноември 2026): веднага под пакетите. --}}
+@if(filled($plans['guarantee']['text'] ?? null))
+    <section class="pb-16 md:pb-20 bg-white dark:bg-ink-950">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal flex flex-col gap-5 rounded-[2rem] border border-emerald-200 bg-emerald-50/70 p-6 sm:flex-row sm:items-center md:p-8 dark:border-emerald-400/20 dark:bg-emerald-400/[0.06]">
+                <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-lg shadow-emerald-900/20"><x-icon name="shield-halved" class="text-xl" /></span>
+                <div>
+                    <h2 class="text-xl md:text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $plans['guarantee']['title'] ?? __('Гаранция') }}</h2>
+                    <p class="mt-1 text-lg leading-relaxed text-gray-700 dark:text-gray-200">{{ $plans['guarantee']['text'] }}</p>
+                    @if(filled($plans['guarantee']['note'] ?? null))
+                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">{{ $plans['guarantee']['note'] }}</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </section>
+@endif
+
 {{-- 3. Сравнение. Иконите са декорация, текстът „Да“ / „Не“ е за екранни четци. --}}
 @if(! empty($plans['compare']))
     <section class="py-16 md:py-24 bg-brand-50/60 dark:bg-ink-900">
