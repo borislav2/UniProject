@@ -705,5 +705,6 @@
     "Страници без данни за Google и AI (schema): :n": "Pages without data for Google and AI (schema): :n",
     "Специален код казва на търсачките и на AI асистентите какво е страницата. Помага в Google и в отговорите на AI.": "A special code tells search engines and AI assistants what the page is. It helps in Google and in AI answers.",
     "Страници без настроено споделяне (Open Graph): :n": "Pages without share settings (Open Graph): :n",
-    "Когато някой изпрати линка в чат или във Facebook, няма подбрана снимка и заглавие.": "When someone sends the link in a chat or on Facebook, there is no chosen image and title."
+    "Когато някой изпрати линка в чат или във Facebook, няма подбрана снимка и заглавие.": "When someone sends the link in a chat or on Facebook, there is no chosen image and title.",
+    "Гаранция": "Guarantee"
 }
