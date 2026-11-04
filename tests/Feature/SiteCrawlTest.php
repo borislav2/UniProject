@@ -121,7 +121,7 @@ class SiteCrawlTest extends TestCase
         $this->assertArrayNotHasKey('slow_pages', $issues);
         $this->assertArrayNotHasKey('deep_pages', $issues);
         $this->assertArrayNotHasKey('canonical_broken', $issues);
-        $this->assertSame(5, $issues['canonical_missing']['count']);
+        $this->assertSame(4, $issues['canonical_missing']['count']); // the noindex page is not checked further
         $this->assertSame('error', $issues['broken_pages']['severity']);
         $this->assertSame('error', $result['issues'][0]['severity']);
 
@@ -246,5 +246,40 @@ class SiteCrawlTest extends TestCase
         $user->roles()->attach(Role::where('slug', 'developer')->value('id'));
 
         $this->actingAs($user)->get('/admin/zdrave')->assertSee('PAGESPEED_API_KEY=');
+    }
+
+    public function test_noindex_pages_query_variants_and_social_links_are_not_reported_as_problems(): void
+    {
+        Http::swap(new \Illuminate\Http\Client\Factory);
+        $canonical = '<link rel="canonical" href="https://firma.bg/paketi">';
+        Http::fake(function (Request $request) use ($canonical) {
+            $html = ['Content-Type' => 'text/html; charset=utf-8'];
+
+            return match ($request->url()) {
+                'https://firma.bg/' => Http::response($this->page('Начална страница на фирмата', '<h1>Фирма</h1>', '
+                    <a href="/paketi">Пакети</a> <a href="/paketi?paket=1">Пакет 1</a> <a href="/paketi?paket=2">Пакет 2</a>
+                    <a href="/demo">Демо</a> <a href="https://www.linkedin.com/in/someone/">LinkedIn</a> <a href="https://slow.bg/">Бавен</a>',
+                    '<link rel="canonical" href="https://firma.bg/">'), 200, $html),
+                'https://firma.bg/paketi', 'https://firma.bg/paketi?paket=1', 'https://firma.bg/paketi?paket=2' => Http::response($this->page('Пакети и цени на фирмата', '<h1>Пакети</h1>', '', $canonical), 200, $html),
+                'https://firma.bg/demo' => Http::response('<html><head><meta name="robots" content="noindex"></head><body>Демо</body></html>', 200, $html),
+                'https://slow.bg/' => throw new \Illuminate\Http\Client\ConnectionException('timeout'),
+                default => Http::response('', 404),
+            };
+        });
+
+        $result = app(SiteCrawler::class)->crawl('https://firma.bg/');
+        $issues = $this->issues($result);
+
+        $this->assertSame(1, $issues['noindex']['count']);
+        // Само noindex се отбелязва за демото; вариантите ?paket= (с canonical към /paketi) не се броят никъде.
+        foreach ($issues as $key => $issue) {
+            foreach ($issue['examples'] as $example) {
+                $this->assertFalse($key !== 'noindex' && str_contains($example['url'], '/demo'), $key);
+                $this->assertStringNotContainsString('?paket=', $example['url'], $key);
+            }
+        }
+        // LinkedIn не се проверява, а сайт без отговор не е „счупена връзка“.
+        $this->assertArrayNotHasKey('broken_external', $issues);
+        Http::assertNotSent(fn (Request $r) => str_contains($r->url(), 'linkedin.com'));
     }
 }
