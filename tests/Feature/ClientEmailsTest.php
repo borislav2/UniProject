@@ -82,7 +82,7 @@ class ClientEmailsTest extends TestCase
             ->assertSee('value="Екипът на Creatium Lab"', false)
             ->assertSee('value="{business}: предложение за постоянен растеж | Creatium Lab"', false)
             ->assertSee('Какво получавате')->assertSee('<details', false)
-            ->assertSee('value="850"', false)->assertSee('value="400"', false)
+            ->assertSee('value="900"', false)->assertSee('value="400"', false)
             ->assertSee('value="' . now()->addDays(7)->toDateString() . '"', false);
 
         $this->actingAs($user)->get('/admin/emails/nyama')->assertNotFound();
@@ -104,7 +104,7 @@ class ClientEmailsTest extends TestCase
 
         $this->actingAs($user)->post('/admin/emails/offer-active/preview', ['data' => $this->offerData()])
             ->assertSee('Как Студио Лавандула ще расте с постоянен поток от запитвания')
-            ->assertSee('€850', false)->assertSee('€400', false)->assertSee('/ месец')
+            ->assertSee('€900', false)->assertSee('€400', false)->assertSee('/ месец')
             ->assertSee('Предложението е валидно до ' . now()->addWeek()->format('d.m.Y') . ' г.')
             ->assertSee('Поемаме ограничен брой нови проекти')->assertSee('Видимост в AI асистентите');
         $this->actingAs($user)->post('/admin/emails/offer-start/preview', ['data' => ['business' => 'Мотор Про', 'price' => '450', 'monthly_price' => '150']])
@@ -140,7 +140,7 @@ class ClientEmailsTest extends TestCase
                 && $mail->hasReplyTo(config('creatium.contact.email'))
                 && $mail->hasSubject('Студио Лавандула: предложение за постоянен растеж | Creatium Lab')
                 && str_contains($html, 'Здравейте, Мария')
-                && str_contains($html, '€850')
+                && str_contains($html, '€900')
                 && str_contains($html, 'валидно до ' . now()->addWeek()->format('d.m.Y'))
                 && ! str_contains($html, '{business}') && ! str_contains($html, '{client_name}')
                 && ! str_contains($html, '[');
@@ -350,7 +350,7 @@ class ClientEmailsTest extends TestCase
 
         // Друг шаблон не взима чужди данни.
         $this->actingAs($user)->get('/admin/emails/offer-active?from=' . $sent->id)->assertOk()
-            ->assertDontSee('Моят собствен текст за сега.')->assertSee('value="850"', false);
+            ->assertDontSee('Моят собствен текст за сега.')->assertSee('value="900"', false);
     }
 
     public function test_the_start_offer_has_no_valid_until_prefill_and_active_does(): void
