@@ -132,7 +132,7 @@ class PublicSiteTest extends TestCase
     {
         $this->get('/paketi')->assertOk()
             ->assertSee('Всеки пакет включва цялата система')
-            ->assertSeeInOrder(['Стартов двигател', '€600', 'старт: изграждаме всичко и първия месец', 'след това', '€150', '/ месец', 'Активен маркетинг и растеж', 'Препоръчваме', '€900', '€400', '/ месец', 'Индивидуален маркетинг и мащабиране'], false)
+            ->assertSeeInOrder(['Стартов двигател', '€600', 'старт: изграждаме всичко и първия месец', 'след това', '€200', '/ месец', 'Активен маркетинг и растеж', '€900', '€450', '/ месец', 'Индивидуален маркетинг и мащабиране'], false)
             ->assertSee('Получете оферта');
         $this->get('/en/packages')->assertOk()->assertSee('Starter Engine')->assertSee('Get a quote');
     }
@@ -228,7 +228,7 @@ class PublicSiteTest extends TestCase
 
     public function test_packages_page_links_to_the_quote_form(): void
     {
-        $this->get('/paketi')->assertOk()->assertSee('Получете оферта')->assertSee(route('packages') . '?paket=0#oferta', false);
+        $this->get('/paketi')->assertOk()->assertSee('Получете оферта')->assertSee(route('packages') . '?paket=0&amp;obem=1&amp;plashtane=mesechno#oferta', false);
     }
 
     public function test_sitemap_lists_new_pages(): void

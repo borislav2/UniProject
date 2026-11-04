@@ -94,6 +94,7 @@ class FaqResponder
             $topics[] = [
                 __('Колко струва сайт? Цени на пакетите, такса на месец, абонамент, оферта.'),
                 implode("\n", array_map(fn ($p) => $p['name'] . ': ' . implode(', ', (array) $p['prices']), $plans))
+                    . (($intro = \App\Support\PlanPricing::textIntro(site('plans') ?? [])) !== '' ? "\n" . $intro . ' ' . lroute('packages') . '#izbor' : '')
                     . "\n" . __('Оферта за вашия бизнес: :link', ['link' => lroute('packages') . '#oferta']),
             ];
         }

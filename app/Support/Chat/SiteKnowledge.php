@@ -116,6 +116,15 @@ class SiteKnowledge
             }
         }
 
+        $plansFull = app(\App\Support\Content::class)->withDefaults('plans');
+        if ($table = \App\Support\PlanPricing::textLines($plansFull)) {
+            $out[] = "\n### " . __('Месечна такса според обема съдържание');
+            $out[] = \App\Support\PlanPricing::textIntro($plansFull);
+            $out[] = __('Месечната такса е „от“ най-ниската сума; точната зависи от колко публикации и статии на месец ви трябват. Стартовата цена (изграждане и първия месец) не зависи от обема.');
+            array_push($out, ...$table);
+            $out[] = __('Ако клиентът пита за конкретен брой публикации, вземи реда с най-близката стъпка (или по-високата) и посочи и двата начина на плащане.');
+        }
+
         $process = app(\App\Support\Content::class)->withDefaults('home_process');
         if (! empty($process['steps'])) {
             $out[] = "\n## " . __('Работен процес');

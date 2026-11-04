@@ -20,8 +20,8 @@ class PackagesPageTest extends TestCase
             $this->assertSame($parts, $heads, $plan['name']);
             $this->assertSame([], $plan['monthly_items']);
         }
-        $this->assertSame(['€600 старт: изграждаме всичко и първия месец', 'след това €150 / месец'], $plans['items'][0]['prices']);
-        $this->assertSame(['€900 старт: изграждаме всичко и първия месец', 'след това €400 / месец'], $plans['items'][1]['prices']);
+        $this->assertSame(['€600 старт: изграждаме всичко и първия месец', 'след това от €150 / месец'], $plans['items'][0]['prices']);
+        $this->assertSame(['€900 старт: изграждаме всичко и първия месец', 'след това от €400 / месец'], $plans['items'][1]['prices']);
 
         $labels = array_column($plans['compare'], 'label');
         foreach ($parts as $part) {
@@ -40,7 +40,7 @@ class PackagesPageTest extends TestCase
             ->assertSee('от €600 старт');
 
         $this->get('/en/packages')->assertOk()->assertSee('€600')->assertSee('then')->assertSee('€150')
-            ->assertSee('€5,300 for the first year (€900 + 11 × €400)')->assertSee('Returning customers');
+            ->assertSee('€5,850 for the first year')->assertSee('Returning customers');
         $this->get('/')->assertSee('€600 – €900+', false);
     }
 
@@ -53,10 +53,10 @@ class PackagesPageTest extends TestCase
             ->assertDontSee('Най-предпочитан')
             ->assertSee('Плащате на две части')->assertSee('50% при договор, 50% след одобрено демо')
             ->assertSee('Фиксирана цена в офертата')
-            ->assertSee('€2 250 за първата година (€600 + 11 × €150)')
-            ->assertSee('€5 300 за първата година (€900 + 11 × €400)')
+            ->assertSee("€2\u{202F}800 за първата година", false)
+            ->assertSee("€5\u{202F}850 за първата година", false)
             ->assertSee('Всеки пакет включва цялата система')
-            ->assertDontSee('€450')->assertDontSee('€850')->assertDontSee('изработка на сайта')
+            ->assertDontSee('изработка на сайта')
             ->assertSee('Какво включва всеки пакет')
             ->assertSee('онлайн плащания и резервации')
             ->assertSee('Как започваме')
@@ -64,7 +64,7 @@ class PackagesPageTest extends TestCase
             ->assertSee('Предпочитате разговор?')
             ->assertSee('/kontakti#konsultatsiya', false);
         $this->get('/en/packages')->assertOk()
-            ->assertSee('Active Marketing and Growth')->assertSee('€5,300 for the first year');
+            ->assertSee('Active Marketing and Growth')->assertSee('€5,850 for the first year');
     }
 
     public function test_faq_json_ld_is_valid(): void
@@ -95,11 +95,13 @@ class PackagesPageTest extends TestCase
             $plans[$key] = [];
         }
         $plans['items'][0]['year_total'] = '';
+        unset($plans['pricing']);
         config(['creatium.plans' => $plans]);
 
         $this->get('/paketi')->assertOk()
             ->assertDontSee('Какво включва всеки пакет')
             ->assertDontSee('Как започваме')
-            ->assertDontSee('Общо за първата година: €2 250');
+            ->assertDontSee('Общо за първата година: €2 250')
+            ->assertDontSee('id="izbor"', false);
     }
 }
