@@ -18,6 +18,6 @@ class MailTestMail extends Mailable
 
     public function content(): Content
     {
-        return new Content(htmlString: '<p>Ако четете това, имейлите от сайта се изпращат правилно.</p><p>Запитванията от контактната форма ще пристигат на този адрес.</p>');
+        return new Content(htmlString: '<div style="font-family:Arial,Helvetica,sans-serif;"><p>Ако четете това, имейлите от сайта се изпращат правилно.</p><p>Запитванията от контактната форма ще пристигат на този адрес.</p></div>');
     }
 }

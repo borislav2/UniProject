@@ -143,7 +143,7 @@ class ClientEmailsTest extends TestCase
                 && str_contains($html, '€900')
                 && str_contains($html, 'валидно до ' . now()->addWeek()->format('d.m.Y'))
                 && ! str_contains($html, '{business}') && ! str_contains($html, '{client_name}')
-                && ! str_contains($html, '[');
+                && ! str_contains(preg_replace('/<!--\[if mso\].*?<!\[endif\]-->/s', '', $html), '['); // no unfilled [поле], ignoring the Outlook-only font comment
         });
 
         $log = ClientEmail::sole();
@@ -358,5 +358,18 @@ class ClientEmailsTest extends TestCase
         $user = $this->admin();
         $this->actingAs($user)->get('/admin/emails/offer-start')->assertOk()->assertDontSee('value="' . now()->addDays(7)->toDateString() . '"', false);
         $this->actingAs($user)->get('/admin/emails/offer-active')->assertOk()->assertSee('value="' . now()->addDays(7)->toDateString() . '"', false);
+    }
+
+    public function test_every_email_uses_one_font(): void
+    {
+        $html = view('emails.client.offer', ['data' => ['client_name' => 'Ивон', 'business' => 'Pet Bowls', 'price' => '800'], 'package' => 'active', 'subject' => 'x'])->render();
+        $this->assertStringContainsString('font-family: Arial, Helvetica, sans-serif !important;', $html);
+        $this->assertStringContainsString('<!--[if mso]>', $html);
+        preg_match_all('/font-family:\s*([^;"]+)/', $html, $m);
+        foreach ($m[1] as $stack) {
+            $this->assertMatchesRegularExpression('/^Arial,\s*Helvetica,\s*sans-serif/', trim(str_replace(' !important', '', $stack)));
+        }
+        // The plain-text part does not get the CSS.
+        $this->assertStringNotContainsString('font-family', \App\Support\PlainText::fromHtml($html));
     }
 }
