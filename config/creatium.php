@@ -102,6 +102,9 @@ return [
     // с отчета, напр. „Подробният одит струва 90 €.“ Празно = „Цената зависи от големината на сайта…“.
     'site_check' => [
         'audit_price_note' => env('CREATIUM_AUDIT_PRICE_NOTE', ''),
+        // Обхождане на сайта (App\Support\SiteCheck\SiteCrawler): най-много страници и общо време в секунди.
+        'crawl_limit' => max(1, (int) env('SITE_CHECK_CRAWL_LIMIT', 50)),
+        'crawl_seconds' => max(5, (int) env('SITE_CHECK_CRAWL_SECONDS', 60)),
     ],
 
     // Публичен блог (/blog, линк в менюто, sitemap). BLOG_ENABLED=false го скрива (404); админът работи и така.

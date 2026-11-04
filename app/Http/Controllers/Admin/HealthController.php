@@ -37,6 +37,9 @@ class HealthController extends Controller
             Outreach::configured() ? null : 'bash deploy/configure-outreach-mail.sh');
         $add('Продажби', 'Търсене в Google Maps', filled(config('services.serper.key')) ? 'ok' : 'off',
             filled(config('services.serper.key')) ? 'Търсенето на бизнеси е през Google Maps.' : 'Без ключ търсенето е в OpenStreetMap (по-малко бизнеси със сайт).', filled(config('services.serper.key')) ? null : 'SERPER_API_KEY в .env');
+        $add('Сайт', 'Скорост на телефон в проверката на сайт', filled(config('services.pagespeed.key')) ? 'ok' : 'off',
+            filled(config('services.pagespeed.key')) ? 'Отчетът от безплатната проверка включва оценка, LCP, CLS и INP от Google PageSpeed.' : 'По желание. Без ключ отчетът няма оценка за скорост на телефон.',
+            filled(config('services.pagespeed.key')) ? null : 'PAGESPEED_API_KEY=... в .env (безплатен ключ от Google Cloud, PageSpeed Insights API)');
         $add('Продажби', 'Проверка на имейли (Reoon)', filled(config('services.reoon.key')) ? 'ok' : 'off',
             filled(config('services.reoon.key')) ? 'Имейлите се проверяват през Reoon.' : 'По желание. Без него се проверява само дали домейнът приема поща.');
 

@@ -19,7 +19,8 @@ class SiteCheckTest extends TestCase
     private const GOOD_PAGE = '<!doctype html><html><head><meta name="viewport" content="width=device-width"><title>Ремонт на покриви в Пловдив | Здрав покрив</title>'
         . '<meta name="description" content="Оглед и оферта до 48 часа. Работим в Пловдив и областта. Обадете се или изпратете снимка на покрива и ще ви кажем какво трябва.">'
         . '<meta property="og:title" content="Здрав покрив"><meta property="og:image" content="https://firma.bg/og.png"><script type="application/ld+json">{}</script></head>'
-        . '<body><h1>Ремонт на покриви</h1><a href="tel:+359888000000">0888 000 000</a><img src="a.webp" alt="Покрив"></body></html>';
+        . '<link rel="canonical" href="https://firma.bg/">'
+        . '<body><h1>Ремонт на покриви</h1><a href="tel:+359888000000">0888 000 000</a><img src="a.webp" alt="Покрив"><p>%WORDS%</p></body></html>';
 
     protected function setUp(): void
     {
@@ -34,9 +35,11 @@ class SiteCheckTest extends TestCase
         });
     }
 
-    private function fakeSite(string $html = self::GOOD_PAGE, bool $redirect = true, string $robots = "User-agent: *\nDisallow:\nSitemap: https://firma.bg/sitemap.xml", bool $sitemap = true): void
+    private function fakeSite(?string $html = null, bool $redirect = true, string $robots = "User-agent: *\nDisallow:\nSitemap: https://firma.bg/sitemap.xml", bool $sitemap = true): void
     {
+        $html ??= str_replace('%WORDS%', str_repeat('покрив ', 250), self::GOOD_PAGE);
         Http::fake([
+            'https://firma.bg/a.webp' => Http::response('', 200, ['Content-Length' => '20000']),
             'https://firma.bg/robots.txt' => Http::response($robots),
             'https://firma.bg/sitemap.xml' => Http::response('<urlset/>', $sitemap ? 200 : 404),
             'https://firma.bg/' => Http::response($html),

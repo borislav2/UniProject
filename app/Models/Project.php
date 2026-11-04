@@ -208,6 +208,14 @@ class Project extends Model
                 'ok' => $checks->where('status', 'ok')->count(),
                 'sent' => (bool) ($report['sent'] ?? false),
                 'failed' => false,
+                // Новият отчет (обхождане на сайта); старите запитвания нямат тези ключове.
+                'crawl' => $report['crawl'] ?? null,
+                'pagespeed' => $report['pagespeed'] ?? null,
+                'issues' => collect($report['issues'] ?? [])->map(function ($issue) {
+                    $d = \App\Support\SiteCheck\SiteCrawler::describe($issue['key'], $issue['count']);
+
+                    return ['severity' => $issue['severity'], 'title' => $d['title'], 'count' => $issue['count'], 'examples' => $issue['examples'] ?? []];
+                })->all(),
             ];
         }
         if (is_array($report) && ! empty($report['failed'])) {
