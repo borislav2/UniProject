@@ -35,7 +35,7 @@ return [
 
     // Страница „Често задавани въпроси“ (/vaprosi). „group“ подрежда въпросите в теми; празно = без тема.
     'questions' => [
-        ['q' => 'How is the project budget set?', 'a' => 'The price is fixed and you know it before we start: from €600 to start with Starter Engine and from €900 to start with Active Marketing and Growth, then €150 and €400 a month. Both include the whole system: brand, website, visibility, marketing, returning customers and care every month. What exactly you get and by when is written in the quote.', 'group' => 'Prices and payment'],
+        ['q' => 'How is the project budget set?', 'a' => 'The price is fixed and you know it before we start: from €600 to start with Starter Engine and from €900 to start with Active Marketing and Growth, then a monthly fee from €150 for Starter Engine and from €400 for Active Marketing and Growth, depending on how many posts and articles a month you need (the slider on the packages page). Both include the whole system: brand, website, visibility, marketing, returning customers and care every month. What exactly you get and by when is written in the quote.', 'group' => 'Prices and payment'],
         ['q' => 'What is the monthly subscription for?', 'a' => 'To bring real results, a website needs constant care and development, not just to sit there as a business card. The monthly subscription covers round-the-clock technical security, hosting, regular backups and updates, as well as the marketing work: tracking visits in Google Analytics, looking after your Google Maps profile and making sure AI assistants (ChatGPT, Gemini) understand you, email communication and ongoing changes to the site.', 'group' => 'Prices and payment'],
         ['q' => 'How does payment work?', 'a' => 'You pay in two parts: half when the contract is signed, the other half after you approve the demo and before the site goes live.', 'group' => 'Prices and payment'],
         ['q' => 'Are hosting and the domain included?', 'a' => 'Yes. The monthly subscription covers setting up and looking after hosting, the domain and business email addresses. If you already have a domain, we connect it to the new site.', 'group' => 'Prices and payment'],
@@ -568,6 +568,25 @@ return [
 
     'plans' => [
         'intro' => 'Every package includes the whole system: brand, website, visibility, marketing, returning customers and care every month. The difference is the scale.',
+        'pricing' => [
+            'title' => 'Choose how much content you need every month',
+            'unit' => 'posts and articles a month',
+            'unit_short' => 'posts and articles',
+            'hint' => 'Social media posts, blog articles and email campaigns. Everything else in the system is included in every package.',
+            'default' => 1,
+            'yearly_months' => 10,
+            'yearly_label' => 'Yearly: 2 months free',
+            'compare_label' => 'Posts and articles a month',
+            'steps' => [
+                ['value' => '2', 'monthly' => [150, 400], 'recommended' => 0],
+                ['value' => '4', 'monthly' => [200, 450], 'recommended' => 1],
+                ['value' => '8', 'monthly' => [300, 550], 'recommended' => 1],
+                ['value' => '12', 'monthly' => [400, 650], 'recommended' => 1],
+                ['value' => '20', 'monthly' => [550, 800], 'recommended' => 1],
+                ['value' => '20+', 'monthly' => [null, null], 'recommended' => 2],
+            ],
+            'note' => 'The start price (the build and the first month) does not depend on the slider. There are no hidden fees.',
+        ],
         'trust' => [
             ['icon' => 'eye', 'text' => 'A demo before launch: you see the website and approve it before it goes live'],
             ['icon' => 'file-contract', 'text' => 'You pay in two parts: 50% at the contract, 50% after the approved demo'],
@@ -581,7 +600,7 @@ return [
                 'badge' => '',
                 'highlighted' => false,
                 'audience' => 'The whole system at a basic scale: a professional online presence that brings your first enquiries.',
-                'prices' => ['€600 start: we build everything and the first month', 'then €150 / month'],
+                'prices' => ['€600 start: we build everything and the first month', 'then from €150 / month'],
                 'year_total' => '€2,250 for the first year (€600 + 11 × €150)',
                 'upgrade_note' => '',
                 'button' => '',
@@ -602,7 +621,7 @@ return [
                 'badge' => 'Recommended',
                 'highlighted' => true,
                 'audience' => 'The whole system at a larger scale: for a business that wants to grow with marketing, content and online sales.',
-                'prices' => ['€900 start: we build everything and the first month', 'then €400 / month'],
+                'prices' => ['€900 start: we build everything and the first month', 'then from €400 / month'],
                 'year_total' => '€5,300 for the first year (€900 + 11 × €400)',
                 'upgrade_note' => '',
                 'button' => '',

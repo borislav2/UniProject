@@ -37,6 +37,12 @@
             @csrf
             <div class="hidden" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
 
+            @if(! empty($pricing))
+                <input type="hidden" name="volume" value="{{ old('volume', $pricing['steps'][$pricingStep]['value']) }}" data-quote-volume>
+                <input type="hidden" name="billing" value="{{ old('billing', $pricingBilling) }}" data-quote-billing>
+                <p class="rounded-xl bg-brand-50/70 px-4 py-3 text-sm font-semibold text-brand-950 dark:bg-white/[0.06] dark:text-white" data-quote-summary>{{ __('Избрано от плъзгача') }}: {{ \App\Support\PlanPricing::volumeLabel($pricing, $pricingStep) }}, {{ $pricingBilling === 'yearly' ? __('годишно плащане') : __('месечно плащане') }}</p>
+            @endif
+
             <div>
                 <label for="quote-plan" class="{{ $label }}">{{ __('Пакет') }}</label>
                 <select id="quote-plan" name="plan" class="{{ $field }}">

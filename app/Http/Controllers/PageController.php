@@ -78,8 +78,17 @@ class PageController extends Controller
         $selected = request()->integer('paket', -1);
         $faq = \App\Support\Plans::faq($plans, (array) site('questions'));
 
+        // Плъзгачът „колко съдържание“: състоянието идва от ?obem=<индекс на стъпката> и ?plashtane=godishno,
+        // така страницата е пълна и без JavaScript; невалидни стойности дават стойностите по подразбиране.
+        $pricing = \App\Support\PlanPricing::config($plans);
+        $step = $pricing ? \App\Support\PlanPricing::stepFrom(request()->query('obem'), $pricing) : 0;
+        $billing = \App\Support\PlanPricing::billingFrom(request()->query('plashtane'));
+
         return view('packages', [
             'plans' => $plans,
+            'pricing' => $pricing,
+            'pricingStep' => $step,
+            'pricingBilling' => $billing,
             'faq' => $faq,
             // „Получете оферта“ под всеки пакет води към формата с избрания пакет (?paket=N#oferta).
             'selectedPlan' => array_key_exists($selected, $plans['items'] ?? []) ? $selected : null,
@@ -240,6 +249,14 @@ class PageController extends Controller
         $lines[] = '';
         foreach (site('plans')['items'] as $plan) {
             $lines[] = '- **' . $plan['name'] . '**: ' . implode(' + ', $plan['prices']) . '. ' . $plan['audience'];
+        }
+        $plansBg = app(\App\Support\Content::class)->withDefaults('plans', 'bg');
+        if ($table = \App\Support\PlanPricing::textLines($plansBg)) {
+            $lines[] = '';
+            $lines[] = \App\Support\PlanPricing::textIntro($plansBg);
+            $lines[] = '';
+            array_push($lines, ...$table);
+            $lines[] = '';
         }
         $lines[] = '- Всички пакети: ' . lroute('packages', [], 'bg');
         $lines[] = '';

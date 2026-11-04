@@ -233,7 +233,7 @@ class CmsTest extends TestCase
         $plans['items'] = [['name' => 'Старт', 'badge' => '', 'highlighted' => '0', 'audience' => 'x', 'prices' => "€600 веднъж\n\n",
             'build_title' => 'Включва', 'build_items' => "Едно: първо\nДве\n\n", 'monthly_title' => '', 'monthly_items' => '']];
         $this->put('/admin/content/plans', ['locale' => 'bg', 'content' => $plans])->assertSessionHasNoErrors();
-        $this->get('/paketi')->assertSee('€600')->assertSee('<strong class="text-brand-950 dark:text-white">Едно:</strong>', false);
+        $this->get('/paketi')->assertSee('€600')->assertSee('<strong class="pc-fg">Едно:</strong>', false);
         $this->assertSame(['Едно: първо', 'Две'], site('plans')['items'][0]['build_items']);
     }
 

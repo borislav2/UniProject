@@ -6,6 +6,7 @@ use App\Mail\NewLeadMail;
 use App\Models\Category;
 use App\Models\Project;
 use App\Support\LeadAttribution;
+use App\Support\PlanPricing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -63,6 +64,16 @@ class QuoteController extends Controller
             'Цел: ' . (config('creatium.contact_goals')[$validated['goal'] ?? ''] ?? ''),
             'Кога: ' . (config('creatium.contact_timelines')[$validated['timeline'] ?? ''] ?? ''),
         ], fn ($line) => ! str_ends_with($line, ': '));
+
+        // Плъзгачът на /paketi: обемът и начинът на плащане. Непозната стойност (променена или остаряла форма) се пропуска, без грешка.
+        $pricing = PlanPricing::config(app(\App\Support\Content::class)->withDefaults('plans', 'bg'));
+        $volume = $request->input('volume');
+        if ($pricing && is_string($volume) && in_array($volume, array_column($pricing['steps'], 'value'), true)) {
+            $lines[] = 'Обем: ' . $volume . ' ' . $pricing['unit'];
+        }
+        if ($pricing && in_array($request->input('billing'), [PlanPricing::MONTHLY, PlanPricing::YEARLY], true)) {
+            $lines[] = 'Плащане: ' . ($request->input('billing') === PlanPricing::YEARLY ? 'годишно' : 'месечно');
+        }
 
         $attribution = $request->session()->get(LeadAttribution::SESSION_KEY);
         $lead = Project::create([
