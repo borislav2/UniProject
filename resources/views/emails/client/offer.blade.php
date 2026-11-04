@@ -47,11 +47,20 @@
 @section('body')
 {{-- 2. Поздрав и увод --}}
 <tr><td style="padding:32px 36px 0;{{ $f }}font-size:15px;line-height:1.65;color:#1f2a3a;">
-<p style="margin:0 0 14px;">Здравейте, {{ $t('client_name') }},</p>
+<p style="margin:0 0 14px;">{{ $t('greeting') !== '' ? $t('greeting') : 'Здравейте, ' . $t('client_name') . ',' }}</p>
 @foreach($paras('intro') as $para)
 <p style="margin:0 0 14px;">{!! nl2br(e($para)) !!}</p>
 @endforeach
 </td></tr>
+
+{{-- Бутон към демото (по желание) --}}
+@if($t('demo_url') !== '')
+<tr><td align="center" style="padding:6px 36px 4px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+<td bgcolor="#2d63a3" style="background:#2d63a3;border-radius:10px;"><a href="{{ $t('demo_url') }}" style="display:inline-block;padding:15px 32px;{{ $f }}font-size:16px;font-weight:bold;color:#ffffff;text-decoration:none;">{{ $t('demo_button') !== '' ? $t('demo_button') : 'Вижте демото' }} →</a></td>
+</tr></table>
+</td></tr>
+@endif
 
 {{-- 3. Какво чухме --}}
 @if($t('heard') !== '')
@@ -134,16 +143,19 @@
 <div style="height:14px;line-height:14px;font-size:0;">&nbsp;</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0f1a2b" style="background:#0f1a2b;border-radius:14px;">
 <tr>
-<td width="50%" valign="top" align="center" style="padding:24px 12px 18px;border-right:1px solid #2a4468;">
+@php($hasMonthly = $t('monthly_price') !== '')
+<td width="{{ $hasMonthly ? '50%' : '100%' }}" valign="top" align="center" style="padding:24px 12px 18px;{{ $hasMonthly ? 'border-right:1px solid #2a4468;' : '' }}">
 @if($t('price_label') !== '')<div style="{{ $f }}font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#9cc0eb;">{{ $t('price_label') }}</div>@endif
 <div style="{{ $f }}font-size:34px;line-height:1.2;font-weight:bold;color:#ffffff;padding-top:6px;">€{{ $t('price') }}</div>
-<div style="{{ $f }}font-size:13px;color:#c5d6ec;">еднократно</div>
+@if($t('price_note') !== '')<div style="{{ $f }}font-size:13px;color:#c5d6ec;">{{ $t('price_note') }}</div>@endif
 </td>
+@if($hasMonthly)
 <td width="50%" valign="top" align="center" style="padding:24px 12px 18px;">
 @if($t('monthly_label') !== '')<div style="{{ $f }}font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#9cc0eb;">{{ $t('monthly_label') }}</div>@endif
 <div style="{{ $f }}font-size:34px;line-height:1.2;font-weight:bold;color:#ffffff;padding-top:6px;">€{{ $t('monthly_price') }}</div>
 <div style="{{ $f }}font-size:13px;color:#c5d6ec;">/ месец</div>
 </td>
+@endif
 </tr>
 <tr><td colspan="2" style="padding:0 24px 16px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
