@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', __('Цена за изработка на сайт: пакети от €450'))
-@section('meta_description', __('Колко струва сайт с маркетинг: от €450 + €150/месец или €850 + €400/месец с активна реклама. Фиксирана цена и демо преди старта.'))
+@section('title', __('Цена за изработка на сайт: пакети от €600'))
+@section('meta_description', __('Колко струва цялата система: от €600 старт и €150/месец или €900 старт и €400/месец. Фиксирана цена и демо преди старта.'))
 
 @php
     // FAQPage JSON-LD for the price and payment questions shown on this page.
@@ -84,11 +84,18 @@
                             <p class="mt-3 leading-relaxed {{ $dark ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300' }}">{{ $plan['audience'] }}</p>
                         </div>
 
-                        {{-- Цени: сумата на старта и месечната сума са разделени. --}}
+                        {{-- Цени: голяма цена на старта и под нея месечната сума. --}}
                         <div class="relative mt-7 rounded-3xl p-5 {{ $dark ? 'bg-white/[0.07] ring-1 ring-white/15' : 'bg-brand-50/70 dark:bg-white/[0.04]' }}">
                             @foreach($plan['prices'] as $price)
                                 @php
-                                    $parts = preg_match('/^(€\s?\d[\d\s.,]*?)(?:\s*(\/\s*(?:месец|month)))?\s+(.+)$/u', $price, $m) ? [$m[1], $m[2], $m[3]] : null;
+                                    // Първият ред: голямата цена на старта и подпис. Следващите: „след това €150 / месец“.
+                                    $parts = null;
+                                    $monthly = null;
+                                    if ($loop->first) {
+                                        $parts = preg_match('/^(€\s?\d[\d\s.,]*?)(?:\s*(\/\s*(?:месец|month)))?\s+(.+)$/u', $price, $m) ? [$m[1], $m[2], $m[3]] : null;
+                                    } elseif (preg_match('/^(\D*?)\s*(€\s?\d[\d\s.,]*\d)\s*(\/\s*(?:месец|month))?\s*$/u', $price, $m)) {
+                                        $monthly = [trim($m[1]), $m[2], $m[3] ?? ''];
+                                    }
                                 @endphp
                                 <div class="{{ $loop->first ? '' : 'mt-4 pt-4 border-t ' . ($dark ? 'border-white/15' : 'border-gray-200 dark:border-white/10') }}">
                                     @if($parts)
@@ -97,6 +104,12 @@
                                             @if($parts[1])<span class="text-lg font-bold {{ $dark ? 'text-brand-200' : 'text-brand-700 dark:text-brand-300' }}">{{ $parts[1] }}</span>@endif
                                         </p>
                                         <p class="mt-1.5 text-sm {{ $dark ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300' }}">{{ $parts[2] }}</p>
+                                    @elseif($monthly)
+                                        <p class="flex flex-wrap items-baseline gap-x-2">
+                                            @if($monthly[0] !== '')<span class="text-sm {{ $dark ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300' }}">{{ $monthly[0] }}</span>@endif
+                                            <span class="text-3xl font-extrabold tracking-tight leading-none {{ $dark ? 'text-white' : 'text-brand-950 dark:text-white' }}">{{ $monthly[1] }}</span>
+                                            @if($monthly[2] !== '')<span class="text-base font-bold {{ $dark ? 'text-brand-200' : 'text-brand-700 dark:text-brand-300' }}">{{ $monthly[2] }}</span>@endif
+                                        </p>
                                     @else
                                         <p class="text-2xl font-extrabold leading-snug tracking-tight {{ $dark ? 'text-white' : 'text-brand-950 dark:text-white' }}">{{ $price }}</p>
                                     @endif

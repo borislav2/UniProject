@@ -22,7 +22,7 @@ class HomeCopyTest extends TestCase
             ->assertSee('Цялостен подход към дигиталното ви присъствие')
             ->assertDontSee('Източник:')->assertDontSee('Технологична инфраструктура')
             ->assertDontSee('id="kalkulator"', false)->assertDontSee('Подобрението за вашия бизнес')
-            ->assertSee('Изработка на сайтове и дигитален маркетинг от €450')
+            ->assertSee('Изработка на сайтове и дигитален маркетинг от €600')
             ->assertDontSee('Готова система, не визитка')
             ->assertDontSee('Изработка на уебсайтове и дигитален маркетинг')
             ->assertDontSee('Без посредници')
