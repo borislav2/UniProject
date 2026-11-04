@@ -10,7 +10,14 @@
         $score >= 60 => ['#b45309', __('Има няколко неща, които си струва да оправите.')],
         default => ['#b91c1c', __('Има важни проблеми, които пречат на сайта в Google и при клиентите.')],
     };
-    $issues = collect($report['checks'])->where('status', '!=', 'ok')->sortBy(fn ($c) => $c['status'] === 'fail' ? 0 : 1);
+    $crawl = $report['crawl'] ?? null;
+    $pagesChecked = (int) ($crawl['analyzed'] ?? 0);
+    $issues = collect(\App\Support\SiteCheck\SiteAudit::items($report));
+    $groups = [
+        'error' => [__('Какво да оправите първо'), '#b91c1c', '#fee2e2', '✕'],
+        'warning' => [__('Какво да подобрите после'), '#b45309', '#fef3c7', '!'],
+    ];
+    $speed = $report['pagespeed'] ?? null;
     $passed = collect($report['checks'])->where('status', 'ok');
     $auditSubject = rawurlencode(__('Подробен одит за :domain', ['domain' => $report['domain']]));
     $priceNote = config('creatium.site_check.audit_price_note');
@@ -18,7 +25,7 @@
 
 @section('eyebrow', __('Безплатна проверка на сайт'))
 @section('headline'){{ $report['domain'] }}@endsection
-@section('sub'){{ __('Проверихме началната страница и основните настройки. Ето какво открихме.') }}@endsection
+@section('sub'){{ $pagesChecked > 1 ? __('Проверихме :n страници от сайта и основните настройки. Ето какво открихме.', ['n' => $pagesChecked]) : __('Проверихме началната страница и основните настройки. Ето какво открихме.') }}@endsection
 
 @section('body')
 <tr><td style="padding:30px 36px 0;">
@@ -33,17 +40,43 @@
 </table>
 </td></tr>
 
-@if($issues->isNotEmpty())
+@if($crawl && $pagesChecked > 0)
+<tr><td style="padding:14px 36px 0;{{ $f }}font-size:13px;line-height:1.6;color:#64748b;">
+{{ __('Обходени страници: :n (до :limit за една проверка).', ['n' => $pagesChecked, 'limit' => $crawl['limit']]) }}
+@if(! empty($crawl['limited']))<strong style="color:#b45309;">{{ __('Обхождането беше ограничено по размер или време, затова не всички страници са проверени. Подробният одит обхваща целия сайт.') }}</strong>@endif
+</td></tr>
+@endif
+
+@if($speed)
+<tr><td style="padding:14px 36px 0;{{ $f }}font-size:14px;line-height:1.55;color:#475569;">
+<strong style="color:#0f1a2b;">{{ __('Скорост на телефон (Google PageSpeed)') }}:</strong>
+{{ $speed['score'] }}/100 @if($speed['lcp'] !== null) · LCP {{ number_format($speed['lcp'], 1, ',', '') }} s @endif @if($speed['cls'] !== null) · CLS {{ number_format($speed['cls'], 2, ',', '') }} @endif @if($speed['inp'] !== null) · INP {{ $speed['inp'] }} ms @endif
+<span style="color:#94a3b8;font-size:12px;">({{ ($speed['source'] ?? 'lab') === 'field' ? __('данни от реални посетители') : __('лабораторен тест') }})</span>
+</td></tr>
+@endif
+
+@foreach($groups as $severity => [$groupTitle, $color, $bg, $mark])
+@php $groupItems = $issues->where('severity', $severity); @endphp
+@if($groupItems->isNotEmpty())
 <tr><td style="padding:28px 36px 0;">
-@include('emails.client._parts', ['part' => 'label', 'text' => __('Какво да оправите')])
+@include('emails.client._parts', ['part' => 'label', 'text' => $groupTitle, 'color' => $color])
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:6px;">
-@foreach($issues as $check)
-<tr><td width="34" valign="top" style="padding:12px 0;"><span style="display:inline-block;width:22px;height:22px;line-height:22px;border-radius:11px;background:{{ $check['status'] === 'fail' ? '#fee2e2' : '#fef3c7' }};color:{{ $check['status'] === 'fail' ? '#b91c1c' : '#b45309' }};{{ $f }}font-size:13px;font-weight:bold;text-align:center;">{{ $check['status'] === 'fail' ? '✕' : '!' }}</span></td>
-<td style="padding:12px 0;{{ $f }}font-size:14px;line-height:1.55;color:#475569;border-bottom:1px solid #eef1f5;"><strong style="display:block;color:#0f1a2b;font-size:15px;">{{ $check['title'] }}</strong>{{ $check['detail'] }}</td></tr>
+@foreach($groupItems as $check)
+<tr><td width="34" valign="top" style="padding:12px 0;"><span style="display:inline-block;width:22px;height:22px;line-height:22px;border-radius:11px;background:{{ $bg }};color:{{ $color }};{{ $f }}font-size:13px;font-weight:bold;text-align:center;">{{ $mark }}</span></td>
+<td style="padding:12px 0;{{ $f }}font-size:14px;line-height:1.55;color:#475569;border-bottom:1px solid #eef1f5;"><strong style="display:block;color:#0f1a2b;font-size:15px;">{{ $check['title'] }}</strong>{{ $check['detail'] }}
+@if(! empty($check['examples']))
+<div style="padding-top:6px;font-size:12px;line-height:1.5;color:#64748b;">{{ __('Например') }}:
+@foreach($check['examples'] as $example)
+<div style="word-break:break-all;">{{ \Illuminate\Support\Str::limit($example['url'], 80) }}@if(! empty($example['from'])) ← {{ \Illuminate\Support\Str::limit($example['from'], 60) }}@endif @if(! empty($example['note'])) ({{ \Illuminate\Support\Str::limit($example['note'], 80) }})@endif</div>
+@endforeach
+</div>
+@endif
+</td></tr>
 @endforeach
 </table>
 </td></tr>
 @endif
+@endforeach
 
 @if($passed->isNotEmpty())
 <tr><td style="padding:26px 36px 0;">
@@ -54,7 +87,7 @@
 @endif
 
 <tr><td style="padding:26px 36px 0;{{ $f }}font-size:13px;line-height:1.6;color:#64748b;">
-{{ __('Проверката е автоматична и гледа само началната страница. Не преглежда текстовете, скоростта на телефон, профила в Google Business и дали сайтът носи запитвания.') }}
+{{ __('Проверката е автоматична: обхожда до :limit страници и гледа техническите основи. Не преглежда текстовете, профила в Google Business и дали сайтът носи запитвания.', ['limit' => $crawl['limit'] ?? config('creatium.site_check.crawl_limit')]) }}
 </td></tr>
 
 <tr><td style="padding:26px 36px 0;">

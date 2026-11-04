@@ -72,6 +72,25 @@
                     </p>
                 </div>
             </div>
+            @if(! empty($summary['crawl']))
+                @php $crawl = $summary['crawl']; @endphp
+                <p class="mt-3 text-sm text-gray-600">
+                    Обходени страници: <strong>{{ $crawl['analyzed'] ?? $crawl['pages'] }}</strong> (лимит {{ $crawl['limit'] }}), {{ $crawl['seconds'] }} сек.
+                    @if(! empty($crawl['limited']))<span class="font-semibold text-amber-700">Обхождането е ограничено ({{ ($crawl['limited_by'] ?? '') === 'time' ? 'по време' : 'по брой страници' }}): има още страници, които не са проверени.</span>@endif
+                    @if(! empty($crawl['error']))<span class="font-semibold text-red-700">Обхождането спря с грешка: {{ $crawl['error'] }}</span>@endif
+                    @if(! empty($summary['pagespeed']))· Скорост на телефон: <strong>{{ $summary['pagespeed']['score'] }}/100</strong>@endif
+                </p>
+            @endif
+            @if(! empty($summary['issues']))
+                <p class="mt-3 text-xs font-bold uppercase tracking-wider text-gray-500">Проблеми по целия сайт</p>
+                <ul class="mt-2 grid gap-2 text-sm sm:grid-cols-2">
+                    @foreach(array_slice($summary['issues'], 0, 6) as $issue)
+                        @php $isErr = $issue['severity'] === 'error'; @endphp
+                        <li class="flex gap-2 rounded-md px-3 py-2 {{ $isErr ? 'bg-red-50' : 'bg-amber-50' }}"><span class="mt-1.5 h-2 w-2 shrink-0 rounded-full {{ $isErr ? 'bg-red-500' : 'bg-amber-500' }}"></span><span class="min-w-0"><span class="font-semibold {{ $isErr ? 'text-red-900' : 'text-amber-900' }}">{{ $issue['title'] }}</span>@if(! empty($issue['examples'][0]))<span class="block truncate text-xs text-gray-600">напр. {{ $issue['examples'][0]['url'] }}</span>@endif</span></li>
+                    @endforeach
+                </ul>
+                @if(count($summary['issues']) > 6)<p class="mt-1 text-xs text-gray-500">и още {{ count($summary['issues']) - 6 }} вида проблеми (пълният списък е в отчета на клиента).</p>@endif
+            @endif
             @if($summary['fail'] || $summary['warn'])
                 <ul class="mt-4 grid gap-2 text-sm sm:grid-cols-2">
                     @foreach($summary['fail'] as $item)
