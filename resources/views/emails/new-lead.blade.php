@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="bg">
-<body style="font-family: Arial, sans-serif; color: #111827; line-height: 1.5;">
+<head><meta charset="utf-8">@include('emails._font')</head>
+<body style="font-family:Arial,Helvetica,sans-serif; color: #111827; line-height: 1.5;">
     <h2 style="margin-bottom: 4px;">Ново запитване от сайта</h2>
     <p style="margin-top: 0; color: #6b7280;">{{ $lead->created_at->format('d.m.Y H:i') }}</p>
 

@@ -12,14 +12,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ $subject ?? 'Creatium Lab' }}</title>
+@include('emails._font')
 </head>
-<body style="margin:0;padding:0;background:#eef1f5;">
+<body style="margin:0;padding:0;background:#eef1f5;font-family:Arial,Helvetica,sans-serif;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eef1f5;">
 <tr><td align="center" style="padding:24px 12px;">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:14px;overflow:hidden;">
 
 <tr><td bgcolor="#0f1a2b" style="background:#0f1a2b;background-image:linear-gradient(135deg,#0f1a2b 0%,#22406a 55%,#2d63a3 100%);padding:32px 36px 36px;">
-<img src="{{ isset($message) && $message instanceof \Illuminate\Mail\Message ? $message->embed(public_path('images/logo-white.png')) : asset('images/logo-white.png') }}" width="190" height="27" alt="Creatium Lab" style="display:block;border:0;width:190px;height:auto;">
+<img src="{{ isset($message) && $message instanceof \Illuminate\Mail\Message ? $message->embed(public_path('images/logo-white.png')) : asset('images/logo-white.png') }}" width="190" height="27" alt="Creatium Lab" style="display:block;border:0;font-family:Arial,Helvetica,sans-serif;color:#ffffff;font-size:20px;font-weight:bold;width:190px;height:auto;">
 <div style="height:28px;line-height:28px;font-size:0;">&nbsp;</div>
 <div style="{{ $f }}font-size:12px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:#9cc0eb;">@yield('eyebrow')</div>
 <div style="{{ $f }}font-size:26px;line-height:1.25;font-weight:bold;color:#ffffff;padding-top:8px;">@yield('headline')</div>
