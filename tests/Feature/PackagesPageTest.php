@@ -116,5 +116,15 @@ class PackagesPageTest extends TestCase
         $this->get('/en/packages')->assertOk()
             ->assertSee('Guarantee: we refund you')
             ->assertSee('The subscription price is fixed for the first 6 months.');
+        $this->get('/usloviya')->assertOk()
+            ->assertSee('3. Абонамент, гаранция и реклама')
+            ->assertSee('е фиксирана за първите 6 месеца', false)
+            ->assertSee('Плащате го вие директно на Meta.');
+        $this->get('/en/terms')->assertOk()->assertSee('3. Subscription, guarantee and ads');
+
+        $fields = \App\Support\ClientEmails::find('offer-active')['fields'];
+        $this->assertStringContainsString('60 дни', $fields['guarantee']['default']);
+        $this->assertStringContainsString('6 месеца', $fields['subscription_terms']['default']);
+        $this->assertStringContainsString('Meta', $fields['ad_budget']['default']);
     }
 }

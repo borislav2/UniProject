@@ -17,22 +17,30 @@
             <p>Изпращането на запитване през формата не ви задължава с нищо и не създава договор. След разговора ви изпращаме писмена оферта с обхвата, цената и срока. Работата започва, след като я потвърдите. Пакетите и цените в сайта са ориентировъчни, а валидни са тези в потвърдената оферта.</p>
         </div>
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">3. Интелектуална собственост</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">3. Абонамент, гаранция и реклама</h2>
+            <ul class="list-disc pl-5 space-y-2">
+                <li><strong class="text-gray-900 dark:text-white">Цена на абонамента.</strong> Месечната цена от потвърдената оферта е фиксирана за първите 6 месеца. След това може да се промени, като ви уведомяваме предварително, преди новата цена да влезе в сила. При годишно плащане цената важи за цялата платена година.</li>
+                <li><strong class="text-gray-900 dark:text-white">Гаранция.</strong> Ако 60 дни след пускането на сайта той няма трафик, връщаме парите, които сте платили. Посещенията се измерват с Google Analytics, който настройваме при старта и до който имате достъп. Точните условия на гаранцията се описват в договора.</li>
+                <li><strong class="text-gray-900 dark:text-white">Рекламен бюджет.</strong> Бюджетът за реклама във Facebook и Instagram не е включен в цената. Плащате го вие директно на Meta. Ние следим рекламите и ви казваме какво носят.</li>
+            </ul>
+        </div>
+        <div>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">4. Интелектуална собственост</h2>
             <p>Текстовете, дизайнът, логото и другото съдържание в сайта принадлежат на Creatium Lab и не могат да се копират или използват без наше писмено съгласие.</p>
         </div>
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">4. Отговорност</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">5. Отговорност</h2>
             <p>Стараем се информацията да е точна и актуална, но не гарантираме, че сайтът ще работи без прекъсвания или грешки. Не носим отговорност за съдържанието на външни сайтове, към които има препратки.</p>
         </div>
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">5. Лични данни и бисквитки</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">6. Лични данни и бисквитки</h2>
             <p>Как обработваме личните ви данни е описано в <a href="{{ route('privacy') }}" class="text-brand-600 underline dark:text-brand-300">Политиката за поверителност</a>, а какви бисквитки използваме, в <a href="{{ route('cookies') }}" class="text-brand-600 underline dark:text-brand-300">Политиката за бисквитките</a>.</p>
         </div>
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">6. Приложимо право</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">7. Приложимо право</h2>
             <p>За тези условия се прилага българското право. Въпроси: <a href="mailto:{{ $contact['email'] }}" class="text-brand-600 underline dark:text-brand-300">{{ $contact['email'] }}</a>.</p>
         </div>
-        <p class="text-sm text-gray-500 dark:text-gray-400">Последна промяна: 02.10.2026</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Последна промяна: 04.11.2026</p>
     </div>
 </section>
 @endsection
