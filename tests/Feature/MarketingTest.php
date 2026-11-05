@@ -206,4 +206,12 @@ class MarketingTest extends TestCase
         config(['creatium.bing_site_verification' => []]);
         $this->get('/')->assertDontSee('msvalidate.01', false);
     }
+
+    public function test_bing_xml_verification_file_lists_both_accounts(): void
+    {
+        $xml = file_get_contents(public_path('BingSiteAuth.xml'));
+        $this->assertNotFalse(simplexml_load_string($xml));
+        $this->assertStringContainsString('<user>B58AE7F5ECB72BF413DDE741CBF38418</user>', $xml);
+        $this->assertStringContainsString('<user>A903648D9DC376E5148713950DAF4D25</user>', $xml);
+    }
 }
