@@ -46,12 +46,18 @@ return [
     // Код за потвърждение в Google Search Console (метод „HTML tag“). Не е нужен, ако домейнът е потвърден през DNS.
     'google_site_verification' => preg_match('/^[A-Za-z0-9_-]{10,100}$/', (string) env('GOOGLE_SITE_VERIFICATION')) ? (string) env('GOOGLE_SITE_VERIFICATION') : null,
 
-    // Код за потвърждение в Bing Webmaster Tools (метод „HTML Meta Tag“). Не махайте тага, иначе потвърждението пада.
-    // BING_SITE_VERIFICATION= (празно) го изключва.
+    // Кодове за потвърждение в Bing Webmaster Tools (метод „HTML Meta Tag“), по един таг за всеки акаунт.
+    // Не махайте кодовете, иначе потвърждението пада. BING_SITE_VERIFICATION добавя още кодове (със запетая);
+    // BING_SITE_VERIFICATION= (празно) изключва всички.
     'bing_site_verification' => (function () {
-        $code = (string) env('BING_SITE_VERIFICATION', 'A903648D9DC376E5148713950DAF4D25');
+        $builtIn = ['A903648D9DC376E5148713950DAF4D25', 'B58AE7F5ECB72BF413DDE741CBF38418'];
+        $env = env('BING_SITE_VERIFICATION');
+        if ($env !== null && trim((string) $env) === '') {
+            return [];
+        }
+        $codes = array_merge($builtIn, array_map('trim', explode(',', (string) $env)));
 
-        return preg_match('/^[A-Fa-f0-9]{32}$/', $code) ? $code : null;
+        return array_values(array_unique(array_map('strtoupper', array_filter($codes, fn ($c) => preg_match('/^[A-Fa-f0-9]{32}$/', $c)))));
     })(),
 
     // Бисквитките по категории, които се зареждат през GTM след съгласие. Показват се в Политиката за бисквитките.

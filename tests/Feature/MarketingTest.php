@@ -196,13 +196,14 @@ class MarketingTest extends TestCase
 
     public function test_bing_verification_tag_is_on_the_home_page_and_other_pages(): void
     {
-        $tag = '<meta name="msvalidate.01" content="A903648D9DC376E5148713950DAF4D25">';
+        foreach (['A903648D9DC376E5148713950DAF4D25', 'B58AE7F5ECB72BF413DDE741CBF38418'] as $code) {
+            $tag = '<meta name="msvalidate.01" content="' . $code . '">';
+            $this->get('/')->assertSee($tag, false);
+            $this->get('/en')->assertSee($tag, false);
+            $this->get('/uslugi')->assertSee($tag, false);
+        }
 
-        $this->get('/')->assertSee($tag, false);
-        $this->get('/en')->assertSee($tag, false);
-        $this->get('/uslugi')->assertSee($tag, false);
-
-        config(['creatium.bing_site_verification' => null]);
+        config(['creatium.bing_site_verification' => []]);
         $this->get('/')->assertDontSee('msvalidate.01', false);
     }
 }
