@@ -192,4 +192,42 @@ class StarterBlogAndDemoTest extends TestCase
             ->assertSee('images/blog/kakvo-tryabva-da-ima-saytat-na-malak-biznes.webp', false)
             ->assertSee('Какво НЕ е нужно в началото');
     }
+
+    public function test_dcd_articles_are_valid_drafts_with_sources_covers_and_working_links(): void
+    {
+        $data = StarterBlogPosts::data('dcd-2026-posts.php');
+        $this->assertCount(6, $data['posts']);
+
+        $added = StarterBlogPosts::import(file: 'dcd-2026-posts.php', status: 'draft');
+        $this->assertSame(6, $added);
+        $this->assertSame(0, StarterBlogPosts::import(file: 'dcd-2026-posts.php', status: 'draft'));
+
+        foreach ($data['posts'] as $post) {
+            foreach (['category', 'title', 'slug', 'excerpt', 'body'] as $field) {
+                $this->assertNotEmpty($post[$field], $post['slug'] . ': ' . $field);
+            }
+            $this->assertArrayHasKey($post['category'], $data['categories']);
+            $this->assertStringContainsString("\n## Източници\n", $post['body'], $post['title']);
+            $this->assertStringContainsString('Digital Community Day 2026, 5 ноември 2026, IEC София', $post['body'], $post['title']);
+            $this->assertGreaterThan(550, preg_match_all('/\pL{2,}/u', $post['body']), $post['title']);
+            $this->assertLessThanOrEqual(160, mb_strlen($post['excerpt']));
+            $this->assertFileExists(public_path($post['cover']), $post['slug']);
+
+            $saved = \App\Models\Post::where('slug->bg', $post['slug'])->firstOrFail();
+            $this->assertSame('draft', $saved->status);
+            $this->assertSame($post['cover'], $saved->cover_image);
+            $this->get('/blog/' . $post['slug'])->assertNotFound();
+
+            // Само връзки към страници, които съществуват; никакви към други чернови.
+            preg_match_all('/\]\((\/[^)]*)\)/', $post['body'], $links);
+            foreach ($links[1] as $link) {
+                $this->assertStringNotContainsString('/blog/', $link);
+                $this->get($link)->assertOk();
+            }
+        }
+
+        $shopping = collect($data['posts'])->firstWhere('slug', 'google-shopping-idva-v-balgaria-podgotovka-na-magazina');
+        $this->assertStringContainsString('(/uslugi/podgotovka-za-google-shopping)', $shopping['body']);
+        $this->assertStringContainsString('(/proverka-na-sait)', $shopping['body']);
+    }
 }

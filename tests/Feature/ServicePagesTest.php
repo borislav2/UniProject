@@ -64,4 +64,26 @@ class ServicePagesTest extends TestCase
             ->assertSee('Сайт във вашия стил, бърз на телефон, с бутон за обаждане, форма и карта. Демо преди пускане.')
             ->assertSee('Получете оферта');
     }
+
+    public function test_the_google_shopping_page_is_honest_about_the_date_and_the_price(): void
+    {
+        $this->get('/uslugi/podgotovka-za-google-shopping')->assertOk()
+            ->assertSee('Подготовка на онлайн магазина за Google Shopping')
+            ->assertSee('официална дата няма')
+            ->assertSee('Цена по оферта')
+            ->assertDontSee('Включено в пакет')
+            ->assertSee('hreflang="en" href="' . url('/en/services/google-shopping-readiness') . '"', false);
+
+        $this->get('/en/services/google-shopping-readiness')->assertOk()
+            ->assertSee('Price on request')
+            ->assertSee('no official date');
+
+        $this->get('/sitemap.xml')->assertSee('<loc>' . url('/uslugi/podgotovka-za-google-shopping') . '</loc>', false)
+            ->assertSee('<loc>' . url('/en/services/google-shopping-readiness') . '</loc>', false);
+        $this->get('/llms.txt')->assertSee('/uslugi/podgotovka-za-google-shopping', false);
+        $this->get('/uslugi')->assertSee(url('/uslugi/podgotovka-za-google-shopping'), false);
+        $this->get('/')->assertSee('Google Shopping');
+
+        $this->assertStringContainsString('Google Shopping', \App\Support\Chat\SiteKnowledge::text());
+    }
 }

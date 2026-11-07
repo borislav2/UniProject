@@ -62,6 +62,7 @@ class SendSiteCheckReport
                 'crawl' => $report['crawl'] ?? null,
                 'issues' => $report['issues'] ?? [],
                 'pagespeed' => $report['pagespeed'] ?? null,
+                'shopping' => $report['shopping'] ?? null,
                 'checks' => collect($report['checks'])->map(fn ($c) => ['status' => $c['status'], 'title' => $c['title'], 'detail' => $c['detail'] ?? ''])->values()->all(),
                 'sent' => $sent,
                 'checked_at' => now()->toIso8601String(),

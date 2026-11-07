@@ -37,7 +37,8 @@
             </article>
         @endforeach
 
-        @if($google = site('service_pages')['google'] ?? null)
+        @foreach(['google', 'shopping'] as $featuredKey)
+        @if($google = site('service_pages')[$featuredKey] ?? null)
             <article class="reveal card-hover overflow-hidden rounded-3xl border border-brand-300 bg-brand-50/60 p-7 md:p-9 flex flex-col md:col-span-2 md:flex-row md:items-center md:justify-between gap-6 dark:border-brand-400/30 dark:bg-white/[0.04]">
                 <div class="flex items-start gap-4">
                     <div class="icon-pop w-14 h-14 shrink-0 rounded-2xl bg-brand-gradient flex items-center justify-center shadow-lg shadow-brand-900/20"><x-icon :name="$google['icon']" class="text-white text-lg" /></div>
@@ -47,9 +48,10 @@
                         <p class="mt-2 max-w-2xl text-gray-600 leading-relaxed dark:text-gray-300">{{ $google['lead'] }}</p>
                     </div>
                 </div>
-                <a href="{{ \App\Http\Controllers\PageController::serviceUrl('google') }}" class="btn-shine shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-brand-950 px-6 py-3.5 font-semibold text-white hover:bg-brand-800 dark:bg-white dark:text-brand-950">{{ __('Научете повече') }} <x-icon name="arrow-right" class="text-sm" /></a>
+                <a href="{{ \App\Http\Controllers\PageController::serviceUrl($featuredKey) }}" class="btn-shine shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-brand-950 px-6 py-3.5 font-semibold text-white hover:bg-brand-800 dark:bg-white dark:text-brand-950">{{ __('Научете повече') }} <x-icon name="arrow-right" class="text-sm" /></a>
             </article>
         @endif
+        @endforeach
     </div>
 
 </section>

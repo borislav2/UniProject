@@ -211,6 +211,7 @@ class Project extends Model
                 // Новият отчет (обхождане на сайта); старите запитвания нямат тези ключове.
                 'crawl' => $report['crawl'] ?? null,
                 'pagespeed' => $report['pagespeed'] ?? null,
+                'shopping' => \App\Support\SiteCheck\ShoppingReadiness::summary($report['shopping'] ?? null),
                 'issues' => collect($report['issues'] ?? [])->map(function ($issue) {
                     $d = \App\Support\SiteCheck\SiteCrawler::describe($issue['key'], $issue['count']);
 

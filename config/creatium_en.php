@@ -492,6 +492,38 @@ return [
                 ['What does the monthly price include?', 'Monitoring, backups, updates and regular content changes. The exact scope is in the package.'],
             ],
         ],
+        'shopping' => [
+            'slug' => 'google-shopping-readiness', 'icon' => 'bag-shopping', 'menu' => 'Google Shopping',
+            'title' => 'Get your online shop ready for Google Shopping',
+            'seo_title' => 'Google Shopping readiness in Bulgaria | Creatium Lab',
+            'seo_description' => 'Google Shopping is expected in Bulgaria, with no official date. We prepare the feed, Merchant Center, policies and tracking so you are ready on launch day.',
+            'lead' => 'Google Shopping is expected in Bulgaria, but there is no official date. The shops that have their data ready on launch day win. We get yours ready.',
+            'problems' => [
+                'You don\'t know what Google checks in your shop. Without clear contacts and policies the account can be suspended',
+                'Product data is incomplete or differs between the website and other places',
+                'Images are small or one per product, and titles are short and generic',
+            ],
+            'includes' => [
+                'A product feed: titles of 70 to 100 characters (brand, type, model, material), descriptions, GTIN, availability and price, updated at least daily',
+                'Merchant Center setup, site verification and claim',
+                'The pages Google checks "as a buyer": contacts, company data, shipping, returns, prices and payment, HTTPS',
+                'Data that matches 1:1 in Merchant Center and on the website: name, address, phone, shipping, returns',
+                'Images of at least 500×500 px (required from 31 January 2027) and 5 or more per product',
+                'Structured data for the products on the website',
+                'Purchase tracking in GA4',
+                'A list of what is missing and the order to fix it in',
+            ],
+            'result' => 'A shop with a ready feed, clear policies and working tracking, that does not start from zero on the day Google launches Shopping for Bulgaria.',
+            'package' => null,
+            'note' => 'The price is not in a ready package: we set it after a short review of the shop. You can see the first part of the list for free in the website check.',
+            'faq' => [
+                ['When does Google Shopping come to Bulgaria?', 'Google announced Shopping for 15 European markets in March 2026, Bulgaria among them. In July Bulgaria was in its documentation, and in August it disappeared from the list. The launch is expected in the first or second quarter of 2027, but there is no official date. Free listings and Shopping ads are not yet available for Bulgaria.'],
+                ['Should I wait for the launch?', 'No. Most of it helps today: clear contacts, shipping and returns, tidy product data and purchase tracking. The shops that have their data ready on launch day win first.'],
+                ['What if my shop is not on WooCommerce or Shopify?', 'The feed is built from product data, and every shop has it. How exactly we get it (a ready extension, an export or a file) depends on the system. That is why we start with a short review of the shop.'],
+                ['What does Google check on the website?', 'It looks at the site as a buyer would: contacts, company data, shipping, returns, prices and payment, and HTTPS. The data in Merchant Center must match the website. Without clear contacts and policies the account can be suspended.'],
+                ['How much does the preparation cost?', 'The price depends on the number of products and the state of the shop, so it is not in a ready package. We tell you after a short review. The consultation is free.'],
+            ],
+        ],
     ],
 
     'services_page' => [

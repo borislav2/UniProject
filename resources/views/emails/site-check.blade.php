@@ -21,6 +21,7 @@
     $passed = collect($report['checks'])->where('status', 'ok');
     $auditSubject = rawurlencode(__('Подробен одит за :domain', ['domain' => $report['domain']]));
     $priceNote = config('creatium.site_check.audit_price_note');
+    $shopping = $report['shopping'] ?? null;
 @endphp
 
 @section('eyebrow', __('Безплатна проверка на сайт'))
@@ -83,6 +84,24 @@
 @include('emails.client._parts', ['part' => 'label', 'text' => __('Какво е наред'), 'color' => '#15803d'])
 <div style="height:4px;line-height:4px;font-size:0;">&nbsp;</div>
 @include('emails.client._parts', ['part' => 'checklist', 'items' => $passed->pluck('title')->all(), 'color' => '#15803d'])
+</td></tr>
+@endif
+
+@if(! empty($shopping['checks']))
+<tr><td style="padding:28px 36px 0;">
+@include('emails.client._parts', ['part' => 'label', 'text' => __('Готовност за Google Shopping'), 'color' => '#2d63a3'])
+<div style="{{ $f }}font-size:14px;line-height:1.6;color:#475569;padding-top:8px;">{{ __('Сайтът прилича на онлайн магазин. Google Shopping се очаква в България, но официална дата още няма. Първи печелят магазините с готови данни в деня на старта. Ето как стоите днес: :ok от :total наред.', ['ok' => $shopping['ok'], 'total' => $shopping['total']]) }}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:6px;">
+@foreach($shopping['checks'] as $shopCheck)
+@php
+    $isOk = $shopCheck['status'] === 'ok';
+    $shopText = \App\Support\SiteCheck\ShoppingReadiness::describe($shopCheck);
+@endphp
+<tr><td width="34" valign="top" style="padding:10px 0;"><span style="display:inline-block;width:22px;height:22px;line-height:22px;border-radius:11px;background:{{ $isOk ? '#dcfce7' : '#fee2e2' }};color:{{ $isOk ? '#15803d' : '#b91c1c' }};{{ $f }}font-size:13px;font-weight:bold;text-align:center;">{{ $isOk ? '✓' : '✕' }}</span></td>
+<td style="padding:10px 0;{{ $f }}font-size:14px;line-height:1.55;color:#475569;border-bottom:1px solid #eef1f5;"><strong style="display:block;color:#0f1a2b;font-size:15px;">{{ $shopText['title'] }}</strong>@if($shopText['detail']){{ $shopText['detail'] }}@endif</td></tr>
+@endforeach
+</table>
+<div style="{{ $f }}font-size:14px;line-height:1.6;color:#475569;padding-top:12px;">{{ __('Какво включва подготовката на магазина:') }} <a href="{{ \App\Http\Controllers\PageController::serviceUrl('shopping') }}" style="color:#2d63a3;font-weight:bold;text-decoration:none;">{{ __('Подготовка за Google Shopping') }}</a>.</div>
 </td></tr>
 @endif
 

@@ -132,6 +132,8 @@ class StarterBlogPosts
                 'slug' => ['bg' => $post['slug']],
                 'excerpt' => ['bg' => $post['excerpt']],
                 'body' => ['bg' => trim($post['body'])],
+                // Корица по избор ('cover' = път под public/): само ако файлът съществува.
+                'cover_image' => isset($post['cover']) && is_file(public_path($post['cover'])) ? $post['cover'] : null,
                 'status' => $status,
                 'published_at' => $status === 'published' ? $dates[$i] : null,
             ]);

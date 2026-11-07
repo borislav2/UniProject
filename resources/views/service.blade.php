@@ -45,6 +45,9 @@
                     <p class="text-xs font-bold uppercase tracking-[0.18em] text-brand-300">{{ __('Включено в пакет') }}</p>
                     <h2 class="mt-2 text-2xl md:text-3xl font-extrabold tracking-tight">{{ $plan['name'] }}</h2>
                     <p class="mt-2 text-gray-300">{{ $plan['prices'][0] ?? '' }}</p>
+                @else
+                    <p class="text-xs font-bold uppercase tracking-[0.18em] text-brand-300">{{ __('Цена') }}</p>
+                    <h2 class="mt-2 text-2xl md:text-3xl font-extrabold tracking-tight">{{ __('Цена по оферта') }}</h2>
                 @endif
                 @if(filled($page['note'] ?? null))
                     <p class="mt-3 text-gray-300">{{ $page['note'] }}</p>
@@ -94,7 +97,7 @@
 <section class="py-16 md:py-20 bg-white dark:bg-ink-950">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ __('Другите ни услуги') }}</h2>
-        <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             @foreach($others as $otherKey => $other)
                 <a href="{{ \App\Http\Controllers\PageController::serviceUrl($otherKey) }}" class="card-hover flex items-center gap-3 rounded-2xl border border-gray-200 p-4 font-semibold text-brand-950 hover:border-brand-400 dark:border-white/10 dark:text-white">
                     <x-icon :name="$other['icon']" class="text-brand-600 dark:text-brand-300" /> {{ $other['menu'] }}
