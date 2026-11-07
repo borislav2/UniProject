@@ -81,6 +81,13 @@
                     @if(! empty($summary['pagespeed']))· Скорост на телефон: <strong>{{ $summary['pagespeed']['score'] }}/100</strong>@endif
                 </p>
             @endif
+            @if(! empty($summary['shopping']))
+                @php $shop = $summary['shopping']; @endphp
+                <p class="mt-3 text-sm text-gray-600">
+                    <span class="font-semibold text-gray-900">Изглежда като онлайн магазин. Готовност за Google Shopping: {{ $shop['ok'] }} от {{ $shop['total'] }} наред.</span>
+                    @if($shop['missing']) Липсват: {{ implode('; ', $shop['missing']) }}.@endif
+                </p>
+            @endif
             @if(! empty($summary['issues']))
                 <p class="mt-3 text-xs font-bold uppercase tracking-wider text-gray-500">Проблеми по целия сайт</p>
                 <ul class="mt-2 grid gap-2 text-sm sm:grid-cols-2">

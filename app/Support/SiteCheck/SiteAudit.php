@@ -29,6 +29,13 @@ class SiteAudit
         $report['crawl'] = $crawl['crawl'];
         $report['issues'] = $crawl['issues'];
 
+        // „Готовност за Google Shopping“: само за онлайн магазини, от вече обходените страници; не влияе на оценката.
+        try {
+            $report['shopping'] = ShoppingReadiness::evaluate($crawl['shop'] ?? [], str_starts_with($report['url'], 'https://'));
+        } catch (\Throwable) {
+            $report['shopping'] = null;
+        }
+
         $report['pagespeed'] = null;
         try {
             if ($speed = $this->pageSpeed->run($report['url'])) {

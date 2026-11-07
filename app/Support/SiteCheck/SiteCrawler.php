@@ -155,6 +155,8 @@ class SiteCrawler
                 'error' => $error,
             ],
             'issues' => $this->issueList(),
+            // Сигналите за онлайн магазин от всички прочетени страници (ShoppingReadiness::evaluate).
+            'shop' => array_values(array_map(fn ($p) => $p['shop'], array_filter($this->pages, fn ($p) => ! empty($p['shop'])))),
         ];
     }
 
@@ -432,6 +434,7 @@ class SiteCrawler
             'mixed' => $mixed,
             'schema' => (bool) $xpath->query('//script[@type="application/ld+json"]')->length,
             'og' => (bool) $xpath->query('//meta[@property="og:title"]')->length,
+            'shop' => ShoppingReadiness::signals($xpath, $html, $text, $url),
         ];
     }
 
