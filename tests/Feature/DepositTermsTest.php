@@ -38,4 +38,29 @@ class DepositTermsTest extends TestCase
         $this->get('/en/packages')->assertOk()->assertSee('non-refundable')->assertSee('Working capacity per month');
         $this->get('/usloviya')->assertOk()->assertSee('не се връща, ако решите да не продължите');
     }
+
+    public function test_admin_copy_gets_the_individual_plan_deposit_once(): void
+    {
+        ContentBlock::create(['key' => 'plans', 'locale' => 'bg', 'value' => ['items' => [
+            ['name' => 'Стартов двигател', 'deposit' => 'x'],
+            ['name' => 'Индивидуален маркетинг', 'deposit' => ''],
+        ]]]);
+        ContentBlock::create(['key' => 'questions', 'locale' => 'bg', 'value' => [
+            ['q' => 'Как протича процесът на плащане?', 'a' => 'Първата сума се плаща преди да подготвим офертата и демото и не се връща, ако решите да не продължите. Край.'],
+        ]]);
+
+        $this->assertSame(['plans/bg', 'questions/bg'], DepositTerms2026::applyIndividual());
+
+        $plans = ContentBlock::where('key', 'plans')->first()->value;
+        $this->assertSame('x', $plans['items'][0]['deposit']);
+        $this->assertStringContainsString('не се връща', $plans['items'][1]['deposit']);
+        $this->assertStringContainsString('При Индивидуален маркетинг също има капаро', ContentBlock::where('key', 'questions')->first()->value[0]['a']);
+        $this->assertSame([], DepositTerms2026::applyIndividual());
+    }
+
+    public function test_individual_plan_shows_its_deposit_and_terms_say_so(): void
+    {
+        $this->get('/paketi')->assertOk()->assertSee('сумата е в индивидуалната оферта');
+        $this->get('/usloviya')->assertOk()->assertSee('При Индивидуален маркетинг (от €1 200 на месец) също се плаща капаро');
+    }
 }
