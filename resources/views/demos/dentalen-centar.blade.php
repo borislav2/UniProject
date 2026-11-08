@@ -63,7 +63,7 @@
                 <div class="flex gap-3"><x-icon name="location-dot" class="mt-1 text-[#0f8b8d]" /><dd>бул. „Приморски“ 50, Варна</dd></div>
                 <div class="flex gap-3"><x-icon name="phone" class="mt-1 text-[#0f8b8d]" /><dd>+359 52 000 000</dd></div>
                 <div class="flex gap-3"><x-icon name="envelope" class="mt-1 text-[#0f8b8d]" /><dd>office@example.com</dd></div>
-                <div class="flex gap-3"><x-icon name="check" class="mt-1 text-[#0f8b8d]" /><dd>Пн – Пт 8:30 – 19:00, Сб 9:00 – 14:00</dd></div>
+                <div class="flex gap-3"><x-icon name="check" class="mt-1 text-[#0f8b8d]" /><dd>Понеделник до петък от 8:30 до 19:00, събота от 9:00 до 14:00</dd></div>
             </dl>
         </div>
         <form data-demo-form class="rounded-2xl bg-[#f1f9f9] p-6 space-y-4">

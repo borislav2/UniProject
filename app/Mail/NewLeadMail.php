@@ -18,7 +18,7 @@ class NewLeadMail extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Ново запитване от сайта: ' . $this->lead->name);
+        return new Envelope(subject: 'Ново запитване от сайта | ' . $this->lead->name);
     }
 
     public function content(): Content

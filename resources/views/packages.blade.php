@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', __('Цена за изработка на сайт: пакети от €400'))
-@section('meta_description', __('Колко струва: €400 старт и €200/месец или €800 старт и €650/месец. Индивидуален маркетинг от €1 200/месец. Фиксирана цена и 2 месеца безплатно при годишно плащане.'))
+@section('title', __('Цена за изработка на сайт с пакети от €400'))
+@section('meta_description', __('Цени от €400 старт и €200/месец или €800 старт и €650/месец. Индивидуален маркетинг от €1 200/месец. Фиксирана цена и 2 месеца безплатно при годишно плащане.'))
 
 @php
     // FAQPage JSON-LD for the price and payment questions shown on this page.
@@ -16,7 +16,6 @@
     ];
     $planItems = $plans['items'] ?? [];
     $contactInfo = config('creatium.contact');
-    $billingOn = ! empty($billing['enabled']);
 @endphp
 
 @if(! empty($faq))
@@ -26,20 +25,88 @@
 @endif
 
 @section('content')
-{{-- 1. Тъмно заглавие с лентата на доверието. --}}
-<section class="relative overflow-hidden surface-night grain on-dark text-white">
+{{-- 1. Тъмно заглавие с пакетите (собствениците, ноември 2026): трите карти са в самото начало, цените се виждат без превъртане.
+     Картите са еднакви по височина: на голям екран всяка е подмрежа (subgrid) на общата мрежа, така че имена, цени, списъци и бутони са на една линия. --}}
+<section data-packages-hero class="relative overflow-hidden surface-night grain on-dark text-white">
     <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_top,black_25%,transparent_70%)]" aria-hidden="true"></div>
     <div class="hidden md:block aurora-a absolute -top-40 -right-24 w-[30rem] h-[30rem] rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true"></div>
     <div class="hidden md:block aurora-b absolute -bottom-48 -left-24 w-[28rem] h-[28rem] rounded-full bg-brand-700/30 blur-3xl" aria-hidden="true"></div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-header pb-14 md:pb-20 text-center">
-        <p class="kicker rise-in">{{ __('Пакети и цени') }}</p>
-        <h1 class="display rise-text mt-5 text-4xl sm:text-5xl xl:text-6xl text-balance" style="--d: 80ms">{{ __('Изберете как да расте вашият бизнес') }}</h1>
-        @if(filled($plans['intro'] ?? null))
-            <p class="rise-text mt-6 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed text-pretty" style="--d: 160ms">{{ $plans['intro'] }}</p>
-        @endif
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-header pb-12 md:pb-16">
+        <div class="text-center">
+            <p class="kicker rise-in">{{ __('Пакети и цени') }}</p>
+            <h1 class="display rise-text mt-4 text-3xl sm:text-4xl xl:text-5xl text-balance" style="--d: 80ms">{{ __('Изберете как да расте вашият бизнес') }}</h1>
+            @if(filled($plans['intro'] ?? null))
+                <p class="rise-text mt-4 text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed text-pretty" style="--d: 160ms">{{ $plans['intro'] }}</p>
+            @endif
+        </div>
+
+        @php
+            $recIndex = -1;
+            foreach (array_values($planItems) as $i => $candidate) {
+                if (! empty($candidate['highlighted'])) { $recIndex = $i; break; }
+            }
+            $badgeText = collect($planItems)->pluck('badge')->filter()->first() ?: __('Препоръчваме');
+        @endphp
+        <div id="paketi" class="mt-10 md:mt-12 grid gap-8 lg:gap-x-6 lg:gap-y-0 lg:grid-cols-3 lg:grid-rows-[auto_auto_1fr_auto_auto] scroll-mt-28">
+            @foreach($planItems as $plan)
+                @php
+                    $isRec = $loop->index === $recIndex;
+                    $buttonText = filled($plan['button'] ?? null) ? $plan['button'] : ($plans['button'] ?? __('Получете оферта'));
+                    $card = \App\Support\PlanBilling::cardPrice($billing, $plan, $loop->index);
+                    $short = \App\Support\PlanBilling::cardItems($plan);
+                @endphp
+                <div id="paket-{{ $loop->index }}" data-plan class="reveal scroll-mt-28 flex lg:row-span-5 lg:grid lg:grid-rows-subgrid {{ ! empty($plan['highlighted']) ? 'order-first lg:order-none' : '' }}" style="--reveal-delay: {{ $loop->index * 100 }}ms">
+                    <div class="plan-card flex flex-1 lg:row-span-5 lg:grid lg:grid-rows-subgrid" data-plan-card="{{ $loop->index }}" data-rec="{{ $isRec ? 'true' : 'false' }}">
+                        <span class="pc-badge rounded-full bg-white px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-950 shadow-lg ring-1 ring-brand-200" aria-hidden="{{ $isRec ? 'false' : 'true' }}">{{ $badgeText }}</span>
+                        <article class="plan-card-body relative flex flex-1 flex-col p-6 xl:p-8 lg:row-span-5 lg:grid lg:grid-rows-subgrid">
+                            <div class="pc-deco absolute inset-0 bg-grid-light" aria-hidden="true"></div>
+                            <div class="pc-deco absolute -top-24 -right-24 w-72 h-72 rounded-full bg-brand-500/30 blur-3xl" aria-hidden="true"></div>
+
+                            <div class="relative">
+                                <p class="pc-accent text-xs font-bold uppercase tracking-[0.18em]">{{ __('Пакет :n', ['n' => $loop->iteration]) }}</p>
+                                <h2 class="pc-fg mt-2 text-2xl leading-tight font-extrabold tracking-tight">{{ $plan['name'] }}</h2>
+                                <p class="pc-body mt-2 text-sm leading-relaxed">{{ $plan['audience'] }}</p>
+                            </div>
+
+                            {{-- Цена: голямо „от €400“, подпис и само годишният абонамент (или „Индивидуална оферта“). Без месечна цена и без плащане на старта. --}}
+                            <div class="pc-box relative mt-5 rounded-3xl p-5">
+                                <p class="pc-fg text-4xl xl:text-5xl font-extrabold tracking-tight leading-none tabular-nums">{{ $card['from'] }}</p>
+                                @if($card['caption'] !== '')<p class="pc-body mt-2 text-sm leading-snug">{{ $card['caption'] }}</p>@endif
+                                @if($card['second'] !== '')
+                                    <div class="pc-line mt-4 pt-4 border-t">
+                                        <p class="pc-fg text-xl xl:text-2xl font-extrabold leading-snug tracking-tight tabular-nums">{{ $card['second'] }}</p>
+                                        @if($card['note'] !== '')<p class="pc-body mt-1 text-xs leading-snug">{{ $card['note'] }}</p>@endif
+                                    </div>
+                                @endif
+                            </div>
+
+                            <ul class="relative mt-5 space-y-2.5">
+                                @foreach($short as $line)
+                                    <li class="pc-body flex items-start gap-3 text-sm leading-snug">
+                                        <span class="pc-chip mt-0.5 w-5 h-5 shrink-0 rounded-full flex items-center justify-center"><x-icon name="check" class="text-[10px]" /></span>
+                                        <span>{{ $line }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+
+                            <p class="relative mt-4">
+                                <a href="#vsichko-{{ $loop->index }}" class="pc-strong inline-flex items-center gap-2 text-sm font-semibold hover:opacity-80">{{ __('Вижте всичко включено') }} <x-icon name="chevron-down" class="text-xs" /></a>
+                            </p>
+
+                            <div class="relative mt-auto pt-5">
+                                <a href="{{ lroute('packages') }}?paket={{ $loop->index }}#oferta" data-p-link class="pc-btn btn-shine group/btn flex w-full items-center justify-center gap-2 text-center px-6 py-3.5 rounded-2xl font-semibold">
+                                    <span>{{ $buttonText }}</span>
+                                    <x-icon name="arrow-right" class="text-sm" />
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            @endforeach
+        </div>
 
         @if(! empty($plans['trust']))
-            <ul class="rise-text mt-10 md:mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-5 text-left" style="--d: 240ms">
+            <ul class="mt-10 md:mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-5 text-left">
                 @foreach($plans['trust'] as $item)
                     <li class="relative edge glass flex items-start gap-3 rounded-2xl p-4">
                         <span class="w-10 h-10 shrink-0 rounded-xl bg-brand-500/20 flex items-center justify-center"><x-icon :name="$item['icon'] ?? 'check'" class="text-brand-200" /></span>
@@ -58,141 +125,28 @@
     <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand-400/50 to-transparent" aria-hidden="true"></div>
 </section>
 
-{{-- 2. Превключвателят Месечно / Годишно и пакетите. На телефон пакетът, отбелязан с highlighted, е първи; препоръката само сменя подчертаването. --}}
-<section class="py-16 md:py-24 bg-white dark:bg-ink-950">
+{{-- 2. Всичко включено: пълните списъци от `build_items`, до които води „Вижте всичко включено“ на картите. --}}
+<section class="py-16 md:py-20 bg-white dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        @php
-            $recIndex = -1;
-            foreach (array_values($planItems) as $i => $candidate) {
-                if (! empty($candidate['highlighted'])) { $recIndex = $i; break; }
-            }
-            $badgeText = collect($planItems)->pluck('badge')->filter()->first() ?: __('Препоръчваме');
-            $queryTail = $billingOn && $billingMode === 'yearly' ? '&plashtane=' . \App\Support\PlanBilling::billingParam($billingMode) : '';
-        @endphp
-        @if($billingOn)
-            @include('partials/plan-billing')
-        @endif
-        <div class="grid lg:grid-cols-3 gap-8 lg:gap-6 items-stretch">
+        <div class="max-w-2xl">
+            <p class="kicker kicker-light">{{ __('Подробно') }}</p>
+            <h2 class="display mt-3 text-3xl md:text-4xl text-brand-950 dark:text-white">{{ $plans['all_title'] ?? __('Всичко включено във всеки пакет') }}</h2>
+        </div>
+        <div class="mt-10 grid gap-6 lg:grid-cols-3 items-start">
             @foreach($planItems as $plan)
-                @php
-                    $isRec = $loop->index === $recIndex;
-                    $buttonText = filled($plan['button'] ?? null) ? $plan['button'] : ($plans['button'] ?? __('Получете оферта'));
-                    $cells = [
-                        'monthly' => \App\Support\PlanBilling::cell($billing, $plan, $loop->index, 'monthly'),
-                        'yearly' => \App\Support\PlanBilling::cell($billing, $plan, $loop->index, 'yearly'),
-                    ];
-                    $priced = $cells['monthly']['priced'];
-                @endphp
-                <div id="paket-{{ $loop->index }}" class="reveal scroll-mt-28 flex {{ ! empty($plan['highlighted']) ? 'order-first lg:order-none' : '' }}" style="--reveal-delay: {{ $loop->index * 100 }}ms">
-                    <div class="plan-card flex flex-1" data-plan-card="{{ $loop->index }}" data-rec="{{ $isRec ? 'true' : 'false' }}">
-                        <span class="pc-badge rounded-full bg-white px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-950 shadow-lg ring-1 ring-brand-200" aria-hidden="{{ $isRec ? 'false' : 'true' }}">{{ $badgeText }}</span>
-                        <article class="plan-card-body relative flex flex-1 flex-col p-7 md:p-9">
-                            <div class="pc-deco absolute inset-0 bg-grid-light" aria-hidden="true"></div>
-                            <div class="pc-deco absolute -top-24 -right-24 w-72 h-72 rounded-full bg-brand-500/30 blur-3xl" aria-hidden="true"></div>
-
-                            <div class="relative">
-                                <p class="pc-accent text-xs font-bold uppercase tracking-[0.18em]">{{ __('Пакет :n', ['n' => $loop->iteration]) }}</p>
-                                <h2 class="pc-fg mt-2 text-2xl md:text-[1.7rem] leading-tight font-extrabold tracking-tight">{{ $plan['name'] }}</h2>
-                                <p class="pc-body mt-3 leading-relaxed">{{ $plan['audience'] }}</p>
-                            </div>
-
-                            {{-- Цени: голяма цена на старта, под нея абонаментът (месечно или годишно) и как се плаща старта. --}}
-                            <div class="pc-box relative mt-7 rounded-3xl p-5">
-                                @foreach($plan['prices'] as $price)
-                                    @php
-                                        // Първият ред: голямата цена на старта и подпис. Следващите: „след това €200 / месец“.
-                                        $parts = null;
-                                        $monthly = null;
-                                        if ($loop->first) {
-                                            $parts = preg_match('/^(€\s?\d[\d\s.,]*?)(?:\s*(\/\s*(?:месец|month)))?\s+(.+)$/u', $price, $m) ? [$m[1], $m[2], $m[3]] : null;
-                                        } elseif (preg_match('/^(\D*?)\s*(€\s?\d[\d\s.,]*\d)\s*(\/\s*(?:месец|month))?\s*$/u', $price, $m)) {
-                                            $monthly = [trim($m[1]), $m[2], $m[3] ?? ''];
-                                        }
-                                    @endphp
-                                    @continue($priced && ! $loop->first)
-                                    <div class="{{ $loop->first ? '' : 'mt-4 pt-4 border-t pc-line' }}">
-                                        @if($parts)
-                                            <p class="flex flex-wrap items-baseline gap-x-2">
-                                                <span class="pc-fg text-5xl font-extrabold tracking-tight leading-none">{{ $parts[0] }}</span>
-                                                @if($parts[1])<span class="pc-strong text-lg font-bold">{{ $parts[1] }}</span>@endif
-                                            </p>
-                                            <p class="pc-body mt-1.5 text-sm">{{ $parts[2] }}</p>
-                                        @elseif($monthly)
-                                            <p class="flex flex-wrap items-baseline gap-x-2">
-                                                @if($monthly[0] !== '')<span class="pc-body text-sm">{{ $monthly[0] }}</span>@endif
-                                                <span class="pc-fg text-3xl font-extrabold tracking-tight leading-none">{{ $monthly[1] }}</span>
-                                                @if($monthly[2] !== '')<span class="pc-strong text-base font-bold">{{ $monthly[2] }}</span>@endif
-                                            </p>
-                                        @else
-                                            <p class="pc-fg text-2xl font-extrabold leading-snug tracking-tight">{{ $price }}</p>
-                                        @endif
-                                    </div>
-                                @endforeach
-
-                                @if($priced)
-                                    @foreach($cells as $mode => $cell)
-                                        @continue($mode === 'yearly' && ! $billingOn)
-                                        <div data-billing-view="{{ $mode }}" @if($mode !== $billingMode) hidden @endif>
-                                            <div class="mt-4 pt-4 border-t pc-line">
-                                                <p class="flex flex-wrap items-baseline gap-x-2">
-                                                    <span class="pc-body text-sm">{{ __('след това') }}</span>
-                                                    <span class="pc-fg text-3xl font-extrabold tracking-tight leading-none tabular-nums">{{ $cell['price'] }}</span>
-                                                    <span class="pc-strong text-base font-bold">{{ $cell['suffix'] }}</span>
-                                                </p>
-                                                @if($cell['sub'] !== '')<p class="pc-body mt-1.5 text-xs leading-relaxed">{{ $cell['sub'] }}</p>@endif
-                                            </div>
-                                            @if($cell['year'] !== '')<p class="pc-line pc-body mt-4 pt-3 border-t text-xs leading-relaxed">{{ $cell['year'] }}</p>@endif
-                                        </div>
+                <div id="vsichko-{{ $loop->index }}" class="scroll-mt-28 rounded-[2rem] border border-gray-200 bg-white p-6 md:p-7 dark:border-white/10 dark:bg-white/[0.03]">
+                    <div class="plan-card" data-rec="false">
+                        <h3 class="pc-fg text-xl font-extrabold tracking-tight">{{ $plan['name'] }}</h3>
+                        @foreach([['build_title', 'build_items'], ['monthly_title', 'monthly_items']] as [$titleKey, $itemsKey])
+                            @if(! empty($plan[$itemsKey]))
+                                @if(filled($plan[$titleKey] ?? null))<h4 class="pc-body mt-4 text-sm font-semibold">{{ $plan[$titleKey] }}</h4>@endif
+                                <ul class="mt-4 space-y-3">
+                                    @foreach($plan[$itemsKey] as $line)
+                                        @include('partials/plan-item', ['line' => $line])
                                     @endforeach
-                                @elseif(filled($plan['year_total'] ?? null))
-                                    <p class="pc-line pc-body mt-4 pt-3 border-t text-xs leading-relaxed">{{ $plan['year_total'] }}</p>
-                                @endif
-                                @if(filled($plan['deposit'] ?? null))
-                                    <p class="pc-line pc-body mt-4 pt-3 border-t text-sm leading-relaxed"><strong class="pc-fg">{{ __('Плащане на старта') }}:</strong> {{ $plan['deposit'] }}</p>
-                                @endif
-                            </div>
-
-                            {{-- Кратко: само заглавията на точките (частта преди „:“). Пълният текст е в „Вижте подробно“. --}}
-                            <div class="relative">
-                                @foreach([['build_items', __('При старта')], ['monthly_items', __('Всеки месец')]] as [$itemsKey, $shortTitle])
-                                    @if(! empty($plan[$itemsKey]))
-                                        <h3 class="pc-accent mt-7 text-xs font-bold uppercase tracking-wider">{{ empty($plan['monthly_items']) ? __('Включва') : $shortTitle }}</h3>
-                                        <ul class="mt-3 space-y-2">
-                                            @foreach($plan[$itemsKey] as $line)
-                                                @include('partials/plan-item', ['line' => str_contains($line, ': ') ? explode(': ', $line, 2)[0] : $line])
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                @endforeach
-                            </div>
-
-                            @if(filled($plan['upgrade_note'] ?? null))
-                                <p class="pc-strong relative mt-6 text-sm font-semibold leading-relaxed">{{ $plan['upgrade_note'] }}</p>
+                                </ul>
                             @endif
-
-                            <details class="group relative mt-6">
-                                <summary class="pc-strong flex cursor-pointer list-none items-center gap-2 text-sm font-semibold [&::-webkit-details-marker]:hidden hover:opacity-80">
-                                    {{ __('Вижте подробно какво включва') }} <x-icon name="chevron-down" class="text-xs group-open:rotate-180" />
-                                </summary>
-                                @foreach([['build_title', 'build_items'], ['monthly_title', 'monthly_items']] as [$titleKey, $itemsKey])
-                                    @if(! empty($plan[$itemsKey]))
-                                        <h4 class="pc-fg mt-5 text-sm font-bold">{{ $plan[$titleKey] }}</h4>
-                                        <ul class="mt-3 space-y-3">
-                                            @foreach($plan[$itemsKey] as $line)
-                                                @include('partials/plan-item', ['line' => $line])
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                @endforeach
-                            </details>
-
-                            <div class="relative mt-auto pt-8">
-                                <a href="{{ lroute('packages') }}?paket={{ $loop->index }}{{ $queryTail }}#oferta" data-p-link class="pc-btn btn-shine group/btn flex w-full items-center justify-center gap-2 text-center px-6 py-4 rounded-2xl font-semibold">
-                                    <span>{{ $buttonText }}</span>
-                                    <x-icon name="arrow-right" class="text-sm" />
-                                </a>
-                            </div>
-                        </article>
+                        @endforeach
                     </div>
                 </div>
             @endforeach
@@ -368,7 +322,7 @@
 {{-- 8. Формата за оферта. --}}
 <section class="pb-16 pt-4 md:pb-24 bg-white dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        @include('partials/quote-form', ['plans' => $plans, 'selectedPlan' => $selectedPlan, 'billingOn' => $billingOn, 'billingMode' => $billingMode])
+        @include('partials/quote-form', ['plans' => $plans, 'selectedPlan' => $selectedPlan])
     </div>
 </section>
 

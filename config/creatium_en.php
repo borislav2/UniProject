@@ -11,7 +11,7 @@ return [
             'description' => 'I build your website so it loads fast, works on a phone, and the forms really reach you.',
             'bio' => [
                 'My part is the website and everything you don\'t see but that has to work. I check every page on a phone, because that is where many of your customers will open it. I make sure the site is fast and secure, and that every enquiry from the form reaches you instead of getting lost on the way. I also set up tracking, so we know what the website brings.',
-                'Programming doesn\'t stop at work: I study software engineering at the University of Veliko Tarnovo. With you, though, I speak without technical words. I tell you what we did and why it matters for your business.',
+                'Programming doesn\'t stop at work. I study software engineering at the University of Veliko Tarnovo. With you, though, I speak without technical words. I tell you what we did and why it matters for your business.',
             ],
             'skills' => ['A website that loads fast', 'Works well on a phone', 'A secure website', 'Enquiries reach you'],
             'image' => 'images/team/borislav-kostadinov.webp',
@@ -22,7 +22,7 @@ return [
             'role' => 'Marketing and SEO',
             'description' => 'I make sure people find you on Google and contact you. And I check that they actually call.',
             'bio' => [
-                'My work starts with how your customers search for you. I set up your Google profile, write the texts, run ads on Google and Meta, and send the emails. I also check whether assistants like ChatGPT find you. In the end I check what matters most: are calls and enquiries coming in?',
+                'My work starts with how your customers search for you. I set up your Google profile, write the texts, run ads on Google and Meta, and send the emails. I also check whether assistants like ChatGPT find you. In the end I check what matters most, whether calls and enquiries are coming in.',
                 'I studied management, then digital marketing at SoftUni, and I keep learning, because something changes here every month. I\'m calm and I don\'t give up easily. If something doesn\'t bring results, I look for the reason and we change it.',
             ],
             'skills' => ['Being found on Google', 'Google profile', 'Google and Meta ads', 'Emails to your customers'],
@@ -34,8 +34,8 @@ return [
     // Страница „Често задавани въпроси“ (/vaprosi). „group“ подрежда въпросите в теми; празно = без тема.
     'questions' => [
         ['q' => 'How is the project budget set?', 'a' => 'The price is fixed and you know it before we start. Starter Engine is €400 one-off (the build and the first month), then €200 a month. Active Marketing and Growth is €800 one-off, then €650 a month. Custom Marketing is from €1,200 a month under a custom quote. With yearly billing you get 2 months free. What exactly you get and by when is written in the quote.', 'group' => 'Prices and payment'],
-        ['q' => 'What is the monthly subscription for?', 'a' => 'To bring real results, a website needs constant care and development, not just to sit there as a business card. The monthly subscription covers round-the-clock technical security, hosting, regular backups and updates, as well as the marketing work: tracking visits in Google Analytics, looking after your Google Maps profile and making sure AI assistants (ChatGPT, Gemini) understand you, email communication and ongoing changes to the site.', 'group' => 'Prices and payment'],
-        ['q' => 'How does payment work?', 'a' => 'The start price is paid in two parts. For Starter Engine: €100 when you request a quote and demo and the remaining €300 when you agree. For Active Marketing and Growth: €200 when you request a quote and demo and the remaining €600 when you agree. The first amount is paid before we prepare the quote and the demo and is not refunded if you decide not to continue. Custom Marketing also has a deposit before the quote and the demo: the amount is set in the custom quote and is not refunded either. The subscription starts in the second month.', 'group' => 'Prices and payment'],
+        ['q' => 'What is the monthly subscription for?', 'a' => 'To bring real results, a website needs constant care and development, not just to sit there as a business card. The monthly subscription covers round-the-clock technical security, hosting, regular backups and updates, as well as the marketing work. That means tracking visits in Google Analytics, looking after your Google Maps profile and making sure AI assistants (ChatGPT, Gemini) understand you, email communication and ongoing changes to the site.', 'group' => 'Prices and payment'],
+        ['q' => 'How does payment work?', 'a' => 'The start price is paid in two parts. For Starter Engine you pay €100 when you request a quote and demo and the remaining €300 when you agree. For Active Marketing and Growth you pay €200 when you request a quote and demo and the remaining €600 when you agree. The first amount is paid before we prepare the quote and the demo and is not refunded if you decide not to continue. Custom Marketing also has a deposit before the quote and the demo. The amount is set in the custom quote and is not refunded either. The subscription starts in the second month.', 'group' => 'Prices and payment'],
         ['q' => 'How long is the monthly price fixed?', 'a' => 'The subscription price is fixed for the first 6 months. After that it may change, and we tell you in advance. With yearly billing the price holds for the whole paid year.', 'group' => 'Prices and payment'],
         ['q' => 'Is the ad budget included in the price?', 'a' => 'No. The ad budget for Facebook and Instagram is paid by you directly to Meta. We monitor the ads and tell you what they bring.', 'group' => 'Prices and payment'],
         ['q' => 'Is there a guarantee?', 'a' => 'Yes. If your website has no traffic 60 days after launch, we refund what you have paid. Visits are measured with Google Analytics, which we set up at the start.', 'group' => 'Prices and payment'],
@@ -46,10 +46,10 @@ return [
         ['q' => 'Can you update our current site instead of building a new one?', 'a' => 'Yes. We start by reviewing your current site and tell you what is worth keeping and what to rework. Sometimes updating is the faster and cheaper way.', 'group' => 'Build and timing'],
         ['q' => 'Do you build online shops?', 'a' => 'Yes. We build online shops with card payments (Stripe, myPOS, Apple Pay, Google Pay), order tracking and automatic emails after purchase.', 'group' => 'Build and timing'],
         ['q' => 'Do you work with businesses outside Sofia?', 'a' => 'Yes. We work with businesses all over Bulgaria. Calls and reviews happen online, so location does not matter.', 'group' => 'Build and timing'],
-        ['q' => 'Why are the website and the marketing done together?', 'a' => 'When the website and the marketing go to different contractors, communication often slows down and things do not line up – the marketing strategy runs into technical limits of the platform, and the website lacks tracking codes and the right structure. When they are designed together, the website is built with analytics, email funnels and SEO architecture in place from the very start.', 'group' => 'Google, ads and AI'],
+        ['q' => 'Why are the website and the marketing done together?', 'a' => 'When the website and the marketing go to different contractors, communication often slows down and things do not line up. The marketing strategy runs into technical limits of the platform, and the website lacks tracking codes and the right structure. When they are designed together, the website is built with analytics, email funnels and SEO architecture in place from the very start.', 'group' => 'Google, ads and AI'],
         ['q' => 'Do you guarantee first place in Google?', 'a' => 'No honest specialist guarantees a ranking. We guarantee the work and a clear monthly report on what has changed.', 'group' => 'Google, ads and AI'],
         ['q' => 'What is visibility in AI assistants?', 'a' => 'More and more people ask ChatGPT or Gemini for a recommendation. AI assistants recommend businesses that clearly describe what they do and where. We structure your site and profiles so they understand them.', 'group' => 'Google, ads and AI'],
-        ['q' => 'Can we make changes to the content ourselves?', 'a' => 'Yes. Websites come with an easy-to-use admin panel. On top of that, your subscription includes our regular support – so when you need to change prices, offers or texts, we can quickly do it for you.', 'group' => 'After launch'],
+        ['q' => 'Can we make changes to the content ourselves?', 'a' => 'Yes. Websites come with an easy-to-use admin panel. On top of that, your subscription includes our regular support. So when you need to change prices, offers or texts, we can quickly do it for you.', 'group' => 'After launch'],
         ['q' => 'What happens if the site goes down?', 'a' => 'We monitor the site around the clock. If it goes down, we get an alert and act at once, and daily backups let us restore it quickly.', 'group' => 'After launch'],
         ['q' => 'Will I know how many enquiries come from the site?', 'a' => 'Yes. We track every enquiry and call, so you see how many customers come from the site and from which channel.', 'group' => 'After launch'],
         ['q' => 'How fast do you reply?', 'a' => 'We reply to every enquiry within one working day at the latest.', 'group' => 'After launch'],
@@ -61,8 +61,8 @@ return [
         'story_title' => 'Why we do it',
         'story' => [
             'The website is ready, the ads are running, and the phone stays silent.',
-            'We saw it again and again. A business pays one person for the website and another for ads. Each does their part, but nobody answers the simple question: are customers coming?',
-            'So we work as one team. Borislav builds the website and the technical side, Vladimir makes sure people find you and contact you. We answer for the whole path: from the first visit to the first enquiry, and after.',
+            'We saw it again and again. A business pays one person for the website and another for ads. Each does their part, but nobody answers the simple question of whether customers are coming.',
+            'So we work as one team. Borislav builds the website and the technical side, Vladimir makes sure people find you and contact you. We answer for the whole path, from the first visit to the first enquiry, and after.',
             'You talk directly to the people who do the work. The price is written in the offer, and you get a reply within one working day. We are with you all the way to results.',
         ],
     ],
@@ -77,7 +77,7 @@ return [
     'home_problem' => [
         'eyebrow' => 'The solution',
         'solution_title' => 'An integrated approach to your digital presence',
-        'solution_text' => 'A customer sees your brand as one whole – from the first encounter online to the final deal. That is why we develop your digital strategy in an integrated way and connect design, technology and marketing into a single mechanism.',
+        'solution_text' => 'A customer sees your brand as one whole, from the first encounter online to the final deal. That is why we develop your digital strategy in an integrated way and connect design, technology and marketing into a single mechanism.',
         'guide_label' => 'The principles we guide you by',
         'guide_items' => [
             [
@@ -101,7 +101,7 @@ return [
         'stats' => [
             ['icon' => 'location-dot', 'value' => '28%', 'text' => 'of searches for a business nearby on a phone end in a purchase', 'meaning' => 'People searching for you are ready to buy. What matters is that they find you right then.', 'source' => 'Google', 'url' => 'https://www.thinkwithgoogle.com/data/local-search-conversion-statistics/'],
             ['icon' => 'store', 'value' => '+70%', 'text' => 'more likely to visit you with a complete Google profile, and 50% more likely to buy', 'meaning' => 'Photos, reviews and accurate opening hours build trust before the first conversation.', 'source' => 'Google', 'url' => 'https://support.google.com/business/answer/10515606'],
-            ['icon' => 'gauge-high', 'value' => '+8.4%', 'text' => 'more purchases in online retail with 0.1 seconds faster loading on a phone', 'meaning' => 'Speed is part of trust: the customer does not wait, does not doubt and reaches you.', 'source' => 'Deloitte, 2020', 'url' => 'https://www.deloitte.com/ie/en/services/consulting/research/milliseconds-make-millions.html'],
+            ['icon' => 'gauge-high', 'value' => '+8.4%', 'text' => 'more purchases in online retail with 0.1 seconds faster loading on a phone', 'meaning' => 'Speed is part of trust. The customer does not wait, does not doubt and reaches you.', 'source' => 'Deloitte, 2020', 'url' => 'https://www.deloitte.com/ie/en/services/consulting/research/milliseconds-make-millions.html'],
             ['icon' => 'envelope-open-text', 'value' => '€38', 'text' => 'returned on average for every €1 spent on keeping in touch with customers by email', 'meaning' => 'People who already know you buy again when you remind them in time.', 'source' => 'Litmus', 'url' => 'https://www.litmus.com/press/litmus-research-finds-email-marketing-roi-is-38-to-1'],
         ],
         'system_title' => 'Everything a customer sees of you is built as one.',
@@ -154,7 +154,7 @@ return [
         'scenarios' => [
             ['label' => 'Scenario 1', 'title' => 'A good-looking site nobody finds', 'text' => "When one team builds the site and another runs the ads, nobody is responsible for the end result. One side says \"the site is done\", the other says \"the problem is the site\", and you pay both."],
             ['label' => 'Scenario 2', 'title' => 'You pay for ads but lose enquiries', 'text' => 'You pour money into Google and Meta ads, but the contact forms are not connected properly. Customers try to reach you, the enquiries get lost on the way, and the ad budget goes to waste.'],
-            ['label' => 'The solution', 'title' => 'Everything in one place. With real results.', 'text' => "We take on the whole process: from coding the site and connecting the forms to your email or CRM to setting up the ads in full.\n\nWe are responsible for the whole system, from the visitor's first click to the first enquiry."],
+            ['label' => 'The solution', 'title' => 'Everything in one place. With real results.', 'text' => "We take on the whole process, from coding the site and connecting the forms to your email or CRM to setting up the ads in full.\n\nWe are responsible for the whole system, from the visitor's first click to the first enquiry."],
         ],
     ],
 
@@ -213,7 +213,7 @@ return [
         // Шестте светещи възела в мрежата на първия екран (една система, не отделни услуги). Празно = мрежата не се показва.
         'network_nodes' => ['Brand', 'Website', 'Google', 'Ads', 'Emails', 'Care'],
         'proof' => [
-            ['value' => 'Google + Meta', 'text' => 'ad tracking is set up: you measure every enquiry and sale', 'link' => ''],
+            ['value' => 'Google + Meta', 'text' => 'ad tracking is set up, so you measure every enquiry and sale', 'link' => ''],
             ['value' => 'Instantly', 'text' => 'every enquiry goes to your email, phone or CRM', 'link' => ''],
             ['value' => '1 click', 'text' => 'you change texts and offers yourself, without waiting for anyone', 'link' => ''],
             ['value' => 'Conversion', 'text' => 'design and structure built to turn visitors into customers', 'link' => ''],
@@ -245,7 +245,7 @@ return [
         'engine_title' => 'The anatomy of your digital engine',
         'engine_subtitle' => 'How we build the path from the first contact to long-term loyalty',
         'engine_button' => 'Explore all services in detail',
-        'engine_text' => 'Success does not end with the first sale. Our engine covers the customer\'s whole journey – from discovering the brand to the moment they become a regular and recommend you to others. Switch off a level and see where the chain breaks.',
+        'engine_text' => 'Success does not end with the first sale. Our engine covers the customer\'s whole journey, from discovering the brand to the moment they become a regular and recommend you to others. Switch off a level and see where the chain breaks.',
         'funnel_levels' => [
             [
                 'icon' => 'magnifying-glass',
@@ -327,7 +327,7 @@ return [
         'value_items' => [
             [
                 'title' => 'Results over decoration',
-                'text' => 'Every web element and structure is designed with one single purpose – to guide the visitor to a call, an enquiry or a purchase. The design subordinates aesthetics to business conversion.',
+                'text' => 'Every web element and structure is designed with one single purpose, to guide the visitor to a call, an enquiry or a purchase. The design subordinates aesthetics to business conversion.',
             ],
             [
                 'title' => 'Exact data instead of assumptions',
@@ -345,7 +345,7 @@ return [
         'fit_title' => 'We work for the growth of your business.',
         'fit_text' => 'We take on projects where we can guarantee a direct effect on the growth of the business. We work with businesses that have a product, a service or a dream, but need to be seen by more people.',
         // Надпис над списъка (по желание).
-        'fit_list_label' => 'We partner with:',
+        'fit_list_label' => 'We partner with',
         'fit_items' => [
             ['title' => 'Businesses with proven quality and limited online reach', 'text' => 'Companies with an excellent reputation on the ground that lose market share to competitors only because they lack precise digital visibility in search engines and AI platforms.'],
             ['title' => 'Sales-driven teams focused on pure conversion', 'text' => 'Organisations for which the website is the main tool for generating qualified deals, quotes and direct sales.'],
@@ -356,7 +356,7 @@ return [
         'principles_title' => 'One system instead of five contractors.',
         'principles_text' => 'We have been doing this for 4 years. The website, Google, emails and maintenance work together when one team builds them.',
         'principle_items' => [
-            ['title' => 'Customer first, decoration second', 'text' => 'Every page leads to one action: a call, an inquiry or a purchase. The design serves that.'],
+            ['title' => 'Customer first, decoration second', 'text' => 'Every page leads to one action. That is a call, an inquiry or a purchase. The design serves that.'],
             ['title' => 'We measure, we don\'t guess', 'text' => 'Every website starts with Google Analytics and Search Console. You see where inquiries come from.'],
             ['title' => 'We are with you all the way to launch', 'text' => 'You work directly with the people who build your website and marketing. Your questions don\'t go through account managers.'],
             ['title' => 'Everything is in your name', 'text' => 'The domain, profiles and access are yours from day one. If you ever leave, you take everything.'],
@@ -389,14 +389,14 @@ return [
                 'Bookings and online payments (Stripe, myPOS, Apple Pay)',
                 'Business email on your own domain',
                 'Easy editing of text, prices and photos',
-                'Demo preview: we launch after your approval',
+                'Demo preview and launch after your approval',
             ],
             'result' => 'A website that works like a salesperson 24/7, collecting enquiries while you work.',
             'package' => 0,
             'faq' => [
-                ['How long does it take?', 'Usually 1–2 weeks, depending on the content. The timeline is in the proposal before we start.'],
+                ['How long does it take?', 'Usually 1 to 2 weeks, depending on the content. The timeline is in the proposal before we start.'],
                 ['Can I change the text myself?', 'Yes, from a simple panel. If you have no time, changes are included in the monthly care plan.'],
-                ['What if I don\'t like it?', 'That is what the demo is for: we make the changes and launch only after you approve.'],
+                ['What if I don\'t like it?', 'That is what the demo is for. We make the changes and launch only after you approve.'],
             ],
         ],
         'seo' => [
@@ -407,17 +407,17 @@ return [
             'lead' => 'People now ask Google and ChatGPT for "the best one nearby". We make sure the answer is you.',
             'problems' => ['Competitors show up before you on Google Maps', 'You have a website, but nobody finds it', 'You don\'t know where customers come from'],
             'includes' => [
-                'Local SEO: Google Maps and "near me" searches',
+                'Local SEO for Google Maps and "near me" searches',
                 'Optimisation for AI search (ChatGPT, Gemini)',
                 'Structured business data (schema)',
                 'Google Analytics and enquiry tracking',
                 'Content and articles that bring buyers',
-                'Monthly report: rankings, enquiries and how AI assistants describe you',
+                'Monthly report with rankings, enquiries and how AI assistants describe you',
             ],
             'result' => 'More people find you on their own, exactly when they look for your service.',
             'package' => 1,
             'faq' => [
-                ['When will I see results?', 'The first Google Maps improvements often show within 1–2 months. SEO compounds: each month builds on the last.'],
+                ['When will I see results?', 'The first Google Maps improvements often show within 1 or 2 months. SEO compounds and each month builds on the last.'],
                 ['What is AI visibility?', 'AI assistants recommend businesses that clearly say what they do and where. We structure your site and profiles so they understand it.'],
                 ['Do you guarantee first place?', 'No honest specialist guarantees a ranking. We guarantee the work and a clear monthly report of what changed.'],
             ],
@@ -431,11 +431,11 @@ return [
             'problems' => ['Reviews go unanswered and bad ones scare new customers away', 'Opening hours, photos or phone are out of date', 'A competitor with a better profile shows up first'],
             'includes' => [
                 'Full Google Business Profile setup',
-                'A reply to every review, good or bad, within 1–2 days',
+                'A reply to every review, good or bad, within 1 or 2 days',
                 'Photos, services, prices and hours always current',
                 'Profile posts with offers and news',
                 'A QR code and link for leaving a review',
-                'Monthly report: views, calls, directions',
+                'Monthly report with views, calls and directions',
             ],
             'result' => 'A profile that looks active and trustworthy, ranks higher on Google Maps and brings calls.',
             'package' => 1,
@@ -457,16 +457,16 @@ return [
                 'Forms and a pop-up that collect subscribers',
                 'Welcome series and an automatic reply to enquiries',
                 'Abandoned cart reminders',
-                'Post-purchase emails: tips, add-ons, reviews',
+                'Post-purchase emails with tips, add-ons and review requests',
                 'Campaigns in Brevo, Mailchimp or Klaviyo',
                 'Inbox, not spam, and a sales report',
             ],
             'result' => 'Customers who come back, and enquiries answered right away, even on a day off.',
             'package' => 1,
             'faq' => [
-                ['I have no email list. Is it worth it?', 'Yes. We start by collecting: a form on the site, a sign-up discount, an email after purchase.'],
+                ['I have no email list. Is it worth it?', 'Yes. We start by collecting addresses through a form on the site, a sign-up discount and an email after purchase.'],
                 ['Won\'t we annoy customers?', 'We write rarely and usefully, with an unsubscribe link in every email. That is why people stay.'],
-                ['Is it GDPR compliant?', 'Yes: consent, one-click unsubscribe and only the data that is needed.'],
+                ['Is it GDPR compliant?', 'Yes. There is consent, one-click unsubscribe and only the data that is needed.'],
             ],
         ],
         'support' => [
@@ -484,11 +484,11 @@ return [
                 'Hosting, domain and SSL certificate',
                 'Changes to prices, offers and text',
             ],
-            'result' => 'Peace of mind: the site is fast, secure and current, and you have someone to call.',
+            'result' => 'Peace of mind. The site is fast, secure and current, and you have someone to call.',
             'package' => 0,
             'faq' => [
                 ['Do you maintain sites you didn\'t build?', 'Yes, after a short review. If there are problems, we say so openly before taking it over.'],
-                ['How fast do you respond?', 'For an outage, as soon as monitoring alerts us. Content changes usually within 1–2 working days.'],
+                ['How fast do you respond?', 'For an outage, as soon as monitoring alerts us. Content changes usually within 1 or 2 working days.'],
                 ['What does the monthly price include?', 'Monitoring, backups, updates and regular content changes. The exact scope is in the package.'],
             ],
         ],
@@ -504,10 +504,10 @@ return [
                 'Images are small or one per product, and titles are short and generic',
             ],
             'includes' => [
-                'A product feed: titles of 70 to 100 characters (brand, type, model, material), descriptions, GTIN, availability and price, updated at least daily',
+                'A product feed with titles of 70 to 100 characters (brand, type, model, material), descriptions, GTIN, availability and price, updated at least daily',
                 'Merchant Center setup, site verification and claim',
-                'The pages Google checks "as a buyer": contacts, company data, shipping, returns, prices and payment, HTTPS',
-                'Data that matches 1:1 in Merchant Center and on the website: name, address, phone, shipping, returns',
+                'The pages Google checks "as a buyer", such as contacts, company data, shipping, returns, prices and payment, and HTTPS',
+                'Data that matches one to one in Merchant Center and on the website, such as name, address, phone, shipping and returns',
                 'Images of at least 500×500 px (required from 31 January 2027) and 5 or more per product',
                 'Structured data for the products on the website',
                 'Purchase tracking in GA4',
@@ -515,13 +515,13 @@ return [
             ],
             'result' => 'A shop with a ready feed, clear policies and working tracking, that does not start from zero on the day Google launches Shopping for Bulgaria.',
             'package' => null,
-            'note' => 'The price is not in a ready package: we set it after a short review of the shop. You can see the first part of the list for free in the website check.',
+            'note' => 'The price is not in a ready package. We set it after a short review of the shop. You can see the first part of the list for free in the website check.',
             'faq' => [
                 ['When does Google Shopping come to Bulgaria?', 'Google announced Shopping for 15 European markets in March 2026, Bulgaria among them. In July Bulgaria was in its documentation, and in August it disappeared from the list. The launch is expected in the first or second quarter of 2027, but there is no official date. Free listings and Shopping ads are not yet available for Bulgaria.'],
-                ['Should I wait for the launch?', 'No. Most of it helps today: clear contacts, shipping and returns, tidy product data and purchase tracking. The shops that have their data ready on launch day win first.'],
+                ['Should I wait for the launch?', 'No. Most of it helps today. Clear contacts, shipping and returns, tidy product data and purchase tracking all count. The shops that have their data ready on launch day win first.'],
                 ['What if my shop is not on WooCommerce or Shopify?', 'The feed is built from product data, and every shop has it. How exactly we get it (a ready extension, an export or a file) depends on the system. That is why we start with a short review of the shop.'],
-                ['What does Google check on the website?', 'It looks at the site as a buyer would: contacts, company data, shipping, returns, prices and payment, and HTTPS. The data in Merchant Center must match the website. Without clear contacts and policies the account can be suspended.'],
-                ['How much does the preparation cost?', 'The price depends on the number of products and the state of the shop, so it is not in a ready package. We tell you after a short review. The consultation is free.'],
+                ['What does Google check on the website?', 'It looks at the site as a buyer would. It checks contacts, company data, shipping, returns, prices and payment, and HTTPS. The data in Merchant Center must match the website. Without clear contacts and policies the account can be suspended.'],
+                ['How much does the preparation cost?', 'The price depends on the number of products and the state of the shop, so it is not in a ready package. We tell you after a short review and a call with you.'],
             ],
         ],
     ],
@@ -548,7 +548,7 @@ return [
                 'slug' => 'email', 'icon' => 'envelope-open-text', 'label' => 'Marketing automation and conversions (retention and sales)',
                 'title' => 'Sales automation',
                 'tag' => 'Turn one-time visitors into loyal customers.',
-                'description' => 'We build smart email systems that talk to your customers at the moments that matter – automatically, without manual work from you.',
+                'description' => 'We build smart email systems that talk to your customers at the moments that matter. Automatically, without manual work from you.',
                 'includes' => ['Automated email funnels after an enquiry or purchase', 'Setup of leading platforms (Klaviyo, Mailchimp, Brevo)', 'Guaranteed deliverability straight to the inbox'],
             ],
             [
@@ -589,6 +589,15 @@ return [
         'exploring' => 'Just exploring',
     ],
 
+    'contact_interests' => [
+        'website' => 'Website design',
+        'seo' => 'SEO and visibility in Google and AI',
+        'google' => 'Google profile and reviews',
+        'ads' => 'Google and Meta ads',
+        'email' => 'Email marketing',
+        'support' => 'Website maintenance',
+    ],
+
     'contact_topics' => [
         'new-system' => 'Building a new digital system (website + marketing)',
         'modernization' => 'Modernising an existing website and marketing optimisation',
@@ -602,15 +611,15 @@ return [
     ],
 
     'plans' => [
-        'intro' => 'Three ways to work together: from a professional online presence to an outside marketing department for your company.',
+        'intro' => 'Three ways to work together, from a professional online presence to an outside marketing department for your company.',
         'billing' => [
             'yearly_months' => 10,
-            'yearly_label' => 'Yearly: 2 months free',
+            'yearly_label' => 'Yearly, 2 months free',
             'note' => 'Yearly billing is 12 months of subscription paid as 10. The subscription starts in the second month, and the start price is paid separately. Custom Marketing is a custom quote.',
         ],
         'trust' => [
-            ['icon' => 'eye', 'text' => 'Approval before launch: you see the website and approve it before it goes live'],
-            ['icon' => 'file-contract', 'text' => 'Payment in two parts: a deposit before the quote and the demo, the rest when you agree'],
+            ['icon' => 'eye', 'text' => 'Approval before launch. You see the website and approve it before it goes live'],
+            ['icon' => 'file-contract', 'text' => 'Payment in two parts. A deposit before the quote and the demo, the rest when you agree'],
             ['icon' => 'lock', 'text' => 'The domain, profiles and access are in your name'],
             ['icon' => 'envelope-open-text', 'text' => 'A reply within 1 working day'],
             ['icon' => 'tag', 'text' => 'A fixed price in the quote'],
@@ -621,11 +630,19 @@ return [
                 'badge' => '',
                 'highlighted' => false,
                 'audience' => 'Everything you need for your business to have a professional online presence.',
-                'prices' => ['€400 start: we build everything and the first month', 'then €200 / month'],
+                'prices' => ['€400 one-off for the build and the first month', 'then €200 / month'],
                 'deposit' => '€100 when you request a quote and demo (non-refundable), the remaining €300 when you agree.',
                 'year_total' => '€2,600 for the first year (€400 + 11 × €200)',
                 'upgrade_note' => '',
                 'button' => '',
+                // Short list for the card (up to 5 lines); the full list is under „See everything included“.
+                'card_items' => [
+                    'Branding',
+                    'Website build',
+                    'Google Business Profile',
+                    'Basic SEO',
+                    'Hosting, support and a monthly report',
+                ],
                 'build_title' => 'What it includes',
                 'build_items' => [
                     'Branding: A logo, colours and a basic visual identity.',
@@ -645,12 +662,20 @@ return [
                 'badge' => 'Recommended',
                 'highlighted' => true,
                 'audience' => 'Not just an online presence, but steady marketing activity that helps your business grow.',
-                'prices' => ['€800 start: we build or fix your current website and the first month', 'then €650 / month'],
+                'prices' => ['€800 one-off to build or fix your current website and the first month', 'then €650 / month'],
                 'deposit' => '€200 when you request a quote and demo (non-refundable), the remaining €600 when you agree.',
                 'year_total' => '€7,950 for the first year (€800 + 11 × €650)',
                 'upgrade_note' => '',
                 'button' => '',
-                'build_title' => 'What it includes: everything in Starter Engine, plus',
+                // Short list for the card (up to 5 lines); the full list is under „See everything included“.
+                'card_items' => [
+                    'Everything in Starter Engine',
+                    'Brand development and a marketing strategy',
+                    'SEO development and review management',
+                    'Management of one advertising platform',
+                    'Email marketing and conversion optimisation',
+                ],
+                'build_title' => 'Includes everything in Starter Engine, plus',
                 'build_items' => [
                     'Brand development and a marketing strategy',
                     'Up to 8 content items a month',
@@ -675,7 +700,15 @@ return [
                 'year_total' => '',
                 'upgrade_note' => '',
                 'button' => 'Book a call',
-                'build_title' => 'What it includes: tailored to your needs, everything in Active Marketing and Growth, plus',
+                // Short list for the card (up to 5 lines); the full list is under „See everything included“.
+                'card_items' => [
+                    'Everything in Active Marketing and Growth, tailored to you',
+                    'A custom marketing strategy',
+                    'Several advertising channels and AI visibility',
+                    'CRM integrations and automations',
+                    'Strategy meetings and priority communication',
+                ],
+                'build_title' => 'Includes, tailored to your needs, everything in Active Marketing and Growth, plus',
                 'build_items' => [
                     'A custom marketing strategy',
                     'Management of several advertising channels',
@@ -711,23 +744,23 @@ return [
             ['title' => 'Enquiry', 'text' => 'You fill in the short form below or call us.'],
             ['title' => 'Call', 'text' => 'We reply within 1 working day and learn what you need.'],
             ['title' => 'Quote and demo', 'text' => 'The first part of the start price is paid before we prepare the quote and the demo. You get a quote with a fixed price and see a demo of the website.'],
-            ['title' => 'Start after you agree', 'text' => 'When you agree, you pay the rest of the start price. The standard time is 1–2 weeks, and the website goes live only after you approve it.'],
+            ['title' => 'Start after you agree', 'text' => 'When you agree, you pay the rest of the start price. The standard time is 1 to 2 weeks, and the website goes live only after you approve it.'],
         ],
         'terms_title' => 'Terms you know in advance',
         'terms' => [
             ['title' => 'A fixed price', 'text' => 'The price and what you get are written in the quote.'],
-            ['title' => 'The start price in two parts', 'text' => 'For Starter Engine: €100 when you request a quote and demo (non-refundable), the remaining €300 when you agree. For Active Marketing and Growth: €200 when you request a quote and demo (non-refundable), the remaining €600 when you agree. The first amount is paid before we prepare the quote and the demo and is not refunded if you decide not to continue.'],
+            ['title' => 'The start price in two parts', 'text' => 'For Starter Engine you pay €100 when you request a quote and demo (non-refundable) and the remaining €300 when you agree. For Active Marketing and Growth you pay €200 when you request a quote and demo (non-refundable) and the remaining €600 when you agree. The first amount is paid before we prepare the quote and the demo and is not refunded if you decide not to continue.'],
             ['title' => 'Subscription from the second month', 'text' => 'The first month is in the start price. After that the subscription is €200 / month for Starter Engine and €650 / month for Active Marketing and Growth. Custom Marketing is from €1,200 / month under a custom quote.'],
-            ['title' => 'Yearly billing: 2 months free', 'text' => 'The yearly subscription is €2,000 instead of €2,400 for Starter Engine and €6,500 instead of €7,800 for Active Marketing and Growth. It is paid once for 12 months, counted from the second month.'],
-            ['title' => 'Subscription: price for 6 months', 'text' => 'The subscription price is fixed for the first 6 months. After that it may change, and we tell you in advance. With yearly billing the price holds for the whole paid year.'],
+            ['title' => 'Yearly billing with 2 months free', 'text' => 'The yearly subscription is €2,000 instead of €2,400 for Starter Engine and €6,500 instead of €7,800 for Active Marketing and Growth. It is paid once for 12 months, counted from the second month.'],
+            ['title' => 'Fixed subscription price for 6 months', 'text' => 'The subscription price is fixed for the first 6 months. After that it may change, and we tell you in advance. With yearly billing the price holds for the whole paid year.'],
             ['title' => 'Facebook and Instagram ads', 'text' => 'The ad budget for Facebook and Instagram is paid by you directly to Meta. We monitor the ads and tell you what they bring.'],
             ['title' => 'What the monthly fee covers', 'text' => 'We set up and look after hosting, the domain and business email addresses. Plus technical support, regular backups and a monthly report. The content items and the marketing depend on the package.'],
             ['title' => 'Everything is in your name', 'text' => 'The domain, profiles and access are yours from day one. If you decide to leave, you take everything with you.'],
-            ['title' => 'Timing', 'text' => 'Normally 1–2 weeks to build. We agree the deadline at the start and keep to it.'],
+            ['title' => 'Timing', 'text' => 'Normally 1 to 2 weeks to build. We agree the deadline at the start and keep to it.'],
             ['title' => 'Honest about Google', 'text' => 'We do not promise a Google ranking. We stand behind our work and give you a clear monthly report of what has changed.'],
         ],
         'guarantee' => [
-            'title' => 'Guarantee: we refund you',
+            'title' => 'Money-back guarantee',
             'text' => 'If your website has no traffic 60 days after launch, we refund what you have paid.',
             'note' => 'Visits are measured with Google Analytics, which we set up at the start, and you see them too.',
         ],

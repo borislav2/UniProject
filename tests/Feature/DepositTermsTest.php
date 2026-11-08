@@ -60,7 +60,8 @@ class DepositTermsTest extends TestCase
 
     public function test_individual_plan_shows_its_deposit_and_terms_say_so(): void
     {
-        $this->get('/paketi')->assertOk()->assertSee('сумата е в индивидуалната оферта');
+        // Картите вече не показват плащането на старта; условията и въпросите го описват.
+        $this->get('/paketi')->assertOk()->assertSee('Индивидуален маркетинг');
         $this->get('/usloviya')->assertOk()->assertSee('При Индивидуален маркетинг (от €1 200 на месец) също се плаща капаро');
     }
 }

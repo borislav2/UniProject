@@ -80,7 +80,7 @@ class ClientEmailsTest extends TestCase
             ->assertSee('value="maria@salon.bg"', false)
             ->assertSee('value="Мария Петрова"', false)
             ->assertSee('value="Екипът на Creatium Lab"', false)
-            ->assertSee('value="{business}: предложение за постоянен растеж | Creatium Lab"', false)
+            ->assertSee('value="Предложение за постоянен растеж за {business} | Creatium Lab"', false)
             ->assertSee('Какво включва')->assertSee('<details', false)
             ->assertSee('value="800"', false)->assertSee('value="650"', false)
             ->assertSee('value="' . now()->addDays(7)->toDateString() . '"', false);
@@ -143,7 +143,7 @@ class ClientEmailsTest extends TestCase
 
             return $mail->hasTo('maria@salon.bg')
                 && $mail->hasReplyTo(config('creatium.contact.email'))
-                && $mail->hasSubject('Студио Лавандула: предложение за постоянен растеж | Creatium Lab')
+                && $mail->hasSubject('Предложение за постоянен растеж за Студио Лавандула | Creatium Lab')
                 && str_contains($html, 'Здравейте, Мария')
                 && str_contains($html, '€800')
                 && str_contains($html, 'валидно до ' . now()->addWeek()->format('d.m.Y'))
@@ -153,7 +153,7 @@ class ClientEmailsTest extends TestCase
 
         $log = ClientEmail::sole();
         $this->assertSame('offer-active', $log->template);
-        $this->assertSame('Студио Лавандула: предложение за постоянен растеж | Creatium Lab', $log->subject);
+        $this->assertSame('Предложение за постоянен растеж за Студио Лавандула | Creatium Lab', $log->subject);
         $this->assertSame('До 8 съдържателни единици месечно', ClientEmails::lines($log->data['includes'])[3]);
         $this->assertSame(array_keys(ClientEmails::find('offer-active')['fields']), array_keys($log->data));
         $this->assertNotNull($log->sent_at);
@@ -289,7 +289,7 @@ class ClientEmailsTest extends TestCase
         $this->assertStringContainsString('за Студио Лавандула е фиксирана.', $html);
         $this->assertStringNotContainsString('{business}', $html);
         $this->assertStringNotContainsString('{client_name}', $html);
-        $this->assertStringContainsString('subject=' . rawurlencode('Одобрявам предложението: Студио Лавандула'), $html);
+        $this->assertStringContainsString('subject=' . rawurlencode('Одобрявам предложението, Студио Лавандула'), $html);
         $this->assertStringContainsString('Пакетът включва', $html);
     }
 

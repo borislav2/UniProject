@@ -78,15 +78,12 @@ class PageController extends Controller
         $selected = request()->integer('paket', -1);
         $faq = \App\Support\Plans::faq($plans, (array) site('questions'));
 
-        // Месечно / годишно плащане: състоянието идва от ?plashtane=godishno, така страницата е пълна и без JavaScript;
-        // невалидна стойност дава месечното. Без отстъпка за годишно плащане превключвателят се скрива.
+        // Картите показват само годишния абонамент (собствениците, ноември 2026), без превключвател и без ?plashtane.
         $billing = \App\Support\PlanBilling::config($plans);
-        $mode = $billing['enabled'] ? \App\Support\PlanBilling::billingFrom(request()->query('plashtane')) : \App\Support\PlanBilling::MONTHLY;
 
         return view('packages', [
             'plans' => $plans,
             'billing' => $billing,
-            'billingMode' => $mode,
             'faq' => $faq,
             // „Получете оферта“ под всеки пакет води към формата с избрания пакет (?paket=N#oferta).
             'selectedPlan' => array_key_exists($selected, $plans['items'] ?? []) ? $selected : null,
@@ -227,36 +224,36 @@ class PageController extends Controller
             '',
             '> ' . __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.') . ' ' . site('services_page')['intro'],
             '',
-            'Екип в ' . __($contact['city']) . ', България, който работи с бизнеси. Сайт на български: ' . lroute('home', [], 'bg') . ', на английски: ' . lroute('home', [], 'en'),
+            'Екип в ' . __($contact['city']) . ', България, който работи с бизнеси. Сайтът на български е на ' . lroute('home', [], 'bg') . ', на английски на ' . lroute('home', [], 'en') . '.',
             '',
             '## Услуги',
             '',
         ];
         foreach (site('service_pages') as $key => $service) {
-            $lines[] = '- [' . $service['title'] . '](' . self::serviceUrl($key, 'bg') . '): ' . $service['lead'];
+            $lines[] = '- [' . $service['title'] . '](' . self::serviceUrl($key, 'bg') . '). ' . $service['lead'];
         }
-        $lines[] = '- [Безплатна проверка на сайт](' . lroute('site-check', [], 'bg') . '): въвеждате адреса и имейл и получавате отчет за минута.';
+        $lines[] = '- [Безплатна проверка на сайт](' . lroute('site-check', [], 'bg') . '). Въвеждате адреса и имейл и получавате отчет за минута.';
         $lines[] = '';
         $lines[] = '## Сайт за бранш';
         $lines[] = '';
         foreach (site('industry_pages') as $slug => $industry) {
-            $lines[] = '- [' . $industry['title'] . '](' . route('industry', $slug) . '): ' . $industry['lead'];
+            $lines[] = '- [' . $industry['title'] . '](' . route('industry', $slug) . '). ' . $industry['lead'];
         }
         $lines[] = '';
         $lines[] = '## Пакети и цени';
         $lines[] = '';
         $plansBg = app(\App\Support\Content::class)->withDefaults('plans', 'bg');
         array_push($lines, ...\App\Support\PlanBilling::textLines($plansBg, true));
-        $lines[] = '- Всички пакети: ' . lroute('packages', [], 'bg');
+        $lines[] = '- Всички пакети на ' . lroute('packages', [], 'bg');
         $lines[] = '';
         $lines[] = '## Контакти';
         $lines[] = '';
-        $lines[] = '- Имейл: ' . $contact['email'];
+        $lines[] = '- Имейл ' . $contact['email'];
         foreach ($contact['phones'] as $phone) {
-            $lines[] = '- Телефон: ' . $phone;
+            $lines[] = '- Телефон ' . $phone;
         }
-        $lines[] = '- Безплатна консултация: ' . lroute('contact', [], 'bg') . '#konsultatsiya';
-        $lines[] = '- Проекти и концепции за сайтове: ' . lroute('portfolio', [], 'bg');
+        $lines[] = '- Запазете час за разговор на ' . lroute('contact', [], 'bg') . '#konsultatsiya';
+        $lines[] = '- Проекти и концепции за сайтове на ' . lroute('portfolio', [], 'bg');
 
         return response(implode("\n", $lines) . "\n")->header('Content-Type', 'text/markdown; charset=UTF-8');
     }

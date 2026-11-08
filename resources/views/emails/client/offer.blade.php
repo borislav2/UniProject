@@ -254,9 +254,9 @@
 @if($cta !== '')
 <tr><td style="padding:30px 36px 0;" align="center">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-<td bgcolor="#0f1a2b" style="background:#0f1a2b;border-radius:10px;"><a href="mailto:{{ $contact['email'] }}?subject={{ rawurlencode($cta . ': ' . $business) }}" style="display:inline-block;padding:16px 34px;{{ $f }}font-size:16px;font-weight:bold;color:#ffffff;text-decoration:none;">{{ $cta }}</a></td>
+<td bgcolor="#0f1a2b" style="background:#0f1a2b;border-radius:10px;"><a href="mailto:{{ $contact['email'] }}?subject={{ rawurlencode($cta . ', ' . $business) }}" style="display:inline-block;padding:16px 34px;{{ $f }}font-size:16px;font-weight:bold;color:#ffffff;text-decoration:none;">{{ $cta }}</a></td>
 </tr></table>
-@if($phone)<div style="{{ $f }}font-size:13px;line-height:1.6;color:#64748b;padding-top:12px;">или се обадете: <a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}" style="color:#2d63a3;font-weight:bold;text-decoration:none;">{{ $phone }}</a></div>@endif
+@if($phone)<div style="{{ $f }}font-size:13px;line-height:1.6;color:#64748b;padding-top:12px;">или се обадете на <a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}" style="color:#2d63a3;font-weight:bold;text-decoration:none;">{{ $phone }}</a></div>@endif
 </td></tr>
 @endif
 

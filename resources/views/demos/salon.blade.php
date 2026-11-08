@@ -64,7 +64,7 @@
     <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
         <div>
             <h2 class="demo-serif text-4xl">Запишете час</h2>
-            <p class="mt-3 text-[#cbbfdc]">Понеделник – Събота, 9:00 – 20:00</p>
+            <p class="mt-3 text-[#cbbfdc]">От понеделник до събота, от 9:00 до 20:00</p>
             <p class="mt-6 flex items-center gap-3"><x-icon name="location-dot" class="text-[#c9b3e6]" /> ул. „Черни връх“ 40, София</p>
             <p class="mt-3 flex items-center gap-3"><x-icon name="phone" class="text-[#c9b3e6]" /> +359 2 000 0000</p>
         </div>

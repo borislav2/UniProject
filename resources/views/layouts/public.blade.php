@@ -110,7 +110,7 @@
         <!-- End Google Tag Manager (noscript) -->
     @endif
     @php
-        // Главно меню: Услуги ▾ · Пакети · Проекти · За нас ▾ и бутон „Изчислете ползата“ към калкулатора.
+        // Главно меню: Услуги ▾ · Пакети · Проекти · За нас ▾ и бутон „Получете оферта“ към формата на /paketi (собствениците, ноември 2026).
         $is = fn (...$patterns) => collect($patterns)->contains(fn ($p) => request()->routeIs($p, 'en.' . $p));
         $serviceLinks = [[__('Всички услуги'), lroute('services'), $is('services'), 'list-ul']];
         foreach (site('service_pages') as $key => $servicePage) {
@@ -130,7 +130,7 @@
             ['label' => __('За нас'), 'children' => $aboutLinks, 'active' => $is('about', 'blog.*', 'contact')],
         ];
         // Бутонът в менюто води към калкулатора на началната страница (собствениците, ноември 2026).
-        $calculatorUrl = lroute('services') . '#kalkulator';
+        $offerUrl = lroute('packages') . '#oferta';
         $languages = ['bg' => ['BG', 'Български'], 'en' => ['EN', 'English']];
     @endphp
 
@@ -139,7 +139,7 @@
       <div class="mx-auto max-w-7xl rounded-2xl border border-white/60 bg-white shadow-[0_10px_30px_-14px_rgb(15_26_43/0.3)] backdrop-blur-xl backdrop-saturate-150">
         <nav class="px-4 sm:px-5" aria-label="{{ __('Основна навигация') }}">
             <div class="flex justify-between items-center h-14 md:h-16">
-                <a href="{{ lroute('home') }}" class="flex items-center shrink-0" aria-label="{{ __('Creatium Lab - начало') }}">
+                <a href="{{ lroute('home') }}" class="flex items-center shrink-0" aria-label="{{ __('Creatium Lab, начало') }}">
                     <img src="{{ asset('images/logo.webp') }}" srcset="{{ asset('images/logo-224.webp') }} 224w, {{ asset('images/logo-352.webp') }} 352w, {{ asset('images/logo.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" fetchpriority="high" class="h-7 md:h-8 w-auto">
                 </a>
 
@@ -170,7 +170,7 @@
                         @endif
                     @endforeach
 
-                    <a href="{{ $calculatorUrl }}" class="btn-shine ml-2 whitespace-nowrap rounded-xl bg-brand-950 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800">{{ __('Изчислете ползата') }}</a>
+                    <a href="{{ $offerUrl }}" class="btn-shine ml-2 whitespace-nowrap rounded-xl bg-brand-950 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800">{{ __('Получете оферта') }}</a>
 
                     <div class="ml-3 flex items-center rounded-lg border border-gray-200 p-0.5 text-xs font-bold" role="group" aria-label="{{ __('Език') }}">
                         @foreach($languages as $code => [$short, $name])
@@ -230,7 +230,7 @@
                         <a href="{{ $item['href'] }}" class="block px-3 py-2.5 rounded-lg font-medium {{ $item['active'] ? 'text-brand-700 bg-brand-50' : 'text-gray-700 hover:bg-gray-50' }}">{{ $item['label'] }}</a>
                     @endif
                 @endforeach
-                <a href="{{ $calculatorUrl }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold">{{ __('Изчислете ползата') }}</a>
+                <a href="{{ $offerUrl }}" class="block px-3 py-3 bg-brand-950 text-white rounded-xl mt-2 text-center font-semibold">{{ __('Получете оферта') }}</a>
                 @auth
                     <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-gray-500">{{ __('Административен панел') }}</a>
                     <form action="{{ route('logout') }}" method="POST">
@@ -295,7 +295,7 @@
 
             @if($locale === 'bg')
                 <nav class="border-t border-white/10 py-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-400" aria-label="Сайт за бранш">
-                    <span class="font-semibold text-gray-300">Сайт за:</span>
+                    <span class="font-semibold text-gray-300">Изработка на сайт за</span>
                     @foreach(config('creatium.industry_pages') as $industrySlug => $industry)
                         <a href="{{ route('industry', $industrySlug) }}" class="hover:text-white">{{ $industry['menu'] }}</a>
                     @endforeach

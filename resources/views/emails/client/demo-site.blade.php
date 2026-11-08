@@ -8,7 +8,7 @@
 
 @section('eyebrow', 'Демо на вашия сайт')
 @section('headline'){{ $data['client_name'] }}, ето демото за {{ $data['business'] }}@endsection
-@section('sub', 'Както се разбрахме по телефона: разгледайте го спокойно, когато ви е удобно.')
+@section('sub', 'Както се разбрахме по телефона, разгледайте го спокойно, когато ви е удобно.')
 
 @section('body')
 <tr><td style="padding:32px 36px 0;{{ $f }}font-size:15px;line-height:1.65;color:#1f2a3a;">
@@ -25,7 +25,7 @@
 <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
 <td bgcolor="#0f1a2b" style="background:#0f1a2b;border-radius:10px;"><a href="{{ $url }}" style="display:inline-block;padding:15px 30px;{{ $f }}font-size:16px;font-weight:bold;color:#ffffff;text-decoration:none;">Вижте демото &rarr;</a></td>
 </tr></table>
-<div style="{{ $f }}font-size:12px;line-height:1.5;color:#64748b;padding-top:10px;word-break:break-all;">Ако бутонът не се отваря: <a href="{{ $url }}" style="color:#2d63a3;">{{ $url }}</a></div>
+<div style="{{ $f }}font-size:12px;line-height:1.5;color:#64748b;padding-top:10px;word-break:break-all;">Ако бутонът не се отваря, ползвайте този адрес <a href="{{ $url }}" style="color:#2d63a3;">{{ $url }}</a></div>
 </td></tr>
 @else
 <tr><td style="padding:28px 36px 0;">
@@ -39,7 +39,7 @@
 @include('emails.client._parts', ['part' => 'label', 'text' => 'На какво да обърнете внимание'])
 <div style="height:4px;line-height:4px;font-size:0;">&nbsp;</div>
 @include('emails.client._parts', ['part' => 'checklist', 'items' => [
-    $url ? 'Отворете го и от телефона: оттам ще ви търсят повечето клиенти.' : 'Как изглежда и на телефона: оттам ще ви търсят повечето клиенти.',
+    $url ? 'Отворете го и от телефона. Оттам ще ви търсят повечето клиенти.' : 'Вижте как изглежда и на телефона. Оттам ще ви търсят повечето клиенти.',
     'Колко бързо се стига до бутона за обаждане и до формата за запитване.',
     'Дали услугите и информацията са подредени така, както клиентите ви питат за тях.',
 ]])
@@ -58,8 +58,8 @@
 <div style="height:4px;line-height:4px;font-size:0;">&nbsp;</div>
 @include('emails.client._parts', ['part' => 'steps', 'items' => [
     ['Разгледайте демото,', 'когато ви е удобно.'],
-    ['Кажете ни впечатленията си:', 'какво ви харесва и какво бихте сменили. Достатъчно е да отговорите на този имейл.'],
-    ['Подготвяме сайта за вас:', 'с вашите услуги, снимки и контакти, и ви го показваме преди да тръгне.'],
+    ['Кажете ни впечатленията си.', 'Какво ви харесва и какво бихте сменили? Достатъчно е да отговорите на този имейл.'],
+    ['Подготвяме сайта за вас.', 'Слагаме вашите услуги, снимки и контакти и ви го показваме преди да тръгне.'],
 ]])
 </td></tr>
 

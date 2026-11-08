@@ -48,7 +48,7 @@ class BookingTest extends TestCase
 
         $this->post('/kontakti', $this->payload(['consultation' => '2026-10-19 11:00']))
             ->assertSessionHasNoErrors()
-            ->assertSessionHas('success', 'Получихме запитването ви. Ще ви се обадим на понеделник, 19 октомври, 11:00 за консултацията.');
+            ->assertSessionHas('success', 'Получихме запитването ви. Ще ви се обадим на понеделник, 19 октомври, 11:00 за разговора.');
 
         $lead = Project::firstOrFail();
         $this->assertSame('2026-10-19 08:00:00', $lead->consultation_at->utc()->format('Y-m-d H:i:s'));

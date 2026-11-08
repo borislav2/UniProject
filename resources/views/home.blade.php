@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', __('Изработка на сайтове и дигитален маркетинг от €400'))
-@section('meta_description', __('Сайт, който носи запитвания, плюс видимост в Google, Google Maps и ChatGPT. За бизнеси в България: фиксирана цена и калкулатор на ползата.'))
+@section('meta_description', __('Сайт, който носи запитвания, плюс видимост в Google, Google Maps и ChatGPT. За бизнеси в България, с фиксирана цена и калкулатор на ползата.'))
 
 @push('head')
 @php

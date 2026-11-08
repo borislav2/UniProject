@@ -11,7 +11,7 @@
         ['profile', __('Попълнен Google профил със снимки, отзиви и работно време'), 'visits', 20, __('повече хора ви намират в Google Maps'), false],
         ['seo', __('SEO и видимост в AI асистентите (ChatGPT, Gemini)'), 'visits', 25, __('повече посещения от търсения'), false],
         ['ads', __('Реклама в Google и Meta, насочена към вашия град'), 'visits', 30, __('повече посещения от хора, които търсят сега'), false],
-        ['brand', __('Единен бранд: лого, цветове и тон навсякъде'), 'conv', 5, __('повече доверие, повече хора ви пишат'), true],
+        ['brand', __('Единен бранд с лого, цветове и тон навсякъде'), 'conv', 5, __('повече доверие, повече хора ви пишат'), true],
         ['speed', __('Сайтът се отваря бързо на телефон'), 'conv', 8, __('повече запитвания от същите посещения'), false],
         ['cta', __('Бутон за обаждане и кратка форма на всяка страница'), 'conv', 20, __('по-лесно е да ви пишат'), true],
         ['email', __('Автоматични имейли след запитване и покупка'), 'leads', 10, __('повече хора се връщат и пишат отново'), false],
@@ -31,9 +31,9 @@
     $afterConv = $nowConv * $factors['conv'];
     $afterLeads = $afterVisits * $afterConv / 100 * $factors['leads'];
     $rows = [
-        ['visits', __('Видимост: посещения на месец'), $calcVisits, $afterVisits, 0, ''],
+        ['visits', __('Видимост в посещения на месец'), $calcVisits, $afterVisits, 0, ''],
         ['leads', __('Запитвания на месец'), $calcLeads, $afterLeads, 0, ''],
-        ['conv', __('Конверсия: от посетителите ви пишат'), $nowConv, $afterConv, 1, '%'],
+        ['conv', __('Конверсия, или колко от посетителите ви пишат'), $nowConv, $afterConv, 1, '%'],
     ];
 @endphp
 <section id="kalkulator" class="relative py-20 md:py-28 bg-white scroll-mt-24 dark:bg-ink-950" data-calc data-locale="{{ $bg ? 'bg-BG' : 'en-GB' }}">
@@ -81,7 +81,7 @@
                                         <span class="font-semibold text-gray-200">{{ $label }}</span>
                                         <span class="tabular-nums"><span class="text-gray-400" data-calc-out="{{ $key }}Now">{{ $num($now, $decimals) }}{{ $unit }}</span> → <strong class="text-lg text-white" data-calc-out="{{ $key }}After">{{ $num($after, $decimals) }}{{ $unit }}</strong> <span class="ml-1 rounded-full bg-emerald-400/15 px-2 py-0.5 text-xs font-bold text-emerald-300" data-calc-out="{{ $key }}Up">+{{ $num(($after / max(0.0001, $now) - 1) * 100) }}%</span></span>
                                     </div>
-                                    <div class="mt-2 h-2.5 overflow-hidden rounded-full bg-emerald-400/70" title="{{ __('Зелено: с подобренията') }}">
+                                    <div class="mt-2 h-2.5 overflow-hidden rounded-full bg-emerald-400/70" title="{{ __('Зелено означава с подобренията') }}">
                                         <div class="h-full rounded-full bg-brand-400 transition-[width] duration-500" style="width: {{ min(100, $now / max(0.0001, $after) * 100) }}%" data-calc-bar="{{ $key }}"></div>
                                     </div>
                                 </div>
@@ -100,13 +100,13 @@
                         @foreach($calcItems as [$key, $label, $area, $pct, $why, $has])
                             <li class="flex items-start gap-3 text-sm {{ $has ? 'hidden' : '' }}" data-calc-improve="{{ $key }}">
                                 <span class="mt-0.5 shrink-0 rounded-full bg-brand-50 px-2 py-0.5 text-xs font-bold text-brand-700 dark:bg-white/10 dark:text-brand-300">+{{ $pct }}%</span>
-                                <span class="text-gray-700 dark:text-gray-300"><strong class="text-brand-950 dark:text-white">{{ $label }}</strong>: {{ $why }}</span>
+                                <span class="text-gray-700 dark:text-gray-300"><strong class="block text-brand-950 dark:text-white">{{ $label }}</strong>{{ \Illuminate\Support\Str::ucfirst($why) }}</span>
                             </li>
                         @endforeach
                     </ul>
-                    <p class="mt-3 hidden text-sm text-gray-600 dark:text-gray-300" data-calc-all>{{ __('Имате основите. Ще ги поддържаме и ще търсим къде още да растете: на консултация ще видим вашите числа.') }}</p>
+                    <p class="mt-3 hidden text-sm text-gray-600 dark:text-gray-300" data-calc-all>{{ __('Имате основите. Ще ги поддържаме и ще търсим къде още да растете. На разговор ще видим вашите числа.') }}</p>
                 </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Синьо: сега. Зелено: с подобренията.') }} {{ __('Сметката е ориентировъчна. Процентите са умерени оценки по данни на Google и Deloitte и от нашата работа; реалният резултат зависи от бранша, града и конкуренцията. Не обещаваме конкретен резултат.') }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Синьото е сега, зеленото е с подобренията.') }} {{ __('Сметката е ориентировъчна. Процентите са умерени оценки по данни на Google и Deloitte и от нашата работа; реалният резултат зависи от бранша, града и конкуренцията. Не обещаваме конкретен резултат.') }}</p>
             </div>
         </div>
     </div>

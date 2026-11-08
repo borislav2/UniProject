@@ -1,11 +1,11 @@
-{{-- Ден и час за консултация (по избор). Без JavaScript се виждат всички дни един под друг; със скрипта се показва само избраният. --}}
+{{-- Ден и час за разговор (по избор). Без JavaScript се виждат всички дни един под друг; със скрипта се показва само избраният. --}}
 @php
     $bookingDays = \App\Support\Booking::days();
     $selectedSlot = old('consultation');
     $selectedDay = $selectedSlot ? substr($selectedSlot, 0, 10) : $bookingDays[0]['date']->format('Y-m-d');
 @endphp
 <fieldset id="konsultatsiya" class="min-w-0 scroll-mt-28 rounded-2xl border border-gray-200 p-4 dark:border-white/15" data-booking>
-    <legend class="px-1 text-sm font-medium text-gray-700 dark:text-gray-200">{{ __('Ден и час за консултация') }} <span class="text-gray-500 font-normal dark:text-gray-400">{{ __('(по избор)') }}</span></legend>
+    <legend class="px-1 text-sm font-medium text-gray-700 dark:text-gray-200">{{ __('Ден и час за разговор') }} <span class="text-gray-500 font-normal dark:text-gray-400">{{ __('(по избор)') }}</span></legend>
     <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('Изберете удобен час и ще ви се обадим тогава. Разговорът е около :minutes минути.', ['minutes' => config('creatium.booking.minutes')]) }}</p>
 
     <div class="mt-3 -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:thin] hidden" data-booking-days role="tablist" aria-label="{{ __('Ден') }}">
@@ -55,7 +55,7 @@
         function update() {
             var checked = box.querySelector('input[name="consultation"]:checked');
             clear.classList.toggle('hidden', !checked);
-            summary.textContent = checked ? @json(__('Избрахте:')) + ' ' + checked.closest('[data-day-panel]').querySelector('[data-day-title]').textContent + ', ' + checked.value.slice(11) : '';
+            summary.textContent = checked ? @json(__('Избрахте')) + ' ' + checked.closest('[data-day-panel]').querySelector('[data-day-title]').textContent + ', ' + checked.value.slice(11) : '';
         }
         tabs.addEventListener('click', function (e) { var b = e.target.closest('[data-day]'); if (b) show(b.dataset.day); });
         box.addEventListener('change', update);

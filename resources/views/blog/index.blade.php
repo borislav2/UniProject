@@ -2,7 +2,7 @@
 
 @section('title', $category ? __('Новини за :category', ['category' => $category->trOrBg('name')]) : __('Новини за клиенти от Google и ChatGPT'))
 @section('breadcrumb', $category ? $category->trOrBg('name') : '')
-@section('meta_description', $category ? __('Статии от категория „:category“: практични съвети за бизнеси, просто и с примери.', ['category' => $category->trOrBg('name')]) : __('Практични статии за собственици на бизнес. Как да ви намират в Google и ChatGPT, какво трябва да има сайтът и кои реклами и имейли се изплащат.'))
+@section('meta_description', $category ? __('Статии от категория „:category“. Практични съвети за бизнеси, просто и с примери.', ['category' => $category->trOrBg('name')]) : __('Практични статии за собственици на бизнес. Как да ви намират в Google и ChatGPT, какво трябва да има сайтът и кои реклами и имейли се изплащат.'))
 
 @section('content')
 @include('partials/page-header', ['eyebrow' => $category ? __('Новини') : null, 'heading' => $category ? $category->trOrBg('name') : __('Новини'), 'sub' => __('Практични съвети как клиентите да ви намират в Google и ChatGPT и да ви пишат.')])

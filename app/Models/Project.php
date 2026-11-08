@@ -143,7 +143,7 @@ class Project extends Model
         return match (true) {
             $this->service === self::SITE_CHECK_SERVICE => 'site-check',
             $this->service === self::CHAT_SERVICE => 'chat',
-            str_starts_with((string) $this->service, 'Оферта: ') => 'quote',
+            str_starts_with((string) $this->service, 'Оферта: ') || str_starts_with((string) $this->service, 'Оферта за ') => 'quote',
             default => 'form',
         };
     }

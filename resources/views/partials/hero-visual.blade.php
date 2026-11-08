@@ -84,7 +84,7 @@
                                 <div class="flex flex-col rounded-md bg-white/[0.05] ring-1 ring-white/10 p-[5%]">
                                     <span class="font-semibold text-[#8ab4f8]">Tag Manager</span>
                                     <span class="mt-auto space-y-1 text-gray-300">
-                                        @foreach(['GA4 · ' . __('конфигурация'), __('Конверсия: запитване'), 'Consent Mode v2'] as $tag)
+                                        @foreach(['GA4 · ' . __('конфигурация'), __('Конверсия при запитване'), 'Consent Mode v2'] as $tag)
                                             <span class="flex items-center gap-1"><span class="text-emerald-400">✓</span><span class="truncate">{{ $tag }}</span></span>
                                         @endforeach
                                     </span>
@@ -143,7 +143,7 @@
                 <p class="ml-auto w-fit max-w-[90%] rounded-xl rounded-br-sm bg-brand-500/30 px-2.5 py-1.5 text-[10px] text-white">{{ __('Къде да вечерям в Пловдив?') }}</p>
                 <div class="grid">
                     <span class="ai-typing col-start-1 row-start-1 flex w-fit gap-1 rounded-xl rounded-bl-sm bg-white/10 px-2.5 py-2"><span class="typing-dot"></span><span class="typing-dot" style="animation-delay: .15s"></span><span class="typing-dot" style="animation-delay: .3s"></span></span>
-                    <p class="ai-answer col-start-1 row-start-1 w-fit max-w-[95%] rounded-xl rounded-bl-sm bg-white/10 px-2.5 py-1.5 text-[10px] leading-snug text-gray-200">{!! __('Препоръчвам :name: домашна кухня и резервация онлайн.', ['name' => '<strong class="text-white">' . e(__('ресторант „Лозата“')) . '</strong>']) !!}</p>
+                    <p class="ai-answer col-start-1 row-start-1 w-fit max-w-[95%] rounded-xl rounded-bl-sm bg-white/10 px-2.5 py-1.5 text-[10px] leading-snug text-gray-200">{!! __('Препоръчвам :name. Домашна кухня и резервация онлайн.', ['name' => '<strong class="text-white">' . e(__('ресторант „Лозата“')) . '</strong>']) !!}</p>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', __('Въпроси за изработка на сайт: цена, срокове, SEO'))
+@section('title', __('Въпроси за изработка на сайт, цена, срокове и SEO'))
 @section('meta_description', __('Отговори на най-честите въпроси за цени, плащане, срокове, Google и AI видимост и грижата за сайта след пускането.'))
 
 @push('head')
@@ -32,8 +32,8 @@
             @endif
             <div class="mt-8 hidden lg:block rounded-2xl bg-brand-50/70 p-6 dark:bg-white/[0.04]">
                 <p class="font-bold text-brand-950 dark:text-white">{{ __('Не намерихте отговор?') }}</p>
-                <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ __('Запазете безплатна консултация и ще отговорим на всичко за вашия бизнес.') }}</p>
-                <a href="{{ lroute('contact') }}#konsultatsiya" class="btn-shine mt-4 inline-flex items-center gap-2 rounded-xl bg-brand-950 px-5 py-3 text-sm font-semibold text-white hover:bg-brand-800 dark:bg-white dark:text-brand-950">{{ __('Безплатна консултация') }} <x-icon name="arrow-right" class="text-xs" /></a>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ __('Запазете час за разговор и ще отговорим на всичко за вашия бизнес.') }}</p>
+                <a href="{{ lroute('contact') }}#konsultatsiya" class="btn-shine mt-4 inline-flex items-center gap-2 rounded-xl bg-brand-950 px-5 py-3 text-sm font-semibold text-white hover:bg-brand-800 dark:bg-white dark:text-brand-950">{{ __('Запазете час за разговор') }} <x-icon name="arrow-right" class="text-xs" /></a>
             </div>
         </nav>
 

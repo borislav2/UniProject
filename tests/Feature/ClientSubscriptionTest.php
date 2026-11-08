@@ -161,7 +161,7 @@ class ClientSubscriptionTest extends TestCase
             'done' => "– Обновихме менюто\n– Нов профил в Google", 'results' => '12 запитвания от сайта', 'site_status' => 'Сайтът работи', 'next' => 'Кампания за Коледа',
         ]])->assertOk()->getContent();
 
-        foreach (['Ресторант Лозата: октомври 2026', 'Обновихме менюто', 'Нов профил в Google', '12 запитвания от сайта', 'Кампания за Коледа'] as $text) {
+        foreach (['Ресторант Лозата, октомври 2026', 'Обновихме менюто', 'Нов профил в Google', '12 запитвания от сайта', 'Кампания за Коледа'] as $text) {
             $this->assertStringContainsString($text, $html);
         }
     }

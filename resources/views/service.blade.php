@@ -54,7 +54,7 @@
                 @endif
             </div>
             <div class="relative flex flex-col sm:flex-row gap-3 shrink-0">
-                <a href="{{ lroute('contact') }}#konsultatsiya" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 font-semibold text-brand-950 hover:bg-brand-50">{{ __('Безплатна консултация') }} <x-icon name="arrow-right" class="text-sm" /></a>
+                <a href="{{ lroute('contact') }}#konsultatsiya" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 font-semibold text-brand-950 hover:bg-brand-50">{{ __('Запазете час за разговор') }} <x-icon name="arrow-right" class="text-sm" /></a>
                 <a href="{{ lroute('packages') }}" class="inline-flex items-center justify-center rounded-xl border border-white/25 px-6 py-3.5 font-semibold text-white hover:bg-white/10">{{ __('Вижте пакетите') }}</a>
             </div>
         </div>

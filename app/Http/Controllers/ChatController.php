@@ -40,7 +40,7 @@ class ChatController extends Controller
         $chat->increment('user_messages');
 
         if ($chat->user_messages > (int) config('creatium.chat.max_messages', 30)) {
-            $result = ['reply' => __('Разговорът стана дълъг. За още въпроси ни пишете на :email или изберете час за безплатна консултация: :link', ['email' => config('creatium.contact.email'), 'link' => lroute('contact') . '#konsultatsiya']), 'source' => 'faq'];
+            $result = ['reply' => __('Разговорът стана дълъг. За още въпроси ни пишете на :email или запазете час за разговор. :link', ['email' => config('creatium.contact.email'), 'link' => lroute('contact') . '#konsultatsiya']), 'source' => 'faq'];
         } else {
             $result = $assistant->reply($chat, $text, $request->session()->get(LeadAttribution::SESSION_KEY));
         }

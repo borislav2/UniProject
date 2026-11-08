@@ -12,21 +12,21 @@
 
         <div>
             <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">1. Who processes your data</h2>
-            @php($details = array_filter([! empty($legal['eik']) ? 'company ID (EIK) ' . $legal['eik'] : null, ! empty($legal['address']) ? 'address: ' . $legal['address'] : null]))
+            @php($details = array_filter([! empty($legal['eik']) ? 'company ID (EIK) ' . $legal['eik'] : null, ! empty($legal['address']) ? 'address ' . $legal['address'] : null]))
             <p>The data controller is <strong>{{ $legal['company'] }}</strong>@if($details), {{ implode(', ', $details) }}@endif. For questions about your personal data, write to <a href="mailto:{{ $contact['email'] }}" class="text-brand-600 underline dark:text-brand-300">{{ $contact['email'] }}</a>.</p>
         </div>
 
         <div>
             <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">2. What data we collect</h2>
             <ul class="list-disc pl-6 space-y-1">
-                <li>Data you send us through the contact form: name, phone number, the service you are interested in, and your message if you write one.</li>
+                <li>The data you send us through the contact form. That is your name, phone number, email, your website if you give it, the services you are interested in, and your message if you write one.</li>
                 @if(config('creatium.chat.enabled'))
                     <li>The messages you write in the chat on the site, and any details you choose to leave there (name, phone, email, business).</li>
                 @endif
                 <li>How you got to the site (for example from Google or from an ad), if the site receives it from your browser or from the link you followed. We store it with your inquiry so we know which channels work.</li>
-                <li>Technical data needed to run and secure the site: IP address and request data in the server logs.</li>
-                <li>If we have written to you as a business: the business name, its publicly listed email address, website and city, taken from public sources (your website, Google Maps or OpenStreetMap), and whether you clicked a link in our email (which link and when). We do not track whether you open the email.</li>
-                <li>If we have looked you up on LinkedIn: your name, job title, company and the contact details visible on your public profile. We process them under our legitimate interest (Art. 6(1)(f) GDPR) to offer you our services; you can object and ask us to delete your data by writing to {{ $contact['email'] }}.</li>
+                <li>Technical data needed to run and secure the site. That is the IP address and request data in the server logs.</li>
+                <li>If we have written to you as a business, we keep the business name, its publicly listed email address, website and city, taken from public sources (your website, Google Maps or OpenStreetMap), and whether you clicked a link in our email (which link and when). We do not track whether you open the email.</li>
+                <li>If we have looked you up on LinkedIn, we keep your name, job title, company and the contact details visible on your public profile. We process them under our legitimate interest (Art. 6(1)(f) GDPR) to offer you our services; you can object and ask us to delete your data by writing to {{ $contact['email'] }}.</li>
                 @if(config('creatium.gtm_id'))
                     <li>Data about your visit from analytics and advertising tools, only if you have allowed them (see section 6).</li>
                 @endif
@@ -36,9 +36,9 @@
         <div>
             <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">3. Why and on what legal basis</h2>
             <ul class="list-disc pl-6 space-y-1">
-                <li>To reply to your inquiry and send you an offer: based on your consent and on taking steps at your request before entering into a contract (Art. 6(1)(a) and (b) GDPR).</li>
-                <li>For security and to prevent misuse of the site: based on our legitimate interest (Art. 6(1)(f) GDPR).</li>
-                <li>For a single business email to a company whose website we think could be improved, and to know whether it was useful (clicks on its links): based on our legitimate interest (Art. 6(1)(f) GDPR). Every such email has an unsubscribe link; after you unsubscribe we do not write again and keep only the address so that we never write to it again.</li>
+                <li>To reply to your inquiry and send you an offer. This is based on your consent and on taking steps at your request before entering into a contract (Art. 6(1)(a) and (b) GDPR).</li>
+                <li>For security and to prevent misuse of the site. This is based on our legitimate interest (Art. 6(1)(f) GDPR).</li>
+                <li>For a single business email to a company whose website we think could be improved, and to know whether it was useful (clicks on its links). This is based on our legitimate interest (Art. 6(1)(f) GDPR). Every such email has an unsubscribe link; after you unsubscribe we do not write again and keep only the address so that we never write to it again.</li>
             </ul>
         </div>
 
@@ -56,7 +56,7 @@
             <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">6. Cookies and measurement</h2>
             <p>The site uses strictly necessary cookies (session and form protection against abuse). These do not require consent.</p>
             @if(config('creatium.gtm_id'))
-                <p class="mt-3">We use <strong>Google Tag Manager</strong> to load analytics tools (such as Google Analytics 4 and Microsoft Clarity) and ad measurement tools (such as Meta Pixel). They set cookies and send their providers information about your visit (pages, device, approximate location from your IP address, submitted inquiry) <strong>only if you allow them</strong> in the cookie banner, separately for analytics and marketing. Legal basis: your consent (Art. 6(1)(a) GDPR).</p>
+                <p class="mt-3">We use <strong>Google Tag Manager</strong> to load analytics tools (such as Google Analytics 4 and Microsoft Clarity) and ad measurement tools (such as Meta Pixel). They set cookies and send their providers information about your visit (pages, device, approximate location from your IP address, submitted inquiry) <strong>only if you allow them</strong> in the cookie banner, separately for analytics and marketing. The legal basis is your consent (Art. 6(1)(a) GDPR).</p>
                 <p class="mt-3">Google, Microsoft and Meta may transfer data to the United States. They are certified under the EU-US Data Privacy Framework and use standard contractual clauses.</p>
                 <p class="mt-3">You can withdraw or change your consent at any time in <a href="#" data-cookie-settings class="text-brand-700 underline dark:text-brand-300">Cookie settings</a>.</p>
             @else
@@ -70,7 +70,7 @@
             <p>You have the right to access, rectify and erase your data, to restrict processing, to data portability and to object, and to withdraw your consent at any time. Write to us at the email above. You also have the right to lodge a complaint with the Bulgarian Commission for Personal Data Protection (<a href="https://www.cpdp.bg" class="text-brand-600 underline dark:text-brand-300" target="_blank" rel="noopener">www.cpdp.bg</a>).</p>
         </div>
 
-        <p class="text-sm text-gray-500 dark:text-gray-400">Last updated: 3 October 2026</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Last updated 8 November 2026</p>
     </div>
 </section>
 @endsection

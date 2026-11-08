@@ -82,7 +82,7 @@ class ChatTest extends TestCase
         config(['services.anthropic.key' => null]);
 
         $first = $this->send('Колко време отнема изработката на сайта?')->assertOk()->json();
-        $this->assertStringContainsString('1–2 седмици', $first['reply']);
+        $this->assertStringContainsString('от 1 до 2 седмици', $first['reply']);
         $this->assertFalse($first['lead']);
 
         $chat = ChatConversation::where('public_id', $first['conversation'])->firstOrFail();
@@ -145,7 +145,7 @@ class ChatTest extends TestCase
     {
         $fake = $this->fakeClaude([['stop' => 'refusal', 'content' => []]]);
         $reply = $this->send('Колко време отнема изработката на сайта?')->assertOk()->json('reply');
-        $this->assertStringContainsString('1–2 седмици', $reply);
+        $this->assertStringContainsString('от 1 до 2 седмици', $reply);
         $this->assertNull(ChatConversation::firstOrFail()->api_messages);
         $this->assertCount(1, $fake->calls);
 
@@ -288,6 +288,6 @@ class ChatTest extends TestCase
         Http::fake(['api.mistral.ai/*' => Http::response(['message' => 'Unauthorized'], 401)]);
 
         $reply = $this->send('Колко време отнема изработката на сайта?')->assertOk()->json('reply');
-        $this->assertStringContainsString('1–2 седмици', $reply);
+        $this->assertStringContainsString('от 1 до 2 седмици', $reply);
     }
 }

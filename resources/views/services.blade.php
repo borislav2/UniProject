@@ -91,7 +91,7 @@
             <div class="relative md:col-span-8">
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-brand-300">{{ __('Безплатно') }}</p>
                 <h2 class="mt-2 text-2xl md:text-3xl font-extrabold tracking-tight">{{ __('Проверете сайта си за минута') }}</h2>
-                <p class="mt-3 text-gray-300 leading-relaxed">{{ __('Въведете адреса и имейл и ще получите отчет: HTTPS, скорост на сървъра, заглавия за Google, телефон и още.') }}</p>
+                <p class="mt-3 text-gray-300 leading-relaxed">{{ __('Въведете адреса и имейл и ще получите отчет за HTTPS, скоростта на сървъра, заглавията за Google, телефона и още.') }}</p>
             </div>
             <div class="relative md:col-span-4 md:text-right">
                 <a href="{{ lroute('site-check') }}" class="btn-shine inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 font-semibold text-brand-950 hover:bg-brand-50">{{ __('Проверете сайта') }} <x-icon name="magnifying-glass" class="text-sm" /></a>

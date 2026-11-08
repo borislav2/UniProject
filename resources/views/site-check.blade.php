@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', __('Безплатна проверка на сайт: SEO, скорост и Google'))
-@section('meta_description', __('Въведете адреса на сайта си и получете безплатен отчет на имейла: обхождаме до :n страници за счупени връзки, заглавия за Google, скорост, HTTPS, sitemap и още.', ['n' => config('creatium.site_check.crawl_limit')]))
+@section('title', __('Безплатна проверка на сайт за SEO, скорост и Google'))
+@section('meta_description', __('Въведете адреса на сайта си и получете безплатен отчет на имейла. Обхождаме до :n страници за счупени връзки, заглавия за Google, скорост, HTTPS, sitemap и още.', ['n' => config('creatium.site_check.crawl_limit')]))
 
 @php
     $checks = [
@@ -44,7 +44,7 @@
                             <x-icon name="paper-plane" class="text-green-600 text-xl dark:text-green-400" />
                         </div>
                         <h2 class="text-xl font-bold mb-2">{{ __('Проверката започна') }}</h2>
-                        <p class="text-gray-600 dark:text-gray-300">{{ __('Ще изпратим отчета на :email до няколко минути: обхождането на целия сайт отнема малко повече време. Ако не го виждате, проверете папка „Спам“ или „Промоции“.', ['email' => session('site_check_sent')]) }}</p>
+                        <p class="text-gray-600 dark:text-gray-300">{{ __('Ще изпратим отчета на :email до няколко минути, защото обхождането на целия сайт отнема малко повече време. Ако не го виждате, проверете папка „Спам“ или „Промоции“.', ['email' => session('site_check_sent')]) }}</p>
                         <a href="{{ lroute('site-check') }}" class="mt-6 inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">{{ __('Проверете друг сайт') }} <x-icon name="arrow-right" class="text-xs" /></a>
                     </div>
                 @else

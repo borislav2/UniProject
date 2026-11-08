@@ -99,7 +99,7 @@ class OutreachSearchTest extends TestCase
         $prospect = OutreachProspect::sole();
         $this->assertSame(['info@lozata.bg', 'published', 'restaurant', 'Пловдив'], [$prospect->email, $prospect->email_status, $prospect->industry, $prospect->city]);
         $this->assertTrue($prospect->canBeEmailed());
-        $this->assertSame(['Няма описание за Google', 'Не е настроен за телефон', 'Адресът с http:// не води към https://'], array_column($prospect->findings, 'title'));
+        $this->assertSame(['Няма описание за Google', 'Не е настроен за телефон', 'Адресът с http не води към https'], array_column($prospect->findings, 'title'));
         $this->assertStringContainsString("\n– Сайтът не е пригоден за телефон. Повечето клиенти ви търсят от телефона", $prospect->suggestedObservation());
         $this->assertStringStartsWith('При преглед на бизнесите в Пловдив проверихме и сайта на Ресторант Лозата (lozata.bg)', $prospect->suggestedObservation());
         $this->assertCount(3, $prospect->findings);

@@ -85,7 +85,7 @@ class QuoteController extends Controller
             )->id,
             'client_phone' => filled($validated['phone'] ?? null) ? $validated['phone'] : null,
             'client_email' => filled($validated['email'] ?? null) ? mb_strtolower($validated['email']) : null,
-            'service' => 'Оферта: ' . $planName,
+            'service' => 'Оферта за ' . $planName,
             'locale' => app()->getLocale(),
             'source' => 'website',
             'lead_channel' => LeadAttribution::channel($attribution),

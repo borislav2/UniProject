@@ -1,7 +1,7 @@
 {{--
     „Получете оферта“ на /paketi (#oferta), QuoteController::store. Задължителни са само име, бизнес и имейл или телефон;
     останалото е в „По желание“. След изпращане същото място показва благодарността (session quote_sent).
-    $plans: site('plans'); $selectedPlan: индекс на пакета от ?paket= или null; $billingOn / $billingMode: превключвателят Месечно / Годишно.
+    $plans: site('plans'); $selectedPlan: индекс на пакета от ?paket= или null;
 --}}
 @php
     $field = 'w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 placeholder:text-gray-500 dark:placeholder:text-gray-400';
@@ -37,10 +37,6 @@
             @csrf
             <div class="hidden" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
 
-            @if(! empty($billingOn))
-                <input type="hidden" name="billing" value="{{ old('billing', $billingMode) }}" data-quote-billing>
-            @endif
-
             <div>
                 <label for="quote-plan" class="{{ $label }}">{{ __('Пакет') }}</label>
                 <select id="quote-plan" name="plan" class="{{ $field }}">
@@ -64,7 +60,7 @@
 
             <details class="group rounded-2xl border border-gray-200 dark:border-white/10" @if($openExtra) open @endif>
                 <summary class="flex cursor-pointer list-none items-center justify-between gap-3 p-4 font-semibold text-brand-950 [&::-webkit-details-marker]:hidden dark:text-white">
-                    {{ __('По желание: за по-точна оферта') }} <x-icon name="chevron-down" class="text-xs text-gray-500 transition-transform group-open:rotate-180" />
+                    {{ __('По желание, за по-точна оферта') }} <x-icon name="chevron-down" class="text-xs text-gray-500 transition-transform group-open:rotate-180" />
                 </summary>
                 <div class="space-y-5 p-4 pt-0">
                     <div class="grid gap-5 sm:grid-cols-2">
