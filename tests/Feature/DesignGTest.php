@@ -4,7 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Http\Controllers\PageController;
 use App\Support\PlanBilling;
+use Illuminate\Foundation\Vite;
+use Illuminate\Support\HtmlString;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -141,5 +144,138 @@ class DesignGTest extends TestCase
 
         $this->assertStringNotContainsString('g-hero', $html);
         $this->assertStringContainsString('surface-night', $html);
+    }
+
+    /** Replaces the no-op Vite of the test case with one that names the entry files it was asked for. */
+    private function fakeViteEntries(): void
+    {
+        $this->app->instance(Vite::class, new class extends Vite {
+            public function __invoke($entrypoints, $buildDirectory = null)
+            {
+                return new HtmlString('<!--vite:' . implode(',', (array) $entrypoints) . '-->');
+            }
+        });
+        \Illuminate\Support\Facades\Vite::clearResolvedInstance(Vite::class);
+    }
+
+    public function test_the_phone_bar_exists_in_design_g_only(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringNotContainsString('data-g-bar', $html);
+
+        config(['creatium.design' => 'g']);
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('data-g-bar', $html);
+        $this->assertStringContainsString('Обадете се', $html);
+        $this->assertMatchesRegularExpression('/class="g-bar-call" href="tel:\+?[0-9]+"/', $html);
+        $this->assertStringContainsString('class="g-bar-offer" href="' . url('/paketi') . '#oferta"', $html);
+
+        // Inner pages carry it too, in English as well.
+        $this->get('/paketi')->assertOk()->assertSee('data-g-bar', false);
+        $this->get('/en')->assertOk()->assertSee('Call us')->assertSee('Get a quote');
+    }
+
+    public function test_the_hero_has_a_trust_line_and_a_link_to_the_website_check(): void
+    {
+        config(['creatium.design' => 'g']);
+        $html = $this->get('/')->assertOk()->getContent();
+
+        foreach (['Фиксирана цена в офертата', 'Отговор до един работен ден', 'Месечен отчет'] as $line) {
+            $this->assertStringContainsString("<li>{$line}</li>", $html);
+        }
+        $this->assertStringContainsString('href="' . url('/proverka-na-sait') . '">Проверете сайта си безплатно', $html);
+        $this->get('/en')->assertSee('Check your website for free');
+    }
+
+    public function test_the_six_parts_link_to_their_service_pages_with_a_short_line(): void
+    {
+        config(['creatium.design' => 'g']);
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('website') . '"><span class="g-mono">02</span><b>Сайт</b><small>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('google') . '"><span class="g-mono">03</span><b>Google</b>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('seo') . '"><span class="g-mono">04</span><b>Реклами</b>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('email') . '"><span class="g-mono">05</span><b>Имейли</b>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('support') . '"><span class="g-mono">06</span><b>Грижа</b>', $html);
+        $this->assertStringContainsString('<a href="' . url('/uslugi') . '"><span class="g-mono">01</span><b>Бранд</b>', $html);
+
+        $en = $this->get('/en')->assertOk()->getContent();
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('website', 'en') . '"><span class="g-mono">02</span><b>Website</b>', $en);
+    }
+
+    public function test_the_proof_block_is_hidden_without_data_and_shown_with_a_review_count(): void
+    {
+        config(['creatium.design' => 'g', 'creatium.google_reviews' => ['rating' => 0, 'count' => 0, 'url' => null]]);
+        $this->get('/')->assertOk()->assertDontSee('id="dokazatelstva"', false)->assertDontSee('g-proof', false);
+
+        // A rating without a count is not shown either.
+        config(['creatium.google_reviews' => ['rating' => 4.9, 'count' => 0, 'url' => null]]);
+        $this->get('/')->assertDontSee('id="dokazatelstva"', false);
+
+        config(['creatium.google_reviews' => ['rating' => 4.9, 'count' => 37, 'url' => 'https://g.page/r/example']]);
+        $this->get('/')->assertOk()
+            ->assertSee('id="dokazatelstva"', false)
+            ->assertSee('4,9 / 5')
+            ->assertSee('Оценка в Google от 37 отзива')
+            ->assertSee('href="https://g.page/r/example"', false);
+        $this->get('/en')->assertSee('4.9 / 5')->assertSee('Google rating from 37 reviews');
+    }
+
+    public function test_the_proof_block_shows_testimonials_and_results_only_when_filled(): void
+    {
+        config(['creatium.design' => 'g', 'creatium.google_reviews' => ['rating' => 0, 'count' => 0, 'url' => null]]);
+
+        // The default is one empty item: it must not render.
+        $this->assertSame('', config('creatium.home_trust.testimonials.0.quote'));
+        $this->get('/')->assertDontSee('id="dokazatelstva"', false);
+
+        config([
+            'creatium.home_trust.testimonials' => [['quote' => 'Получихме запитвания още първата седмица', 'name' => 'Мария', 'business' => 'Студио Лавандула']],
+            'creatium.home_trust.results' => [['value' => '12', 'text' => 'запитвания за първия месец']],
+        ]);
+        $this->get('/')->assertOk()
+            ->assertSee('id="dokazatelstva"', false)
+            ->assertSee('Получихме запитвания още първата седмица')
+            ->assertSee('Студио Лавандула')
+            ->assertSee('запитвания за първия месец');
+    }
+
+    public function test_the_g_home_loads_its_own_lean_stylesheet_and_not_app_css(): void
+    {
+        $this->fakeViteEntries();
+        config(['creatium.design' => 'g']);
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('resources/css/g-lean.css', $html);
+        $this->assertStringContainsString('resources/js/g-bar.js', $html);
+        $this->assertStringContainsString('resources/js/g-home.js', $html);
+        $this->assertStringNotContainsString('resources/css/app.css', $html);
+        $this->assertStringNotContainsString('resources/js/app.js', $html);
+
+        // A page whose body is still the old one keeps app.css (and g.css on top).
+        $inner = $this->get('/paketi')->assertOk()->getContent();
+        $this->assertStringContainsString('resources/css/app.css', $inner);
+        $this->assertStringContainsString('resources/css/g.css', $inner);
+        $this->assertStringContainsString('resources/js/g-bar.js', $inner);
+    }
+
+    public function test_the_current_design_still_loads_app_css_only(): void
+    {
+        $this->fakeViteEntries();
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('<!--vite:resources/css/app.css,resources/js/app.js-->', $html);
+        $this->assertStringNotContainsString('g-lean', $html);
+        $this->assertStringNotContainsString('g-bar', $html);
+    }
+
+    public function test_the_menu_does_not_mark_about_us_on_the_contact_page(): void
+    {
+        config(['creatium.design' => 'g']);
+
+        $contact = $this->get('/kontakti')->assertOk()->getContent();
+        $this->assertStringNotContainsString('aria-current="page"', $contact);
+        $this->assertMatchesRegularExpression('/aria-current="page"\s*>За нас/u', $this->get('/za-nas')->assertOk()->getContent());
+        $this->assertMatchesRegularExpression('/aria-current="page"\s*>Пакети/u', $this->get('/paketi')->assertOk()->getContent());
     }
 }

@@ -1,0 +1,64 @@
+/*
+ * Design G, lean stylesheet for pages that are fully converted (the g home page): Tailwind with only the utilities the shared
+ * partials need (contact form, booking, chat, cookie banner, header, footer) plus g.css. It replaces app.css (176 KB) on those
+ * pages. Pages whose body is still the old one keep loading app.css + g.css.
+ */
+@import 'tailwindcss' source(none);
+@import './g.css';
+
+@source '../views/partials/contact-form.blade.php';
+@source '../views/partials/booking.blade.php';
+@source '../views/partials/turnstile.blade.php';
+@source '../views/partials/chat-widget.blade.php';
+@source '../views/partials/cookie-consent.blade.php';
+@source '../views/partials/g';
+@source '../views/components/icon.blade.php';
+
+/* Same dark switch and brand tokens as app.css (the chat and the cookie banner use them). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Onest', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-brand-50: #eef4fb;
+    --color-brand-100: #dae7f6;
+    --color-brand-200: #bcd3ee;
+    --color-brand-300: #8fb5e0;
+    --color-brand-400: #5d91cd;
+    --color-brand-500: #3b77bd;
+    --color-brand-600: #2d63a3;
+    --color-brand-700: #274f84;
+    --color-brand-800: #22406a;
+    --color-brand-900: #1c3252;
+    --color-brand-950: #0f1a2b;
+    --color-ink-950: #070d18;
+    --color-ink-900: #0b1424;
+    --color-ink-800: #111e33;
+}
+
+@layer base {
+    *, ::after, ::before, ::backdrop, ::file-selector-button { border-color: var(--color-gray-200, currentColor); }
+    html { scroll-behavior: smooth; }
+}
+
+@utility bg-brand-gradient {
+    background-image: linear-gradient(135deg, var(--color-brand-950) 0%, var(--color-brand-800) 55%, var(--color-brand-600) 100%);
+}
+
+/* The few app.css rules the chat widget needs */
+.surface-night {
+    background-color: var(--color-ink-950);
+    background-image:
+        radial-gradient(60% 55% at 50% -5%, rgb(59 119 189 / 0.38), transparent 70%),
+        radial-gradient(35% 40% at 90% 10%, rgb(45 99 163 / 0.28), transparent 70%),
+        radial-gradient(30% 35% at 5% 60%, rgb(39 79 132 / 0.22), transparent 70%);
+}
+.chat-pulse { border: 2px solid rgb(93 145 205 / 0.7); animation: chat-pulse 2.4s ease-out infinite; will-change: transform, opacity; }
+@keyframes chat-pulse { 0% { transform: scale(1); opacity: 1; } 70%, 100% { transform: scale(1.12, 1.35); opacity: 0; } }
+.chat-teaser:not(.hidden) { animation: chat-teaser-in .35s ease-out both; }
+@keyframes chat-teaser-in { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes typing-dot { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-3px); opacity: 1; } }
+.typing-dot { width: 4px; height: 4px; border-radius: 9999px; background: #fff; animation: typing-dot 1s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+}

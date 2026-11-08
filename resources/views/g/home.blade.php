@@ -4,6 +4,8 @@
 @section('title', __('Изработка на сайтове и дигитален маркетинг от €400'))
 @section('meta_description', __('Сайт, който носи запитвания, плюс видимост в Google, Google Maps и ChatGPT. За бизнеси в България, с фиксирана цена и калкулатор на ползата.'))
 
+@section('g_lean', '1')
+
 @push('head')
 @include('partials.home-ld')
 @vite(['resources/js/g-home.js'])
@@ -22,6 +24,24 @@
     $pad = fn ($n) => str_pad((string) $n, 2, '0', STR_PAD_LEFT);
 
     $nodes = array_values(array_filter((array) ($trust['network_nodes'] ?? [])));
+    // The six parts: label, one short line and the service page each one links to (empty = all services). Older saves without `parts` fall back to the node names.
+    $servicePages = (array) config('creatium.service_pages');
+    $parts = collect((array) ($trust['parts'] ?? []))->filter(fn ($p) => filled($p['label'] ?? null))->map(fn ($p) => [
+        'label' => $p['label'],
+        'text' => $p['text'] ?? '',
+        'href' => filled($p['service'] ?? null) && isset($servicePages[$p['service']]) ? \App\Http\Controllers\PageController::serviceUrl($p['service']) : lroute('services'),
+    ])->values();
+    if ($parts->isEmpty()) {
+        $parts = collect($nodes)->map(fn ($label) => ['label' => $label, 'text' => '', 'href' => lroute('services')]);
+    }
+    $heroTrust = array_values(array_filter((array) ($trust['hero_trust'] ?? [])));
+
+    // Proof: only what really exists. A Google rating needs a review count, testimonials a quote, results a value and a text.
+    $rating = (float) ($reviews['rating'] ?? 0);
+    $reviewCount = (int) ($reviews['count'] ?? 0);
+    $testimonials = collect((array) ($trust['testimonials'] ?? []))->filter(fn ($t) => filled($t['quote'] ?? null))->values();
+    $results = collect((array) ($trust['results'] ?? []))->filter(fn ($r) => filled($r['value'] ?? null) && filled($r['text'] ?? null))->values();
+    $hasProof = $reviewCount > 0 || $testimonials->isNotEmpty() || $results->isNotEmpty();
     $steps = array_values((array) ($problem['system_steps'] ?? []));
 
     // Four concepts: the four industries of the design brief when they exist, otherwise the first four.
@@ -52,10 +72,16 @@
             <a class="g-btn" data-g-clear href="{{ lroute('packages') }}#oferta">{{ $hero['button'] ?? __('Получете оферта') }}<i></i></a>
             <a class="g-btn g-ghost" data-g-clear href="{{ lroute('packages') }}">{{ __('Вижте пакетите') }}</a>
         </div>
-        @if($nodes)
-            <nav class="g-parts" aria-label="{{ __('Системата') }}">
-                @foreach($nodes as $node)
-                    <a href="{{ lroute('services') }}"><span class="g-mono">{{ $pad($loop->iteration) }}</span><b>{{ $node }}</b></a>
+        @if($heroTrust)
+            <ul class="g-trust" data-g-clear>
+                @foreach($heroTrust as $line)<li>{{ $line }}</li>@endforeach
+            </ul>
+        @endif
+        <a class="g-link" data-g-clear href="{{ lroute('site-check') }}">{{ __('Проверете сайта си безплатно') }}</a>
+        @if($parts->isNotEmpty())
+            <nav class="g-parts" data-g-clear="full" aria-label="{{ __('Системата') }}">
+                @foreach($parts as $part)
+                    <a href="{{ $part['href'] }}"><span class="g-mono">{{ $pad($loop->iteration) }}</span><b>{{ $part['label'] }}</b>@if(filled($part['text']))<small>{{ $part['text'] }}</small>@endif</a>
                 @endforeach
             </nav>
         @endif
@@ -69,6 +95,7 @@
         <div class="g-sh">
             <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Системата') }}</p>
             <h2 class="g-h">{{ __('Една система. Шест части.') }}</h2>
+            @if(filled($problem['system_text'] ?? null))<p class="g-sh-text">{{ $problem['system_text'] }}</p>@endif
         </div>
         <ol class="g-rows">
             @foreach($steps as $step)
@@ -156,6 +183,38 @@
                     </article>
                 @endforeach
             </div>
+        </div>
+    </div>
+</section>
+@endif
+
+{{-- Proof: rendered only when there is a Google rating, a testimonial or a result (nothing is made up) --}}
+@if($hasProof)
+<section class="g-s" id="dokazatelstva">
+    <div class="g-wrap">
+        <div class="g-sh">
+            <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Доказателства') }}</p>
+            <h2 class="g-h">{{ __('Доверие, което можете да проверите') }}</h2>
+        </div>
+        <div class="g-proof">
+            @if($reviewCount > 0)
+                <div>
+                    @if($rating > 0)<span class="g-big">{{ number_format($rating, 1, app()->getLocale() === 'en' ? '.' : ',', '') }} / 5</span>@endif
+                    @php($ratingText = __('Оценка в Google от :count отзива', ['count' => $reviewCount]))
+                    <p>@if(filled($reviews['url'] ?? null))<a href="{{ $reviews['url'] }}" target="_blank" rel="noopener">{{ $ratingText }}</a>@else{{ $ratingText }}@endif</p>
+                </div>
+            @endif
+            @foreach($results as $result)
+                <div><span class="g-big">{{ $result['value'] }}</span><p>{{ $result['text'] }}</p></div>
+            @endforeach
+            @foreach($testimonials as $testimonial)
+                <figure>
+                    <blockquote>{{ $testimonial['quote'] }}</blockquote>
+                    @if(filled($testimonial['name'] ?? null) || filled($testimonial['business'] ?? null))
+                        <cite><b>{{ $testimonial['name'] ?? '' }}</b>@if(filled($testimonial['name'] ?? null) && filled($testimonial['business'] ?? null)), @endif{{ $testimonial['business'] ?? '' }}</cite>
+                    @endif
+                </figure>
+            @endforeach
         </div>
     </div>
 </section>

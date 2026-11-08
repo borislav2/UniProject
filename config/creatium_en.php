@@ -212,6 +212,17 @@ return [
         'proof_label' => '',
         // Шестте светещи възела в мрежата на първия екран (една система, не отделни услуги). Празно = мрежата не се показва.
         'network_nodes' => ['Brand', 'Website', 'Google', 'Ads', 'Emails', 'Care'],
+        'hero_trust' => ['Fixed price written into the offer', 'A reply within one working day', 'A monthly report'],
+        'parts' => [
+            ['label' => 'Brand', 'text' => 'A logo, a visual system and a tone that speak with one voice', 'service' => ''],
+            ['label' => 'Website', 'text' => 'A fast site that turns visitors into enquiries', 'service' => 'website'],
+            ['label' => 'Google', 'text' => 'A Google Maps profile and reviews that win customers', 'service' => 'google'],
+            ['label' => 'Ads', 'text' => 'Visibility in Google and AI assistants, measured down to the enquiry', 'service' => 'seo'],
+            ['label' => 'Emails', 'text' => 'Emails that bring back the customers who already know you', 'service' => 'email'],
+            ['label' => 'Care', 'text' => 'Hosting, support and monitoring so the site works every day', 'service' => 'support'],
+        ],
+        'testimonials' => [['quote' => '', 'name' => '', 'business' => '']],
+        'results' => [['value' => '', 'text' => '']],
         'agency_title' => 'Strategy, design, technology and marketing under one roof.',
         'agency_accent' => ['under one roof'],
         'agency_facts' => [

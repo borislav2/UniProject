@@ -7,6 +7,8 @@
         // Redesign (concept G): `g` for everyone with CREATIUM_DESIGN=g, or as an admin preview (noindex plus a small exit pill).
         $g = \App\Support\Design::is('g');
         $gPreview = \App\Support\Design::preview();
+        // The g home page ships its own lean stylesheet (Tailwind limited to the shared partials) and no app.css / app.js.
+        $gLean = $g && $__env->hasSection('g_lean');
     @endphp
     @if(config('creatium.gtm_id'))
         @include('partials/gtm-head')
@@ -110,13 +112,20 @@
             <link rel="preload" href="{{ $font }}" as="font" type="font/woff2" crossorigin>
         @endforeach
     @endunless
-    @if(config('creatium.inline_css') && ! \Illuminate\Support\Facades\Vite::isRunningHot())
+    @if($gLean)
+        @if(config('creatium.inline_css') && ! \Illuminate\Support\Facades\Vite::isRunningHot())
+            <style>{!! \Illuminate\Support\Facades\Vite::content('resources/css/g-lean.css') !!}</style>
+            @vite(['resources/js/g-bar.js'])
+        @else
+            @vite(['resources/css/g-lean.css', 'resources/js/g-bar.js'])
+        @endif
+    @elseif(config('creatium.inline_css') && ! \Illuminate\Support\Facades\Vite::isRunningHot())
         {{-- Inline CSS (~10 KB gzip) saves a render-blocking request on first load --}}
         <style>{!! \Illuminate\Support\Facades\Vite::content('resources/css/app.css') !!}</style>
         @if($g)<style>{!! \Illuminate\Support\Facades\Vite::content('resources/css/g.css') !!}</style>@endif
-        @vite(['resources/js/app.js'])
+        @vite($g ? ['resources/js/app.js', 'resources/js/g-bar.js'] : ['resources/js/app.js'])
     @else
-        @vite($g ? ['resources/css/app.css', 'resources/css/g.css', 'resources/js/app.js'] : ['resources/css/app.css', 'resources/js/app.js'])
+        @vite($g ? ['resources/css/app.css', 'resources/css/g.css', 'resources/js/app.js', 'resources/js/g-bar.js'] : ['resources/css/app.css', 'resources/js/app.js'])
     @endif
     @stack('head')
 </head>
@@ -270,6 +279,7 @@
 
     @if($g)
         @include('partials.g.footer')
+        @include('partials.g.bar')
     @else
     <footer class="relative surface-night grain on-dark text-white overflow-hidden">
         <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_70%)]" aria-hidden="true"></div>
