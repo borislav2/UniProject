@@ -41,3 +41,11 @@ if (! function_exists('demo_srcset')) {
         return implode(', ', $sources);
     }
 }
+
+if (! function_exists('gview')) {
+    /** A public page: its design G view (`g.<name>`) when design G is shown, otherwise the current view. */
+    function gview(string $name, array $data = [], ?string $current = null)
+    {
+        return view(\App\Support\Design::is('g') ? 'g.' . $name : ($current ?? $name), $data);
+    }
+}

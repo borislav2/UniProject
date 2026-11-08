@@ -1,0 +1,6 @@
+/*
+ * Design G, lean stylesheet of the inner pages (packages, projects, contact, services, about, FAQ, blog, website check, legal pages,
+ * 404): the shared setup plus g-pages.css. No app.css. A utility that is not in the shared partials needs a `g-` class in g-pages.css.
+ */
+@import './g-shared.css';
+@import './g-pages.css';

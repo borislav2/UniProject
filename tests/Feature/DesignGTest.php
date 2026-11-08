@@ -252,10 +252,11 @@ class DesignGTest extends TestCase
         $this->assertStringNotContainsString('resources/css/app.css', $html);
         $this->assertStringNotContainsString('resources/js/app.js', $html);
 
-        // A page whose body is still the old one keeps app.css (and g.css on top).
+        // The inner pages have their own g bodies and load g-inner.css (the lean setup plus the page components), never app.css.
         $inner = $this->get('/paketi')->assertOk()->getContent();
-        $this->assertStringContainsString('resources/css/app.css', $inner);
-        $this->assertStringContainsString('resources/css/g.css', $inner);
+        $this->assertStringContainsString('resources/css/g-inner.css', $inner);
+        $this->assertStringNotContainsString('resources/css/app.css', $inner);
+        $this->assertStringNotContainsString('resources/js/app.js', $inner);
         $this->assertStringContainsString('resources/js/g-bar.js', $inner);
     }
 
@@ -277,5 +278,241 @@ class DesignGTest extends TestCase
         $this->assertStringNotContainsString('aria-current="page"', $contact);
         $this->assertMatchesRegularExpression('/aria-current="page"\s*>За нас/u', $this->get('/za-nas')->assertOk()->getContent());
         $this->assertMatchesRegularExpression('/aria-current="page"\s*>Пакети/u', $this->get('/paketi')->assertOk()->getContent());
+    }
+
+    /** @return array<string, array{string}> */
+    public static function innerPages(): array
+    {
+        $pages = ['/paketi', '/proekti', '/kontakti', '/uslugi', '/uslugi/izrabotka-na-sait', '/uslugi/seo-i-ai-vidimost', '/izrabotka-na-sait-za-restorant',
+            '/za-nas', '/vaprosi', '/blog', '/proverka-na-sait', '/poveritelnost', '/usloviya', '/biskvitki',
+            '/en/packages', '/en/projects', '/en/contact', '/en/services', '/en/services/website-design', '/en/about', '/en/faq', '/en/blog',
+            '/en/website-check', '/en/privacy', '/en/terms', '/en/cookies'];
+
+        return array_combine($pages, array_map(fn ($p) => [$p], $pages));
+    }
+
+    /** @dataProvider innerPages */
+    public function test_every_inner_page_has_a_g_body_and_loads_the_lean_inner_css_without_app_css(string $path): void
+    {
+        $this->fakeViteEntries();
+        config(['creatium.design' => 'g']);
+
+        $html = $this->get($path)->assertOk()->getContent();
+        $this->assertStringContainsString('class="design-g"', $html);
+        $this->assertStringContainsString('class="g-hd"', $html);
+        $this->assertStringContainsString('class="g-ph', $html, $path . ' has no g page head');
+        $this->assertStringContainsString('resources/css/g-inner.css', $html);
+        $this->assertStringNotContainsString('resources/css/app.css', $html);
+        $this->assertStringNotContainsString('resources/js/app.js', $html);
+        // No blue gradients, rounded cards or old kickers from the current design in the page body (between the g header and footer).
+        $body = substr($html, strpos($html, 'class="g-hd"'), strpos($html, 'class="g-ft"') - strpos($html, 'class="g-hd"'));
+        foreach (['bg-brand-gradient', 'rounded-3xl', 'rounded-2xl', 'surface-night', 'kicker', 'shadow-xl'] as $old) {
+            $this->assertStringNotContainsString($old, $body, $path . ' still has ' . $old);
+        }
+    }
+
+    public function test_g_blog_post_and_category_pages_and_the_404_page_use_g(): void
+    {
+        $this->fakeViteEntries();
+        config(['creatium.design' => 'g']);
+        $category = \App\Models\PostCategory::create(['name' => ['bg' => 'Сайтове'], 'slug' => ['bg' => 'sajtove']]);
+        $post = \App\Models\Post::create([
+            'title' => ['bg' => 'Профил в Google: как да го попълните'],
+            'slug' => ['bg' => 'profil-v-google'],
+            'body' => ['bg' => "## Първо\n\nТекст **удебелен**."],
+            'post_category_id' => $category->id,
+            'status' => 'published',
+            'published_at' => now()->subDays(3),
+        ]);
+
+        $show = $this->get('/blog/profil-v-google')->assertOk()
+            ->assertSee('class="g-ph g-post-head"', false)
+            ->assertSee('class="g-prose g-article"', false)
+            ->assertSee('Профил в Google: как да го попълните')
+            ->assertSee('<time datetime="' . $post->published_at->toDateString() . '">', false);
+        $this->assertStringNotContainsString('resources/css/app.css', $show->getContent());
+
+        $this->get('/blog/kategoriya/sajtove')->assertOk()->assertSee('class="g-posts"', false)->assertSee('class="g-post"', false);
+        $this->get('/blog')->assertOk()->assertSee('aria-current="page"', false);
+
+        $missing = $this->get('/nope')->assertNotFound()->assertSee('Страницата не е намерена')->assertSee('class="g-ph g-404"', false);
+        $this->assertStringContainsString('resources/css/g-inner.css', $missing->getContent());
+        $this->assertStringNotContainsString('resources/css/app.css', $missing->getContent());
+    }
+
+    public function test_the_current_design_keeps_app_css_and_its_old_bodies_on_every_inner_page(): void
+    {
+        $this->fakeViteEntries();
+
+        foreach (['/paketi' => 'data-packages-hero', '/proekti' => 'data-portfolio-grid', '/kontakti' => 'id="contact-form"', '/uslugi' => 'kicker kicker-light',
+            '/za-nas' => 'kicker kicker-light', '/vaprosi' => 'kicker', '/blog' => 'text-lg leading-relaxed text-gray-600', '/proverka-na-sait' => 'id="site-check-form"', '/poveritelnost' => 'space-y-8'] as $path => $oldMarker) {
+            $html = $this->get($path)->assertOk()->getContent();
+            $this->assertStringContainsString('<!--vite:resources/css/app.css,resources/js/app.js-->', $html, $path);
+            $this->assertStringContainsString($oldMarker, $html, $path);
+            $this->assertStringNotContainsString('g-inner', $html, $path);
+            $this->assertStringNotContainsString('class="g-ph', $html, $path);
+        }
+        $this->get('/nope')->assertNotFound()->assertSee('text-6xl', false);
+    }
+
+    public function test_g_packages_has_three_cards_a_billing_toggle_and_no_trust_strip_guarantee_or_comparison(): void
+    {
+        config(['creatium.design' => 'g']);
+
+        $html = $this->get('/paketi')->assertOk()
+            ->assertSee('data-g-billing-root', false)
+            ->assertSee('Месечно')->assertSee('Годишно')
+            ->assertSee('от €400')->assertSee('от €800')->assertSee('Индивидуална оферта')
+            ->assertSee('id="vsichko-0"', false)->assertSee('id="oferta"', false)
+            ->assertSee('Предпочитате разговор?')
+            ->assertDontSee('data-sticky-cta', false)
+            ->getContent();
+        $this->assertSame(3, substr_count($html, 'class="g-pk'));
+        $this->assertStringContainsString('data-bv="y"', $html);
+        $this->assertStringNotContainsString('<table', $html);
+        $this->assertStringNotContainsString('Гаранция', $html);
+        $this->assertStringNotContainsString('при заявка за оферта', substr($html, strpos($html, 'class="g-packs'), strpos($html, 'id="vsichko-0"') - strpos($html, 'class="g-packs')), 'no deposit line on the cards');
+        // Both prices are in the page; the monthly one shows without JavaScript.
+        $this->assertStringContainsString('след това €200 / месец', $html);
+    }
+
+    public function test_g_projects_is_one_grid_with_real_projects_first_and_labelled_concepts(): void
+    {
+        config(['creatium.design' => 'g']);
+        $category = \App\Models\Category::create(['name' => 'Уебсайт']);
+        \App\Models\Project::create(['name' => 'Реален клиент ООД', 'description' => 'Нов сайт', 'status' => 'Completed', 'is_public' => true, 'category_id' => $category->id, 'start_date' => now()->subMonth(), 'end_date' => now(), 'manager' => 'Борислав']);
+
+        $html = $this->get('/proekti')->assertOk()->assertSee('data-concept-chip', false)->getContent();
+        $this->assertSame(1, substr_count($html, 'data-portfolio-grid'));
+        $this->assertLessThan(strpos($html, 'data-concept-chip'), strpos($html, 'Реален клиент ООД'));
+        $this->assertGreaterThanOrEqual(6, substr_count($html, 'data-concept-chip'));
+        $this->assertSame(substr_count($html, 'class="g-frame"'), substr_count($html, 'class="g-case"'));
+    }
+
+    public function test_g_contact_form_has_labels_hints_a_promise_and_phone_links_and_the_same_fields(): void
+    {
+        config(['creatium.design' => 'g']);
+
+        $html = $this->get('/kontakti')->assertOk()
+            ->assertSee('id="g-contact-form"', false)->assertSee('id="contact-form"', false)->assertSee('id="konsultatsiya"', false)
+            ->assertSee('Как да се обръщаме към вас.')->assertSee('Тук ще получите отговора.')
+            ->assertSee('Ще ви отговорим до един работен ден.')->assertSee('Отговаряме до един работен ден.')
+            ->assertSee('Viber')->assertSee('WhatsApp')
+            ->getContent();
+        foreach (['name', 'site_url', 'email', 'phone', 'message', 'consent', 'website', 'consultation'] as $field) {
+            $this->assertStringContainsString('name="' . $field . '"', $html, $field);
+        }
+        $this->assertStringContainsString('name="interests[]"', $html);
+        $this->assertMatchesRegularExpression('/<label for="name">Име и фамилия/u', $html);
+        $this->assertMatchesRegularExpression('/href="tel:\+?[0-9]+"/', $html);
+        // The promise comes before the button.
+        $this->assertLessThan(strpos($html, 'class="g-btn g-big">Изпратете'), strpos($html, 'Ще ви отговорим до един работен ден.'));
+        // The booking stays in the collapsed block.
+        $this->assertMatchesRegularExpression('/<details class="g-more-fields" data-booking-details>/', $html);
+    }
+
+    public function test_g_contact_form_still_creates_the_lead_and_shows_a_thank_you_state(): void
+    {
+        config(['creatium.design' => 'g']);
+        \Illuminate\Support\Facades\Mail::fake();
+
+        $this->post('/kontakti', [
+            'name' => 'Иван Петров', 'phone' => '0888123456', 'email' => 'ivan@example.com', 'interests' => ['website'], 'consent' => '1',
+        ])->assertRedirect();
+        $this->assertDatabaseHas('projects', ['client_email' => 'ivan@example.com']);
+
+        $this->withSession(['success' => 'Благодарим ви! Ще се свържем с вас.'])->get('/kontakti')->assertOk()
+            ->assertSee('class="g-thanks"', false)->assertSee('Благодарим!')->assertSee('Благодарим ви! Ще се свържем с вас.')
+            ->assertSee('Отговаряме до един работен ден')->assertDontSee('name="phone"', false);
+    }
+
+    public function test_g_quote_form_and_site_check_show_a_thank_you_state(): void
+    {
+        config(['creatium.design' => 'g']);
+
+        $this->withSession(['quote_sent' => true])->get('/paketi')->assertOk()->assertSee('Получихме запитването ви.')->assertSee('class="g-thanks"', false);
+        $this->withSession(['site_check_sent' => 'a@b.bg'])->get('/proverka-na-sait')->assertOk()->assertSee('Проверката започна')->assertSee('class="g-thanks"', false);
+    }
+
+    public function test_g_about_speaks_as_an_agency_with_method_standards_and_founders(): void
+    {
+        config(['creatium.design' => 'g']);
+
+        $html = $this->get('/za-nas')->assertOk()
+            ->assertSee('Дигитална агенция за бизнеси')
+            ->assertSee('Как работим')->assertSee('Разговор и преглед')->assertSee('Грижа и растеж')
+            ->assertSee('Нашите стандарти')->assertSee('Фиксирана цена')
+            ->assertSee('Основатели')->assertSee('Борислав Костадинов')->assertSee('Владимир Цончев')
+            ->getContent();
+        $this->assertStringNotContainsString('двама', $html);
+        $this->assertStringNotContainsString('Сайтът е готов, рекламата върви', $html, 'the personal story stays out of the g page');
+
+        $en = $this->get('/en/about')->assertOk()->assertSee('A digital agency for businesses')->assertSee('How we work')->assertSee('Founders');
+        $this->assertDoesNotMatchRegularExpression('/\p{Cyrillic}/u', PlainCopyTest::visibleText($en->getContent()));
+    }
+
+    public function test_the_new_about_keys_exist_in_both_languages_and_in_the_admin_block(): void
+    {
+        foreach (['creatium', 'creatium_en'] as $file) {
+            $about = config("$file.about");
+            $this->assertCount(2, $about['g_intro'], $file);
+            $this->assertCount(4, $about['g_method'], $file);
+            $this->assertGreaterThanOrEqual(3, count($about['g_standards']), $file);
+            foreach (array_merge($about['g_method'], $about['g_standards']) as $item) {
+                $this->assertNotSame('', trim($item['title']));
+                $this->assertNotSame('', trim($item['text']));
+            }
+        }
+        $this->assertArrayHasKey('g_intro', app(\App\Support\Content::class)->withDefaults('about'));
+    }
+
+    public function test_g_services_keeps_the_funnel_and_the_calculator(): void
+    {
+        config(['creatium.design' => 'g']);
+
+        $this->get('/uslugi')->assertOk()
+            ->assertSee('data-funnel', false)->assertSee('data-funnel-canvas', false)->assertSee('data-funnel-toggle="0"', false)
+            ->assertSee('id="kalkulator"', false)->assertSee('data-calc-input', false)->assertSee('data-calc-bar="leads"', false)
+            ->assertSee('class="g-svc"', false)->assertSee('Какво получавате')
+            ->assertDontSee('bg-white/[0.03]', false);
+    }
+
+    public function test_g_service_and_industry_pages_keep_json_ld_faq_and_the_package(): void
+    {
+        config(['creatium.design' => 'g']);
+
+        $service = $this->get('/uslugi/izrabotka-na-sait')->assertOk()->assertSee('"@type":"FAQPage"', false)->assertSee('class="g-acc"', false)->assertSee('Включено в пакет')->getContent();
+        $this->assertGreaterThan(0, preg_match_all('/<details class="g-acc"/', $service));
+        $this->get('/izrabotka-na-sait-za-restorant')->assertOk()->assertSee('"@type":"Service"', false)->assertSee('data-concept-chip', false)->assertSee('Подходящ пакет');
+    }
+
+    public function test_g_legal_pages_keep_their_text_in_g_typography(): void
+    {
+        config(['creatium.design' => 'g']);
+
+        $this->get('/poveritelnost')->assertOk()->assertSee('class="g-prose g-legal"', false)->assertSee('Политика за поверителност')->assertSee('Кой обработва данните ви')->assertSee('<title>', false);
+        $this->get('/en/terms')->assertOk()->assertSee('class="g-prose g-legal"', false);
+        $this->get('/biskvitki')->assertOk()->assertSee('<table', false)->assertSee('Строго необходими');
+    }
+
+    public function test_g_inner_pages_have_no_dashes_or_colons_in_visible_text(): void
+    {
+        config(['creatium.design' => 'g']);
+        foreach (['/paketi', '/proekti', '/kontakti', '/uslugi', '/uslugi/izrabotka-na-sait', '/izrabotka-na-sait-za-restorant', '/za-nas', '/vaprosi', '/proverka-na-sait',
+            '/en/packages', '/en/projects', '/en/contact', '/en/services', '/en/about', '/en/faq', '/en/website-check'] as $path) {
+            $text = PlainCopyTest::visibleText($this->get($path)->assertOk()->getContent());
+            $this->assertSame([], PlainCopyTest::offences($text), $path);
+        }
+    }
+
+    public function test_english_g_pages_have_no_bulgarian_text(): void
+    {
+        config(['creatium.design' => 'g']);
+        foreach (['/en/packages', '/en/contact', '/en/services', '/en/about', '/en/faq', '/en/website-check', '/en/privacy', '/en/terms', '/en/cookies', '/en/nope'] as $path) {
+            $response = $this->get($path);
+            $text = preg_replace('/[„“]/u', '', PlainCopyTest::visibleText($response->getContent()));
+            // Bulgarian legal names and the Bulgarian concept sites are allowed; the interface text is not.
+            $this->assertDoesNotMatchRegularExpression('/\b[А-Яа-я]{4,}\b/u', preg_replace('/Борислав|Костадинов|Владимир|Цончев|Креo/u', '', $text), $path);
+        }
     }
 }

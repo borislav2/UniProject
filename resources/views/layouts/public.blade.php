@@ -9,6 +9,8 @@
         $gPreview = \App\Support\Design::preview();
         // The g home page ships its own lean stylesheet (Tailwind limited to the shared partials) and no app.css / app.js.
         $gLean = $g && $__env->hasSection('g_lean');
+        // Inner pages set the section to `inner` and get the stylesheet with the page components; the home page sets `1`.
+        $gLeanCss = $gLean && trim($__env->yieldContent('g_lean')) === 'inner' ? 'resources/css/g-inner.css' : 'resources/css/g-lean.css';
     @endphp
     @if(config('creatium.gtm_id'))
         @include('partials/gtm-head')
@@ -114,10 +116,10 @@
     @endunless
     @if($gLean)
         @if(config('creatium.inline_css') && ! \Illuminate\Support\Facades\Vite::isRunningHot())
-            <style>{!! \Illuminate\Support\Facades\Vite::content('resources/css/g-lean.css') !!}</style>
+            <style>{!! \Illuminate\Support\Facades\Vite::content($gLeanCss) !!}</style>
             @vite(['resources/js/g-bar.js'])
         @else
-            @vite(['resources/css/g-lean.css', 'resources/js/g-bar.js'])
+            @vite([$gLeanCss, 'resources/js/g-bar.js'])
         @endif
     @elseif(config('creatium.inline_css') && ! \Illuminate\Support\Facades\Vite::isRunningHot())
         {{-- Inline CSS (~10 KB gzip) saves a render-blocking request on first load --}}

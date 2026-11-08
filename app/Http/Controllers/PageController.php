@@ -11,7 +11,7 @@ class PageController extends Controller
 {
     public function services()
     {
-        return view('services', [
+        return gview('services', [
             'page' => site('services_page'),
             'trust' => app(\App\Support\Content::class)->withDefaults('home_trust'),
         ]);
@@ -30,7 +30,7 @@ class PageController extends Controller
             $alternates[$lang] = self::serviceUrl($key, $lang);
         }
 
-        return view('service', [
+        return gview('service', [
             'key' => $key,
             'page' => $pages[$key],
             'others' => collect($pages)->except($key),
@@ -50,7 +50,7 @@ class PageController extends Controller
 
         $alternates = ['bg' => route('industry', $slug), 'en' => self::serviceUrl('website', 'en')];
 
-        return view('industry', [
+        return gview('industry', [
             'slug' => $slug,
             'page' => $page,
             'demo' => $demo,
@@ -81,7 +81,7 @@ class PageController extends Controller
         // Картите показват само годишния абонамент (собствениците, ноември 2026), без превключвател и без ?plashtane.
         $billing = \App\Support\PlanBilling::config($plans);
 
-        return view('packages', [
+        return gview('packages', [
             'plans' => $plans,
             'billing' => $billing,
             'faq' => $faq,
@@ -98,7 +98,7 @@ class PageController extends Controller
             ->orderByDesc('end_date')
             ->get();
 
-        return view('portfolio', ['projects' => $projects, 'demos' => site('demos') ?? []]);
+        return gview('portfolio', ['projects' => $projects, 'demos' => site('demos') ?? []]);
     }
 
     public function about()
@@ -106,7 +106,7 @@ class PageController extends Controller
         // Ключове, добавени след последната редакция в админа (напр. story), идват от config.
         $about = app(\App\Support\Content::class)->withDefaults('about');
 
-        return view('about', ['about' => $about, 'team' => site('team'), 'trust' => site('home_trust')]);
+        return gview('about', ['about' => $about, 'team' => site('team'), 'trust' => site('home_trust')]);
     }
 
     /** Често задавани въпроси: отделна страница, по теми („group“), с FAQPage данни за Google. */
@@ -114,7 +114,7 @@ class PageController extends Controller
     {
         $questions = collect(site('questions') ?? [])->filter(fn ($item) => filled($item['q'] ?? null) && filled($item['a'] ?? null));
 
-        return view('faq', ['groups' => $questions->groupBy(fn ($item) => $item['group'] ?? '')]);
+        return gview('faq', ['groups' => $questions->groupBy(fn ($item) => $item['group'] ?? '')]);
     }
 
     /**
@@ -139,7 +139,7 @@ class PageController extends Controller
 
     public function privacy()
     {
-        return view($this->localized('privacy'), [
+        return $this->legal('privacy', [
             'legal' => config('creatium.legal'),
             'contact' => config('creatium.contact'),
         ]);
@@ -147,12 +147,12 @@ class PageController extends Controller
 
     public function terms()
     {
-        return view($this->localized('terms'), ['contact' => config('creatium.contact')]);
+        return $this->legal('terms', ['contact' => config('creatium.contact')]);
     }
 
     public function cookies()
     {
-        return view($this->localized('cookies'));
+        return $this->legal('cookies', []);
     }
 
     public function sitemap(): Response
@@ -263,6 +263,22 @@ class PageController extends Controller
         $body = "User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: " . route('sitemap') . "\n";
 
         return response($body)->header('Content-Type', 'text/plain');
+    }
+
+    /**
+     * A legal page: the long text stays in one place (resources/views/privacy|terms|cookies and en/*). Design G renders that view's
+     * sections and puts the text into its own page (g.legal) instead of the old page header and Tailwind wrapper.
+     */
+    private function legal(string $name, array $data)
+    {
+        $view = $this->localized($name);
+        if (! \App\Support\Design::is('g')) {
+            return view($view, $data);
+        }
+
+        $sections = view($view, $data)->renderSections();
+
+        return view('g.legal', ['sections' => $sections]);
     }
 
     /** Legal pages are written separately for each language: resources/views/en/* holds the English ones. */

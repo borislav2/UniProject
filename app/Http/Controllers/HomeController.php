@@ -44,7 +44,7 @@ class HomeController extends Controller
 
     public function contact()
     {
-        return view('contact', ['contact' => config('creatium.contact')]);
+        return gview('contact', ['contact' => config('creatium.contact')]);
     }
 
     public function submitContact(Request $request)

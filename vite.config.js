@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/admin-editor.js', 'resources/css/g.css', 'resources/css/g-lean.css', 'resources/js/g-home.js', 'resources/js/g-bar.js'],
+            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/admin-editor.js', 'resources/css/g.css', 'resources/css/g-lean.css', 'resources/css/g-inner.css', 'resources/js/g-home.js', 'resources/js/g-bar.js'],
             refresh: true,
         }),
         tailwindcss(),
