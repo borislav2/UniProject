@@ -47,7 +47,7 @@ class PlanBilling
         return (int) round((1 - $billing['yearly_months'] / 12) * 100);
     }
 
-    /** The first euro amount in a price line („€400 старт: …“, „след това €200 / месец“, „от €1 200 / месец“), or null. */
+    /** The first euro amount in a price line („€400 еднократно …“, „след това €200 / месец“, „от €1 200 / месец“), or null. */
     public static function amount(?string $line): ?int
     {
         if (preg_match('/€\s?(\d[\d\s.,]*)/u', (string) $line, $m) && ($digits = preg_replace('/\D/', '', $m[1])) !== '') {
@@ -109,7 +109,7 @@ class PlanBilling
                 'price' => self::money($f['once']),
                 'suffix' => __('/ година'),
                 'sub' => __('вместо :instead при месечно плащане', ['instead' => self::money($f['instead'])]),
-                'year' => __(':total общо: :start старт и :sub абонамент за 12 месеца', ['total' => self::money($f['year']), 'start' => self::money($start), 'sub' => self::money($f['once'])]),
+                'year' => __(':total общо, от които :start старт и :sub абонамент за 12 месеца', ['total' => self::money($f['year']), 'start' => self::money($start), 'sub' => self::money($f['once'])]),
             ];
         }
 
@@ -136,12 +136,12 @@ class PlanBilling
         foreach (array_values($plans['items'] ?? []) as $i => $plan) {
             $parts = [implode(', ', array_filter((array) ($plan['prices'] ?? []), 'filled'))];
             if (filled($plan['deposit'] ?? null)) {
-                $parts[] = __('Плащане на старта') . ': ' . $plan['deposit'];
+                $parts[] = \Illuminate\Support\Str::ucfirst(rtrim($plan['deposit'], '.'));
             }
             if ($billing['enabled'] && ($f = self::figures($billing, $plan, $i, self::YEARLY))) {
                 $parts[] = __('При годишно плащане абонаментът е :once вместо :instead при месечно плащане', ['once' => self::money($f['once']), 'instead' => self::money($f['instead'])]);
             }
-            $lines[] = '- ' . $plan['name'] . ': ' . implode('. ', $parts) . ($withAudience && filled($plan['audience'] ?? null) ? '. ' . $plan['audience'] : '');
+            $lines[] = '- ' . $plan['name'] . '. ' . implode('. ', $parts) . ($withAudience && filled($plan['audience'] ?? null) ? '. ' . $plan['audience'] : '');
         }
 
         return $lines;

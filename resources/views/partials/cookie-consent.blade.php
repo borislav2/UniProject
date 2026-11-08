@@ -14,11 +14,11 @@
             </label>
             <label class="flex items-start gap-3 rounded-xl bg-white/5 ring-1 ring-white/10 p-3 cursor-pointer">
                 <input type="checkbox" data-category="analytics" class="mt-1 accent-brand-400">
-                <span class="text-sm"><strong class="block">{{ __('Аналитични') }}</strong><span class="text-gray-300">{{ __('Google Analytics и Microsoft Clarity: кои страници се четат и кое е неудобно.') }}</span></span>
+                <span class="text-sm"><strong class="block">{{ __('Аналитични') }}</strong><span class="text-gray-300">{{ __('Google Analytics и Microsoft Clarity показват кои страници се четат и кое е неудобно.') }}</span></span>
             </label>
             <label class="flex items-start gap-3 rounded-xl bg-white/5 ring-1 ring-white/10 p-3 cursor-pointer">
                 <input type="checkbox" data-category="marketing" class="mt-1 accent-brand-400">
-                <span class="text-sm"><strong class="block">{{ __('Маркетингови') }}</strong><span class="text-gray-300">{{ __('Пиксели на рекламните платформи: колко запитвания идват от рекламите ни.') }}</span></span>
+                <span class="text-sm"><strong class="block">{{ __('Маркетингови') }}</strong><span class="text-gray-300">{{ __('Пикселите на рекламните платформи показват колко запитвания идват от рекламите ни.') }}</span></span>
             </label>
         </div>
 

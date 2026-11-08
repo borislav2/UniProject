@@ -34,7 +34,7 @@ class HomeCopyTest extends TestCase
     {
         $this->get('/')->assertOk()
             ->assertSee('<span class="text-accent">успех</span>', false)
-            ->assertSee('href="' . url('/uslugi') . '#kalkulator"', false)
+            ->assertSee('href="' . url('/paketi') . '#oferta"', false)
             ->assertSeeTextInOrder(['Партньор, който ви води стъпка по стъпка', 'Не ви оставяме сами в нито един момент.', 'Прецизен контрол над данните и бюджета', 'Лесно управление и пълна поддръжка', 'Изградено по доказан процес и световен стандарт']);
         $this->get('/en')->assertOk()->assertSeeText('A partner who guides you step by step')->assertSeeText('Built on a proven process and a global standard');
     }
@@ -52,7 +52,7 @@ class HomeCopyTest extends TestCase
     {
         $page = $this->get('/')->assertOk()
             ->assertSeeTextInOrder(['Анатомия на вашия дигитален двигател', 'Как изграждаме пътя от първия контакт до дългосрочната лоялност', 'Разгледайте всички услуги в детайли', 'Успехът не приключва с първата продажба.',
-                '1 · Откриване', 'Awareness', 'Стратегическо присъствие пред готови купувачи', 'Урок за фунията', 'Първото ниво, което отваря вратата към вашия бизнес.', 'Ако спре:', 'Пълна липса на входящ поток',
+                '1 · Откриване', 'Awareness', 'Стратегическо присъствие пред готови купувачи', 'Урок за фунията', 'Първото ниво, което отваря вратата към вашия бизнес.', 'Ако спре', 'Пълна липса на входящ поток',
                 '7 · Лоялност и препоръки', 'Loyalty', 'Липса на препоръки']);
         $this->assertSame(7, substr_count($page->getContent(), 'data-funnel-step="'));
         $this->get('/en')->assertOk()->assertSeeText('Strategic presence in front of ready buyers')->assertSeeText('Funnel lesson')->assertSeeText('No referrals');

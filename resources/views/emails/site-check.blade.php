@@ -43,7 +43,7 @@
 
 @if($crawl && $pagesChecked > 0)
 <tr><td style="padding:14px 36px 0;{{ $f }}font-size:13px;line-height:1.6;color:#64748b;">
-{{ __('Обходени страници: :n (до :limit за една проверка).', ['n' => $pagesChecked, 'limit' => $crawl['limit']]) }}
+{{ __('Обходихме :n страници (до :limit за една проверка).', ['n' => $pagesChecked, 'limit' => $crawl['limit']]) }}
 @if(! empty($crawl['limited']))<strong style="color:#b45309;">{{ __('Обхождането беше ограничено по размер или време, затова не всички страници са проверени. Подробният одит обхваща целия сайт.') }}</strong>@endif
 </td></tr>
 @endif
@@ -66,7 +66,7 @@
 <tr><td width="34" valign="top" style="padding:12px 0;"><span style="display:inline-block;width:22px;height:22px;line-height:22px;border-radius:11px;background:{{ $bg }};color:{{ $color }};{{ $f }}font-size:13px;font-weight:bold;text-align:center;">{{ $mark }}</span></td>
 <td style="padding:12px 0;{{ $f }}font-size:14px;line-height:1.55;color:#475569;border-bottom:1px solid #eef1f5;"><strong style="display:block;color:#0f1a2b;font-size:15px;">{{ $check['title'] }}</strong>{{ $check['detail'] }}
 @if(! empty($check['examples']))
-<div style="padding-top:6px;font-size:12px;line-height:1.5;color:#64748b;">{{ __('Например') }}:
+<div style="padding-top:6px;font-size:12px;line-height:1.5;color:#64748b;"><div style="font-weight:bold;">{{ __('Например') }}</div>
 @foreach($check['examples'] as $example)
 <div style="word-break:break-all;">{{ \Illuminate\Support\Str::limit($example['url'], 80) }}@if(! empty($example['from'])) ← {{ \Illuminate\Support\Str::limit($example['from'], 60) }}@endif @if(! empty($example['note'])) ({{ \Illuminate\Support\Str::limit($example['note'], 80) }})@endif</div>
 @endforeach
@@ -90,7 +90,7 @@
 @if(! empty($shopping['checks']))
 <tr><td style="padding:28px 36px 0;">
 @include('emails.client._parts', ['part' => 'label', 'text' => __('Готовност за Google Shopping'), 'color' => '#2d63a3'])
-<div style="{{ $f }}font-size:14px;line-height:1.6;color:#475569;padding-top:8px;">{{ __('Сайтът прилича на онлайн магазин. Google Shopping се очаква в България, но официална дата още няма. Първи печелят магазините с готови данни в деня на старта. Ето как стоите днес: :ok от :total наред.', ['ok' => $shopping['ok'], 'total' => $shopping['total']]) }}</div>
+<div style="{{ $f }}font-size:14px;line-height:1.6;color:#475569;padding-top:8px;">{{ __('Сайтът прилича на онлайн магазин. Google Shopping се очаква в България, но официална дата още няма. Първи печелят магазините с готови данни в деня на старта. Днес :ok от :total неща са наред.', ['ok' => $shopping['ok'], 'total' => $shopping['total']]) }}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:6px;">
 @foreach($shopping['checks'] as $shopCheck)
 @php
@@ -101,12 +101,12 @@
 <td style="padding:10px 0;{{ $f }}font-size:14px;line-height:1.55;color:#475569;border-bottom:1px solid #eef1f5;"><strong style="display:block;color:#0f1a2b;font-size:15px;">{{ $shopText['title'] }}</strong>@if($shopText['detail']){{ $shopText['detail'] }}@endif</td></tr>
 @endforeach
 </table>
-<div style="{{ $f }}font-size:14px;line-height:1.6;color:#475569;padding-top:12px;">{{ __('Какво включва подготовката на магазина:') }} <a href="{{ \App\Http\Controllers\PageController::serviceUrl('shopping') }}" style="color:#2d63a3;font-weight:bold;text-decoration:none;">{{ __('Подготовка за Google Shopping') }}</a>.</div>
+<div style="{{ $f }}font-size:14px;line-height:1.6;color:#475569;padding-top:12px;">{{ __('Какво включва подготовката на магазина') }} <a href="{{ \App\Http\Controllers\PageController::serviceUrl('shopping') }}" style="color:#2d63a3;font-weight:bold;text-decoration:none;">{{ __('Подготовка за Google Shopping') }}</a>.</div>
 </td></tr>
 @endif
 
 <tr><td style="padding:26px 36px 0;{{ $f }}font-size:13px;line-height:1.6;color:#64748b;">
-{{ __('Проверката е автоматична: обхожда до :limit страници и гледа техническите основи. Не преглежда текстовете, профила в Google Business и дали сайтът носи запитвания.', ['limit' => $crawl['limit'] ?? config('creatium.site_check.crawl_limit')]) }}
+{{ __('Проверката е автоматична. Обхожда до :limit страници и гледа техническите основи. Не преглежда текстовете, профила в Google Business и дали сайтът носи запитвания.', ['limit' => $crawl['limit'] ?? config('creatium.site_check.crawl_limit')]) }}
 </td></tr>
 
 <tr><td style="padding:26px 36px 0;">
@@ -114,7 +114,7 @@
 <tr><td style="padding:26px 26px 24px;{{ $f }}">
 <div style="font-size:12px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:#9cc0eb;">{{ __('Следваща стъпка') }}</div>
 <div style="font-size:19px;line-height:1.35;font-weight:bold;color:#ffffff;padding-top:8px;">{{ __('Искате ли подробен одит?') }}</div>
-<div style="font-size:14px;line-height:1.6;color:#d6e3f5;padding-top:8px;">{{ __('Преглеждаме целия сайт ръчно: скорост на телефон, текстове, Google профил и какво правят конкурентите ви. Получавате план какво да оправите първо и какво после, а ако искате, го оправяме ние.') }}</div>
+<div style="font-size:14px;line-height:1.6;color:#d6e3f5;padding-top:8px;">{{ __('Преглеждаме целия сайт ръчно. Гледаме скоростта на телефон, текстовете, Google профила и какво правят конкурентите ви. Получавате план какво да оправите първо и какво после, а ако искате, го оправяме ние.') }}</div>
 <div style="font-size:14px;line-height:1.6;color:#ffffff;font-weight:bold;padding-top:8px;">{{ $priceNote ?: __('Цената зависи от големината на сайта и я казваме предварително.') }}</div>
 <div style="height:16px;line-height:16px;font-size:0;">&nbsp;</div>
 <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>

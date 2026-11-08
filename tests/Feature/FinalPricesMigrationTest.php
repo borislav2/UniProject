@@ -72,7 +72,7 @@ class FinalPricesMigrationTest extends TestCase
 
         // Цените, имената, списъците и годишните суми са новите; бележката, бадж-ът и бутонът на собствениците остават.
         $this->assertSame($new['items'][0]['prices'], $row['items'][0]['prices']);
-        $this->assertSame(['€800 старт: изграждаме или поправяме сегашния ви сайт и първия месец', 'след това €650 / месец'], $row['items'][1]['prices']);
+        $this->assertSame([config('creatium.plans.items.1.prices.0'), 'след това €650 / месец'], $row['items'][1]['prices']);
         $this->assertSame('Индивидуален маркетинг', $row['items'][2]['name']);
         $this->assertSame($new['items'][1]['build_items'], $row['items'][1]['build_items']);
         $this->assertSame($new['items'][0]['deposit'], $row['items'][0]['deposit']);
@@ -102,7 +102,7 @@ class FinalPricesMigrationTest extends TestCase
         $titles = array_column($row['terms'], 'title');
         $this->assertNotContains('Плащане на две части', $titles);
         $this->assertContains('Плащане на старта на две части', $titles);
-        $this->assertContains('Годишно плащане: 2 месеца безплатно', $titles);
+        $this->assertContains('Годишно плащане с 2 месеца безплатно', $titles);
         $this->assertSame('Моят текст за фиксираната цена.', $row['terms'][array_search('Фиксирана цена', $titles, true)]['text']);
         $this->assertSame('Моето собствено условие', end($row['terms'])['title']);
         $monthly = $row['terms'][array_search('Какво покрива месечната такса', $titles, true)];
@@ -125,7 +125,7 @@ class FinalPricesMigrationTest extends TestCase
         $this->assertSame([], $report['backed_up']);
         $this->assertSame(['plans:bg'], $report['changed']);
         $this->assertSame($first, ContentBlock::where(['key' => 'plans' . FinalPrices2026::BACKUP_SUFFIX, 'locale' => 'bg'])->sole()->value);
-        $this->assertSame('€400 старт: изграждаме всичко и първия месец', ContentBlock::where(['key' => 'plans', 'locale' => 'bg'])->sole()->value['items'][0]['prices'][0]);
+        $this->assertSame(config('creatium.plans.items.0.prices.0'), ContentBlock::where(['key' => 'plans', 'locale' => 'bg'])->sole()->value['items'][0]['prices'][0]);
 
         // Трети път: нищо за променяне, няма нови записи.
         $count = ContentBlock::count();
@@ -191,7 +191,7 @@ class FinalPricesMigrationTest extends TestCase
         FinalPrices2026::apply();
 
         $this->assertFalse(ContentBlock::where('key', 'home_hero' . FinalPrices2026::BACKUP_SUFFIX)->exists());
-        $this->assertSame('€400 старт: изграждаме всичко и първия месец', app(Content::class)->get('plans.items.0.prices.0'));
+        $this->assertSame('€400 еднократно за изграждането и първия месец', app(Content::class)->get('plans.items.0.prices.0'));
         $this->get('/paketi')->assertOk()->assertSee('€400')->assertDontSee('€600 старт');
     }
 

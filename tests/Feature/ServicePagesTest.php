@@ -20,7 +20,7 @@ class ServicePagesTest extends TestCase
                 ->assertSee('hreflang="en" href="' . url('/en/services/' . $en['slug']) . '"', false)
                 ->assertSee('"@type":"FAQPage"', false)
                 ->assertSee($page['faq'][0][0])
-                ->assertSee('Безплатна консултация');
+                ->assertSee('Запазете час за разговор')->assertDontSee('Безплатна консултация');
 
             $this->get('/en/services/' . $en['slug'])->assertOk()->assertSee($en['title'])->assertSee('Free consultation');
         }

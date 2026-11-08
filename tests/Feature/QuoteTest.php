@@ -53,7 +53,7 @@ class QuoteTest extends TestCase
 
         $lead = Project::sole();
         $this->assertSame('Запитване за оферта от Мария Петрова', $lead->name);
-        $this->assertSame('Оферта: ' . $plan, $lead->service);
+        $this->assertSame('Оферта за ' . $plan, $lead->service);
         $this->assertSame('maria@example.com', $lead->client_email);
         $this->assertSame('0888 123 456', $lead->client_phone);
         $this->assertSame('https://lale.bg', $lead->website_url);
@@ -113,7 +113,7 @@ class QuoteTest extends TestCase
     {
         $this->get('/paketi')->assertOk()
             ->assertDontSee('Стъпка 1 от 2')
-            ->assertSee('По желание: за по-точна оферта')
+            ->assertSee('По желание, за по-точна оферта')
             ->assertSee('Изпратете запитването')
             ->assertSee('Без ангажимент. Отговор до 1 работен ден.')
             ->assertSee('data-sticky-cta', false);

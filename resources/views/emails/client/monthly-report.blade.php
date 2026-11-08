@@ -8,7 +8,7 @@
 @endphp
 
 @section('eyebrow', 'Месечен отчет')
-@section('headline'){{ $data['business'] }}: {{ $data['month'] }}@endsection
+@section('headline'){{ $data['business'] }}, {{ $data['month'] }}@endsection
 @section('sub', 'Какво направихме за вашия сайт и маркетинг този месец.')
 
 @section('body')

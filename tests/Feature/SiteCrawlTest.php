@@ -161,8 +161,9 @@ class SiteCrawlTest extends TestCase
             $this->assertLessThan(100, $mail->report['score']);
             $html = $mail->render();
             $this->assertStringContainsString('Какво да оправите първо', $html);
-            $this->assertStringContainsString('Счупени вътрешни връзки (404): 1', $html);
+            $this->assertStringContainsString('Счупени вътрешни връзки, 404 (1)', $html);
             $this->assertStringContainsString('https://firma.bg/stara', $html);
+            $this->assertSame([], PlainCopyTest::offences(PlainCopyTest::visibleText($html)));
             $this->assertStringContainsString('Проверихме 5 страници', $html);
             $this->assertStringContainsString('Искам подробен одит', $html);
 
@@ -181,7 +182,7 @@ class SiteCrawlTest extends TestCase
         $this->actingAs($user)->get('/admin/proverki')->assertOk()
             ->assertSee('Обходени страници')
             ->assertSee('Проблеми по целия сайт')
-            ->assertSee('Счупени вътрешни връзки (404): 1');
+            ->assertSee('Счупени вътрешни връзки, 404 (1)');
     }
 
     public function test_english_report_explains_issues_in_english(): void
@@ -191,7 +192,8 @@ class SiteCrawlTest extends TestCase
 
         Mail::assertSent(SiteCheckReportMail::class, function ($mail) {
             $html = $mail->render();
-            $this->assertStringContainsString('Broken internal links (404): 1', $html);
+            $this->assertStringContainsString('Broken internal links, 404 (1)', $html);
+            $this->assertSame([], PlainCopyTest::offences(PlainCopyTest::visibleText($html)));
             $this->assertStringContainsString('What to fix first', $html);
             $this->assertStringNotContainsString('Счупени', $html);
 

@@ -56,7 +56,7 @@
     <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-10 items-center">
         <div>
             <h2 class="text-4xl md:text-5xl font-black uppercase leading-none">Запази час</h2>
-            <p class="mt-4 font-semibold">Пн – Пт 8:00 – 18:00 · Сб 9:00 – 14:00</p>
+            <p class="mt-4 font-semibold">Понеделник до петък от 8:00 до 18:00 · Събота от 9:00 до 14:00</p>
             <p class="mt-6 flex items-center gap-3 font-semibold"><x-icon name="location-dot" /> бул. „Липник“ 100, Русе</p>
             <p class="mt-2 flex items-center gap-3 font-semibold"><x-icon name="phone" /> +359 82 000 000</p>
         </div>

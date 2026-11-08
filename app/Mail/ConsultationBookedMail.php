@@ -23,7 +23,7 @@ class ConsultationBookedMail extends Mailable
         $contact = config('creatium.contact.email');
 
         return new Envelope(
-            subject: __('Консултация с Creatium Lab: :time', ['time' => \App\Support\Booking::label($this->lead->consultation_at)]),
+            subject: __('Разговор с Creatium Lab, :time', ['time' => \App\Support\Booking::label($this->lead->consultation_at)]),
             replyTo: $contact ? [new Address($contact, 'Creatium Lab')] : [],
         );
     }

@@ -39,7 +39,7 @@ class FaqResponder
             $topics[] = [
                 __('Кои са собствениците, основателите, екипът и хората зад Creatium Lab? Кой стои зад вас, кой ще прави сайта, с кого ще работя, кои сте вие?'),
                 __('Creatium Lab са :people. Те са основателите и сами правят работата, така че говорите директно с хората, които правят сайта и маркетинга.', ['people' => $people])
-                    . (filled($team[0]['description'] ?? null) ? "\n" . implode("\n", array_map(fn ($p) => '– ' . ($p['name'] ?? $p['role']) . ': ' . ($p['description'] ?? ''), $team)) : '')
+                    . (filled($team[0]['description'] ?? null) ? "\n" . implode("\n", array_map(fn ($p) => ($p['name'] ?? $p['role']) . '. ' . ($p['description'] ?? ''), $team)) : '')
                     . "\n" . lroute('about'),
             ];
         }
@@ -51,26 +51,26 @@ class FaqResponder
         }
         $topics[] = [
             __('Какъв е телефонът, имейлът и адресът ви? Как да се свържа с вас, да ви се обадя или пиша? Къде се намирате, в кой град работите?'),
-            __('Имейл: :email. Телефон: :phones. Намираме се в :city и работим с бизнеси от цяла България.', ['email' => $contact['email'], 'phones' => implode(', ', $contact['phones']), 'city' => __($contact['city'])]),
+            __('Имейлът ни е :email, а телефонът :phones. Намираме се в :city и работим с бизнеси от цяла България.', ['email' => $contact['email'], 'phones' => implode(', ', $contact['phones']), 'city' => __($contact['city'])]),
         ];
         $topics[] = [
             __('Може ли безплатна консултация, среща или разговор? Как да запазя час?'),
-            __('Да, консултацията е безплатна, около :minutes минути. Изберете ден и час тук: :link', ['minutes' => config('creatium.booking.minutes'), 'link' => lroute('contact') . '#konsultatsiya']),
+            __('Да. Разговорът с нас е около :minutes минути и не ви задължава с нищо. Изберете ден и час тук. :link', ['minutes' => config('creatium.booking.minutes'), 'link' => lroute('contact') . '#konsultatsiya']),
         ];
         $topics[] = [
             __('Можете ли да проверите моя сайт? Безплатна проверка, анализ или одит на сайта.'),
-            __('Да. Въведете адреса на сайта си и имейл и до минута ще получите отчет какво да оправите: :link', ['link' => lroute('site-check')]),
+            __('Да. Въведете адреса на сайта си и имейл и до минута ще получите отчет какво да оправите. :link', ['link' => lroute('site-check')]),
         ];
         $demos = site('demos') ?? [];
         $topics[] = [
             __('Имате ли примери, портфолио или проекти, които сте правили?'),
-            __('Вижте нашите проекти и концепциите за сайтове за различни браншове:') . ' ' . implode(', ', array_map(fn ($d) => $d['name'] . ' (' . $d['industry'] . ')', $demos)) . '. ' . lroute('portfolio'),
+            __('Вижте нашите проекти и концепциите за сайтове за различни браншове.') . ' ' . implode(', ', array_map(fn ($d) => $d['name'] . ' (' . $d['industry'] . ')', $demos)) . '. ' . lroute('portfolio'),
         ];
         $steps = site('home_process')['steps'] ?? [];
         if ($steps) {
             $topics[] = [
                 __('Как работите, какъв е процесът и стъпките?'),
-                implode("\n", array_map(fn ($s, $i) => ($i + 1) . '. ' . $s['title'] . ': ' . $s['text'], $steps, array_keys($steps))),
+                implode("\n", array_map(fn ($s, $i) => ($i + 1) . '. ' . $s['title'] . '. ' . $s['text'], $steps, array_keys($steps))),
             ];
         }
         // Сайт за конкретен бранш (салон, ресторант, автосервиз…): страницата на бранша и подходящият пакет. Само на български.
@@ -81,13 +81,13 @@ class FaqResponder
                 $plan = $demo['package']['name'] ?? null;
                 $topics[] = [
                     $page['title'] . ', сайт за ' . mb_strtolower($page['menu']) . ' ' . ($demo['industry'] ?? ''),
-                    $page['lead'] . ($plan ? ' Подходящ пакет: ' . $plan . '. ' . ($demo['package']['why'] ?? '') : '') . "\n" . route('industry', $slug),
+                    $page['lead'] . ($plan ? ' Подходящият пакет е ' . $plan . '. ' . ($demo['package']['why'] ?? '') : '') . "\n" . route('industry', $slug),
                 ];
             }
         }
         $topics[] = [
             __('Искам нов сайт, изработка на сайт, уебсайт, да започнем.'),
-            __('Чудесно! Разкажете ни накратко за бизнеса си и ще ви изпратим оферта до един работен ден: :link Или напишете тук телефон или имейл и ще ви се обадим.', ['link' => lroute('packages') . '#oferta']),
+            __('Чудесно! Разкажете ни накратко за бизнеса си и ще ви изпратим оферта до един работен ден. :link Или напишете тук телефон или имейл и ще ви се обадим.', ['link' => lroute('packages') . '#oferta']),
         ];
         $plans = site('plans')['items'] ?? [];
         if ($plans) {
@@ -95,7 +95,7 @@ class FaqResponder
                 __('Колко струва сайт? Цени на пакетите, такса на месец, абонамент, оферта.'),
                 implode("\n", \App\Support\PlanBilling::textLines(app(\App\Support\Content::class)->withDefaults('plans')))
                     . "\n" . lroute('packages')
-                    . "\n" . __('Оферта за вашия бизнес: :link', ['link' => lroute('packages') . '#oferta']),
+                    . "\n" . __('Оферта за вашия бизнес. :link', ['link' => lroute('packages') . '#oferta']),
             ];
         }
 
@@ -136,7 +136,7 @@ class FaqResponder
             return $best . "\n\n" . __('Ако искате да говорим за вашия бизнес, напишете телефон или имейл и ще ви се обадим до един работен ден.');
         }
 
-        return __('Мога да отговоря на въпроси за услугите, цените, сроковете и екипа ни. Ако искате да говорите с нас, напишете телефон или имейл и ще ви се обадим до един работен ден, или изберете час за безплатна консултация: :link', ['link' => lroute('contact') . '#konsultatsiya']);
+        return __('Мога да отговоря на въпроси за услугите, цените, сроковете и екипа ни. Ако искате да говорите с нас, напишете телефон или имейл и ще ви се обадим до един работен ден. Можете и да запазите час за разговор. :link', ['link' => lroute('contact') . '#konsultatsiya']);
     }
 
     /** Поздрав и благодарност: кратък човешки отговор вместо шаблона „мога да отговоря на…“. */

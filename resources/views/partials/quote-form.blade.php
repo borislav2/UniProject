@@ -64,7 +64,7 @@
 
             <details class="group rounded-2xl border border-gray-200 dark:border-white/10" @if($openExtra) open @endif>
                 <summary class="flex cursor-pointer list-none items-center justify-between gap-3 p-4 font-semibold text-brand-950 [&::-webkit-details-marker]:hidden dark:text-white">
-                    {{ __('По желание: за по-точна оферта') }} <x-icon name="chevron-down" class="text-xs text-gray-500 transition-transform group-open:rotate-180" />
+                    {{ __('По желание, за по-точна оферта') }} <x-icon name="chevron-down" class="text-xs text-gray-500 transition-transform group-open:rotate-180" />
                 </summary>
                 <div class="space-y-5 p-4 pt-0">
                     <div class="grid gap-5 sm:grid-cols-2">

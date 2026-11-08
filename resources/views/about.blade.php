@@ -1,10 +1,10 @@
 @extends('layouts.public')
 
-@section('title', __('За нас: екипът зад вашия сайт и маркетинг'))
-@section('meta_description', __('Creatium Lab прави сайтове и маркетинг за бизнеси в България: от първата страница до клиентите, които я намират в Google.'))
+@section('title', __('За нас и екипа зад вашия сайт и маркетинг'))
+@section('meta_description', __('Creatium Lab прави сайтове и маркетинг за бизнеси в България, от първата страница до клиентите, които я намират в Google.'))
 
 @section('content')
-@include('partials/page-header', ['eyebrow' => 'Creatium Lab', 'heading' => __('За нас'), 'sub' => filled($about['subtitle'] ?? null) ? $about['subtitle'] : __('Creatium Lab прави сайтове и маркетинг за бизнеси в България: от първата страница до клиентите, които я намират в Google.')])
+@include('partials/page-header', ['eyebrow' => 'Creatium Lab', 'heading' => __('За нас'), 'sub' => filled($about['subtitle'] ?? null) ? $about['subtitle'] : __('Creatium Lab прави сайтове и маркетинг за бизнеси в България, от първата страница до клиентите, които я намират в Google.')])
 
 @if(!empty($about['paragraphs']))
 <section class="py-20 md:py-28 bg-white dark:bg-ink-950">

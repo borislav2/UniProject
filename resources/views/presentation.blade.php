@@ -21,7 +21,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <title>{{ __('Creatium Lab: презентация') }}</title>
+    <title>{{ __('Презентация на Creatium Lab') }}</title>
     @vite(['resources/css/app.css'])
     <style>
         @page { size: 1600px 900px; margin: 0; }
@@ -184,12 +184,12 @@
                         @endforeach
                     </ul>
                     @if(filled($plan['deposit'] ?? null))
-                        <p class="mt-5 pt-4 border-t text-base leading-snug {{ empty($plan['highlighted']) ? 'border-gray-200 text-gray-600' : 'border-white/15 text-gray-300' }}">{{ __('Плащане на старта') }}: {{ $plan['deposit'] }}</p>
+                        <p class="mt-5 pt-4 border-t text-base leading-snug {{ empty($plan['highlighted']) ? 'border-gray-200 text-gray-600' : 'border-white/15 text-gray-300' }}"><span class="block font-bold">{{ __('Плащане на старта') }}</span>{{ $plan['deposit'] }}</p>
                     @endif
                 </div>
             @endforeach
         </div>
-        <p class="mt-4 text-base text-gray-600">{{ __('Годишно плащане на абонамента: 2 месеца безплатно.') }}</p>
+        <p class="mt-4 text-base text-gray-600">{{ __('При годишно плащане на абонамента 2 месеца са безплатни.') }}</p>
     </div>
     <div class="slide-foot text-gray-400"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
 </section>
@@ -263,8 +263,8 @@
         <img src="{{ asset('images/logo-white.webp') }}" alt="Creatium Lab" class="h-12 w-auto self-start">
         <div>
             <p class="kicker text-base">{{ $trust['contact_eyebrow'] }}</p>
-            <h2 class="display mt-6 text-7xl max-w-[66rem]">{{ __('Безплатна консултация за вашия бизнес.') }}</h2>
-            <p class="mt-6 text-2xl text-gray-300 max-w-[56rem]">{{ __(':minutes минути разговор: разглеждаме сайта и присъствието ви в Google и ви казваме какво бихме направили първо.', ['minutes' => config('creatium.booking.minutes')]) }}</p>
+            <h2 class="display mt-6 text-7xl max-w-[66rem]">{{ __('Разговор с нас за вашия бизнес.') }}</h2>
+            <p class="mt-6 text-2xl text-gray-300 max-w-[56rem]">{{ __(':minutes минути разговор. Разглеждаме сайта и присъствието ви в Google и ви казваме какво бихме направили първо.', ['minutes' => config('creatium.booking.minutes')]) }}</p>
         </div>
         <div class="grid grid-cols-3 gap-6">
             <div class="relative edge glass rounded-2xl p-6"><p class="text-sm font-bold uppercase tracking-[0.2em] text-brand-300">{{ __('Сайт') }}</p><p class="mt-2 text-2xl font-bold">{{ $site }}</p></div>

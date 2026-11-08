@@ -20,8 +20,8 @@ class LocalizationTest extends TestCase
         $this->get('/en')
             ->assertSeeText('Digital solutions built with your success in mind.')
             ->assertSee('The anatomy of your digital engine')
-            ->assertSee('Calculate the gain')
-            ->assertSee('Start your project');
+            ->assertSee('Get a quote')
+            ->assertSee('What are you interested in');
     }
 
     public function test_bulgarian_stays_the_default(): void

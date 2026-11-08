@@ -139,7 +139,7 @@
       <div class="mx-auto max-w-7xl rounded-2xl border border-white/60 bg-white shadow-[0_10px_30px_-14px_rgb(15_26_43/0.3)] backdrop-blur-xl backdrop-saturate-150">
         <nav class="px-4 sm:px-5" aria-label="{{ __('Основна навигация') }}">
             <div class="flex justify-between items-center h-14 md:h-16">
-                <a href="{{ lroute('home') }}" class="flex items-center shrink-0" aria-label="{{ __('Creatium Lab - начало') }}">
+                <a href="{{ lroute('home') }}" class="flex items-center shrink-0" aria-label="{{ __('Creatium Lab, начало') }}">
                     <img src="{{ asset('images/logo.webp') }}" srcset="{{ asset('images/logo-224.webp') }} 224w, {{ asset('images/logo-352.webp') }} 352w, {{ asset('images/logo.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" fetchpriority="high" class="h-7 md:h-8 w-auto">
                 </a>
 
@@ -295,7 +295,7 @@
 
             @if($locale === 'bg')
                 <nav class="border-t border-white/10 py-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-400" aria-label="Сайт за бранш">
-                    <span class="font-semibold text-gray-300">Сайт за:</span>
+                    <span class="font-semibold text-gray-300">Изработка на сайт за</span>
                     @foreach(config('creatium.industry_pages') as $industrySlug => $industry)
                         <a href="{{ route('industry', $industrySlug) }}" class="hover:text-white">{{ $industry['menu'] }}</a>
                     @endforeach

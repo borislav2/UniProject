@@ -40,7 +40,7 @@
                 </div>
                 <div class="relative mt-3 min-h-[440px] flex-1 sm:min-h-[500px] lg:min-h-[600px]">
                     <canvas class="absolute inset-0 block h-full w-full" data-funnel-canvas role="img"
-                            aria-label="{{ __('Фуния: клиентите падат отгоре и минават през всяко ниво, докато стигнат до вас.') }}"></canvas>
+                            aria-label="{{ __('Фуния, в която клиентите падат отгоре и минават през всяко ниво, докато стигнат до вас.') }}"></canvas>
                 </div>
                 {{-- На телефон превключвателите до текстовете са далеч под фунията: тук са същите, наблизо. --}}
                 <div class="mt-3 grid grid-cols-1 gap-2 min-[420px]:grid-cols-2 lg:hidden">
@@ -85,12 +85,12 @@
                     </div>
                     @if(filled($step['works_text'] ?? null))<p class="mt-3 leading-relaxed text-gray-200">{{ $step['works_text'] }}</p>@endif
                     @if(filled($step['lesson'] ?? null))
-                        <p class="mt-3 rounded-xl bg-white/[0.05] px-3 py-2 text-sm leading-relaxed text-gray-300"><span class="font-semibold text-brand-200">{{ __('Урок за фунията') }}:</span> {{ $step['lesson'] }}</p>
+                        <p class="mt-3 rounded-xl bg-white/[0.05] px-3 py-2 text-sm leading-relaxed text-gray-300"><span class="block font-semibold text-brand-200">{{ __('Урок за фунията') }}</span>{{ $step['lesson'] }}</p>
                     @endif
-                    <p class="mt-3 rounded-xl bg-red-500/[0.07] px-3 py-2 text-sm leading-relaxed text-gray-300" data-funnel-without><span class="font-semibold text-red-300">{{ __('Ако спре:') }}</span> <strong class="font-bold text-gray-100">{{ $step['off_title'] ?? '' }}</strong>@if(filled($step['off_text'] ?? null))<span class="mt-0.5 block" data-funnel-without-text>{{ $step['off_text'] }}</span>@endif</p>
+                    <p class="mt-3 rounded-xl bg-red-500/[0.07] px-3 py-2 text-sm leading-relaxed text-gray-300" data-funnel-without><span class="block font-semibold text-red-300">{{ __('Ако спре') }}</span><strong class="font-bold text-gray-100">{{ $step['off_title'] ?? '' }}</strong>@if(filled($step['off_text'] ?? null))<span class="mt-0.5 block" data-funnel-without-text>{{ $step['off_text'] }}</span>@endif</p>
                     <p class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
-                        <span>{{ __('Получава хора от:') }} <strong class="text-gray-200">{{ $loop->first ? __('търсенията в Google и AI') : $funnelSteps[$loop->index - 1]['stage'] }}</strong></span>
-                        <span>{{ __('Подава ги на:') }} <strong class="text-gray-200">{{ $loop->last ? __('вас, като нов клиент') : $funnelSteps[$loop->index + 1]['stage'] }}</strong></span>
+                        <span>{{ __('Получава хората от') }} <strong class="text-gray-200">{{ $loop->first ? __('търсенията в Google и AI') : $funnelSteps[$loop->index - 1]['stage'] }}</strong></span>
+                        <span>{{ __('Подава ги на') }} <strong class="text-gray-200">{{ $loop->last ? __('вас, като нов клиент') : $funnelSteps[$loop->index + 1]['stage'] }}</strong></span>
                     </p>
                 </li>
             @endforeach
@@ -109,7 +109,7 @@
         var iconOk = panel.querySelector('[data-funnel-icon-ok]'), iconAlert = panel.querySelector('[data-funnel-icon-alert]');
         var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var T = {
-            running: @json(__('Двигателят работи')), stopped: @json(__('Двигателят спря')), problem: @json(__('Проблем:')),
+            running: @json(__('Двигателят работи')), stopped: @json(__('Двигателят спря')), problem: @json(__('Проблем')),
             badgeOk: @json(__('Работи')), badgeOff: @json(__('Спряно')), badgeVain: @json(__('Работи напразно')), badgeNone: @json(__('Не получава клиенти')),
             perMonth: @json(__('на месец')), closed: @json(__('затворено')), clients: @json(__('Клиенти')), search: @json(__('Търсят в Google и AI'))
         };
@@ -171,7 +171,7 @@
                 setClasses(panel, ['bg-white/[0.04]', 'ring-white/10'], ['bg-red-500/20', 'ring-red-400/60']);
             } else {
                 var a = data.alerts[off];
-                panelTitle.textContent = T.problem + ' ' + a.title; panelText.textContent = a.text;
+                panelTitle.textContent = T.problem + '. ' + a.title; panelText.textContent = a.text;
                 (a.points || []).forEach(function (p) {
                     var li = document.createElement('li'); li.className = 'flex items-start gap-2 text-red-100';
                     var x = document.createElement('span'); x.textContent = '✕'; x.className = 'mt-px text-xs font-extrabold text-red-300';

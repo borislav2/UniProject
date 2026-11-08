@@ -86,10 +86,10 @@ class PublicSiteTest extends TestCase
         $this->get('/en/services')->assertSee('A web platform designed to sell')->assertSee('Discuss your project with us');
     }
 
-    public function test_contact_form_preselects_the_service_from_the_link(): void
+    public function test_contact_form_preselects_the_interest_from_the_link(): void
     {
-        $this->assertMatchesRegularExpression('/name="service" value="support"[^>]*\schecked/', $this->get('/kontakti?service=support')->getContent());
-        $this->assertDoesNotMatchRegularExpression('/name="service" value="[a-z-]+"[^>]*\schecked/', $this->get('/kontakti?service=nonsense')->getContent());
+        $this->assertMatchesRegularExpression('/name="interests\[\]" value="ads"[^>]*\schecked/', $this->get('/kontakti?interest=ads')->getContent());
+        $this->assertDoesNotMatchRegularExpression('/name="interests\[\]" value="[a-z-]+"[^>]*\schecked/', $this->get('/kontakti?interest=nonsense')->getContent());
     }
 
     public function test_public_project_links_to_the_client_site(): void
@@ -112,7 +112,7 @@ class PublicSiteTest extends TestCase
                 'Персонализирани сайтове. Брандиран маркетинг. Стратегически решения за повече клиенти.',
                 'Получете оферта', 'Нова резервация',
                 'Цялостен подход към дигиталното ви присъствие', 'Принципите, по които ви напътстваме', 'Стратегическа видимост', 'Всичко, което клиентът вижда за вас, е изградено като едно.', 'Брандиране', 'Уеб изработка', 'Маркетинг', 'Успешен бизнес',
-                'Анатомия на вашия дигитален двигател', 'Двигателят работи', '1 · Откриване', 'Ако спре:', 'Подава ги на:',
+                'Анатомия на вашия дигитален двигател', 'Двигателят работи', '1 · Откриване', 'Ако спре', 'Подава ги на',
                 'Нашите ценности', 'Принципите, които гарантират реалния растеж на вашия бизнес',
                 'Как протича процесът', 'Шест етапа от анализа до постоянната оптимизация', 'Стратегически анализ', 'Поддръжка и развитие',
                 'Готови ли сте за дигитална система, която работи за вашите продажби?', 'За директна връзка',
@@ -121,7 +121,7 @@ class PublicSiteTest extends TestCase
             ->assertSeeTextInOrder(['Партньор, който ви води стъпка по стъпка', 'Лесно управление и пълна поддръжка', '01 / Решението', '02 / Дигиталният двигател', '03 / Нашите ценности', '04 / Браншове', '05 / Работен процес'])
             ->assertDontSee('Готова система, не визитка')
             ->assertDontSee('отзива в Google')
-            ->assertSee('href="' . url('/uslugi') . '#kalkulator"', false)
+            ->assertSee('href="' . url('/paketi') . '#oferta"', false)
             ->assertSee('id="konsultatsiya"', false)
             ->assertDontSee('Стандарти на работа')
             ->assertDontSee('Бъди разпознаваем.')
@@ -132,42 +132,70 @@ class PublicSiteTest extends TestCase
     {
         $this->get('/paketi')->assertOk()
             ->assertSee('Три начина да работим заедно')
-            ->assertSeeInOrder(['Стартов двигател', '€400', 'старт: изграждаме всичко и първия месец', 'след това', '€200', '/ месец', 'Активен маркетинг и растеж', '€800', '€650', '/ месец', 'Индивидуален маркетинг', 'от', '€1 200'], false)
+            ->assertSeeInOrder(['Стартов двигател', '€400', 'еднократно за изграждането и първия месец', 'след това', '€200', '/ месец', 'Активен маркетинг и растеж', '€800', '€650', '/ месец', 'Индивидуален маркетинг', 'от', '€1 200'], false)
             ->assertSee('Получете оферта');
         $this->get('/en/packages')->assertOk()->assertSee('Starter Engine')->assertSee('Get a quote');
     }
 
-    public function test_contact_form_asks_for_project_status_and_email(): void
+    public function test_contact_form_is_one_simple_form(): void
     {
         $this->get('/kontakti')
+            ->assertSee('Свържете се с нас')
             ->assertSee('Име и фамилия')
-            ->assertSee('Телефон за връзка')
-            ->assertSee('name="email"', false)
-            ->assertSee('Настоящ статус на проекта')
-            ->assertSee('Изграждане на нова дигитална система (Уебсайт + Маркетинг)')
-            ->assertSee('Модернизация на съществуващ сайт и маркетингова оптимизация')
-            ->assertSee('Техническа поддръжка, аналитика и дигитално развитие')
-            ->assertSee('Описание на бизнес целите')
-            ->assertSee('Стартирайте вашия проект')
-            ->assertSeeInOrder(['data-step', 'name="service"', 'name="goals[]"', 'data-step', 'name="business"', 'name="site_url"', 'name="message"', 'data-step', 'name="timeline"', 'id="konsultatsiya"', 'data-step', 'name="name"', 'name="consent"'], false)
-            ->assertDontSee('Размер на бизнеса');
+            ->assertSee('вашсайт.bg, ако имате')
+            ->assertSee('От какво се интересувате')
+            ->assertSee('Изработка на сайт')
+            ->assertSee('Реклами в Google и Meta')
+            ->assertSee('Разкажете ни накратко за бизнеса си и какво търсите')
+            ->assertSee('Искате ли да запазите час за разговор? (по желание)')
+            ->assertSeeInOrder(['name="website"', 'name="name"', 'name="site_url"', 'name="email"', 'name="phone"', 'name="interests[]"', 'name="message"', '<details', 'id="konsultatsiya"', '</details>', 'name="consent"', 'Изпратете'], false)
+            ->assertDontSee('data-step', false)
+            ->assertDontSee('Напред')
+            ->assertDontSee('name="service"', false)
+            ->assertDontSee('name="goals[]"', false)
+            ->assertDontSee('name="timeline"', false);
+
+        $this->get('/en/contact')->assertSee('What are you interested in')->assertSee('Website design')->assertSee('Send');
     }
 
-    public function test_step_form_answers_are_saved_on_the_lead_in_bulgarian(): void
+    public function test_booking_details_open_when_a_slot_was_chosen(): void
+    {
+        $this->get('/kontakti')->assertDontSee('data-booking-details open', false);
+        $this->withSession(['_old_input' => ['consultation' => '2026-12-01 10:00']])
+            ->get('/kontakti')->assertSee('data-booking-details open', false);
+    }
+
+    public function test_interests_are_saved_as_the_service_and_in_the_description(): void
     {
         Mail::fake();
 
-        $this->post('/en/contact', $this->payload([
-            'goals' => ['google', 'reviews'], 'business' => 'Автосервиз, Бургас', 'site_url' => 'motorpro.bg', 'timeline' => 'month',
-        ]))->assertSessionHasNoErrors();
+        $payload = $this->payload(['interests' => ['website', 'ads'], 'site_url' => 'motorpro.bg']);
+        unset($payload['service']);
+        $this->post('/en/contact', $payload)->assertSessionHasNoErrors()->assertSessionHas('lead_service', 'Изработка на сайт, Реклами в Google и Meta');
 
         $lead = Project::where('source', 'website')->firstOrFail();
-        $this->assertSame("Искам сайт за моя ресторант.\n\nЦели: Повече клиенти от Google и Google Maps, Google профил и отзиви\nБизнес: Автосервиз, Бургас\nСайт: motorpro.bg\nКога: До един месец", $lead->description);
+        $this->assertSame('Изработка на сайт, Реклами в Google и Meta', $lead->service);
+        $this->assertSame("Искам сайт за моя ресторант.\n\nИнтересува се от Изработка на сайт, Реклами в Google и Meta.\nСегашен сайт motorpro.bg", $lead->description);
         $this->assertSame('https://motorpro.bg', $lead->website_url);
+        $this->assertStringNotContainsString(':', $lead->service);
+        Mail::assertSent(NewLeadMail::class);
 
-        $this->post('/kontakti', $this->payload(['goals' => ['nonsense'], 'timeline' => 'someday']))->assertSessionHasErrors(['goals.0', 'timeline']);
+        $this->post('/kontakti', $this->payload(['interests' => ['nonsense']]))->assertSessionHasErrors('interests.0');
         $this->post('/kontakti', $this->payload(['message' => '', 'site_url' => 'не е адрес']))->assertSessionHasNoErrors();
         $this->assertNull(Project::where('source', 'website')->latest('id')->first()->website_url);
+    }
+
+    public function test_website_interests_and_message_are_optional(): void
+    {
+        Mail::fake();
+
+        $this->post('/kontakti', ['name' => 'Мария', 'phone' => '0888123456', 'email' => 'm@example.bg', 'consent' => '1'])
+            ->assertSessionHasNoErrors()->assertSessionHas('lead_service', 'Запитване от сайта');
+
+        $lead = Project::where('source', 'website')->firstOrFail();
+        $this->assertSame('Запитване от сайта', $lead->service);
+        $this->assertSame('Без съобщение. Запитване от сайта.', $lead->description);
+        $this->assertNull($lead->website_url);
     }
 
     public function test_email_is_saved_on_the_lead(): void
@@ -222,7 +250,7 @@ class PublicSiteTest extends TestCase
     {
         config(['creatium.legal.eik' => '123456789', 'creatium.legal.address' => 'гр. София, ул. Примерна 1']);
 
-        $this->get('/poveritelnost')->assertSee('ЕИК 123456789')->assertSee('адрес: гр. София, ул. Примерна 1');
+        $this->get('/poveritelnost')->assertSee('ЕИК 123456789')->assertSee('адрес гр. София, ул. Примерна 1');
         $this->get('/en/privacy')->assertSee('company ID (EIK) 123456789');
     }
 
@@ -267,7 +295,7 @@ class PublicSiteTest extends TestCase
 
     public function test_contact_form_validation(): void
     {
-        $this->post('/kontakti', [])->assertSessionHasErrors(['name', 'phone', 'email', 'service', 'consent']);
+        $this->post('/kontakti', [])->assertSessionHasErrors(['name', 'phone', 'email', 'consent'])->assertSessionDoesntHaveErrors(['service', 'interests', 'site_url', 'message']);
         $this->post('/kontakti', $this->payload(['phone' => 'abc']))->assertSessionHasErrors('phone');
         $this->post('/kontakti', $this->payload(['service' => 'Нещо друго']))->assertSessionHasErrors('service');
         $this->post('/kontakti', $this->payload(['consent' => null]))->assertSessionHasErrors('consent');

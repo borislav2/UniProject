@@ -121,7 +121,7 @@ class SiteKnowledge
 
         $plansFull = app(\App\Support\Content::class)->withDefaults('plans');
         $out[] = "\n### " . __('Цени и плащане');
-        $out[] = __('Цените са фиксирани. Стартовата цена се плаща на две части: първата сума преди да подготвим офертата и демото, останалата при съгласие. Първата сума не се връща, ако клиентът не продължи; кажи го ясно, ако питат.');
+        $out[] = __('Цените са фиксирани. Стартовата цена се плаща на две части, първата сума преди да подготвим офертата и демото, останалата при съгласие. Първата сума не се връща, ако клиентът не продължи; кажи го ясно, ако питат.');
         array_push($out, ...\App\Support\PlanBilling::textLines($plansFull));
         if (! empty($plansFull['compare'])) {
             $out[] = __('Сравнение') . ' (' . implode(' | ', array_map(fn ($p) => $p['name'], array_values($plansFull['items'] ?? []))) . '):';
@@ -166,7 +166,7 @@ class SiteKnowledge
         $out[] = 'Email: ' . $contact['email'];
         $out[] = 'Phone: ' . implode(', ', $contact['phones']);
         $out[] = 'Location: ' . __($contact['city']) . ', ' . __('България') . '; we work with businesses across Bulgaria.';
-        $out[] = 'Free consultation (' . config('creatium.booking.minutes') . ' minutes, pick a day and time on weekdays): ' . lroute('contact') . '#konsultatsiya';
+        $out[] = 'Book a call with us (' . config('creatium.booking.minutes') . ' minutes, pick a day and time on weekdays) at ' . lroute('contact') . '#konsultatsiya';
         $out[] = 'Contact form: ' . lroute('contact');
         $out[] = 'Get a quote for a package (short form, the team replies within one working day): ' . lroute('packages') . '#oferta';
         $out[] = 'Calculator of how much a better digital presence could improve visits and enquiries (on the Services page): ' . lroute('services') . '#kalkulator';

@@ -16,7 +16,7 @@
                 @endif
             </a>
             <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
-                <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">Вижте концепцията: {{ $demo['name'] }} <x-icon name="arrow-right" class="text-xs" /></a>
+                <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">Вижте концепцията {{ $demo['name'] }} <x-icon name="arrow-right" class="text-xs" /></a>
                 <span class="rounded-full border border-gray-300 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:border-white/20 dark:text-gray-400">Концепция</span>
             </div>
         </div>
@@ -76,7 +76,7 @@
                 <p class="mt-4 leading-relaxed text-gray-300">{{ $demo['package']['why'] }}</p>
             </div>
             <div class="relative md:col-span-5 flex flex-col gap-3">
-                <a href="{{ lroute('contact') }}#konsultatsiya" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 font-semibold text-brand-950 hover:bg-brand-50">Безплатна консултация <x-icon name="arrow-right" class="text-sm" /></a>
+                <a href="{{ lroute('contact') }}#konsultatsiya" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 font-semibold text-brand-950 hover:bg-brand-50">Запазете час за разговор <x-icon name="arrow-right" class="text-sm" /></a>
                 <a href="{{ lroute('packages') }}" class="inline-flex items-center justify-center rounded-xl border border-white/25 px-6 py-3.5 font-semibold text-white hover:bg-white/10">Вижте какво включват пакетите</a>
             </div>
         </div>

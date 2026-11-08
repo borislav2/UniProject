@@ -5,7 +5,7 @@
     Текстът от сървъра се показва като текст (textContent); само адресите стават връзки.
 --}}
 @php
-    $chatSuggestions = [__('Колко струва един сайт?'), __('За колко време е готов?'), __('Какво включва месечната поддръжка?'), __('Искам безплатна консултация')];
+    $chatSuggestions = [__('Колко струва един сайт?'), __('За колко време е готов?'), __('Какво включва месечната поддръжка?'), __('Искам да запазя час за разговор')];
 @endphp
 <div id="chat" class="fixed bottom-4 right-4 z-[55] sm:bottom-5 sm:right-5" data-chat
      data-send="{{ route('chat.send') }}" data-history="{{ url('/chat') }}" data-token="{{ csrf_token() }}" data-locale="{{ app()->getLocale() }}"
@@ -40,7 +40,7 @@
                 <textarea id="chat-input" rows="1" maxlength="1000" placeholder="{{ __('Напишете въпрос…') }}" class="max-h-32 min-h-[2.75rem] flex-1 resize-none rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 dark:border-white/15 dark:bg-white/5 dark:focus:bg-ink-900 dark:text-white dark:placeholder:text-gray-400 dark:focus:ring-brand-500/30" data-chat-input></textarea>
                 <button type="submit" class="w-11 h-11 shrink-0 rounded-xl bg-brand-950 text-white flex items-center justify-center hover:bg-brand-800 disabled:opacity-50 dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100" aria-label="{{ __('Изпрати') }}" data-chat-send><x-icon name="paper-plane" class="text-sm" /></button>
             </div>
-            <p class="mt-2 px-1 text-[11px] leading-snug text-gray-500 dark:text-gray-400">{!! __('AI асистент: може да сгреши. Разговорът се пази :days дни. Ако оставите телефон или имейл, ще се свържем с вас. :link', ['days' => config('creatium.chat.retention_days'), 'link' => '<a href="' . e(lroute('privacy')) . '" class="underline hover:text-brand-700 dark:hover:text-brand-300">' . e(__('Поверителност')) . '</a>']) !!}</p>
+            <p class="mt-2 px-1 text-[11px] leading-snug text-gray-500 dark:text-gray-400">{!! __('AI асистентът може да сгреши. Разговорът се пази :days дни. Ако оставите телефон или имейл, ще се свържем с вас. :link', ['days' => config('creatium.chat.retention_days'), 'link' => '<a href="' . e(lroute('privacy')) . '" class="underline hover:text-brand-700 dark:hover:text-brand-300">' . e(__('Поверителност')) . '</a>']) !!}</p>
         </form>
     </div>
 

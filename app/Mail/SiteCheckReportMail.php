@@ -22,7 +22,7 @@ class SiteCheckReportMail extends Mailable
         $contact = config('creatium.contact.email');
 
         return new Envelope(
-            subject: __('Проверка на :domain: оценка :score от 100', ['domain' => $this->report['domain'], 'score' => $this->report['score']]),
+            subject: __('Проверка на :domain, оценка :score от 100', ['domain' => $this->report['domain'], 'score' => $this->report['score']]),
             replyTo: $contact ? [new Address($contact, 'Creatium Lab')] : [],
         );
     }

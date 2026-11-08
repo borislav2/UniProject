@@ -14,8 +14,8 @@ class PackagesPageTest extends TestCase
     {
         $plans = config('creatium.plans');
         $this->assertCount(3, $plans['items']);
-        $this->assertSame(['€400 старт: изграждаме всичко и първия месец', 'след това €200 / месец'], $plans['items'][0]['prices']);
-        $this->assertSame(['€800 старт: изграждаме или поправяме сегашния ви сайт и първия месец', 'след това €650 / месец'], $plans['items'][1]['prices']);
+        $this->assertSame(['€400 еднократно за изграждането и първия месец', 'след това €200 / месец'], $plans['items'][0]['prices']);
+        $this->assertSame(['€800 еднократно за изграждането или поправката на сегашния ви сайт и първия месец', 'след това €650 / месец'], $plans['items'][1]['prices']);
         $this->assertSame(['Индивидуална оферта', 'от €1 200 / месец'], $plans['items'][2]['prices']);
         $this->assertSame('Индивидуален маркетинг', $plans['items'][2]['name']);
         $this->assertArrayNotHasKey('pricing', $plans);
@@ -80,16 +80,16 @@ class PackagesPageTest extends TestCase
 
         $this->get('/usloviya')->assertOk()
             ->assertSee('Първата част се плаща преди да подготвим офертата и демото и не се връща, ако решите да не продължите.')
-            ->assertSee('Последна промяна: 08.11.2026');
+            ->assertSee('Последна промяна 08.11.2026');
         $this->get('/en/terms')->assertOk()
             ->assertSee('The first part is paid before we prepare the offer and the demo and is not refunded if you decide not to continue.')
-            ->assertSee('Last updated: 8 November 2026');
+            ->assertSee('Last updated 8 November 2026');
     }
 
     public function test_yearly_billing_gives_two_months_free_and_the_toggle_has_no_slider(): void
     {
         $html = $this->get('/paketi')->assertOk()
-            ->assertSee('Годишно: 2 месеца безплатно')
+            ->assertSee('Годишно, 2 месеца безплатно')
             ->assertSee('&minus;17%', false)
             ->assertDontSee('type="range"', false)
             ->assertDontSee('Изберете колко съдържание')
@@ -151,13 +151,13 @@ class PackagesPageTest extends TestCase
     public function test_guarantee_six_month_price_and_ad_budget_terms_are_shown(): void
     {
         $this->get('/paketi')->assertOk()
-            ->assertSee('Гаранция: връщаме парите')
+            ->assertSee('Гаранция за връщане на парите')
             ->assertSee('Ако 60 дни след пускането на сайта нямате трафик, връщаме парите, които сте платили.')
             ->assertSee('Абонаментната цена е фиксирана за първите 6 месеца.')
             ->assertSee('Бюджетът за реклама във Facebook и Instagram се плаща от вас директно на Meta.')
             ->assertSee('Рекламният бюджет включен ли е в цената?');
         $this->get('/en/packages')->assertOk()
-            ->assertSee('Guarantee: we refund you')
+            ->assertSee('Money-back guarantee')
             ->assertSee('The subscription price is fixed for the first 6 months.');
         $this->get('/usloviya')->assertOk()
             ->assertSee('3. Цена, плащане, абонамент, гаранция и реклама')

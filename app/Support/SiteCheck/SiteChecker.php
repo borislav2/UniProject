@@ -104,7 +104,7 @@ class SiteChecker
             $location = $http['response']?->header('Location') ?? '';
             $report['checks'][] = $http['response'] && $http['response']->redirect() && str_starts_with(strtolower($location), 'https://')
                 ? $this->item('ok', __('Адресът без „s“ води към защитената версия'), __('Който напише http://, автоматично отива на https://.'))
-                : $this->item('warn', __('Адресът с http:// не води към https://'), __('Хората, които стигат до сайта по стар линк, го виждат като незащитен. Нужно е едно пренасочване в настройките на сървъра.'));
+                : $this->item('warn', __('Адресът с http не води към https'), __('Хората, които стигат до сайта по стар линк, го виждат като незащитен. Нужно е едно пренасочване в настройките на сървъра.'));
         }
 
         // 3. Скорост на отговора
@@ -120,7 +120,7 @@ class SiteChecker
         $titleLength = mb_strlen($title);
         $report['checks'][] = match (true) {
             $titleLength === 0 => $this->item('fail', __('Няма заглавие за Google'), __('Страницата няма мета заглавие (title). Това е синият ред в резултатите на Google.')),
-            $titleLength < 15 || $titleLength > 65 => $this->item('warn', __('Заглавието за Google е с неподходяща дължина (:n знака)', ['n' => $titleLength]), __('„:title“. Добрата дължина е около 30–60 знака: какво правите и къде, плюс името на бизнеса.', ['title' => mb_strimwidth($title, 0, 80, '…')])),
+            $titleLength < 15 || $titleLength > 65 => $this->item('warn', __('Заглавието за Google е с неподходяща дължина (:n знака)', ['n' => $titleLength]), __('„:title“. Добрата дължина е около 30 до 60 знака. Напишете какво правите и къде, плюс името на бизнеса.', ['title' => mb_strimwidth($title, 0, 80, '…')])),
             default => $this->item('ok', __('Заглавие за Google'), '„' . $title . '“'),
         };
 
@@ -128,8 +128,8 @@ class SiteChecker
         $description = trim(preg_replace('/\s+/u', ' ', (string) $xpath->evaluate('string(//meta[translate(@name,"DESCRIPTION","description")="description"]/@content)')));
         $descriptionLength = mb_strlen($description);
         $report['checks'][] = match (true) {
-            $descriptionLength === 0 => $this->item('fail', __('Няма описание за Google'), __('Липсва мета описание: двата реда текст под заглавието в Google. Без него Google избира откъс сам, често неудачен.')),
-            $descriptionLength < 50 || $descriptionLength > 165 => $this->item('warn', __('Описанието за Google е с неподходяща дължина (:n знака)', ['n' => $descriptionLength]), __('Добрата дължина е около 120–155 знака: какво получава клиентът и какво да направи.')),
+            $descriptionLength === 0 => $this->item('fail', __('Няма описание за Google'), __('Липсва мета описание. Това са двата реда текст под заглавието в Google. Без него Google избира откъс сам, често неудачен.')),
+            $descriptionLength < 50 || $descriptionLength > 165 => $this->item('warn', __('Описанието за Google е с неподходяща дължина (:n знака)', ['n' => $descriptionLength]), __('Добрата дължина е около 120 до 155 знака. Напишете какво получава клиентът и какво да направи.')),
             default => $this->item('ok', __('Описание за Google'), '„' . mb_strimwidth($description, 0, 170, '…') . '“'),
         };
 

@@ -23,7 +23,7 @@
                 <a href="#rezervaciya" class="rounded-full bg-[#7a1f2b] px-7 py-3 font-semibold text-white hover:bg-[#5e1520]">Резервирай маса</a>
                 <a href="#menu" class="rounded-full border-2 border-[#7a1f2b] px-7 py-3 font-semibold text-[#7a1f2b] hover:bg-[#7a1f2b] hover:text-white">Виж менюто</a>
             </div>
-            <p class="mt-6 text-sm text-[#5a4636]">Всеки ден 12:00 – 23:00 · ★★★★★ 4,8 от 320 отзива</p>
+            <p class="mt-6 text-sm text-[#5a4636]">Всеки ден от 12:00 до 23:00 · ★★★★★ 4,8 от 320 отзива</p>
         </div>
         <div class="relative">
             <div class="aspect-square max-w-md mx-auto rounded-full bg-gradient-to-br from-[#7a1f2b] to-[#3d0f16] flex items-center justify-center shadow-2xl">

@@ -21,7 +21,7 @@
 <p style="margin:0 0 14px;">Здравейте{{ filled($data['first_name'] ?? null) ? ', ' . $data['first_name'] : '' }},</p>
 <p style="margin:0 0 14px;">{{ $teamSignature ? 'Пишем ви отново' : 'Пиша ви отново' }} накратко във връзка с писмото от {{ $data['first_date'] }} за сайта на {{ $prospect->displayName() }}.</p>
 @if(filled($data['finding'] ?? null))
-<p style="margin:0 0 14px;">Най-важното от проверката беше: <strong style="color:#0f1a2b;">{{ $data['finding'] }}</strong>. Обикновено се оправя за няколко дни, без нов сайт.</p>
+<p style="margin:0 0 14px;">Най-важното от проверката беше „<strong style="color:#0f1a2b;">{{ $data['finding'] }}</strong>“. Обикновено се оправя за няколко дни, без нов сайт.</p>
 @endif
 <p style="margin:0 0 18px;">Ако темата е актуална за вас, изберете удобен час за кратък разговор ({{ $links['minutes'] }} минути) или просто отговорете на този имейл. Ако не е, няма да {{ $teamSignature ? 'ви пишем' : 'ви пиша' }} повече по нея.</p>
 </td></tr>

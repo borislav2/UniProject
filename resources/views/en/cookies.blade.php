@@ -28,7 +28,7 @@
                         <tr><th class="px-4 py-2.5 font-semibold">Name</th><th class="px-4 py-2.5 font-semibold">Purpose</th><th class="px-4 py-2.5 font-semibold">Duration</th></tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-white/10">
-                        <tr><td class="px-4 py-2.5 font-mono text-xs">{{ config('session.cookie') }}</td><td class="px-4 py-2.5">Session: remembers that the form was sent and shows its errors</td><td class="px-4 py-2.5 whitespace-nowrap">{{ config('session.lifetime') }} min</td></tr>
+                        <tr><td class="px-4 py-2.5 font-mono text-xs">{{ config('session.cookie') }}</td><td class="px-4 py-2.5">The session remembers that the form was sent and shows its errors</td><td class="px-4 py-2.5 whitespace-nowrap">{{ config('session.lifetime') }} min</td></tr>
                         <tr><td class="px-4 py-2.5 font-mono text-xs">XSRF-TOKEN</td><td class="px-4 py-2.5">Protects forms against abuse</td><td class="px-4 py-2.5 whitespace-nowrap">{{ config('session.lifetime') }} min</td></tr>
                         @if($tracking)
                             <tr><td class="px-4 py-2.5 font-mono text-xs">creatium-consent</td><td class="px-4 py-2.5">Remembers your choice in the cookie banner (localStorage)</td><td class="px-4 py-2.5 whitespace-nowrap">1 year</td></tr>
@@ -52,7 +52,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-white/10">
                             @foreach($cookies[$category] as $cookie)
-                                <tr><td class="px-4 py-2.5 font-mono text-xs whitespace-nowrap">{{ $cookie['name'] }}</td><td class="px-4 py-2.5"><strong class="font-semibold">{{ $cookie['provider'] }}</strong>: {{ $cookie['purpose'] }}</td><td class="px-4 py-2.5 whitespace-nowrap">{{ $cookie['duration'] }}</td></tr>
+                                <tr><td class="px-4 py-2.5 font-mono text-xs whitespace-nowrap">{{ $cookie['name'] }}</td><td class="px-4 py-2.5"><strong class="block font-semibold">{{ $cookie['provider'] }}</strong>{{ $cookie['purpose'] }}</td><td class="px-4 py-2.5 whitespace-nowrap">{{ $cookie['duration'] }}</td></tr>
                             @endforeach
                     </tbody>
                 </table>
@@ -76,7 +76,7 @@
             <p>Write to us at <a href="mailto:{{ config('creatium.contact.email') }}" class="text-brand-600 underline dark:text-brand-300">{{ config('creatium.contact.email') }}</a>.</p>
         </div>
 
-        <p class="text-sm text-gray-500 dark:text-gray-400">Last updated: 3 October 2026</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Last updated 8 November 2026</p>
     </div>
 </section>
 @endsection

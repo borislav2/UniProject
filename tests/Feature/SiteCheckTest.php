@@ -93,7 +93,7 @@ class SiteCheckTest extends TestCase
             ->assertSee('# Creatium Lab', false)
             ->assertSee('## Услуги', false)
             ->assertSee('(' . url('/uslugi/google-profil-i-otzivi') . ')', false)
-            ->assertSee('- Стартов двигател: €400 старт: изграждаме всичко и първия месец, след това €200 / месец', false)
+            ->assertSee('- Стартов двигател. €400 еднократно за изграждането и първия месец, след това €200 / месец', false)
             ->assertSee(config('creatium.contact.email'));
     }
 
@@ -140,7 +140,7 @@ class SiteCheckTest extends TestCase
 
         Mail::assertSent(SiteCheckReportMail::class, function ($mail) {
             $titles = collect($mail->report['checks'])->where('status', '!=', 'ok')->pluck('title')->all();
-            foreach (['Адресът с http:// не води към https://', 'Няма заглавие за Google', 'Няма описание за Google', 'Няколко основни заглавия (2 × H1)',
+            foreach (['Адресът с http не води към https', 'Няма заглавие за Google', 'Няма описание за Google', 'Няколко основни заглавия (2 × H1)',
                 'Не е настроен за телефон', 'Сайтът е скрит от Google', 'Няма карта на сайта (sitemap)', 'Снимки без описание (1 от 1)'] as $expected) {
                 $this->assertContains($expected, $titles);
             }
@@ -216,7 +216,7 @@ class SiteCheckTest extends TestCase
 
         Mail::assertSent(SiteCheckReportMail::class, function ($mail) {
             $this->assertStringContainsString('I want a detailed audit', $mail->render());
-            $this->assertSame('Check of firma.bg: score 100 out of 100', $mail->envelope()->subject);
+            $this->assertSame('Check of firma.bg, score 100 out of 100', $mail->envelope()->subject);
 
             return true;
         });

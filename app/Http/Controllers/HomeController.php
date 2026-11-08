@@ -43,13 +43,12 @@ class HomeController extends Controller
             'name' => 'required|string|max:255',
             'phone' => ['required', 'string', 'max:25', 'regex:/^[0-9+()\-\s]{6,25}$/'],
             'email' => 'required|email|max:255',
-            'service' => ['required', 'string', Rule::in(array_keys(config('creatium.contact_topics')))],
+            // Older pages sent the project status; the simple form (November 2026) sends interests instead.
+            'service' => ['nullable', 'string', Rule::in(array_keys(config('creatium.contact_topics')))],
+            'interests' => 'nullable|array',
+            'interests.*' => ['string', Rule::in(array_keys(config('creatium.contact_interests')))],
             'message' => 'nullable|string|max:5000',
-            'goals' => 'nullable|array',
-            'goals.*' => ['string', Rule::in(array_keys(config('creatium.contact_goals')))],
-            'business' => 'nullable|string|max:150',
             'site_url' => 'nullable|string|max:255',
-            'timeline' => ['nullable', 'string', Rule::in(array_keys(config('creatium.contact_timelines')))],
             'consultation' => ['nullable', 'string', function ($attribute, $value, $fail) {
                 if (! Booking::resolve($value)) {
                     $fail(__('Този час вече е зает. Моля, изберете друг.'));
@@ -63,17 +62,17 @@ class HomeController extends Controller
             'phone.regex' => __('Моля, въведете валиден телефонен номер.'),
             'email.required' => __('Моля, въведете имейл.'),
             'email.email' => __('Моля, въведете валиден имейл.'),
-            'service.required' => __('Моля, изберете статус на проекта.'),
             'service.in' => __('Моля, изберете статус от списъка.'),
+            'interests.*.in' => __('Моля, изберете услуга от списъка.'),
             'consent.accepted' => __('Моля, потвърдете, че сте запознати с Политиката за поверителност.'),
         ]);
 
         $consultationAt = Booking::resolve($validated['consultation'] ?? null);
         $success = $consultationAt
-            ? __('Получихме запитването ви. Ще ви се обадим на :time за консултацията.', ['time' => Booking::label($consultationAt)])
+            ? __('Получихме запитването ви. Ще ви се обадим на :time за разговора.', ['time' => Booking::label($consultationAt)])
             : __('Получихме запитването ви. Ще ви се обадим до един работен ден.');
         // Admin and the notification email are in Bulgarian, so the lead always stores the Bulgarian label.
-        $service = config('creatium.contact_topics')[$validated['service']];
+        $service = self::serviceLabel($validated);
 
         // Honeypot: real visitors never fill this hidden field.
         if ($request->filled('website')) {
@@ -131,22 +130,43 @@ class HomeController extends Controller
     }
 
     /**
-     * The message plus the answers from the step form, in Bulgarian for the admin and the team email:
-     * „Цели: …“, „Бизнес: …“, „Сайт: …“, „Кога: …“ on their own lines under the message.
+     * The lead's service in Bulgarian and without colons: the chosen interests joined with commas,
+     * else the project status an older page sent, else „Запитване от сайта“.
+     */
+    public static function serviceLabel(array $data): string
+    {
+        $interests = self::interestLabels($data);
+        if ($interests) {
+            return mb_substr(implode(', ', $interests), 0, 255);
+        }
+
+        return isset($data['service']) ? config('creatium.contact_topics')[$data['service']] : 'Запитване от сайта';
+    }
+
+    /** @return list<string> the Bulgarian labels of the chosen interests */
+    private static function interestLabels(array $data): array
+    {
+        $labels = config('creatium.contact_interests');
+
+        return array_values(array_map(fn ($key) => $labels[$key], array_unique($data['interests'] ?? [])));
+    }
+
+    /**
+     * The message plus the answers in plain Bulgarian sentences for the admin and the team email.
      */
     private static function leadDescription(array $data, string $service): string
     {
-        $answers = array_filter([
-            'Цели' => implode(', ', array_map(fn ($key) => config('creatium.contact_goals')[$key], $data['goals'] ?? [])),
-            'Бизнес' => trim((string) ($data['business'] ?? '')),
-            'Сайт' => trim((string) ($data['site_url'] ?? '')),
-            'Кога' => isset($data['timeline']) ? config('creatium.contact_timelines')[$data['timeline']] : '',
+        $interests = self::interestLabels($data);
+        $site = trim((string) ($data['site_url'] ?? ''));
+        $lines = array_filter([
+            $interests ? 'Интересува се от ' . implode(', ', $interests) . '.' : '',
+            $site !== '' ? 'Сегашен сайт ' . $site : '',
         ], 'strlen');
-        $lines = implode("\n", array_map(fn ($label, $value) => "$label: $value", array_keys($answers), $answers));
+        $lines = implode("\n", $lines);
         $message = trim((string) ($data['message'] ?? ''));
 
         if ($message === '' && $lines === '') {
-            return 'Без съобщение. Тема: ' . $service . '.';
+            return 'Без съобщение. ' . $service . '.';
         }
 
         return trim($message . ($message !== '' && $lines !== '' ? "\n\n" : '') . $lines);

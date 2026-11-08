@@ -67,7 +67,7 @@ class PlanBillingTest extends TestCase
         $this->assertSame('€2' . self::TS . '000', $yearly['price']);
         $this->assertSame('/ година', $yearly['suffix']);
         $this->assertSame('вместо €2' . self::TS . '400 при месечно плащане', $yearly['sub']);
-        $this->assertSame('€2' . self::TS . '400 общо: €400 старт и €2' . self::TS . '000 абонамент за 12 месеца', $yearly['year']);
+        $this->assertSame('€2' . self::TS . '400 общо, от които €400 старт и €2' . self::TS . '000 абонамент за 12 месеца', $yearly['year']);
 
         // Текстът от пакета има предимство за месечния вариант; празен текст се изчислява.
         $this->assertSame('€2 600 за първата година (€400 + 11 × €200)', PlanBilling::cell($billing, $item, 0, 'monthly')['year']);
@@ -87,32 +87,32 @@ class PlanBillingTest extends TestCase
     public function test_text_lines_state_start_deposit_subscription_and_yearly_option(): void
     {
         $lines = implode("\n", PlanBilling::textLines($this->plans(), true));
-        $this->assertStringContainsString('Стартов двигател: €400 старт', $lines);
+        $this->assertStringContainsString('Стартов двигател. €400 еднократно', $lines);
         $this->assertStringContainsString('€100 при заявка за оферта и демо (не се връщат), останалите €300 при съгласие.', $lines);
         $this->assertStringContainsString('€2' . self::TS . '000 вместо €2' . self::TS . '400', $lines);
         $this->assertStringContainsString('€6' . self::TS . '500 вместо €7' . self::TS . '800', $lines);
-        $this->assertStringContainsString('Индивидуален маркетинг: Индивидуална оферта, от €1 200 / месец', $lines);
+        $this->assertStringContainsString('Индивидуален маркетинг. Индивидуална оферта, от €1 200 / месец', $lines);
         $this->assertStringContainsString('Всичко необходимо, за да присъства бизнесът ви професионално онлайн.', $lines);
     }
 
     public function test_kreo_the_faq_answer_and_llms_use_the_final_prices(): void
     {
         $knowledge = SiteKnowledge::text();
-        foreach (['€400 старт', '€800 старт', 'от €1 200 / месец', '€100 при заявка за оферта и демо', 'Първата сума не се връща', 'Работен капацитет на месец'] as $text) {
+        foreach (['€400 еднократно', '€800 еднократно', 'от €1 200 / месец', '€100 при заявка за оферта и демо', 'Първата сума не се връща', 'Работен капацитет на месец'] as $text) {
             $this->assertStringContainsString($text, $knowledge);
         }
         $this->assertStringNotContainsString('€600 старт', $knowledge);
         $this->assertStringNotContainsString('плъзгач', $knowledge);
 
         $answer = FaqResponder::answer('Колко струва сайт?');
-        $this->assertStringContainsString('€400 старт', $answer);
+        $this->assertStringContainsString('€400 еднократно', $answer);
         $this->assertStringContainsString('след това €650 / месец', $answer);
         $this->assertStringContainsString('/paketi', $answer);
 
         $this->get('/llms.txt')->assertOk()
-            ->assertSee('- Стартов двигател: €400 старт', false)
+            ->assertSee('- Стартов двигател. €400 еднократно', false)
             ->assertSee('€200 при заявка за оферта и демо (не се връщат), останалите €600 при съгласие.', false)
-            ->assertSee('Индивидуален маркетинг: Индивидуална оферта, от €1 200 / месец', false)
+            ->assertSee('Индивидуален маркетинг. Индивидуална оферта, от €1 200 / месец', false)
             ->assertDontSee('плъзгач', false);
     }
 

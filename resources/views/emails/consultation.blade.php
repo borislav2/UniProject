@@ -2,10 +2,10 @@
 @php
     $f = 'font-family:Arial,Helvetica,sans-serif;';
     $time = \App\Support\Booking::label($lead->consultation_at);
-    $calendar = \App\Support\Booking::googleCalendarUrl($lead->consultation_at, __('Консултация с Creatium Lab'), __('Ще ви се обадим на :phone.', ['phone' => $lead->client_phone]));
+    $calendar = \App\Support\Booking::googleCalendarUrl($lead->consultation_at, __('Разговор с Creatium Lab'), __('Ще ви се обадим на :phone.', ['phone' => $lead->client_phone]));
 @endphp
 
-@section('eyebrow', __('Консултация'))
+@section('eyebrow', __('Разговор с нас'))
 @section('headline'){{ ucfirst($time) }}@endsection
 @section('sub'){{ __('Записахме ви. Ще ви се обадим в този час на :phone.', ['phone' => $lead->client_phone]) }}@endsection
 
