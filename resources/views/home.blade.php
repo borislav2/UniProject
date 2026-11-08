@@ -50,6 +50,7 @@
     <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_top,black_25%,transparent_72%)]" aria-hidden="true"></div>
     <div class="hidden md:block aurora-a absolute -top-48 right-[-10rem] w-[40rem] h-[40rem] rounded-full bg-brand-500/25 blur-3xl" aria-hidden="true"></div>
     <div class="hidden md:block aurora-b absolute top-1/3 -left-48 w-[30rem] h-[30rem] rounded-full bg-brand-700/30 blur-3xl" aria-hidden="true"></div>
+    @include('partials/hero-network', ['nodes' => $trust['network_nodes'] ?? []])
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-header pb-14 md:pb-20 grid lg:grid-cols-12 gap-12 lg:gap-12 items-center">
         <div class="lg:col-span-7">
@@ -72,7 +73,7 @@
             </div>
         </div>
 
-        <div class="lg:col-span-5 2xl:-mr-16 rise-in" style="--d: 260ms">
+        <div class="lg:col-span-5 2xl:-mr-16 rise-in" style="--d: 260ms" data-hero-visual>
             @include('partials/hero-visual')
         </div>
     </div>
@@ -106,6 +107,13 @@
             </div>
         @endif
     </div>
+
+    {{-- Вълни към секция 01 вместо права линия: два тъмносини слоя и най-отпред цветът на следващата секция. --}}
+    <svg class="relative block w-full h-12 sm:h-16 md:h-20 -mb-px" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 52 C 180 18 360 18 540 46 S 900 92 1080 62 S 1340 20 1440 38 V120 H0 Z" fill="#2d63a3" fill-opacity="0.35"/>
+        <path d="M0 78 C 220 48 420 54 620 78 S 1000 110 1200 84 S 1380 60 1440 70 V120 H0 Z" fill="#1d3a63" fill-opacity="0.85"/>
+        <path d="M0 98 C 240 80 480 82 720 98 S 1200 116 1440 96 V120 H0 Z" class="fill-white dark:fill-ink-950"/>
+    </svg>
 </section>
 
 {{-- 01 The solution: what we do, numbers with sources, and the two halves of the system (owners, November 2026) --}}

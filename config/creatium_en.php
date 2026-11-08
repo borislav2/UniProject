@@ -212,6 +212,8 @@ return [
     'home_trust' => [
         'eyebrow' => '',
         'proof_label' => '',
+        // Шестте светещи възела в мрежата на първия екран (една система, не отделни услуги). Празно = мрежата не се показва.
+        'network_nodes' => ['Brand', 'Website', 'Google', 'Ads', 'Emails', 'Care'],
         'proof' => [
             ['value' => 'Google + Meta', 'text' => 'ad tracking is set up: you measure every enquiry and sale', 'link' => ''],
             ['value' => 'Instantly', 'text' => 'every enquiry goes to your email, phone or CRM', 'link' => ''],
