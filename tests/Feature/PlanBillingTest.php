@@ -88,7 +88,7 @@ class PlanBillingTest extends TestCase
     {
         $lines = implode("\n", PlanBilling::textLines($this->plans(), true));
         $this->assertStringContainsString('Стартов двигател: €400 старт', $lines);
-        $this->assertStringContainsString('€100 при заявка за оферта и демо, останалите €300 при съгласие.', $lines);
+        $this->assertStringContainsString('€100 при заявка за оферта и демо (не се връщат), останалите €300 при съгласие.', $lines);
         $this->assertStringContainsString('€2' . self::TS . '000 вместо €2' . self::TS . '400', $lines);
         $this->assertStringContainsString('€6' . self::TS . '500 вместо €7' . self::TS . '800', $lines);
         $this->assertStringContainsString('Индивидуален маркетинг: Индивидуална оферта, от €1 200 / месец', $lines);
@@ -98,7 +98,7 @@ class PlanBillingTest extends TestCase
     public function test_kreo_the_faq_answer_and_llms_use_the_final_prices(): void
     {
         $knowledge = SiteKnowledge::text();
-        foreach (['€400 старт', '€800 старт', 'от €1 200 / месец', '€100 при заявка за оферта и демо', 'Не обещавай дали първата сума се връща', 'Работен капацитет'] as $text) {
+        foreach (['€400 старт', '€800 старт', 'от €1 200 / месец', '€100 при заявка за оферта и демо', 'Първата сума не се връща', 'Работен капацитет на месец'] as $text) {
             $this->assertStringContainsString($text, $knowledge);
         }
         $this->assertStringNotContainsString('€600 старт', $knowledge);
@@ -111,7 +111,7 @@ class PlanBillingTest extends TestCase
 
         $this->get('/llms.txt')->assertOk()
             ->assertSee('- Стартов двигател: €400 старт', false)
-            ->assertSee('€200 при заявка за оферта и демо, останалите €600 при съгласие.', false)
+            ->assertSee('€200 при заявка за оферта и демо (не се връщат), останалите €600 при съгласие.', false)
             ->assertSee('Индивидуален маркетинг: Индивидуална оферта, от €1 200 / месец', false)
             ->assertDontSee('плъзгач', false);
     }

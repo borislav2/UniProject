@@ -723,6 +723,6 @@
     "Плащане на старта": "Paying the start price",
     "При годишно плащане абонаментът е :once вместо :instead при месечно плащане": "With yearly billing the subscription is :once instead of :instead with monthly billing",
     "Цени и плащане": "Prices and payment",
-    "Цените са фиксирани. Стартовата цена се плаща на две части: първата сума преди да подготвим офертата и демото, останалата при съгласие. Не обещавай дали първата сума се връща, ако клиентът не продължи: това не е решено, насочи към консултация.": "Prices are fixed. The start price is paid in two parts: the first amount before we prepare the quote and the demo, the rest when the client agrees. Do not promise whether the first amount is refunded if the client does not continue: that is not decided, point to a consultation.",
-    "Годишно плащане на абонамента: 2 месеца безплатно.": "Yearly billing of the subscription: 2 months free."
+    "Годишно плащане на абонамента: 2 месеца безплатно.": "Yearly billing of the subscription: 2 months free.",
+    "Цените са фиксирани. Стартовата цена се плаща на две части: първата сума преди да подготвим офертата и демото, останалата при съгласие. Първата сума не се връща, ако клиентът не продължи; кажи го ясно, ако питат.": "Prices are fixed. The start price is paid in two parts: the first amount before we prepare the quote and the demo, the rest when the client agrees. The first amount is not refunded if the client does not continue; say so clearly if asked."
 }
