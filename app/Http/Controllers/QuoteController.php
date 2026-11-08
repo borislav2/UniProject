@@ -35,7 +35,8 @@ class QuoteController extends Controller
             'goal' => ['nullable', 'string', Rule::in(array_keys(config('creatium.contact_goals')))],
             'timeline' => ['nullable', 'string', Rule::in(array_keys(config('creatium.contact_timelines')))],
             'consent' => 'accepted',
-        ], [
+            \App\Support\Turnstile::FIELD => \App\Support\Turnstile::rules(),
+        ], \App\Support\Turnstile::messages() + [
             'name.required' => __('Моля, въведете вашите имена.'),
             'email.required_without' => __('Моля, въведете имейл или телефон.'),
             'phone.required_without' => __('Моля, въведете имейл или телефон.'),

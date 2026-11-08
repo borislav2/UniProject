@@ -40,6 +40,9 @@ class HealthController extends Controller
         $add('Сайт', 'Скорост на телефон в проверката на сайт', filled(config('services.pagespeed.key')) ? 'ok' : 'off',
             filled(config('services.pagespeed.key')) ? 'Отчетът от безплатната проверка включва оценка, LCP, CLS и INP от Google PageSpeed.' : 'По желание. Без ключ отчетът няма оценка за скорост на телефон.',
             filled(config('services.pagespeed.key')) ? null : 'PAGESPEED_API_KEY=... в .env (безплатен ключ от Google Cloud, PageSpeed Insights API)');
+        $add('Сайт', 'Защита на формите от ботове', \App\Support\Turnstile::enabled() ? 'ok' : 'warn',
+            \App\Support\Turnstile::enabled() ? 'Cloudflare Turnstile проверява формите за контакт, оферта и проверка на сайт.' : 'Само скрито поле и лимит на заявките. Ботове може да пращат запитвания.',
+            \App\Support\Turnstile::enabled() ? null : 'TURNSTILE_SITE_KEY=... и TURNSTILE_SECRET_KEY=... в .env (безплатно от dash.cloudflare.com → Turnstile), после php artisan config:cache');
         $add('Продажби', 'Проверка на имейли (Reoon)', filled(config('services.reoon.key')) ? 'ok' : 'off',
             filled(config('services.reoon.key')) ? 'Имейлите се проверяват през Reoon.' : 'По желание. Без него се проверява само дали домейнът приема поща.');
 

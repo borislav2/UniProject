@@ -40,6 +40,12 @@ return [
         'key' => env('SERPER_API_KEY'),
     ],
 
+    // Cloudflare Turnstile: защита на формите от ботове (по желание; без ключове е изключена).
+    'turnstile' => [
+        'site_key' => env('TURNSTILE_SITE_KEY'),
+        'secret_key' => env('TURNSTILE_SECRET_KEY'),
+    ],
+
     // Скорост на телефон в безплатната проверка на сайт (Google PageSpeed Insights API, по желание).
     'pagespeed' => [
         'key' => env('PAGESPEED_API_KEY'),

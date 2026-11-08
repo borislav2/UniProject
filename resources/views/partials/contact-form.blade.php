@@ -12,7 +12,7 @@
     $steps = [__('Цел'), __('Бизнес'), __('Кога'), __('Контакт')];
     $field = 'w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 placeholder:text-gray-500 dark:placeholder:text-gray-400';
     $choice = 'block cursor-pointer rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 transition-colors hover:border-brand-400 peer-checked:border-brand-600 peer-checked:bg-brand-50 peer-checked:text-brand-950 peer-focus-visible:ring-4 peer-focus-visible:ring-brand-100 dark:border-white/15 dark:text-gray-200 dark:peer-checked:border-brand-300 dark:peer-checked:bg-white/10 dark:peer-checked:text-white';
-    $stepWithError = collect([['service', 'goals'], ['business', 'site_url', 'message'], ['timeline', 'consultation'], ['name', 'phone', 'email', 'consent']])
+    $stepWithError = collect([['service', 'goals'], ['business', 'site_url', 'message'], ['timeline', 'consultation'], ['name', 'phone', 'email', 'consent', \App\Support\Turnstile::FIELD]])
         ->search(fn ($names) => collect($names)->contains(fn ($n) => $errors->has($n) || $errors->has("$n.*")));
 @endphp
 <div id="contact-form" class="scroll-mt-28 md:scroll-mt-32 bg-white rounded-2xl p-6 md:p-8 text-gray-900 dark:bg-ink-900 dark:text-gray-100 dark:ring-1 dark:ring-white/10">
@@ -142,6 +142,7 @@
                     </label>
                     @error('consent')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
                 </div>
+                @include('partials.turnstile')
                 <button type="submit" class="btn-shine w-full inline-flex items-center justify-center gap-2 bg-brand-950 text-white py-3.5 px-6 rounded-xl font-semibold uppercase tracking-wide hover:bg-brand-800 transition-colors dark:bg-white dark:text-brand-950 dark:hover:bg-brand-100">
                     {{ __('Стартирайте вашия проект') }} <x-icon name="paper-plane" class="text-sm" />
                 </button>

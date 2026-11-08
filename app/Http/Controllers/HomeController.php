@@ -56,7 +56,8 @@ class HomeController extends Controller
                 }
             }],
             'consent' => 'accepted',
-        ], [
+            \App\Support\Turnstile::FIELD => \App\Support\Turnstile::rules(),
+        ], \App\Support\Turnstile::messages() + [
             'name.required' => __('Моля, въведете вашето име.'),
             'phone.required' => __('Моля, въведете телефон, на който да ви се обадим.'),
             'phone.regex' => __('Моля, въведете валиден телефонен номер.'),

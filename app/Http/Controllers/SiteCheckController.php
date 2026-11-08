@@ -32,7 +32,8 @@ class SiteCheckController extends Controller
             }],
             'email' => 'required|email|max:255',
             'consent' => 'accepted',
-        ], [
+            \App\Support\Turnstile::FIELD => \App\Support\Turnstile::rules(),
+        ], \App\Support\Turnstile::messages() + [
             'domain.required' => __('Моля, въведете адреса на сайта.'),
             'email.required' => __('Моля, въведете имейл, на който да изпратим отчета.'),
             'email.email' => __('Моля, въведете валиден имейл.'),
