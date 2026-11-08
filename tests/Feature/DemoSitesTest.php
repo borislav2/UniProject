@@ -22,7 +22,7 @@ class DemoSitesTest extends TestCase
             $response = $this->get('/demo/' . $demo['slug'])
                 ->assertOk()
                 ->assertSee('<meta name="robots" content="noindex">', false)
-                ->assertSee('Концепция на Creatium Lab за ' . mb_strtolower($demo['industry']))
+                ->assertSee('Примерен сайт на Creatium Lab за ' . mb_strtolower($demo['industry']))
                 ->assertSee('Формата е част от концепцията и не изпраща запитване.')
                 ->assertSee('data-demo-form', false);
 
