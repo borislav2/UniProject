@@ -126,6 +126,50 @@ class PlanBilling
     }
 
     /**
+     * What a package card on /paketi shows (owners, November 2026): a big „от €400“, a short caption, and only the yearly
+     * subscription („€2 000 на година“, with „абонамент, 2 месеца безплатно“) or, for a custom plan, its text („Индивидуална оферта“).
+     * The monthly price is not shown on the cards. Keys: from, caption, second, note.
+     */
+    public static function cardPrice(array $billing, array $plan, int $planIndex): array
+    {
+        $prices = array_values((array) ($plan['prices'] ?? []));
+        $start = self::startPrice($plan);
+        $monthly = self::monthlyPrice($plan);
+        $out = ['from' => '', 'caption' => '', 'second' => '', 'note' => ''];
+
+        $amount = $start ?? $monthly;
+        if ($amount !== null) {
+            $out['from'] = __('от') . ' ' . self::money($amount);
+        }
+        if ($start !== null && preg_match('/^€\s?\d[\d\s.,]*?\s*(?:\/\s*(?:месец|month))?\s+(.+)$/u', (string) ($prices[0] ?? ''), $m)) {
+            $out['caption'] = $m[1];
+        } elseif ($start === null && $monthly !== null) {
+            $out['caption'] = __('на месец');
+        }
+
+        if ($billing['enabled'] && ($f = self::figures($billing, $plan, $planIndex, self::YEARLY))) {
+            $out['second'] = self::money($f['once']) . ' ' . __('на година');
+            $free = 12 - $billing['yearly_months'];
+            $out['note'] = $free === 1 ? __('абонамент, 1 месец безплатно') : __('абонамент, :n месеца безплатно', ['n' => $free]);
+        } elseif ($start === null && filled($prices[0] ?? null)) {
+            $out['second'] = $prices[0];
+        }
+
+        return $out;
+    }
+
+    /** The short list of a card: `card_items` when set, otherwise the heads (text before „: “) of the first five included lines. */
+    public static function cardItems(array $plan): array
+    {
+        $items = array_values(array_filter((array) ($plan['card_items'] ?? []), 'filled'));
+        if (! $items) {
+            $items = array_map(fn ($line) => str_contains($line, ': ') ? explode(': ', $line, 2)[0] : $line, array_merge((array) ($plan['build_items'] ?? []), (array) ($plan['monthly_items'] ?? [])));
+        }
+
+        return array_slice($items, 0, 5);
+    }
+
+    /**
      * Prices as plain text lines for Kreo, /llms.txt and the FAQ answer: per package the start price, how the start is paid,
      * the subscription and the yearly option.
      */

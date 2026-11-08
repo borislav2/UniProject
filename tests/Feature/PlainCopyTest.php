@@ -107,6 +107,49 @@ class PlainCopyTest extends TestCase
         }
     }
 
+    public function test_outreach_and_site_check_emails_have_no_dashes_or_colons(): void
+    {
+        $prospect = \App\Models\OutreachProspect::create([
+            'email' => 'info@lozata.bg', 'company' => 'Лозата', 'website' => 'https://lozata.bg', 'email_status' => 'published', 'status' => 'new',
+        ]);
+        $data = ['first_name' => 'Иван', 'sender' => 'Борислав', 'first_date' => '01.11.2026', 'finding' => 'Липсва описание в резултатите на Google',
+            'observation' => "Здравейте.\n– Сайтът се зарежда бавно. Хората си тръгват.\n– Няма описание. Google показва случаен текст.\nКрай."];
+        $failures = [];
+        foreach ([new \App\Mail\OutreachMail($prospect, $data, 'Тема'), new \App\Mail\OutreachFollowUpMail($prospect, $data, 'Re: Тема')] as $mail) {
+            $html = $mail->render();
+            $text = view($mail instanceof \App\Mail\OutreachFollowUpMail ? 'emails.outreach-followup-text' : 'emails.outreach-text', [
+                'data' => $data, 'parts' => \App\Mail\OutreachMail::observationParts($data['observation']), 'links' => $mail->links(), 'plain' => \App\Mail\OutreachMail::targets(), 'prospect' => $prospect,
+                'unsubscribeUrl' => $mail->unsubscribeUrl(), 'teamSignature' => false, 'sender' => 'Борислав',
+            ])->render();
+            foreach ([self::visibleText($html), preg_replace('/\s+/u', ' ', $text)] as $t) {
+                foreach (self::offences($t) as $snippet) {
+                    $failures[] = get_class($mail) . "  …{$snippet}…";
+                }
+            }
+        }
+        $this->assertSame([], $failures, implode("\n", $failures));
+    }
+
+    public function test_site_check_report_email_has_no_dashes_or_colons(): void
+    {
+        $report = [
+            'domain' => 'firma.bg', 'url' => 'https://firma.bg', 'reachable' => true, 'score' => 62, 'home_score' => 70,
+            'checks' => [
+                ['key' => 'title', 'status' => 'fail', 'title' => 'Няма заглавие за Google', 'detail' => 'Добавете заглавие.'],
+                ['key' => 'https', 'status' => 'ok', 'title' => 'Сайтът е с HTTPS', 'detail' => 'Всичко е наред.'],
+            ],
+            'crawl' => ['pages' => 12, 'analyzed' => 12, 'limit' => 50, 'limited' => false, 'limited_by' => null, 'seconds' => 8],
+            'issues' => [['key' => 'title_missing', 'severity' => 'error', 'count' => 3, 'examples' => [['url' => 'https://firma.bg/a', 'from' => 'https://firma.bg/']]]],
+            'pagespeed' => null, 'shopping' => null,
+        ];
+        foreach (['bg', 'en'] as $locale) {
+            app()->setLocale($locale);
+            $mail = new \App\Mail\SiteCheckReportMail($report + ['locale' => $locale]);
+            $text = self::visibleText($mail->render()) . ' ' . $mail->envelope()->subject;
+            $this->assertSame([], self::offences($text), $locale);
+        }
+    }
+
     public function test_the_migration_replaces_only_exact_old_defaults_and_keeps_a_backup(): void
     {
         [$old, $new] = [array_key_first(PlainCopy2026::REPLACE), PlainCopy2026::REPLACE[array_key_first(PlainCopy2026::REPLACE)]];

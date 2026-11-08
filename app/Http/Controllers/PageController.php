@@ -78,15 +78,12 @@ class PageController extends Controller
         $selected = request()->integer('paket', -1);
         $faq = \App\Support\Plans::faq($plans, (array) site('questions'));
 
-        // Месечно / годишно плащане: състоянието идва от ?plashtane=godishno, така страницата е пълна и без JavaScript;
-        // невалидна стойност дава месечното. Без отстъпка за годишно плащане превключвателят се скрива.
+        // Картите показват само годишния абонамент (собствениците, ноември 2026), без превключвател и без ?plashtane.
         $billing = \App\Support\PlanBilling::config($plans);
-        $mode = $billing['enabled'] ? \App\Support\PlanBilling::billingFrom(request()->query('plashtane')) : \App\Support\PlanBilling::MONTHLY;
 
         return view('packages', [
             'plans' => $plans,
             'billing' => $billing,
-            'billingMode' => $mode,
             'faq' => $faq,
             // „Получете оферта“ под всеки пакет води към формата с избрания пакет (?paket=N#oferta).
             'selectedPlan' => array_key_exists($selected, $plans['items'] ?? []) ? $selected : null,

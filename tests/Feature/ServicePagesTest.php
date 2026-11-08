@@ -22,7 +22,7 @@ class ServicePagesTest extends TestCase
                 ->assertSee($page['faq'][0][0])
                 ->assertSee('Запазете час за разговор')->assertDontSee('Безплатна консултация');
 
-            $this->get('/en/services/' . $en['slug'])->assertOk()->assertSee($en['title'])->assertSee('Free consultation');
+            $this->get('/en/services/' . $en['slug'])->assertOk()->assertSee($en['title'])->assertSee('Book a call');
         }
 
         $this->get('/uslugi/nyama-takava')->assertNotFound();
@@ -55,10 +55,10 @@ class ServicePagesTest extends TestCase
             ->assertSee('<loc>' . url('/en/services/google-business-profile') . '</loc>', false);
     }
 
-    public function test_packages_show_the_short_list_and_keep_every_detail_behind_a_toggle(): void
+    public function test_packages_show_the_short_list_and_keep_every_detail_in_the_full_list(): void
     {
         $this->get('/paketi')->assertOk()
-            ->assertSee('Вижте подробно какво включва')
+            ->assertSee('Вижте всичко включено')
             ->assertSee('Google профил и отзиви')
             // Пълният текст на всяка точка е запазен.
             ->assertSee('Лого, цветове и базова визуална идентичност.')

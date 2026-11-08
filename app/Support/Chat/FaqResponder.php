@@ -54,7 +54,7 @@ class FaqResponder
             __('Имейлът ни е :email, а телефонът :phones. Намираме се в :city и работим с бизнеси от цяла България.', ['email' => $contact['email'], 'phones' => implode(', ', $contact['phones']), 'city' => __($contact['city'])]),
         ];
         $topics[] = [
-            __('Може ли безплатна консултация, среща или разговор? Как да запазя час?'),
+            __('Може ли консултация, среща или разговор? Как да запазя час?'),
             __('Да. Разговорът с нас е около :minutes минути и не ви задължава с нищо. Изберете ден и час тук. :link', ['minutes' => config('creatium.booking.minutes'), 'link' => lroute('contact') . '#konsultatsiya']),
         ];
         $topics[] = [

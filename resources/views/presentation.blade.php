@@ -178,18 +178,18 @@
                     @if(filled($plan['badge'] ?? null))<span class="self-start rounded-full px-4 py-1.5 text-sm font-bold {{ ! empty($plan['highlighted']) ? 'bg-white text-brand-950' : 'bg-brand-50 text-brand-700' }}">{{ $plan['badge'] }}</span>@endif
                     <h3 class="mt-5 text-3xl font-extrabold tracking-tight leading-tight {{ empty($plan['highlighted']) ? 'text-brand-950' : '' }}">{{ $plan['name'] }}</h3>
                     <p class="mt-3 text-lg leading-snug {{ empty($plan['highlighted']) ? 'text-gray-600' : 'text-gray-300' }}">{{ $plan['audience'] }}</p>
-                    <ul class="mt-auto pt-6 space-y-2">
-                        @foreach((array) $plan['prices'] as $price)
-                            <li class="text-xl font-bold {{ $loop->first ? 'text-2xl' : '' }}">{{ $price }}</li>
-                        @endforeach
-                    </ul>
-                    @if(filled($plan['deposit'] ?? null))
-                        <p class="mt-5 pt-4 border-t text-base leading-snug {{ empty($plan['highlighted']) ? 'border-gray-200 text-gray-600' : 'border-white/15 text-gray-300' }}"><span class="block font-bold">{{ __('Плащане на старта') }}</span>{{ $plan['deposit'] }}</p>
-                    @endif
+                    @php($card = \App\Support\PlanBilling::cardPrice(\App\Support\PlanBilling::config($plans), $plan, $loop->index))
+                    <div class="mt-auto pt-6">
+                        <p class="text-5xl font-extrabold tracking-tight">{{ $card['from'] }}</p>
+                        @if($card['caption'] !== '')<p class="mt-2 text-lg {{ empty($plan['highlighted']) ? 'text-gray-600' : 'text-gray-300' }}">{{ $card['caption'] }}</p>@endif
+                        @if($card['second'] !== '')
+                            <p class="mt-5 pt-4 border-t text-2xl font-bold {{ empty($plan['highlighted']) ? 'border-gray-200' : 'border-white/15' }}">{{ $card['second'] }}</p>
+                            @if($card['note'] !== '')<p class="mt-1 text-base {{ empty($plan['highlighted']) ? 'text-gray-600' : 'text-gray-300' }}">{{ $card['note'] }}</p>@endif
+                        @endif
+                    </div>
                 </div>
             @endforeach
         </div>
-        <p class="mt-4 text-base text-gray-600">{{ __('При годишно плащане на абонамента 2 месеца са безплатни.') }}</p>
     </div>
     <div class="slide-foot text-gray-400"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
 </section>

@@ -116,11 +116,10 @@ class PlanBillingTest extends TestCase
             ->assertDontSee('плъзгач', false);
     }
 
-    public function test_the_quote_form_keeps_only_the_billing_choice(): void
+    public function test_the_quote_form_has_no_billing_field_but_old_posts_still_work(): void
     {
         Mail::fake();
-        $this->get('/paketi')->assertOk()->assertSee('name="billing" value="monthly"', false)->assertDontSee('name="volume"', false);
-        $this->get('/paketi?plashtane=godishno')->assertOk()->assertSee('name="billing" value="yearly"', false);
+        $this->get('/paketi')->assertOk()->assertDontSee('name="billing"', false)->assertDontSee('name="volume"', false);
 
         $payload = ['plan' => 0, 'name' => 'Мария', 'email' => 'm@example.com', 'business' => 'Лале', 'consent' => '1'];
         $this->post('/paketi/oferta', $payload + ['billing' => 'yearly', 'volume' => '8'])->assertRedirect();

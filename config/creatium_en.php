@@ -635,6 +635,14 @@ return [
                 'year_total' => '€2,600 for the first year (€400 + 11 × €200)',
                 'upgrade_note' => '',
                 'button' => '',
+                // Short list for the card (up to 5 lines); the full list is under „See everything included“.
+                'card_items' => [
+                    'Branding',
+                    'Website build',
+                    'Google Business Profile',
+                    'Basic SEO',
+                    'Hosting, support and a monthly report',
+                ],
                 'build_title' => 'What it includes',
                 'build_items' => [
                     'Branding: A logo, colours and a basic visual identity.',
@@ -659,6 +667,14 @@ return [
                 'year_total' => '€7,950 for the first year (€800 + 11 × €650)',
                 'upgrade_note' => '',
                 'button' => '',
+                // Short list for the card (up to 5 lines); the full list is under „See everything included“.
+                'card_items' => [
+                    'Everything in Starter Engine',
+                    'Brand development and a marketing strategy',
+                    'SEO development and review management',
+                    'Management of one advertising platform',
+                    'Email marketing and conversion optimisation',
+                ],
                 'build_title' => 'Includes everything in Starter Engine, plus',
                 'build_items' => [
                     'Brand development and a marketing strategy',
@@ -684,6 +700,14 @@ return [
                 'year_total' => '',
                 'upgrade_note' => '',
                 'button' => 'Book a call',
+                // Short list for the card (up to 5 lines); the full list is under „See everything included“.
+                'card_items' => [
+                    'Everything in Active Marketing and Growth, tailored to you',
+                    'A custom marketing strategy',
+                    'Several advertising channels and AI visibility',
+                    'CRM integrations and automations',
+                    'Strategy meetings and priority communication',
+                ],
                 'build_title' => 'Includes, tailored to your needs, everything in Active Marketing and Growth, plus',
                 'build_items' => [
                     'A custom marketing strategy',
