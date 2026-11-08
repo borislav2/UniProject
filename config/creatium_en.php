@@ -37,7 +37,7 @@ return [
     'questions' => [
         ['q' => 'How is the project budget set?', 'a' => 'The price is fixed and you know it before we start. Starter Engine is €400 one-off (the build and the first month), then €200 a month. Active Marketing and Growth is €800 one-off, then €650 a month. Custom Marketing is from €1,200 a month under a custom quote. With yearly billing you get 2 months free. What exactly you get and by when is written in the quote.', 'group' => 'Prices and payment'],
         ['q' => 'What is the monthly subscription for?', 'a' => 'To bring real results, a website needs constant care and development, not just to sit there as a business card. The monthly subscription covers round-the-clock technical security, hosting, regular backups and updates, as well as the marketing work: tracking visits in Google Analytics, looking after your Google Maps profile and making sure AI assistants (ChatGPT, Gemini) understand you, email communication and ongoing changes to the site.', 'group' => 'Prices and payment'],
-        ['q' => 'How does payment work?', 'a' => 'The start price is paid in two parts. For Starter Engine: €100 when you request a quote and demo and the remaining €300 when you agree. For Active Marketing and Growth: €200 when you request a quote and demo and the remaining €600 when you agree. The first amount is paid before we prepare the quote and the demo and is not refunded if you decide not to continue. The subscription starts in the second month.', 'group' => 'Prices and payment'],
+        ['q' => 'How does payment work?', 'a' => 'The start price is paid in two parts. For Starter Engine: €100 when you request a quote and demo and the remaining €300 when you agree. For Active Marketing and Growth: €200 when you request a quote and demo and the remaining €600 when you agree. The first amount is paid before we prepare the quote and the demo and is not refunded if you decide not to continue. Custom Marketing also has a deposit before the quote and the demo: the amount is set in the custom quote and is not refunded either. The subscription starts in the second month.', 'group' => 'Prices and payment'],
         ['q' => 'How long is the monthly price fixed?', 'a' => 'The subscription price is fixed for the first 6 months. After that it may change, and we tell you in advance. With yearly billing the price holds for the whole paid year.', 'group' => 'Prices and payment'],
         ['q' => 'Is the ad budget included in the price?', 'a' => 'No. The ad budget for Facebook and Instagram is paid by you directly to Meta. We monitor the ads and tell you what they bring.', 'group' => 'Prices and payment'],
         ['q' => 'Is there a guarantee?', 'a' => 'Yes. If your website has no traffic 60 days after launch, we refund what you have paid. Visits are measured with Google Analytics, which we set up at the start.', 'group' => 'Prices and payment'],
@@ -671,7 +671,7 @@ return [
                 'highlighted' => false,
                 'audience' => 'You get a marketing partner who builds and runs the growth strategy for your business.',
                 'prices' => ['A custom quote', 'from €1,200 / month'],
-                'deposit' => '',
+                'deposit' => 'A deposit when you request a quote and demo (non-refundable), the amount is set in the custom quote; the rest when you agree.',
                 'year_total' => '',
                 'upgrade_note' => '',
                 'button' => 'Book a call',

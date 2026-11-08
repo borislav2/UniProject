@@ -380,7 +380,8 @@ class ClientEmailsTest extends TestCase
         }
         // Без €-префикс пред текстовата цена, без гаранция за трафик и без срок на валидност от подразбиране.
         $this->assertStringNotContainsString('€Съгласно', $individual);
-        $this->assertStringNotContainsString('60 дни', $individual);
+        $this->assertStringContainsString('Ако 60 дни след пускането на сайта нямате трафик', $individual);
+        $this->assertStringContainsString('Капаро преди да подготвим офертата и демото (не се връща)', $individual);
 
         $template = ClientEmails::find('offer-individual');
         $this->assertSame('individual', $template['package']);
