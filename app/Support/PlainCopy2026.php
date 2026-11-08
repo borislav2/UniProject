@@ -86,7 +86,7 @@ class PlainCopy2026
         '€400 старт: изграждаме всичко и първия месец'
             => '€400 еднократно за изграждането и първия месец',
         '€800 старт: изграждаме или поправяме сегашния ви сайт и първия месец'
-            => '€800 еднократно за изграждането или поправката на сегашния ви сайт и първия месец',
+            => '€800 еднократно за нов или обновен сайт и първия месец',
         'Какво включва: всичко от Стартов двигател, плюс'
             => 'Включва всичко от Стартов двигател, плюс',
         'Какво включва: според нуждите ви, всичко от Активен маркетинг и растеж, плюс'
@@ -148,7 +148,7 @@ class PlainCopy2026
         '€400 start: we build everything and the first month'
             => '€400 one-off for the build and the first month',
         '€800 start: we build or fix your current website and the first month'
-            => '€800 one-off to build or fix your current website and the first month',
+            => '€800 one-off for a new or refreshed website and the first month',
         'What it includes: everything in Starter Engine, plus'
             => 'Includes everything in Starter Engine, plus',
         'What it includes: tailored to your needs, everything in Active Marketing and Growth, plus'

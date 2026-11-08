@@ -15,7 +15,7 @@ class PackagesPageTest extends TestCase
         $plans = config('creatium.plans');
         $this->assertCount(3, $plans['items']);
         $this->assertSame(['€400 еднократно за изграждането и първия месец', 'след това €200 / месец'], $plans['items'][0]['prices']);
-        $this->assertSame(['€800 еднократно за изграждането или поправката на сегашния ви сайт и първия месец', 'след това €650 / месец'], $plans['items'][1]['prices']);
+        $this->assertSame(['€800 еднократно за нов или обновен сайт и първия месец', 'след това €650 / месец'], $plans['items'][1]['prices']);
         $this->assertSame(['Индивидуална оферта', 'от €1 200 / месец'], $plans['items'][2]['prices']);
         $this->assertSame('Индивидуален маркетинг', $plans['items'][2]['name']);
         $this->assertArrayNotHasKey('pricing', $plans);

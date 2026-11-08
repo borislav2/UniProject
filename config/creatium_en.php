@@ -669,7 +669,7 @@ return [
                 'badge' => 'Recommended',
                 'highlighted' => true,
                 'audience' => 'Not just an online presence, but steady marketing activity that helps your business grow.',
-                'prices' => ['€800 one-off to build or fix your current website and the first month', 'then €650 / month'],
+                'prices' => ['€800 one-off for a new or refreshed website and the first month', 'then €650 / month'],
                 'deposit' => '€200 when you request a quote and demo (non-refundable), the remaining €600 when you agree.',
                 'year_total' => '€7,950 for the first year (€800 + 11 × €650)',
                 'upgrade_note' => '',
