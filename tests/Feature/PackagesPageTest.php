@@ -29,7 +29,7 @@ class PackagesPageTest extends TestCase
 
         // Сравнителната таблица на собствениците: 10 реда по 3 стойности.
         $this->assertSame(
-            ['Брандиране', 'Уебсайт', 'SEO', 'Google профил', 'Съдържание месечно', 'Рекламни кампании', 'Имейл маркетинг', 'Автоматизации', 'Отчет', 'Работен капацитет'],
+            ['Брандиране', 'Уебсайт', 'SEO', 'Google профил', 'Съдържание месечно', 'Рекламни кампании', 'Имейл маркетинг', 'Автоматизации', 'Отчет', 'Работен капацитет на месец'],
             array_column($plans['compare'], 'label')
         );
         foreach ($plans['compare'] as $row) {
@@ -38,7 +38,7 @@ class PackagesPageTest extends TestCase
 
         $page = $this->get('/paketi')->assertOk();
         $page->assertSee('€400')->assertSee('€800')->assertSee('€1 200')
-            ->assertSee('Работен капацитет')->assertSee('До 2 ч.')->assertSee('Няколко канала');
+            ->assertSee('Работен капацитет на месец')->assertSee('До 2 ч.')->assertSee('Няколко канала');
     }
 
     public function test_plan_names_trust_strip_year_totals_deposit_and_compare_table(): void
@@ -51,9 +51,9 @@ class PackagesPageTest extends TestCase
             ->assertDontSee('Най-предпочитан')
             ->assertSee('Всичко необходимо, за да присъства бизнесът ви професионално онлайн.')
             ->assertSee('Получавате маркетингов партньор, който изгражда и управлява стратегията за растеж на бизнеса ви.')
-            ->assertSee('€100 при заявка за оферта и демо, останалите €300 при съгласие.')
-            ->assertSee('€200 при заявка за оферта и демо, останалите €600 при съгласие.')
-            ->assertSee('Първата сума се плаща преди да подготвим офертата и демото.')
+            ->assertSee('€100 при заявка за оферта и демо (не се връщат), останалите €300 при съгласие.')
+            ->assertSee('€200 при заявка за оферта и демо (не се връщат), останалите €600 при съгласие.')
+            ->assertSee('Първата сума се плаща преди да подготвим офертата и демото и не се връща, ако решите да не продължите.')
             ->assertSee('Фиксирана цена в офертата')
             ->assertSee('€2 600 за първата година (€400 + 11 × €200)')
             ->assertSee('€7 950 за първата година (€800 + 11 × €650)')
@@ -67,23 +67,22 @@ class PackagesPageTest extends TestCase
         $this->get('/en/packages')->assertOk()
             ->assertSee('Active Marketing and Growth')->assertSee('Custom Marketing')->assertDontSee('Scaling')
             ->assertSee('€2,600 for the first year')->assertSee('€7,950 for the first year')
-            ->assertSee('€100 when you request a quote and demo, the remaining €300 when you agree.');
+            ->assertSee('€100 when you request a quote and demo (non-refundable), the remaining €300 when you agree.');
     }
 
-    public function test_the_deposit_wording_does_not_promise_a_refund_and_the_demo_is_not_called_free(): void
+    public function test_the_deposit_is_not_refundable_and_the_demo_is_not_called_free(): void
     {
         $plans = json_encode([config('creatium.plans'), config('creatium_en.plans'), config('creatium.questions'), config('creatium_en.questions')], JSON_UNESCAPED_UNICODE);
         $this->assertStringNotContainsStringIgnoringCase('безплатно демо', $plans);
         $this->assertStringNotContainsStringIgnoringCase('free demo', $plans);
-        $this->assertStringNotContainsString('връща се', $plans);
-        $this->assertStringNotContainsString('невъзвръщаем', $plans);
+        $this->assertStringContainsString('не се връща, ако решите да не продължите', $plans);
         $this->assertSame('Фиксирана цена, записана в офертата', config('creatium.home_problem.system_trust')[1]['text']);
 
         $this->get('/usloviya')->assertOk()
-            ->assertSee('Първата част се плаща преди да подготвим офертата и демото.')
+            ->assertSee('Първата част се плаща преди да подготвим офертата и демото и не се връща, ако решите да не продължите.')
             ->assertSee('Последна промяна: 08.11.2026');
         $this->get('/en/terms')->assertOk()
-            ->assertSee('The first part is paid before we prepare the offer and the demo.')
+            ->assertSee('The first part is paid before we prepare the offer and the demo and is not refunded if you decide not to continue.')
             ->assertSee('Last updated: 8 November 2026');
     }
 
