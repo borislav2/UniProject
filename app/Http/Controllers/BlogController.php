@@ -39,7 +39,7 @@ class BlogController extends Controller
             ->take(3)
             ->get();
 
-        return view('blog.show', [
+        return gview('blog.show', [
             'post' => $post,
             'related' => $related,
             'hreflangAlternates' => count($translations) > 1 ? $translations : [],
@@ -81,7 +81,7 @@ class BlogController extends Controller
             $hreflang = count($hreflang) > 1 ? $hreflang : [];
         }
 
-        return view('blog.index', [
+        return gview('blog.index', [
             'posts' => $posts,
             'categories' => $categories,
             'category' => $category,

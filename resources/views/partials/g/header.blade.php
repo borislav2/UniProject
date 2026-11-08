@@ -4,7 +4,7 @@
         [__('Услуги'), lroute('services'), $is('services', 'services.show', 'site-check')],
         [__('Пакети'), lroute('packages'), $is('packages')],
         [__('Проекти'), lroute('portfolio'), $is('portfolio')],
-        [__('За нас'), lroute('about'), $is('about', 'blog.*', 'contact', 'faq')],
+        [__('За нас'), lroute('about'), $is('about', 'blog.*', 'faq')],
     ];
     $gOther = $locale === 'en' ? 'bg' : 'en';
 @endphp

@@ -1,0 +1,5 @@
+/*
+ * Design G, lean stylesheet of the home page: the shared setup (g-shared.css) and nothing else. It replaces app.css (176 KB) on pages
+ * that are fully converted. Inner pages load g-inner.css, which adds g-pages.css.
+ */
+@import './g-shared.css';

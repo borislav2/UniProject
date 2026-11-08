@@ -58,6 +58,26 @@ return [
     'about' => [
         'subtitle' => '',
         'paragraphs' => [],
+        'g_intro_title' => 'A digital agency for businesses',
+        'g_intro' => [
+            'Creatium Lab is a digital agency for businesses in Bulgaria. We connect the brand, the website, visibility in Google and AI assistants, ads and emails into one system that leads to enquiries.',
+            'We work with a clear method and a fixed price written into the offer. Every month you get a report on what was done and what comes next.',
+        ],
+        'g_method_title' => 'How we work',
+        'g_method' => [
+            ['title' => 'Conversation and review', 'text' => 'We listen to your goals and review your current website, Google profile and ads. You get a clear offer with a fixed price.'],
+            ['title' => 'Brand and website', 'text' => 'We build or update the website so that it is fast, comfortable on a phone and aimed at enquiries. You see it as a demo before launch.'],
+            ['title' => 'Visibility and ads', 'text' => 'We set up the Google profile, SEO, ads and tracking, so you can see where every enquiry comes from.'],
+            ['title' => 'Care and growth', 'text' => 'We maintain the site, monitor it around the clock and send a report every month with the next steps.'],
+        ],
+        'g_standards_title' => 'Our standards',
+        'g_standards' => [
+            ['title' => 'Fixed price', 'text' => 'The price is written into the offer and you know it before we start.'],
+            ['title' => 'A reply within one working day', 'text' => 'We reply to every enquiry within one working day at the latest.'],
+            ['title' => 'A transparent report', 'text' => 'Every month you get a clear report on what was done and the next steps.'],
+            ['title' => 'A direct line', 'text' => 'You talk directly to the people who do the work.'],
+        ],
+        'g_founders_title' => 'Founders',
         'story_title' => 'Why we do it',
         'story' => [
             'The website is ready, the ads are running, and the phone stays silent.',
@@ -212,6 +232,17 @@ return [
         'proof_label' => '',
         // Шестте светещи възела в мрежата на първия екран (една система, не отделни услуги). Празно = мрежата не се показва.
         'network_nodes' => ['Brand', 'Website', 'Google', 'Ads', 'Emails', 'Care'],
+        'hero_trust' => ['Fixed price written into the offer', 'A reply within one working day', 'A monthly report'],
+        'parts' => [
+            ['label' => 'Brand', 'text' => 'A logo, a visual system and a tone that speak with one voice', 'service' => ''],
+            ['label' => 'Website', 'text' => 'A fast site that turns visitors into enquiries', 'service' => 'website'],
+            ['label' => 'Google', 'text' => 'A Google Maps profile and reviews that win customers', 'service' => 'google'],
+            ['label' => 'Ads', 'text' => 'Visibility in Google and AI assistants, measured down to the enquiry', 'service' => 'seo'],
+            ['label' => 'Emails', 'text' => 'Emails that bring back the customers who already know you', 'service' => 'email'],
+            ['label' => 'Care', 'text' => 'Hosting, support and monitoring so the site works every day', 'service' => 'support'],
+        ],
+        'testimonials' => [['quote' => '', 'name' => '', 'business' => '']],
+        'results' => [['value' => '', 'text' => '']],
         'agency_title' => 'Strategy, design, technology and marketing under one roof.',
         'agency_accent' => ['under one roof'],
         'agency_facts' => [

@@ -1,3 +1,7 @@
+@php
+    // Design G has its own 404 page; the current design below is unchanged.
+    if (\App\Support\Design::is('g')) { echo view('g.errors.404')->render(); return; }
+@endphp
 @extends('layouts.public')
 
 @section('title', __('Страницата не е намерена'))

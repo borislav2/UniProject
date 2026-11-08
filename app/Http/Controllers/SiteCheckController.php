@@ -19,7 +19,7 @@ class SiteCheckController extends Controller
 
     public function show()
     {
-        return view('site-check');
+        return gview('site-check');
     }
 
     public function submit(Request $request)

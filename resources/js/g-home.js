@@ -1,15 +1,4 @@
-// Home page of design G: the monthly / yearly switch of the package cards and the topographic hero map.
-
-// Billing switch: both prices are in the page, the attribute picks one (without JavaScript the monthly one shows).
-document.querySelectorAll('[data-g-billing-root]').forEach((root) => {
-    const buttons = root.querySelectorAll('.g-tog button');
-    buttons.forEach((button) => {
-        button.addEventListener('click', () => {
-            root.setAttribute('data-g-billing', button.dataset.b);
-            buttons.forEach((other) => other.setAttribute('aria-pressed', other === button ? 'true' : 'false'));
-        });
-    });
-});
+// Home page of design G: the topographic hero map (the monthly / yearly switch is in g-bar.js, shared with /paketi).
 
 // Topographic contours: a noise field drifts, bends around the cursor, and its iso-lines are drawn with marching squares.
 // One line is in the signal colour; it is clipped away from the headline, the text and the buttons.
@@ -43,7 +32,9 @@ function initTopo() {
         clear = [...hero.querySelectorAll('[data-g-clear]')].map((el) => {
             const r = el.getBoundingClientRect();
             const pad = 22;
-            return [r.left - box.left - pad, r.top - box.top - pad, r.right - box.left + pad, r.bottom - box.top + pad];
+            // data-g-clear="full" (the row of six parts) keeps the signal line out of the whole band, edge to edge.
+            const full = el.dataset.gClear === 'full';
+            return [full ? 0 : r.left - box.left - pad, r.top - box.top - pad, full ? W : r.right - box.left + pad, r.bottom - box.top + pad];
         });
     }
 
