@@ -1,8 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ app()->getLocale() }}"@if(\App\Support\Design::is('g')) class="design-g"@endif>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @php
+        // Redesign (concept G): `g` for everyone with CREATIUM_DESIGN=g, or as an admin preview (noindex plus a small exit pill).
+        $g = \App\Support\Design::is('g');
+        $gPreview = \App\Support\Design::preview();
+    @endphp
     @if(config('creatium.gtm_id'))
         @include('partials/gtm-head')
     @endif
@@ -55,7 +60,9 @@
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDescription }}">
     <link rel="canonical" href="{{ $canonicalUrl }}">
-    @if(!empty($noindex))
+    @if($gPreview)
+        <meta name="robots" content="noindex">
+    @elseif(!empty($noindex))
         <meta name="robots" content="noindex, follow">
     @endif
     @if(count($hreflang) > 1)
@@ -78,7 +85,7 @@
     @endunless
     @include('partials.breadcrumbs-ld')
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="theme-color" content="#0f1a2b">
+    <meta name="theme-color" content="{{ $g ? '#0C0E12' : '#0f1a2b' }}">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link rel="icon" type="image/png" href="{{ asset('favicon-64.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
@@ -86,8 +93,17 @@
         {{-- Start downloading the font with the HTML instead of after the CSS (removes the request chain PageSpeed flags) --}}
         @php
             $fonts = [];
-            foreach (['cyrillic', 'latin'] as $subset) {
-                $fonts[] = rescue(fn () => \Illuminate\Support\Facades\Vite::asset("node_modules/@fontsource-variable/manrope/files/manrope-{$subset}-wght-normal.woff2"), '', false);
+            if ($g) {
+                // Design g: the heading and body fonts of the first screen (Bulgarian and Latin subsets); Manrope is not used.
+                foreach (['geologica/files/geologica-%s-300-normal', 'onest/files/onest-%s-400-normal'] as $pattern) {
+                    foreach (['cyrillic', 'latin'] as $subset) {
+                        $fonts[] = rescue(fn () => \Illuminate\Support\Facades\Vite::asset('node_modules/@fontsource/' . sprintf($pattern, $subset) . '.woff2'), '', false);
+                    }
+                }
+            } else {
+                foreach (['cyrillic', 'latin'] as $subset) {
+                    $fonts[] = rescue(fn () => \Illuminate\Support\Facades\Vite::asset("node_modules/@fontsource-variable/manrope/files/manrope-{$subset}-wght-normal.woff2"), '', false);
+                }
             }
         @endphp
         @foreach(array_filter($fonts) as $font)
@@ -97,9 +113,10 @@
     @if(config('creatium.inline_css') && ! \Illuminate\Support\Facades\Vite::isRunningHot())
         {{-- Inline CSS (~10 KB gzip) saves a render-blocking request on first load --}}
         <style>{!! \Illuminate\Support\Facades\Vite::content('resources/css/app.css') !!}</style>
+        @if($g)<style>{!! \Illuminate\Support\Facades\Vite::content('resources/css/g.css') !!}</style>@endif
         @vite(['resources/js/app.js'])
     @else
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite($g ? ['resources/css/app.css', 'resources/css/g.css', 'resources/js/app.js'] : ['resources/css/app.css', 'resources/js/app.js'])
     @endif
     @stack('head')
 </head>
@@ -134,6 +151,9 @@
         $languages = ['bg' => ['BG', 'Български'], 'en' => ['EN', 'English']];
     @endphp
 
+    @if($g)
+        @include('partials.g.header')
+    @else
     <div class="scroll-progress" aria-hidden="true"></div>
     <header data-header class="sticky top-0 z-50 px-3 pt-3 md:px-4 md:pt-4 -mb-[4.25rem] md:-mb-20">
       <div class="mx-auto max-w-7xl rounded-2xl border border-white/60 bg-white shadow-[0_10px_30px_-14px_rgb(15_26_43/0.3)] backdrop-blur-xl backdrop-saturate-150">
@@ -242,11 +262,15 @@
         </div>
       </div>
     </header>
+    @endif
 
     <main>
         @yield('content')
     </main>
 
+    @if($g)
+        @include('partials.g.footer')
+    @else
     <footer class="relative surface-night grain on-dark text-white overflow-hidden">
         <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_70%)]" aria-hidden="true"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 md:pt-20">
@@ -319,6 +343,11 @@
         </div>
         <div class="wordmark relative pointer-events-none text-center whitespace-nowrap text-[15vw] -mb-[2.5vw] pt-2" aria-hidden="true">Creatium Lab</div>
     </footer>
+    @endif
+
+    @if($gPreview)
+        <a href="?dizain=star" class="g-preview" rel="nofollow">{{ __('Преглед на новия дизайн') }} <span aria-hidden="true">·</span> {{ __('Изход') }}</a>
+    @endif
 
     @if(config('creatium.chat.enabled'))
         @include('partials/chat-widget')
@@ -346,6 +375,7 @@
             var menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
             this.setAttribute('aria-expanded', menu.classList.contains('hidden') ? 'false' : 'true');
+            this.classList.toggle('is-open', !menu.classList.contains('hidden'));
         });
 
         (function () {

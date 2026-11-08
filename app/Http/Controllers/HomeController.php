@@ -19,17 +19,27 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('home', [
-            'hero' => app(\App\Support\Content::class)->withDefaults('home_hero'),
-            'problem' => app(\App\Support\Content::class)->withDefaults('home_problem'),
-            'process' => app(\App\Support\Content::class)->withDefaults('home_process'),
+        $content = app(\App\Support\Content::class);
+        $data = [
+            'hero' => $content->withDefaults('home_hero'),
+            'problem' => $content->withDefaults('home_problem'),
+            'process' => $content->withDefaults('home_process'),
             'contactBlock' => site('home_contact'),
-            'trust' => app(\App\Support\Content::class)->withDefaults('home_trust'),
+            'trust' => $content->withDefaults('home_trust'),
             'demos' => site('demos') ?? [],
             'posts' => config('creatium.blog_enabled') ? Post::visible()->with('category')->latest('published_at')->take(3)->get() : collect(),
             'reviews' => config('creatium.google_reviews'),
             'contact' => config('creatium.contact'),
-        ]);
+        ];
+
+        // The redesign (concept G): the same data plus the packages for the price cards.
+        if (\App\Support\Design::is('g')) {
+            $plans = $content->withDefaults('plans');
+
+            return view('g.home', $data + ['plans' => $plans, 'billing' => \App\Support\PlanBilling::config($plans)]);
+        }
+
+        return view('home', $data);
     }
 
     public function contact()
