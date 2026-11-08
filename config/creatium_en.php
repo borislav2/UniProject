@@ -212,6 +212,13 @@ return [
         'proof_label' => '',
         // Шестте светещи възела в мрежата на първия екран (една система, не отделни услуги). Празно = мрежата не се показва.
         'network_nodes' => ['Brand', 'Website', 'Google', 'Ads', 'Emails', 'Care'],
+        'agency_title' => 'Strategy, design, technology and marketing under one roof.',
+        'agency_accent' => ['under one roof'],
+        'agency_facts' => [
+            ['title' => 'Fixed price', 'text' => 'Written into the offer'],
+            ['title' => 'A reply within one working day', 'text' => 'To every enquiry'],
+            ['title' => 'A monthly report', 'text' => 'A clear account of what was done'],
+        ],
         'proof' => [
             ['value' => 'Google + Meta', 'text' => 'ad tracking is set up, so you measure every enquiry and sale', 'link' => ''],
             ['value' => 'Instantly', 'text' => 'every enquiry goes to your email, phone or CRM', 'link' => ''],

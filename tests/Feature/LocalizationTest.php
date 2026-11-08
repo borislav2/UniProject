@@ -86,7 +86,7 @@ class LocalizationTest extends TestCase
     public function test_every_translated_string_in_public_views_has_an_english_version(): void
     {
         $translations = json_decode(file_get_contents(lang_path('en.json')), true);
-        $files = array_merge(glob(resource_path('views/*.blade.php')), glob(resource_path('views/{blog,partials,errors,layouts}/*.blade.php'), GLOB_BRACE), [app_path('Http/Controllers/HomeController.php')]);
+        $files = array_merge(glob(resource_path('views/*.blade.php')), glob(resource_path('views/{blog,partials,partials/g,g,errors,layouts}/*.blade.php'), GLOB_BRACE), [app_path('Http/Controllers/HomeController.php')]);
 
         foreach ($files as $file) {
             preg_match_all("/__\\('((?:[^'\\\\]|\\\\.)*)'/u", file_get_contents($file), $matches);

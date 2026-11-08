@@ -21,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => CheckAdminAccess::class,
             'role' => RequireRole::class,
         ]);
-        $middleware->web(append: [CaptureLeadAttribution::class, PublishBlogToFacebook::class, PublishBlogToLinkedIn::class, \App\Http\Middleware\MonitorClientSites::class]);
+        $middleware->web(append: [\App\Http\Middleware\DesignPreview::class, CaptureLeadAttribution::class, PublishBlogToFacebook::class, PublishBlogToLinkedIn::class, \App\Http\Middleware\MonitorClientSites::class]);
         // One-click unsubscribe (RFC 8058) is a POST from the mail provider, without a session or CSRF token.
         $middleware->validateCsrfTokens(except: ['otpisvane/*']);
         $middleware->prepend(\App\Http\Middleware\RedirectToCanonicalHost::class);
