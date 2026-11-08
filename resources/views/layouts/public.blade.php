@@ -119,7 +119,7 @@
         $serviceLinks[] = [__('Безплатна проверка на сайт'), lroute('site-check'), $is('site-check'), 'gauge-high'];
         $aboutLinks = [[__('Кои сме ние'), lroute('about'), $is('about'), 'users']];
         if (config('creatium.blog_enabled')) {
-            $aboutLinks[] = [__('Блог'), lroute('blog.index'), $is('blog.*'), 'newspaper'];
+            $aboutLinks[] = [__('Новини'), lroute('blog.index'), $is('blog.*'), 'newspaper'];
         }
         $aboutLinks[] = [__('Често задавани въпроси'), lroute('faq'), $is('faq'), 'quote-left'];
         $aboutLinks[] = [__('Контакти'), lroute('contact'), $is('contact'), 'envelope'];

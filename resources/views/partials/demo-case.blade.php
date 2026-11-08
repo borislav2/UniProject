@@ -1,4 +1,4 @@
-{{-- Под всяко демо: трудностите на бранша, какво прави сайтът за тях, подходящ пакет и въпроси (данните са в creatium.demos). --}}
+{{-- Под всяка концепция: трудностите на бранша, какво прави сайтът за тях, подходящ пакет и въпроси (данните са в creatium.demos). --}}
 @php
     $package = \App\Support\Plans::find(site('plans')['items'], $demo['package']['name']);
 @endphp
@@ -7,7 +7,7 @@
         <div class="max-w-2xl">
             <p class="text-xs font-bold uppercase tracking-[0.18em] text-brand-600">Creatium Lab · {{ $demo['industry'] }}</p>
             <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950">Какво решава този сайт за бранша</h2>
-            <p class="mt-4 text-gray-600 leading-relaxed">Демото е измислено, но проблемите са истински. Ето с какво се сблъскват бизнесите от бранша онлайн и какво правим за тях.</p>
+            <p class="mt-4 text-gray-600 leading-relaxed">Ето с какво се сблъскват бизнесите от бранша онлайн и какво правим за тях.</p>
         </div>
 
         <div class="mt-12 grid lg:grid-cols-2 gap-6">

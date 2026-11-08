@@ -65,7 +65,7 @@
 <section class="pb-16 md:pb-24 bg-white dark:bg-ink-950">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-xl font-extrabold tracking-tight text-brand-950 dark:text-white">Сайт за вашия бранш</h2>
-        <p class="mt-2 text-gray-600 dark:text-gray-300">Какво трябва да има сайтът, с демо и подходящ пакет за всеки бранш.</p>
+        <p class="mt-2 text-gray-600 dark:text-gray-300">Какво трябва да има сайтът, с концепция и подходящ пакет за всеки бранш.</p>
         <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             @foreach(config('creatium.industry_pages') as $industrySlug => $industry)
                 <a href="{{ route('industry', $industrySlug) }}" class="card-hover flex items-center justify-between gap-3 rounded-2xl border border-gray-200 p-4 font-semibold text-brand-950 hover:border-brand-400 dark:border-white/10 dark:text-white">

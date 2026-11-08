@@ -1,68 +1,59 @@
 @extends('layouts.public')
 
-@section('title', __('Проекти и демо сайтове: ресторант, салон, автосервиз'))
-@section('meta_description', __('Демо сайтове за ресторант, салон, зъболекар, автосервиз, строителна фирма и онлайн магазин. Вижте как изглежда сайт, който носи запитвания.'))
+@section('title', __('Проекти и концепции за сайтове: ресторант, салон, автосервиз'))
+@section('meta_description', __('Концепции за сайтове за ресторант, салон, зъболекар, автосервиз, строителна фирма и онлайн магазин. Вижте как изглежда сайт, който носи запитвания.'))
 
 @section('content')
 @include('partials/page-header', ['heading' => __('Проекти'), 'sub' => __('Разгледайте работата ни')])
 
-@if($projects->isNotEmpty())
+@if($projects->isNotEmpty() || ! empty($demos))
 <section class="py-16 bg-white dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {{-- Един списък: първо истинските проекти, после концепциите; картите са еднакви, само концепциите носят етикет „Концепция“. --}}
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" data-portfolio-grid>
             @foreach($projects as $project)
-                <article class="group flex flex-col overflow-hidden border border-gray-200 rounded-2xl card-hover bg-white reveal dark:border-white/10 dark:bg-white/[0.03]">
-                    @if($project->screenshot)
-                        <div class="relative aspect-[8/5] overflow-hidden bg-gray-100 dark:bg-white/5">
+                <article class="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white card-hover reveal dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ ($loop->index % 3) * 100 }}ms">
+                    <div class="relative aspect-[8/5] overflow-hidden bg-gray-100 dark:bg-white/5">
+                        @if($project->screenshot)
                             <img src="{{ asset($project->screenshot) }}" alt="{{ $project->name }}" width="960" height="600" loading="lazy" class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
-                        </div>
-                    @endif
-                    <div class="flex flex-1 flex-col p-7">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-300">{{ $project->category->name }}</span>
-                    <h2 class="text-xl font-bold text-brand-950 mt-2 mb-2 dark:text-white">{{ $project->name }}</h2>
-                    <p class="text-gray-600 mb-4 dark:text-gray-300">{{ $project->description }}</p>
-                    @if($project->website_url)
-                        <a href="{{ $project->website_url }}" target="_blank" rel="noopener" class="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">
-                            {{ __('Посетете сайта') }}: {{ preg_replace('/^www\./', '', (string) parse_url($project->website_url, PHP_URL_HOST)) }} <x-icon name="arrow-up-right-from-square" class="text-xs" />
-                        </a>
-                    @endif
-                    @if($project->technologies->isNotEmpty())
-                        <div class="flex flex-wrap gap-1">
-                            @foreach($project->technologies as $technology)
-                                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded dark:bg-white/10 dark:text-gray-200">{{ $technology->name }}</span>
-                            @endforeach
-                        </div>
-                    @endif
+                        @else
+                            <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-50 to-brand-100 dark:from-white/5 dark:to-white/10"><x-icon name="rocket" class="text-3xl text-brand-300 dark:text-brand-300/60" /></div>
+                        @endif
+                    </div>
+                    <div class="flex flex-1 flex-col p-6">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-300">{{ $project->category->name }}</span>
+                        <h2 class="mt-2 text-xl font-bold text-brand-950 dark:text-white">{{ $project->name }}</h2>
+                        <p class="mt-2 text-gray-600 dark:text-gray-300">{{ $project->description }}</p>
+                        @if($project->technologies->isNotEmpty())
+                            <div class="mt-4 flex flex-wrap gap-1">
+                                @foreach($project->technologies as $technology)
+                                    <span class="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded dark:bg-white/10 dark:text-gray-200">{{ $technology->name }}</span>
+                                @endforeach
+                            </div>
+                        @endif
+                        @if($project->website_url)
+                            <a href="{{ $project->website_url }}" target="_blank" rel="noopener" class="mt-auto pt-5 inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">
+                                {{ __('Посетете сайта') }}: {{ preg_replace('/^www\./', '', (string) parse_url($project->website_url, PHP_URL_HOST)) }} <x-icon name="arrow-up-right-from-square" class="text-xs" />
+                            </a>
+                        @endif
                     </div>
                 </article>
             @endforeach
-        </div>
-    </div>
-</section>
-@endif
 
-@if(!empty($demos))
-<section id="demo" class="py-16 scroll-mt-20 {{ $projects->isNotEmpty() ? 'bg-brand-50/60 dark:bg-ink-900' : 'bg-white dark:bg-ink-950' }}">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-2xl">
-            <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ __('Демо проекти') }}</h2>
-            <p class="mt-3 text-gray-600 dark:text-gray-300">{{ __('Примерни сайтове, които показват как може да изглежда вашият.') }}@if(app()->getLocale() === 'en') {{ __('Демото е на български.') }}@endif</p>
-        </div>
-        <div class="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($demos as $demo)
-                <article class="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white card-hover reveal dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ ($loop->index % 3) * 100 }}ms">
+                <article class="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white card-hover reveal dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ (($projects->count() + $loop->index) % 3) * 100 }}ms">
                     <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="relative block aspect-[8/5] overflow-hidden bg-gray-100 dark:bg-white/5" tabindex="-1" aria-hidden="true">
                         @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
                             <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" alt="" width="960" height="600" loading="lazy" class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
                         @endif
-                        <span class="absolute left-3 top-3 rounded-full bg-brand-950/90 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">{{ __('Демо') }}</span>
+                        <span class="absolute left-3 top-3 rounded-full bg-brand-950/90 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white" data-concept-chip>{{ __('Концепция') }}</span>
                     </a>
                     <div class="flex flex-1 flex-col p-6">
                         <span class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-300">{{ $demo['industry'] }}</span>
-                        <h3 class="mt-2 text-xl font-bold text-brand-950 dark:text-white">{{ $demo['name'] }}</h3>
+                        <h2 class="mt-2 text-xl font-bold text-brand-950 dark:text-white">{{ $demo['name'] }}</h2>
                         <p class="mt-2 text-gray-600 dark:text-gray-300">{{ $demo['description'] }}</p>
                         <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="mt-auto pt-5 inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">
-                            {{ __('Отвори демото') }} <x-icon name="arrow-up-right-from-square" class="text-xs" />
+                            {{ __('Вижте сайта') }} <x-icon name="arrow-up-right-from-square" class="text-xs" />
                         </a>
                         @php($industrySlug = app()->getLocale() === 'bg' ? collect(config('creatium.industry_pages'))->search(fn ($page) => $page['demo'] === $demo['slug']) : false)
                         @if($industrySlug !== false)
@@ -72,10 +63,13 @@
                 </article>
             @endforeach
         </div>
-        <p class="mt-10 text-gray-600 dark:text-gray-300">{{ __('Ако искате вашият да е един от тях, пишете ни.') }} <a href="{{ lroute('contact') }}" class="font-semibold text-brand-700 underline dark:text-brand-300">{{ __('Свържете се с нас') }}</a></p>
+        @if(app()->getLocale() === 'en' && ! empty($demos))
+            <p class="mt-8 text-sm text-gray-500 dark:text-gray-400">{{ __('Сайтовете-концепции са на български.') }}</p>
+        @endif
+        <p class="mt-6 text-gray-600 dark:text-gray-300">{{ __('Ако искате вашият да е един от тях, пишете ни.') }} <a href="{{ lroute('contact') }}" class="font-semibold text-brand-700 underline dark:text-brand-300">{{ __('Свържете се с нас') }}</a></p>
     </div>
 </section>
-@elseif($projects->isEmpty())
+@else
 <section class="py-16 bg-white dark:bg-ink-950">
     <div class="max-w-xl mx-auto px-4 text-center py-8">
         <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-brand-50 flex items-center justify-center dark:bg-white/10">

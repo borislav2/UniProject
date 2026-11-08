@@ -190,11 +190,11 @@ class PublicSiteTest extends TestCase
         $this->get('/za-nas')
             ->assertSee('Борислав Костадинов')
             ->assertSee('Владимир Цончев')
-            ->assertSee('Performance Marketing Expert')
-            ->assertSee('Laravel')
+            ->assertSee('Да ви намират в Google')
+            ->assertSee('Сайт, който се зарежда бързо')
             ->assertSee('href="https://www.linkedin.com/in/vladimirtsonchev/"', false);
 
-        $this->get('/en/about')->assertSee('Borislav Kostadinov')->assertSee('LinkedIn profile')->assertSee('Performance Marketing Expert');
+        $this->get('/en/about')->assertSee('Borislav Kostadinov')->assertSee('LinkedIn profile')->assertSee('Being found on Google');
     }
 
     public function test_faq_has_its_own_page_grouped_by_topic(): void

@@ -1,6 +1,6 @@
 {{--
-    Hero showcase: real demo sites (/proekti) on a laptop and a phone, so visitors see colourful client work, not our own theme.
-    The laptop cycles three demos (12 s); each comes with its own "new booking" notification. The phone scrolls the demo shop.
+    Hero showcase: real concept sites (/proekti) on a laptop and a phone, so visitors see colourful client work, not our own theme.
+    The laptop cycles three concepts (12 s); each comes with its own "new booking" notification. The phone scrolls the concept shop.
     Decorative only (aria-hidden). Animates transform/opacity only and stops under prefers-reduced-motion.
 --}}
 @php
@@ -111,7 +111,7 @@
             </div>
         </div>
 
-        {{-- Phone: scrolls through the demo shop --}}
+        {{-- Phone: scrolls through the concept shop --}}
         <div class="phone-wrap absolute right-0 bottom-0 w-[33%] sm:w-[31%]">
             <div class="animate-float rounded-[2rem] bg-gradient-to-b from-[#3a4558] to-[#121823] p-[5px] ring-1 ring-white/20 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.95)]" style="animation-delay: -2s">
                 <div class="relative overflow-hidden rounded-[1.7rem] bg-white aspect-[9/19.5]">

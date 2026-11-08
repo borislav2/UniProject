@@ -26,7 +26,7 @@
     <header class="relative overflow-hidden surface-night grain on-dark text-white">
         <div class="absolute inset-0 bg-grid-light" aria-hidden="true"></div>
         <div class="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-header pb-14 md:pb-20">
-            <a href="{{ lroute('blog.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-200 hover:text-white"><x-icon name="arrow-left" class="text-xs" /> {{ __('Блог') }}</a>
+            <a href="{{ lroute('blog.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-200 hover:text-white"><x-icon name="arrow-left" class="text-xs" /> {{ __('Новини') }}</a>
             <h1 class="mt-5 text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">{{ $post->tr('title') }}</h1>
             <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-brand-100/90">
                 <time datetime="{{ $post->published_at->toDateString() }}">{{ $post->published_at->locale(app()->getLocale())->translatedFormat('j F Y') }}</time>
@@ -75,7 +75,7 @@
 @if($related->isNotEmpty())
     <section class="py-16 md:py-20 bg-brand-50/60 dark:bg-ink-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 mb-10 dark:text-white">{{ __('Още от блога') }}</h2>
+            <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 mb-10 dark:text-white">{{ __('Още новини') }}</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($related as $post)
                     @include('blog._card')

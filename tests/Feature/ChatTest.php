@@ -63,7 +63,7 @@ class ChatTest extends TestCase
 
         $this->assertStringContainsString('Борислав Костадинов', $faq('Кои са собствениците?'));
         $this->assertStringContainsString('Владимир Цончев', $faq('кой стои зад вас'));
-        $this->assertStringContainsString('От 4 години', $faq('Откога работите?'));
+        $this->assertStringContainsString('телефонът мълчи', $faq('Откога работите?'));
         $this->assertStringContainsString('izrabotka-na-sait-za-kozmetichen-salon', $faq('Здравейте, искам сайт за салон'));
         $this->assertStringContainsString('Аз съм Крео', $faq('Здравейте!'));
         $this->assertStringContainsString('proverka-na-sait', $faq('Може ли да проверите сайта ми?'));
@@ -72,7 +72,7 @@ class ChatTest extends TestCase
         $knowledge = SiteKnowledge::text();
         $this->assertStringContainsString('Борислав Костадинов', $knowledge);
         $this->assertStringContainsString('Founders and owners', $knowledge);
-        $this->assertStringContainsString('От 4 години', $knowledge);
+        $this->assertStringContainsString('телефонът мълчи', $knowledge);
         $this->assertStringContainsString('Deloitte', $knowledge);
     }
 

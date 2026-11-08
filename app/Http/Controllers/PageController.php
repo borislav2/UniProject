@@ -41,7 +41,7 @@ class PageController extends Controller
         ]);
     }
 
-    /** „Изработка на сайт за …“: страница за бранш (само на български), с демото, проблемите, пакета и въпросите му. */
+    /** „Изработка на сайт за …“: страница за бранш (само на български), с концепцията, проблемите, пакета и въпросите ѝ. */
     public function industry(string $slug)
     {
         $page = site('industry_pages')[$slug] ?? null;
@@ -256,7 +256,7 @@ class PageController extends Controller
             $lines[] = '- Телефон: ' . $phone;
         }
         $lines[] = '- Безплатна консултация: ' . lroute('contact', [], 'bg') . '#konsultatsiya';
-        $lines[] = '- Проекти и демо сайтове: ' . lroute('portfolio', [], 'bg');
+        $lines[] = '- Проекти и концепции за сайтове: ' . lroute('portfolio', [], 'bg');
 
         return response(implode("\n", $lines) . "\n")->header('Content-Type', 'text/markdown; charset=UTF-8');
     }

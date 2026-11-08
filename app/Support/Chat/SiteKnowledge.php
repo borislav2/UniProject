@@ -157,8 +157,8 @@ class SiteKnowledge
         }
 
         if ($demos = site('demos')) {
-            $out[] = "\n## Demo websites (" . lroute('portfolio') . ')';
-            $out[] = 'Fictional businesses built to show what we do for each industry, marked "Demo": '
+            $out[] = "\n## Website concepts (" . lroute('portfolio') . ')';
+            $out[] = 'Sample website concepts (for example a restaurant, a salon or an online shop) that show what we can build for each industry, marked "Concept". They are examples, not our clients: '
                 . implode('; ', array_map(fn ($d) => $d['name'] . ' (' . $d['industry'] . ')', $demos)) . '.';
         }
 
