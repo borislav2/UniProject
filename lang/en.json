@@ -732,5 +732,7 @@
     "Готовност за Google Shopping": "Google Shopping readiness",
     "Сайтът прилича на онлайн магазин. Google Shopping се очаква в България, но официална дата още няма. Първи печелят магазините с готови данни в деня на старта. Ето как стоите днес: :ok от :total наред.": "Your site looks like an online shop. Google Shopping is expected in Bulgaria, but there is no official date yet. The shops with ready data on launch day win first. Here is where you stand today: :ok of :total in order.",
     "Какво включва подготовката на магазина:": "What preparing the shop includes:",
-    "Подготовка за Google Shopping": "Getting ready for Google Shopping"
+    "Подготовка за Google Shopping": "Getting ready for Google Shopping",
+    "Проверката срещу ботове не мина. Моля, опитайте отново.": "The bot check did not pass. Please try again.",
+    "Моля, изчакайте проверката срещу ботове да завърши и опитайте отново.": "Please wait for the bot check to finish and try again."
 }
