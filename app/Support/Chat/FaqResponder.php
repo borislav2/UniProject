@@ -93,8 +93,8 @@ class FaqResponder
         if ($plans) {
             $topics[] = [
                 __('Колко струва сайт? Цени на пакетите, такса на месец, абонамент, оферта.'),
-                implode("\n", array_map(fn ($p) => $p['name'] . ': ' . implode(', ', (array) $p['prices']), $plans))
-                    . (($intro = \App\Support\PlanPricing::textIntro(site('plans') ?? [])) !== '' ? "\n" . $intro . ' ' . lroute('packages') . '#izbor' : '')
+                implode("\n", \App\Support\PlanBilling::textLines(app(\App\Support\Content::class)->withDefaults('plans')))
+                    . "\n" . lroute('packages')
                     . "\n" . __('Оферта за вашия бизнес: :link', ['link' => lroute('packages') . '#oferta']),
             ];
         }

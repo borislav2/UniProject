@@ -1,4 +1,4 @@
-{{-- Оферта (Стартов двигател и Активен маркетинг и растеж). Всеки текст идва от полетата на формата (App\Support\ClientEmails::offerFields) и минава през fill(),
+{{-- Оферта (Стартов двигател, Активен маркетинг и растеж и Индивидуален маркетинг). Всеки текст идва от полетата на формата (App\Support\ClientEmails::offerFields) и минава през fill(),
      така че {business} и {client_name} работят навсякъде. Празно по желание поле скрива целия си блок. Само таблици и inline стилове. --}}
 @extends('emails.client.layout')
 @php
@@ -34,6 +34,10 @@
     $cta = $t('cta_text');
     $validUntil = $t('valid_until') !== '' && strtotime($t('valid_until')) !== false ? \Illuminate\Support\Carbon::parse($t('valid_until'))->format('d.m.Y') : null;
     $outcomes = $ls('outcomes');
+    $includes = $pr('includes');
+    // Цената е число (с € отпред) или кратък текст, напр. „от €1 200“ или „Съгласно индивидуално изготвената оферта“.
+    $money = fn ($value) => preg_match('/^\d[\d\s.,]*$/', $value) ? '€' . $value : $value;
+    $bigStyle = fn ($value) => preg_match('/^\d[\d\s.,]*$/', $value) || mb_strlen($value) <= 12 ? 'font-size:34px;line-height:1.2;' : 'font-size:19px;line-height:1.35;';
     $trust = $pr('trust');
     $steps = $pr('steps');
     $extras = $pr('extras');
@@ -66,6 +70,24 @@
 @if($t('heard') !== '')
 <tr><td style="padding:10px 36px 0;">
 @include('emails.client._parts', ['part' => 'quote', 'label' => $t('heading_heard'), 'text' => $t('heard')])
+</td></tr>
+@endif
+
+{{-- Какво включва: списък с отметки --}}
+@if($includes)
+<tr><td style="padding:26px 36px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f8fc" style="background:#f5f8fc;border-radius:12px;">
+<tr><td style="padding:22px 24px 14px;">
+{!! $bar !!}
+@if($t('heading_includes') !== ''){!! $h($t('heading_includes')) !!}@endif
+<div style="height:8px;line-height:8px;font-size:0;">&nbsp;</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+@foreach($includes as [$title, $text])
+<tr><td width="26" valign="top" style="padding:6px 0;{{ $f }}font-size:14px;font-weight:bold;color:#2d63a3;">&#10003;</td><td style="padding:6px 0;{{ $f }}font-size:14px;line-height:1.5;color:#1f2a3a;">@if($text !== '')<strong style="color:#0f1a2b;">{{ $title }}:</strong> {{ $text }}@else{{ $title }}@endif</td></tr>
+@endforeach
+</table>
+</td></tr>
+</table>
 </td></tr>
 @endif
 
@@ -146,20 +168,20 @@
 @php($hasMonthly = $t('monthly_price') !== '')
 <td width="{{ $hasMonthly ? '50%' : '100%' }}" valign="top" align="center" style="padding:24px 12px 18px;{{ $hasMonthly ? 'border-right:1px solid #2a4468;' : '' }}">
 @if($t('price_label') !== '')<div style="{{ $f }}font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#9cc0eb;">{{ $t('price_label') }}</div>@endif
-<div style="{{ $f }}font-size:34px;line-height:1.2;font-weight:bold;color:#ffffff;padding-top:6px;">€{{ $t('price') }}</div>
+<div style="{{ $f }}{{ $bigStyle($t('price')) }}font-weight:bold;color:#ffffff;padding-top:6px;">{{ $money($t('price')) }}</div>
 @if($t('price_note') !== '')<div style="{{ $f }}font-size:13px;color:#c5d6ec;">{{ $t('price_note') }}</div>@endif
 </td>
 @if($hasMonthly)
 <td width="50%" valign="top" align="center" style="padding:24px 12px 18px;">
 @if($t('monthly_label') !== '')<div style="{{ $f }}font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#9cc0eb;">{{ $t('monthly_label') }}</div>@endif
-<div style="{{ $f }}font-size:34px;line-height:1.2;font-weight:bold;color:#ffffff;padding-top:6px;">€{{ $t('monthly_price') }}</div>
+<div style="{{ $f }}{{ $bigStyle($t('monthly_price')) }}font-weight:bold;color:#ffffff;padding-top:6px;">{{ $money($t('monthly_price')) }}</div>
 <div style="{{ $f }}font-size:13px;color:#c5d6ec;">/ месец</div>
 </td>
 @endif
 </tr>
 <tr><td colspan="2" style="padding:0 24px 16px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-@foreach([['Срок', $t('deadline')], ['Плащане', $t('payment')], ['Абонамент', $t('subscription_terms')], ['Гаранция', $t('guarantee')], ['Реклама', $t('ad_budget')]] as [$label, $value])
+@foreach([['Срок', $t('deadline')], ['Плащане', $t('payment')], ['Абонамент', $t('subscription_terms')], ['Годишно', $t('yearly_terms')], ['Гаранция', $t('guarantee')], ['Реклама', $t('ad_budget')]] as [$label, $value])
 @if($value !== '')
 <tr><td valign="top" width="80" style="padding:10px 12px 10px 0;border-top:1px solid #2a4468;{{ $f }}font-size:13px;color:#c5d6ec;">{{ $label }}</td><td valign="top" style="padding:10px 0;border-top:1px solid #2a4468;{{ $f }}font-size:14px;line-height:1.5;font-weight:bold;color:#ffffff;">{{ $value }}</td></tr>
 @endif

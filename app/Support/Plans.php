@@ -7,12 +7,19 @@ namespace App\Support;
  */
 class Plans
 {
-    /** A plan name in a comparable form: lower case, "&" = "и", single spaces. */
+    /** Old plan names that still match the current plan (the third plan was „Индивидуален маркетинг и мащабиране“ until November 2026). */
+    private const ALIASES = [
+        'индивидуален маркетинг и мащабиране' => 'индивидуален маркетинг',
+        'custom marketing and scaling' => 'custom marketing',
+    ];
+
+    /** A plan name in a comparable form: lower case, "&" = "и", single spaces, old names mapped to the current one. */
     public static function normalize(?string $name): string
     {
         $name = str_replace(['&amp;', '&'], ' и ', (string) $name);
+        $name = trim((string) preg_replace('/\s+/u', ' ', mb_strtolower($name)));
 
-        return trim((string) preg_replace('/\s+/u', ' ', mb_strtolower($name)));
+        return self::ALIASES[$name] ?? $name;
     }
 
     /** The plan with this name (case, "&" / "и" and spacing do not matter), or null. */

@@ -35,7 +35,7 @@ class QuoteTest extends TestCase
         $plans = config('creatium.plans.items');
 
         $this->get('/paketi')->assertOk()
-            ->assertSee('/paketi?paket=1&amp;obem=1&amp;plashtane=mesechno#oferta', false)
+            ->assertSee('/paketi?paket=1#oferta', false)
             ->assertSee('id="oferta"', false)
             ->assertSee('Получете оферта');
 
