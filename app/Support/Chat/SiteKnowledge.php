@@ -109,6 +109,9 @@ class SiteKnowledge
             $out[] = "\n### " . $plan['name'];
             $out[] = $plan['audience'] ?? '';
             $out[] = 'Prices: ' . implode('; ', (array) ($plan['prices'] ?? []));
+            if (filled($plan['deposit'] ?? null)) {
+                $out[] = 'Start price payment: ' . $plan['deposit'];
+            }
             foreach (['build' => 'build_items', 'monthly' => 'monthly_items'] as $label => $field) {
                 if (! empty($plan[$field])) {
                     $out[] = ($plan[$label . '_title'] ?? $label) . ': ' . implode('; ', (array) $plan[$field]);
@@ -117,12 +120,15 @@ class SiteKnowledge
         }
 
         $plansFull = app(\App\Support\Content::class)->withDefaults('plans');
-        if ($table = \App\Support\PlanPricing::textLines($plansFull)) {
-            $out[] = "\n### " . __('Месечна такса според обема съдържание');
-            $out[] = \App\Support\PlanPricing::textIntro($plansFull);
-            $out[] = __('Месечната такса е „от“ най-ниската сума; точната зависи от колко публикации и статии на месец ви трябват. Стартовата цена (изграждане и първия месец) не зависи от обема.');
-            array_push($out, ...$table);
-            $out[] = __('Ако клиентът пита за конкретен брой публикации, вземи реда с най-близката стъпка (или по-високата) и посочи и двата начина на плащане.');
+        $out[] = "\n### " . __('Цени и плащане');
+        $out[] = __('Цените са фиксирани. Стартовата цена се плаща на две части: първата сума преди да подготвим офертата и демото, останалата при съгласие. Не обещавай дали първата сума се връща, ако клиентът не продължи: това не е решено, насочи към консултация.');
+        array_push($out, ...\App\Support\PlanBilling::textLines($plansFull));
+        if (! empty($plansFull['compare'])) {
+            $out[] = __('Сравнение') . ' (' . implode(' | ', array_map(fn ($p) => $p['name'], array_values($plansFull['items'] ?? []))) . '):';
+            foreach ($plansFull['compare'] as $row) {
+                $values = array_map(fn ($v) => match (strtolower(trim((string) $v))) { 'yes' => __('Да'), 'no', '' => __('Не'), default => $v }, array_values((array) ($row['values'] ?? [])));
+                $out[] = '- ' . $row['label'] . ': ' . implode(' | ', $values);
+            }
         }
 
         $process = app(\App\Support\Content::class)->withDefaults('home_process');

@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', __('Цена за изработка на сайт: пакети от €600'))
-@section('meta_description', __('Колко струва цялата система: от €600 старт и от €150/месец или €900 старт и от €400/месец според обема съдържание. Фиксирана цена и демо преди старта.'))
+@section('title', __('Цена за изработка на сайт: пакети от €400'))
+@section('meta_description', __('Колко струва: €400 старт и €200/месец или €800 старт и €650/месец. Индивидуален маркетинг от €1 200/месец. Фиксирана цена и 2 месеца безплатно при годишно плащане.'))
 
 @php
     // FAQPage JSON-LD for the price and payment questions shown on this page.
@@ -16,7 +16,7 @@
     ];
     $planItems = $plans['items'] ?? [];
     $contactInfo = config('creatium.contact');
-    $hasPricing = ! empty($pricing);
+    $billingOn = ! empty($billing['enabled']);
 @endphp
 
 @if(! empty($faq))
@@ -58,37 +58,34 @@
     <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand-400/50 to-transparent" aria-hidden="true"></div>
 </section>
 
-{{-- 2. Плъзгачът и пакетите. На телефон пакетът, отбелязан с highlighted, е първи; препоръката само сменя подчертаването. --}}
+{{-- 2. Превключвателят Месечно / Годишно и пакетите. На телефон пакетът, отбелязан с highlighted, е първи; препоръката само сменя подчертаването. --}}
 <section class="py-16 md:py-24 bg-white dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         @php
             $recIndex = -1;
-            if ($hasPricing) {
-                $recIndex = \App\Support\PlanPricing::recommended($pricing, $pricingStep, count($planItems));
-            } else {
-                foreach (array_values($planItems) as $i => $candidate) {
-                    if (! empty($candidate['highlighted'])) { $recIndex = $i; break; }
-                }
+            foreach (array_values($planItems) as $i => $candidate) {
+                if (! empty($candidate['highlighted'])) { $recIndex = $i; break; }
             }
             $badgeText = collect($planItems)->pluck('badge')->filter()->first() ?: __('Препоръчваме');
-            $queryTail = $hasPricing ? '&obem=' . $pricingStep . '&plashtane=' . \App\Support\PlanPricing::billingParam($pricingBilling) : '';
+            $queryTail = $billingOn && $billingMode === 'yearly' ? '&plashtane=' . \App\Support\PlanBilling::billingParam($billingMode) : '';
         @endphp
-        @if($hasPricing)
-            @include('partials/plan-slider')
+        @if($billingOn)
+            @include('partials/plan-billing')
         @endif
         <div class="grid lg:grid-cols-3 gap-8 lg:gap-6 items-stretch">
             @foreach($planItems as $plan)
                 @php
                     $isRec = $loop->index === $recIndex;
                     $buttonText = filled($plan['button'] ?? null) ? $plan['button'] : ($plans['button'] ?? __('Получете оферта'));
-                    $cell = $hasPricing ? \App\Support\PlanPricing::cell($pricing, $plan, $loop->index, $pricingStep, $pricingBilling) : null;
-                    $dynamic = $hasPricing && $loop->index <= 1;
-                    $customText = filled($plan['button'] ?? null) ? $plan['button'] : __('Заявете разговор');
-                    $buttonCustom = $cell && $cell['custom'];
+                    $cells = [
+                        'monthly' => \App\Support\PlanBilling::cell($billing, $plan, $loop->index, 'monthly'),
+                        'yearly' => \App\Support\PlanBilling::cell($billing, $plan, $loop->index, 'yearly'),
+                    ];
+                    $priced = $cells['monthly']['priced'];
                 @endphp
                 <div id="paket-{{ $loop->index }}" class="reveal scroll-mt-28 flex {{ ! empty($plan['highlighted']) ? 'order-first lg:order-none' : '' }}" style="--reveal-delay: {{ $loop->index * 100 }}ms">
                     <div class="plan-card flex flex-1" data-plan-card="{{ $loop->index }}" data-rec="{{ $isRec ? 'true' : 'false' }}">
-                        <span class="pc-badge rounded-full bg-white px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-950 shadow-lg ring-1 ring-brand-200" aria-hidden="{{ $isRec ? 'false' : 'true' }}" data-p-badge>{{ $badgeText }}</span>
+                        <span class="pc-badge rounded-full bg-white px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-950 shadow-lg ring-1 ring-brand-200" aria-hidden="{{ $isRec ? 'false' : 'true' }}">{{ $badgeText }}</span>
                         <article class="plan-card-body relative flex flex-1 flex-col p-7 md:p-9">
                             <div class="pc-deco absolute inset-0 bg-grid-light" aria-hidden="true"></div>
                             <div class="pc-deco absolute -top-24 -right-24 w-72 h-72 rounded-full bg-brand-500/30 blur-3xl" aria-hidden="true"></div>
@@ -97,16 +94,13 @@
                                 <p class="pc-accent text-xs font-bold uppercase tracking-[0.18em]">{{ __('Пакет :n', ['n' => $loop->iteration]) }}</p>
                                 <h2 class="pc-fg mt-2 text-2xl md:text-[1.7rem] leading-tight font-extrabold tracking-tight">{{ $plan['name'] }}</h2>
                                 <p class="pc-body mt-3 leading-relaxed">{{ $plan['audience'] }}</p>
-                                @if($cell)
-                                    <p class="pc-chip mt-4 rounded-xl px-3 py-2 text-sm font-bold leading-snug" data-p-volume>{{ $cell['volume'] }}</p>
-                                @endif
                             </div>
 
-                            {{-- Цени: голяма цена на старта и под нея месечната сума (от плъзгача, ако го има). --}}
+                            {{-- Цени: голяма цена на старта, под нея абонаментът (месечно или годишно) и как се плаща старта. --}}
                             <div class="pc-box relative mt-7 rounded-3xl p-5">
                                 @foreach($plan['prices'] as $price)
                                     @php
-                                        // Първият ред: голямата цена на старта и подпис. Следващите: „след това от €150 / месец“.
+                                        // Първият ред: голямата цена на старта и подпис. Следващите: „след това €200 / месец“.
                                         $parts = null;
                                         $monthly = null;
                                         if ($loop->first) {
@@ -115,7 +109,7 @@
                                             $monthly = [trim($m[1]), $m[2], $m[3] ?? ''];
                                         }
                                     @endphp
-                                    @continue($dynamic && ! $loop->first)
+                                    @continue($priced && ! $loop->first)
                                     <div class="{{ $loop->first ? '' : 'mt-4 pt-4 border-t pc-line' }}">
                                         @if($parts)
                                             <p class="flex flex-wrap items-baseline gap-x-2">
@@ -135,21 +129,26 @@
                                     </div>
                                 @endforeach
 
-                                @if($dynamic)
-                                    <div class="mt-4 pt-4 border-t pc-line">
-                                        <div data-p-numbers @if($cell['custom']) hidden @endif>
-                                            <p class="flex flex-wrap items-baseline gap-x-2">
-                                                <span class="pc-body text-sm">{{ __('след това') }}</span>
-                                                <span class="pc-fg text-3xl font-extrabold tracking-tight leading-none tabular-nums" data-p-price>{{ $cell['price'] }}</span>
-                                                <span class="pc-strong text-base font-bold" data-p-suffix>{{ $cell['suffix'] }}</span>
-                                            </p>
-                                            <p class="pc-body mt-1.5 text-xs leading-relaxed" data-p-sub @if($cell['sub'] === '') hidden @endif>{{ $cell['sub'] }}</p>
+                                @if($priced)
+                                    @foreach($cells as $mode => $cell)
+                                        @continue($mode === 'yearly' && ! $billingOn)
+                                        <div data-billing-view="{{ $mode }}" @if($mode !== $billingMode) hidden @endif>
+                                            <div class="mt-4 pt-4 border-t pc-line">
+                                                <p class="flex flex-wrap items-baseline gap-x-2">
+                                                    <span class="pc-body text-sm">{{ __('след това') }}</span>
+                                                    <span class="pc-fg text-3xl font-extrabold tracking-tight leading-none tabular-nums">{{ $cell['price'] }}</span>
+                                                    <span class="pc-strong text-base font-bold">{{ $cell['suffix'] }}</span>
+                                                </p>
+                                                @if($cell['sub'] !== '')<p class="pc-body mt-1.5 text-xs leading-relaxed">{{ $cell['sub'] }}</p>@endif
+                                            </div>
+                                            @if($cell['year'] !== '')<p class="pc-line pc-body mt-4 pt-3 border-t text-xs leading-relaxed">{{ $cell['year'] }}</p>@endif
                                         </div>
-                                        <p class="pc-fg text-2xl font-extrabold leading-snug tracking-tight" data-p-custom @unless($cell['custom']) hidden @endunless>{{ __('Индивидуална оферта') }}</p>
-                                    </div>
-                                    <p class="pc-line pc-body mt-4 pt-3 border-t text-xs leading-relaxed" data-p-year @if($cell['year'] === '') hidden @endif>{{ $cell['year'] }}</p>
-                                @elseif(! $hasPricing && filled($plan['year_total'] ?? null))
+                                    @endforeach
+                                @elseif(filled($plan['year_total'] ?? null))
                                     <p class="pc-line pc-body mt-4 pt-3 border-t text-xs leading-relaxed">{{ $plan['year_total'] }}</p>
+                                @endif
+                                @if(filled($plan['deposit'] ?? null))
+                                    <p class="pc-line pc-body mt-4 pt-3 border-t text-sm leading-relaxed"><strong class="pc-fg">{{ __('Плащане на старта') }}:</strong> {{ $plan['deposit'] }}</p>
                                 @endif
                             </div>
 
@@ -189,8 +188,7 @@
 
                             <div class="relative mt-auto pt-8">
                                 <a href="{{ lroute('packages') }}?paket={{ $loop->index }}{{ $queryTail }}#oferta" data-p-link class="pc-btn btn-shine group/btn flex w-full items-center justify-center gap-2 text-center px-6 py-4 rounded-2xl font-semibold">
-                                    <span data-p-btn-default @if($buttonCustom) hidden @endif>{{ $buttonText }}</span>
-                                    <span data-p-btn-custom @unless($buttonCustom) hidden @endunless>{{ $customText }}</span>
+                                    <span>{{ $buttonText }}</span>
                                     <x-icon name="arrow-right" class="text-sm" />
                                 </a>
                             </div>
@@ -243,15 +241,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- Първият ред следва плъзгача (скриптът сменя клетките); без JavaScript показва стъпката от адреса. --}}
-                        @if($hasPricing)
-                            <tr>
-                                <th scope="row" class="sticky left-0 z-10 border-t border-gray-100 bg-white p-4 md:p-5 text-sm font-semibold leading-snug text-brand-950 dark:border-white/10 dark:bg-ink-950 dark:text-gray-100">{{ $pricing['compare_label'] ?? __('Публикации и статии на месец') }}</th>
-                                @foreach($planItems as $i => $plan)
-                                    <td class="border-t border-gray-100 p-4 md:p-5 text-sm {{ ! empty($plan['highlighted']) ? 'bg-brand-50/70 dark:bg-white/[0.05]' : '' }} dark:border-white/10"><span class="font-semibold text-brand-700 dark:text-brand-300" data-compare-volume="{{ $i }}">{{ \App\Support\PlanPricing::cell($pricing, $plan, $i, $pricingStep, $pricingBilling)['cell'] }}</span></td>
-                                @endforeach
-                            </tr>
-                        @endif
                         @foreach($plans['compare'] as $row)
                             <tr>
                                 <th scope="row" class="sticky left-0 z-10 border-t border-gray-100 bg-white p-4 md:p-5 text-sm font-semibold leading-snug text-brand-950 dark:border-white/10 dark:bg-ink-950 dark:text-gray-100">{{ $row['label'] }}</th>
@@ -379,7 +368,7 @@
 {{-- 8. Формата за оферта. --}}
 <section class="pb-16 pt-4 md:pb-24 bg-white dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        @include('partials/quote-form', ['plans' => $plans, 'selectedPlan' => $selectedPlan, 'pricing' => $pricing, 'pricingStep' => $pricingStep, 'pricingBilling' => $pricingBilling])
+        @include('partials/quote-form', ['plans' => $plans, 'selectedPlan' => $selectedPlan, 'billingOn' => $billingOn, 'billingMode' => $billingMode])
     </div>
 </section>
 
@@ -387,9 +376,6 @@
 <div data-sticky-cta class="md:hidden fixed inset-x-0 bottom-0 z-50 px-4 pb-4 pointer-events-none transition duration-300">
     <a href="#oferta" class="btn-shine pointer-events-auto flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-950 px-5 py-4 font-semibold text-white shadow-2xl shadow-brand-950/40 ring-1 ring-white/20 dark:bg-white dark:text-brand-950">{{ $plans['button'] ?? __('Получете оферта') }} <x-icon name="arrow-right" class="text-sm" /></a>
 </div>
-@if($hasPricing)
-    @include('partials/plan-pricing-script')
-@endif
 <script>
     (function () {
         var bar = document.querySelector('[data-sticky-cta]');

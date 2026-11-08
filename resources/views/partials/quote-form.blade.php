@@ -1,7 +1,7 @@
 {{--
     „Получете оферта“ на /paketi (#oferta), QuoteController::store. Задължителни са само име, бизнес и имейл или телефон;
     останалото е в „По желание“. След изпращане същото място показва благодарността (session quote_sent).
-    $plans: site('plans'); $selectedPlan: индекс на пакета от ?paket= или null.
+    $plans: site('plans'); $selectedPlan: индекс на пакета от ?paket= или null; $billingOn / $billingMode: превключвателят Месечно / Годишно.
 --}}
 @php
     $field = 'w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 placeholder:text-gray-500 dark:placeholder:text-gray-400';
@@ -37,10 +37,8 @@
             @csrf
             <div class="hidden" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
 
-            @if(! empty($pricing))
-                <input type="hidden" name="volume" value="{{ old('volume', $pricing['steps'][$pricingStep]['value']) }}" data-quote-volume>
-                <input type="hidden" name="billing" value="{{ old('billing', $pricingBilling) }}" data-quote-billing>
-                <p class="rounded-xl bg-brand-50/70 px-4 py-3 text-sm font-semibold text-brand-950 dark:bg-white/[0.06] dark:text-white" data-quote-summary>{{ __('Избрано от плъзгача') }}: {{ \App\Support\PlanPricing::volumeLabel($pricing, $pricingStep) }}, {{ $pricingBilling === 'yearly' ? __('годишно плащане') : __('месечно плащане') }}</p>
+            @if(! empty($billingOn))
+                <input type="hidden" name="billing" value="{{ old('billing', $billingMode) }}" data-quote-billing>
             @endif
 
             <div>

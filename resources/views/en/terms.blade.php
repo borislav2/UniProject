@@ -14,11 +14,13 @@
         </div>
         <div>
             <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">2. Inquiries and offers</h2>
-            <p>Sending an inquiry through the form does not commit you to anything and does not create a contract. After our call we send you a written offer with the scope, price and timeline. Work starts once you confirm it. Packages and prices on the site are indicative; the ones in the confirmed offer apply.</p>
+            <p>Sending an inquiry through the form does not commit you to anything and does not create a contract. After our call we send you a written offer with the scope, price and timeline. We start preparing the offer and the demo after the first part of the start price (section 3). Work starts once you confirm the offer. Packages and prices on the site are indicative; the ones in the confirmed offer apply.</p>
         </div>
         <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">3. Subscription, guarantee and ads</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">3. Price, payment, subscription, guarantee and ads</h2>
             <ul class="list-disc pl-5 space-y-2">
+                <li><strong class="text-gray-900 dark:text-white">Paying the start price.</strong> The start price is paid in two parts. For the Starter Engine package (€400) the first part is €100 when you request an offer and demo, and the remaining €300 is paid when you agree. For the Active Marketing and Growth package (€800) the first part is €200, and the remaining €600 is paid when you agree. The first part is paid before we prepare the offer and the demo. Custom Marketing (from €1,200 a month) is a custom offer.</li>
+                <li><strong class="text-gray-900 dark:text-white">Subscription from the second month.</strong> The first month is included in the start price. After that the subscription is €200 a month for Starter Engine and €650 a month for Active Marketing and Growth. With yearly billing 2 months are free: €2,000 instead of €2,400 and €6,500 instead of €7,800 for 12 months.</li>
                 <li><strong class="text-gray-900 dark:text-white">Subscription price.</strong> The monthly price in the confirmed offer is fixed for the first 6 months. After that it may change, and we tell you in advance before the new price applies. With yearly billing the price holds for the whole paid year.</li>
                 <li><strong class="text-gray-900 dark:text-white">Guarantee.</strong> If the website has no traffic 60 days after launch, we refund what you have paid. Visits are measured with Google Analytics, which we set up at the start and you have access to. The exact terms of the guarantee are set out in the contract.</li>
                 <li><strong class="text-gray-900 dark:text-white">Ad budget.</strong> The ad budget for Facebook and Instagram is not included in the price. You pay it directly to Meta. We monitor the ads and tell you what they bring.</li>
@@ -40,7 +42,7 @@
             <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">7. Governing law</h2>
             <p>These terms are governed by Bulgarian law. Questions: <a href="mailto:{{ $contact['email'] }}" class="text-brand-600 underline dark:text-brand-300">{{ $contact['email'] }}</a>.</p>
         </div>
-        <p class="text-sm text-gray-500 dark:text-gray-400">Last updated: 4 November 2026</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Last updated: 8 November 2026</p>
     </div>
 </section>
 @endsection

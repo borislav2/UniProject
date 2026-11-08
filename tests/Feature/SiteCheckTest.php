@@ -93,7 +93,7 @@ class SiteCheckTest extends TestCase
             ->assertSee('# Creatium Lab', false)
             ->assertSee('## Услуги', false)
             ->assertSee('(' . url('/uslugi/google-profil-i-otzivi') . ')', false)
-            ->assertSee('**Стартов двигател**: €600', false)
+            ->assertSee('- Стартов двигател: €400 старт: изграждаме всичко и първия месец, след това €200 / месец', false)
             ->assertSee(config('creatium.contact.email'));
     }
 

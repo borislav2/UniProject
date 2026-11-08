@@ -174,18 +174,22 @@
         <h2 class="display mt-6 text-6xl text-brand-950">{{ __('Три пакета с ясни цени.') }}</h2>
         <div class="mt-auto grid grid-cols-3 gap-8">
             @foreach($plans['items'] as $plan)
-                <div class="rounded-3xl p-10 flex flex-col {{ ! empty($plan['highlighted']) ? 'bg-brand-950 text-white shadow-2xl' : 'bg-white border border-gray-200' }}">
+                <div class="rounded-3xl p-8 flex flex-col {{ ! empty($plan['highlighted']) ? 'bg-brand-950 text-white shadow-2xl' : 'bg-white border border-gray-200' }}">
                     @if(filled($plan['badge'] ?? null))<span class="self-start rounded-full px-4 py-1.5 text-sm font-bold {{ ! empty($plan['highlighted']) ? 'bg-white text-brand-950' : 'bg-brand-50 text-brand-700' }}">{{ $plan['badge'] }}</span>@endif
                     <h3 class="mt-5 text-3xl font-extrabold tracking-tight leading-tight {{ empty($plan['highlighted']) ? 'text-brand-950' : '' }}">{{ $plan['name'] }}</h3>
-                    <p class="mt-4 text-lg leading-snug {{ empty($plan['highlighted']) ? 'text-gray-600' : 'text-gray-300' }}">{{ $plan['audience'] }}</p>
-                    <ul class="mt-auto pt-8 space-y-3">
+                    <p class="mt-3 text-lg leading-snug {{ empty($plan['highlighted']) ? 'text-gray-600' : 'text-gray-300' }}">{{ $plan['audience'] }}</p>
+                    <ul class="mt-auto pt-6 space-y-2">
                         @foreach((array) $plan['prices'] as $price)
                             <li class="text-xl font-bold {{ $loop->first ? 'text-2xl' : '' }}">{{ $price }}</li>
                         @endforeach
                     </ul>
+                    @if(filled($plan['deposit'] ?? null))
+                        <p class="mt-5 pt-4 border-t text-base leading-snug {{ empty($plan['highlighted']) ? 'border-gray-200 text-gray-600' : 'border-white/15 text-gray-300' }}">{{ __('Плащане на старта') }}: {{ $plan['deposit'] }}</p>
+                    @endif
                 </div>
             @endforeach
         </div>
+        <p class="mt-4 text-base text-gray-600">{{ __('Годишно плащане на абонамента: 2 месеца безплатно.') }}</p>
     </div>
     <div class="slide-foot text-gray-400"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
 </section>

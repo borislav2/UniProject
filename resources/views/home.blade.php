@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', __('Изработка на сайтове и дигитален маркетинг от €600'))
-@section('meta_description', __('Сайт, който носи запитвания, плюс видимост в Google, Google Maps и ChatGPT. За бизнеси в България: демо преди старта и калкулатор на ползата.'))
+@section('title', __('Изработка на сайтове и дигитален маркетинг от €400'))
+@section('meta_description', __('Сайт, който носи запитвания, плюс видимост в Google, Google Maps и ChatGPT. За бизнеси в България: фиксирана цена и калкулатор на ползата.'))
 
 @push('head')
 @php
@@ -19,7 +19,7 @@
         'address' => ['@type' => 'PostalAddress', 'addressLocality' => __($contact['city']), 'addressCountry' => 'BG'],
         'areaServed' => ['@type' => 'Country', 'name' => __('България')],
         'sameAs' => array_values(array_filter([$contact['facebook'] ?? null])),
-        'priceRange' => '€600 – €900+',
+        'priceRange' => '€400 – €1200+',
         'knowsAbout' => [__('Изработка на сайт'), 'SEO', __('Google Business профил'), __('Имейл маркетинг'), __('Видимост в AI асистенти')],
     ];
     // WebSite: името на сайта, което Google показва над резултата.

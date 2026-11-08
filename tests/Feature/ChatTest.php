@@ -105,7 +105,7 @@ class ChatTest extends TestCase
         Mail::fake();
         $thinking = ['type' => 'thinking', 'thinking' => '', 'signature' => 'sig-1'];
         $fake = $this->fakeClaude([
-            ['stop' => 'end_turn', 'content' => [$thinking, ['type' => 'text', 'text' => 'Стартовият двигател е €450. Искате ли да ви се обадим?']]],
+            ['stop' => 'end_turn', 'content' => [$thinking, ['type' => 'text', 'text' => 'Стартовият двигател е €400. Искате ли да ви се обадим?']]],
             ['stop' => 'tool_use', 'content' => [
                 ['type' => 'thinking', 'thinking' => '', 'signature' => 'sig-2'],
                 ['type' => 'tool_use', 'id' => 'toolu_1', 'name' => 'save_contact', 'input' => ['name' => 'Мария', 'phone' => '+359 888 111 222', 'email' => '', 'business' => 'салон, Варна', 'need' => 'Иска сайт за салон.']],
@@ -114,7 +114,7 @@ class ChatTest extends TestCase
         ]);
 
         $first = $this->send('Колко струва сайт?')->assertOk()->json();
-        $this->assertSame('Стартовият двигател е €450. Искате ли да ви се обадим?', $first['reply']);
+        $this->assertSame('Стартовият двигател е €400. Искате ли да ви се обадим?', $first['reply']);
         $this->assertStringContainsString('<site_info>', $fake->calls[0]['system'][0]['text']);
         $this->assertStringContainsString('Стартов двигател', $fake->calls[0]['system'][0]['text']);
         $this->assertSame(['type' => 'ephemeral'], $fake->calls[0]['system'][0]['cacheControl']);
@@ -206,7 +206,7 @@ class ChatTest extends TestCase
         Mail::fake();
         config(['services.anthropic.key' => null, 'services.mistral.key' => 'm-key', 'services.mistral.model' => 'mistral-medium-latest', 'creatium.chat.provider' => 'auto']);
         Http::fake(['api.mistral.ai/*' => Http::sequence()
-            ->push(['choices' => [['finish_reason' => 'stop', 'message' => ['role' => 'assistant', 'content' => 'Стартовият двигател е €450. Да ви се обадим ли?']]]])
+            ->push(['choices' => [['finish_reason' => 'stop', 'message' => ['role' => 'assistant', 'content' => 'Стартовият двигател е €400. Да ви се обадим ли?']]]])
             ->push(['choices' => [['finish_reason' => 'tool_calls', 'message' => ['role' => 'assistant', 'content' => '', 'tool_calls' => [
                 ['id' => 'call_1', 'type' => 'function', 'function' => ['name' => 'save_contact', 'arguments' => json_encode(['name' => 'Мария', 'phone' => '0888 111 222', 'email' => '', 'business' => 'салон, Варна', 'need' => 'Иска сайт.'])]],
             ]]]]])
@@ -214,7 +214,7 @@ class ChatTest extends TestCase
         ]);
 
         $first = $this->send('Колко струва сайт?')->assertOk()->json();
-        $this->assertSame('Стартовият двигател е €450. Да ви се обадим ли?', $first['reply']);
+        $this->assertSame('Стартовият двигател е €400. Да ви се обадим ли?', $first['reply']);
         $second = $this->send('Да, Мария, 0888 111 222, салон във Варна', $first['conversation'])->assertOk()->json();
         $this->assertSame('Благодарим, Мария! Ще ви се обадим.', $second['reply']);
         $this->assertTrue($second['lead']);
