@@ -73,7 +73,7 @@ class HomeCopyTest extends TestCase
         $this->get('/')->assertOk()
             ->assertSeeTextInOrder(['Нашите ценности', 'Принципите, които гарантират реалния растеж на вашия бизнес', 'Работим с бизнеси, които имат продукт или услуга с потенциал',
                 'Резултатите пред украсата', 'Точни данни вместо предположения', 'Оперативна гъвкавост и бързина', 'Пълна собственост и контрол',
-                'Специализирани дигитални архитектури', 'Готови концепции и работещи модели за конкретни бизнес ниши', 'Демонстрационни платформи', 'Бизнес бранша',
+                'Специализирани дигитални архитектури', 'Готови концепции и работещи модели за конкретни бизнес ниши', 'Концепции за сектори', 'Бизнес бранша',
                 'Как протича процесът', 'Шест етапа от анализа до постоянната оптимизация', 'Изграждаме вашата дигитална система чрез ясна методология.', 'Стъпка 1', 'Стратегически анализ', 'Стъпка 6', 'Поддръжка и развитие'])
             ->assertDontSee('Стъпка 1 — ');
         $this->get('/en')->assertOk()->assertSeeText('Results over decoration')->assertSeeText('Six stages from analysis to continuous optimisation')->assertSeeText('Step 1');
@@ -91,9 +91,9 @@ class HomeCopyTest extends TestCase
         ContentBlock::create(['key' => 'about', 'locale' => 'bg', 'value' => ['subtitle' => '', 'paragraphs' => ['Нашият текст от админа.']]]);
 
         $this->get('/za-nas')->assertOk()
-            ->assertSeeInOrder(['Кои сме ние', 'Нашият текст от админа.', 'Защо го правим', 'От 4 години правим сайтове и дигитален маркетинг.', 'Екипът'])
+            ->assertSeeInOrder(['Кои сме ние', 'Нашият текст от админа.', 'Защо го правим', 'Сайтът е готов, рекламата върви, а телефонът мълчи.', 'Екипът'])
             ->assertDontSee('Говорите с хората, които правят работата.');
-        $this->get('/en/about')->assertOk()->assertSee('Why we do it')->assertSee('for 4 years');
+        $this->get('/en/about')->assertOk()->assertSee('Why we do it')->assertSee('the phone stays silent');
     }
 
     public function test_long_post_titles_drop_the_brand_suffix_and_an_empty_english_blog_is_not_indexed(): void

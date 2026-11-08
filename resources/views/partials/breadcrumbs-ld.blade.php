@@ -9,7 +9,7 @@
     $crumbLabels = [
         'services' => __('Услуги'), 'packages' => __('Пакети и цени'), 'portfolio' => __('Проекти'),
         'site-check' => __('Безплатна проверка на сайт'), 'about' => __('За нас'), 'faq' => __('Често задавани въпроси'),
-        'contact' => __('Контакти'), 'blog.index' => __('Блог'),
+        'contact' => __('Контакти'), 'blog.index' => __('Новини'),
     ];
     $crumbParents = ['services.show' => 'services', 'blog.category' => 'blog.index', 'blog.show' => 'blog.index'];
     $crumbs = [];

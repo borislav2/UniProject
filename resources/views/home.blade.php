@@ -64,8 +64,8 @@
                 @endif
             </h1>
             <div class="rise-text mt-10 flex flex-col sm:flex-row gap-3" style="--d: 260ms">
-                <a href="{{ lroute('services') }}#kalkulator" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
-                    <x-icon name="calculator" class="text-sm" /> {{ $hero['button'] }}
+                <a href="{{ lroute('packages') }}#oferta" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 bg-white text-brand-950 px-7 py-3.5 rounded-xl font-semibold">
+                    <x-icon name="file-contract" class="text-sm" /> {{ $hero['button'] }}
                 </a>
                 <a href="{{ lroute('services') }}" class="relative edge glass inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-white hover:bg-white/10 transition-colors">
                     {{ __('Вижте услугите') }}
@@ -249,7 +249,7 @@
                 @endif
                 <p class="mt-6 text-lg text-gray-400 leading-relaxed">{{ $trust['demos_text'] }}</p>
             </div>
-            {{-- Двете числа се смятат от демо сайтовете; етикетите и текстовете са на собствениците. --}}
+            {{-- Двете числа се смятат от концепциите; етикетите и текстовете са на собствениците. --}}
             <dl class="lg:col-span-5 grid gap-3 sm:grid-cols-2">
                 <div class="relative edge glass rounded-2xl p-5"><dd class="display text-5xl">{{ count($demos) }}</dd><dt class="mt-2 text-sm font-bold text-white">{{ $trust['demos_count_label'] }}</dt><dd class="mt-1.5 text-sm leading-snug text-gray-400">{{ $trust['demos_count_text'] }}</dd></div>
                 <div class="relative edge glass rounded-2xl p-5"><dd class="display text-5xl">{{ collect($demos)->pluck('industry')->unique()->count() }}</dd><dt class="mt-2 text-sm font-bold text-white">{{ $trust['industries_count_label'] }}</dt><dd class="mt-1.5 text-sm leading-snug text-gray-400">{{ $trust['industries_count_text'] }}</dd></div>
@@ -263,7 +263,7 @@
                         @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
                             <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" alt="" width="960" height="600" loading="lazy" decoding="async" class="h-full w-full object-cover object-top opacity-90 transition duration-500 group-hover:scale-[1.03] group-hover:opacity-100">
                         @endif
-                        <span class="absolute top-3 left-3 rounded-full bg-brand-950/80 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white ring-1 ring-white/20">{{ __('Демо') }}</span>
+                        <span class="absolute top-3 left-3 rounded-full bg-brand-950/80 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white ring-1 ring-white/20">{{ __('Концепция') }}</span>
                     </span>
                     <span class="block p-5">
                         <span class="block text-xs font-bold uppercase tracking-[0.18em] text-brand-300">{{ $demo['industry'] }}</span>

@@ -1,14 +1,21 @@
 @extends('layouts.public')
 
-@section('title', $category ? __('Блог: :category', ['category' => $category->trOrBg('name')]) : __('Блог: съвети за сайт, SEO и Google за вашия бизнес'))
+@section('title', $category ? __('Новини за :category', ['category' => $category->trOrBg('name')]) : __('Новини за клиенти от Google и ChatGPT'))
 @section('breadcrumb', $category ? $category->trOrBg('name') : '')
-@section('meta_description', $category ? __('Статии от категория „:category“: практични съвети за бизнеси, просто и с примери.', ['category' => $category->trOrBg('name')]) : __('Статии за сайтове, SEO, Google Business и имейл кампании за бизнеси. Пишем просто и с примери.'))
+@section('meta_description', $category ? __('Статии от категория „:category“: практични съвети за бизнеси, просто и с примери.', ['category' => $category->trOrBg('name')]) : __('Практични статии за собственици на бизнес. Как да ви намират в Google и ChatGPT, какво трябва да има сайтът и кои реклами и имейли се изплащат.'))
 
 @section('content')
-@include('partials/page-header', ['eyebrow' => $category ? __('Блог') : null, 'heading' => $category ? $category->trOrBg('name') : __('Блог'), 'sub' => __('Статии за сайтове, Google и имейл кампании. Пишем просто и с примери.')])
+@include('partials/page-header', ['eyebrow' => $category ? __('Новини') : null, 'heading' => $category ? $category->trOrBg('name') : __('Новини'), 'sub' => __('Практични съвети как клиентите да ви намират в Google и ChatGPT и да ви пишат.')])
 
 <section class="py-16 md:py-20 bg-white dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {{-- По-дълго описание под заглавието (собствениците, ноември 2026, текстът е с бизнес и маркетинг експерти). --}}
+        @unless($category)
+            <div class="mb-12 max-w-3xl space-y-4 text-lg leading-relaxed text-gray-600 dark:text-gray-300">
+                <p>{{ __('Пишем какво носи клиенти на един бизнес. Как да ви намират в Google и в ChatGPT, какво трябва да има сайтът, кога рекламите в Google и Meta се изплащат и как имейлите връщат клиенти. Има и бележки от eCommerce Summit и Digital Community Day и какво ще промени Google Shopping, когато стигне до България.') }}</p>
+                <p>{{ __('Текстовете са за собственици на салони, ресторанти, сервизи, строителни фирми и магазини, без жаргон. Повечето статии завършват с нещо, което можете да направите още тази седмица.') }}</p>
+            </div>
+        @endunless
         @if($categories->count() > 1)
             <nav class="mb-10 flex flex-wrap gap-2" aria-label="{{ __('Категории') }}">
                 <a href="{{ lroute('blog.index') }}" class="rounded-full px-4 py-1.5 text-sm font-semibold border transition-colors {{ $category ? 'border-gray-200 text-gray-700 hover:border-brand-300 dark:border-white/15 dark:text-gray-200' : 'border-brand-950 bg-brand-950 text-white dark:bg-white dark:text-brand-950 dark:border-white' }}" @unless($category) aria-current="page" @endunless>{{ __('Всички') }}</a>

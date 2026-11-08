@@ -110,7 +110,7 @@ class PublicSiteTest extends TestCase
             ->assertSeeTextInOrder([
                 'Дигитални решения, изградени с мисъл за вашия успех.',
                 'Персонализирани сайтове. Брандиран маркетинг. Стратегически решения за повече клиенти.',
-                'Изчислете ползата за бизнеса си', 'Нова резервация',
+                'Получете оферта', 'Нова резервация',
                 'Цялостен подход към дигиталното ви присъствие', 'Принципите, по които ви напътстваме', 'Стратегическа видимост', 'Всичко, което клиентът вижда за вас, е изградено като едно.', 'Брандиране', 'Уеб изработка', 'Маркетинг', 'Успешен бизнес',
                 'Анатомия на вашия дигитален двигател', 'Двигателят работи', '1 · Откриване', 'Ако спре:', 'Подава ги на:',
                 'Нашите ценности', 'Принципите, които гарантират реалния растеж на вашия бизнес',
@@ -190,11 +190,11 @@ class PublicSiteTest extends TestCase
         $this->get('/za-nas')
             ->assertSee('Борислав Костадинов')
             ->assertSee('Владимир Цончев')
-            ->assertSee('Performance Marketing Expert')
-            ->assertSee('Laravel')
+            ->assertSee('Да ви намират в Google')
+            ->assertSee('Сайт, който се зарежда бързо')
             ->assertSee('href="https://www.linkedin.com/in/vladimirtsonchev/"', false);
 
-        $this->get('/en/about')->assertSee('Borislav Kostadinov')->assertSee('LinkedIn profile')->assertSee('Performance Marketing Expert');
+        $this->get('/en/about')->assertSee('Borislav Kostadinov')->assertSee('LinkedIn profile')->assertSee('Being found on Google');
     }
 
     public function test_faq_has_its_own_page_grouped_by_topic(): void

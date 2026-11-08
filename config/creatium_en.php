@@ -8,26 +8,24 @@ return [
         [
             'name' => 'Borislav Kostadinov',
             'role' => 'Full-Stack Developer',
-            'description' => 'Architecture and clean code that turn your idea into a secure, high-quality digital platform.',
+            'description' => 'I build your website so it loads fast, works on a phone, and the forms really reach you.',
             'bio' => [
-                'I am responsible for the overall architecture, security and technical implementation of projects at Creatium Lab. My focus is building secure and scalable systems that deliver high performance, stable operation and a pleasant user experience.',
-                'Every web platform is designed from the start with the business in mind — with clean code, ready-made integration for analytics, conversion tracking and search engine optimization.',
-                'I have a degree in Computer Programming from MSU Lomonosov, a C# certificate from Software University, and I am currently in my third year of a Bachelor\'s degree in Software Engineering at St. Cyril and St. Methodius University of Veliko Tarnovo, where I am deepening my knowledge of software architecture and engineering best practices.',
+                'My part is the website and everything you don\'t see but that has to work. I check every page on a phone, because that is where many of your customers will open it. I make sure the site is fast and secure, and that every enquiry from the form reaches you instead of getting lost on the way. I also set up tracking, so we know what the website brings.',
+                'Programming doesn\'t stop at work: I study software engineering at the University of Veliko Tarnovo. With you, though, I speak without technical words. I tell you what we did and why it matters for your business.',
             ],
-            'skills' => ['Laravel & Filament', 'MVC Architecture', 'MySQL & RESTful APIs', 'HTML, CSS & Bootstrap', 'jQuery', 'Git & Agile', 'Postman'],
+            'skills' => ['A website that loads fast', 'Works well on a phone', 'A secure website', 'Enquiries reach you'],
             'image' => 'images/team/borislav-kostadinov.webp',
             'linkedin' => 'https://www.linkedin.com/in/borislav-kostadinov-7ba990285/',
         ],
         [
             'name' => 'Vladimir Tsonchev',
             'role' => 'Marketing and SEO',
-            'description' => 'I make sure people find you on Google: keywords, your Google Business Profile, page copy. And I check whether that actually brings in calls.',
+            'description' => 'I make sure people find you on Google and contact you. And I check that they actually call.',
             'bio' => [
-                'I have been interested in marketing and computers since childhood and often wondered how to bring them together. I started at the National School of Management, then moved into digital marketing at SoftUni. I earned certificates in Marketing Basics, Content Marketing, Facebook Marketing, Google Ads, Google Analytics and Email Marketing, and I am now finishing the whole course to become a Performance Marketing Expert.',
-                'I believe this is the future, and it is where I see mine. I stay motivated because I love learning, and in this field you learn something new every day.',
-                'I would describe myself as positive, composed, modest and hardworking, and I do not easily give up on the things I love.',
+                'My work starts with how your customers search for you. I set up your Google profile, write the texts, run ads on Google and Meta, and send the emails. I also check whether assistants like ChatGPT find you. In the end I check what matters most: are calls and enquiries coming in?',
+                'I studied management, then digital marketing at SoftUni, and I keep learning, because something changes here every month. I\'m calm and I don\'t give up easily. If something doesn\'t bring results, I look for the reason and we change it.',
             ],
-            'skills' => ['Google Ads', 'Google Analytics', 'Facebook marketing', 'Content marketing', 'Email marketing', 'Performance marketing'],
+            'skills' => ['Being found on Google', 'Google profile', 'Google and Meta ads', 'Emails to your customers'],
             'image' => 'images/team/vladimir-tsonchev.webp',
             'linkedin' => 'https://www.linkedin.com/in/vladimirtsonchev/',
         ],
@@ -62,17 +60,17 @@ return [
         'paragraphs' => [],
         'story_title' => 'Why we do it',
         'story' => [
-            'We have been building websites and doing digital marketing for 4 years.',
-            'We started because we kept seeing the same thing: a business pays one company for the website and another for advertising, and nobody is responsible for whether customers come. The website is "done", the ads are "running", and the phone does not ring.',
-            'So we work as one team: Borislav builds the website and the technical side, and Vladimir makes sure people find you and get in touch. We are responsible for the whole way, from the first page to the first enquiry.',
-            'We are with you all the way: from the idea to the day the website brings customers, and after that.',
+            'The website is ready, the ads are running, and the phone stays silent.',
+            'We saw it again and again. A business pays one person for the website and another for ads. Each does their part, but nobody answers the simple question: are customers coming?',
+            'So we work as one team. Borislav builds the website and the technical side, Vladimir makes sure people find you and contact you. We answer for the whole path: from the first visit to the first enquiry, and after.',
+            'You talk directly to the people who do the work. The price is written in the offer, and you get a reply within one working day. We are with you all the way to results.',
         ],
     ],
 
     'home_hero' => [
         'title' => 'Digital solutions built with your success in mind.',
         'highlight' => 'Custom websites. Branded marketing. Strategic solutions for more customers.',
-        'button' => 'Calculate the benefit for your business',
+        'button' => 'Get a quote',
         'accent' => ['success'],
     ],
 
@@ -366,8 +364,8 @@ return [
         'demos_eyebrow' => 'Industries',
         'demos_title' => 'Specialised digital architectures',
         'demos_subtitle' => 'Ready-made concepts and working models for specific business niches',
-        'demos_text' => 'We developed demonstration platforms for key sectors. Each of them addresses the specific challenges of the industry, the buyer\'s journey and the integrations needed to generate enquiries.',
-        'demos_count_label' => 'Demonstration platforms',
+        'demos_text' => 'We developed concepts for key sectors. Each of them addresses the specific challenges of the industry, the buyer\'s journey and the integrations needed to generate enquiries.',
+        'demos_count_label' => 'Concepts for sectors',
         'demos_count_text' => 'Explore the interactive models to see how the structure, the design and the funnel work in real conditions for your sector.',
         'industries_count_label' => 'Industries',
         'industries_count_text' => 'Solutions designed around the specific needs, customer behaviour and operating processes of the respective niche.',
@@ -565,7 +563,7 @@ return [
         'cta_button' => 'Discuss your project with us',
     ],
 
-    // Card texts for the demo sites (same slugs as config/creatium.php; the demo pages themselves are in Bulgarian).
+    // Card texts for the concept sites (same slugs as config/creatium.php; the concept pages themselves are in Bulgarian).
     'demos' => [
         ['slug' => 'restorant', 'name' => 'Lozata Restaurant', 'industry' => 'Restaurant', 'description' => 'A restaurant website with a menu, table booking and opening hours where people can see them.'],
         ['slug' => 'salon', 'name' => 'Lavandula Studio', 'industry' => 'Beauty salon', 'description' => 'An elegant salon website with services, prices and appointment booking.'],
