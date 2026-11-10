@@ -15,6 +15,9 @@ class Design
 {
     public const SESSION_KEY = 'design';
 
+    /** Set by the signed preview link (admin header „Копирай линк за преглед“), so people without an admin account can look too. */
+    public const LINK_KEY = 'design_link';
+
     public static function configured(): string
     {
         return config('creatium.design') === 'g' ? 'g' : 'current';
@@ -33,7 +36,12 @@ class Design
             return false;
         }
 
-        return self::canPreview() && request()->hasSession() && request()->session()->get(self::SESSION_KEY) === 'g';
+        if (! request()->hasSession()) {
+            return false;
+        }
+
+        return (self::canPreview() && request()->session()->get(self::SESSION_KEY) === 'g')
+            || request()->session()->get(self::LINK_KEY) === 'g';
     }
 
     public static function current(): string

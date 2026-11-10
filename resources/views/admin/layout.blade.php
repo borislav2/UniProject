@@ -112,6 +112,21 @@
                     <a href="{{ route('home') }}" target="_blank" rel="noopener" class="hidden sm:flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors whitespace-nowrap text-sm">
                         <x-icon name="home" class="mr-2" />Към сайта
                     </a>
+                    @if(\App\Support\Design::configured() !== 'g')
+                        {{-- Новият дизайн (концепция Г): прегледът за влезлите и линк за 30 дни за хора без профил в админа. --}}
+                        @php($designLink = \Illuminate\Support\Facades\URL::temporarySignedRoute('design.link', now()->addDays(30)))
+                        <a href="{{ route('home') }}?dizain=g" target="_blank" rel="noopener" class="hidden sm:flex items-center border border-gray-900 text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-900 hover:text-white transition-colors whitespace-nowrap text-sm" data-new-design>Нов дизайн</a>
+                        <button type="button" class="hidden lg:flex items-center text-gray-600 hover:text-gray-900 px-2 py-2 text-sm whitespace-nowrap" data-copy-design-link="{{ $designLink }}" title="Линк, с който всеки вижда новия дизайн 30 дни, без вход">Копирай линк за преглед</button>
+                        <script>
+                            document.querySelectorAll('[data-copy-design-link]').forEach(function (b) {
+                                b.addEventListener('click', function () {
+                                    var link = b.getAttribute('data-copy-design-link');
+                                    var done = function () { var t = b.textContent; b.textContent = 'Копирано'; setTimeout(function () { b.textContent = t; }, 1800); };
+                                    if (navigator.clipboard) { navigator.clipboard.writeText(link).then(done, function () { window.prompt('Копирайте линка', link); }); } else { window.prompt('Копирайте линка', link); }
+                                });
+                            });
+                        </script>
+                    @endif
                 </div>
             </header>
 

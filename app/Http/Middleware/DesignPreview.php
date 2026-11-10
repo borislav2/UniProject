@@ -15,6 +15,11 @@ class DesignPreview
 {
     public function handle(Request $request, Closure $next): Response
     {
+        // Anyone may leave the preview (the signed link also uses the session).
+        if ($request->isMethod('GET') && $request->query('dizain') === 'star' && $request->hasSession()) {
+            $request->session()->forget(Design::LINK_KEY);
+        }
+
         if ($request->isMethod('GET') && $request->has('dizain') && $request->hasSession() && Design::canPreview()) {
             match ($request->query('dizain')) {
                 'g' => $request->session()->put(Design::SESSION_KEY, 'g'),
