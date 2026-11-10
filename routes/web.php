@@ -89,6 +89,12 @@ Route::match(['get', 'post'], '/otpisvane/{prospect}', OutreachUnsubscribeContro
 Route::get('/o/{prospect}/{link}', OutreachClickController::class)->middleware(['signed', 'throttle:60,1'])->name('outreach.click');
 
 Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
+// Signed link from the admin header: shows design G (preview, noindex) to someone without an admin account for 30 days.
+Route::get('/nov-dizain', function (\Illuminate\Http\Request $request) {
+    $request->session()->put(\App\Support\Design::LINK_KEY, 'g');
+
+    return redirect()->route('home');
+})->middleware('signed')->name('design.link');
 Route::get('/robots.txt', [PageController::class, 'robots'])->name('robots');
 Route::get('/llms.txt', [PageController::class, 'llms'])->name('llms');
 
