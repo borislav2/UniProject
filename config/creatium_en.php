@@ -241,6 +241,18 @@ return [
             ['label' => 'Emails', 'text' => 'Emails that bring back the customers who already know you', 'service' => 'email'],
             ['label' => 'Care', 'text' => 'Hosting, support and monitoring so the site works every day', 'service' => 'support'],
         ],
+        // Design G, fourth round (the owners' audit, November 2026): read only by the g views.
+        'g_hero_points' => ['Transparent budget planning', 'AI for marketing and creative', 'Strategic branding'],
+        'g_parts' => [
+            ['title' => 'Brand positioning', 'text' => 'We build a look and a tone of voice that make your brand recognisable and preferred by customers and business partners.', 'service' => ''],
+            ['title' => 'Digital platforms and websites', 'text' => 'A fast, clear and easy online presence that leads the visitor step by step to the contact or buy button.', 'service' => 'website'],
+            ['title' => 'Online reputation and location', 'text' => 'We optimise your Google Maps and search profile, so every new customer finds you easily and sees your good reviews.', 'service' => 'google'],
+            ['title' => 'Campaigns for enquiries and sales', 'text' => 'We show your offer only to people who search for your solutions in Google and AI search, with full tracking of every enquiry.', 'service' => 'seo'],
+            ['title' => 'Retention and customer contact', 'text' => 'We send automated, useful emails that keep your audience interested and encourage repeat orders and new enquiries.', 'service' => 'email'],
+            ['title' => 'Digital support and protection', 'text' => 'We take over the hosting, security and updates of the site, so it works flawlessly every day while you grow your business.', 'service' => 'support'],
+        ],
+        'g_projects_title' => 'Projects built with growth in mind',
+        'g_projects_subtitle' => 'Explore some of our custom concepts for different industries. Every project is built with a focus on speed, design and high conversion.',
         'testimonials' => [['quote' => '', 'name' => '', 'business' => '']],
         'results' => [['value' => '', 'text' => '']],
         'agency_title' => 'Strategy, design, technology and marketing under one roof.',
@@ -603,12 +615,12 @@ return [
 
     // Card texts for the concept sites (same slugs as config/creatium.php; the concept pages themselves are in Bulgarian).
     'demos' => [
-        ['slug' => 'restorant', 'name' => 'Lozata Restaurant', 'industry' => 'Restaurant', 'description' => 'A restaurant website with a menu, table booking and opening hours where people can see them.'],
-        ['slug' => 'salon', 'name' => 'Lavandula Studio', 'industry' => 'Beauty salon', 'description' => 'An elegant salon website with services, prices and appointment booking.'],
-        ['slug' => 'dentalen-centar', 'name' => 'Byala Usmivka Dental Centre', 'industry' => 'Dental clinic', 'description' => 'A calm, trustworthy clinic website with services, the team and a check-up request form.'],
-        ['slug' => 'avtoservis', 'name' => 'Motor Pro Car Service', 'industry' => 'Car repair shop', 'description' => 'A car service website with services, diagnostics prices and a quick call to action.'],
-        ['slug' => 'pokrivi', 'name' => 'Zdrav Pokriv', 'industry' => 'Construction and roofing', 'description' => 'A construction company website with services, guarantees and a free on-site inspection.'],
-        ['slug' => 'onlain-magazin', 'name' => 'Medena Pita', 'industry' => 'Online shop', 'description' => 'A small online shop for honey products with a catalogue and a basket.'],
+        ['slug' => 'restorant', 'name' => 'Lozata Restaurant', 'industry' => 'Restaurant', 'description' => 'A restaurant website with a menu, table booking and opening hours where people can see them.', 'g_micro' => 'A menu that reads well on a phone, and a table request with day, time and party size.'],
+        ['slug' => 'salon', 'name' => 'Lavandula Studio', 'industry' => 'Beauty salon', 'description' => 'An elegant salon website with services, prices and appointment booking.', 'g_micro' => 'Services and prices in one place, and an appointment form instead of dozens of messages.'],
+        ['slug' => 'dentalen-centar', 'name' => 'Byala Usmivka Dental Centre', 'industry' => 'Dental clinic', 'description' => 'A calm, trustworthy clinic website with services, the team and a check-up request form.', 'g_micro' => 'A team with faces and names, indicative prices and a check-up request without a phone call.'],
+        ['slug' => 'avtoservis', 'name' => 'Motor Pro Car Service', 'industry' => 'Car repair shop', 'description' => 'A car service website with services, diagnostics prices and a quick call to action.', 'g_micro' => 'A big call button, prices for common repairs and an enquiry with make and model.'],
+        ['slug' => 'pokrivi', 'name' => 'Zdrav Pokriv', 'industry' => 'Construction and roofing', 'description' => 'A construction company website with services, guarantees and a free on-site inspection.', 'g_micro' => 'A gallery of jobs, a clear process from inspection to handover and an inspection form with a photo.'],
+        ['slug' => 'onlain-magazin', 'name' => 'Medena Pita', 'industry' => 'Online shop', 'description' => 'A small online shop for honey products with a catalogue and a basket.', 'g_micro' => 'A catalogue with a basket, clear delivery and payment terms and ordering at any hour.'],
     ],
 
     // Labels only: the keys must match config/creatium.php.
@@ -650,6 +662,109 @@ return [
 
     'plans' => [
         'intro' => 'Three ways to work together, from a professional online presence to an outside marketing department for your company.',
+        // Design G, fourth round: the plans and the five steps (read only by the g views). The yearly figure is monthly × 10 until the owners confirm it.
+        'g_title' => 'A plan for every stage of your business',
+        'g_subtitle' => 'A clear structure for building, maintaining and growing steadily.',
+        'g_includes_label' => 'What it includes',
+        'g_yearly_note' => '2 months free',
+        'g_items' => [
+            [
+                'name' => 'Digital Start',
+                'from' => 'from',
+                'monthly' => 500,
+                'yearly' => 5000,
+                'audience' => 'For new or small businesses that have no website, or whose current site is just a business card that brings no enquiries or orders. The focus here is a fast launch, building trust and winning your first local customers.',
+                'groups' => [
+                    [
+                        'title' => 'Strategy and positioning',
+                        'points' => [
+                            ['title' => 'Business review', 'text' => 'Research into your niche, your competitors and the people in your area, to bring out your strongest commercial advantages.'],
+                            ['title' => 'Structure built around search', 'text' => 'The site is organised around what people nearby really look for, to hold their attention after the first click.'],
+                            ['title' => 'Consultations and explanations', 'text' => 'Every decision explained in plain language, so it is clear how it works for you.'],
+                        ],
+                    ],
+                    [
+                        'title' => 'Development, platforms and design',
+                        'points' => [
+                            ['title' => 'Clean code website (custom code)', 'text' => 'The site is built without heavy, slow platforms, for lightning speed, strong security and flawless work on mobile devices.'],
+                            ['title' => 'AI search optimisation (GEO)', 'text' => 'Preparing your site and brand so that the new AI assistants (such as ChatGPT, Gemini and Perplexity) recommend your business over your competitors.'],
+                            ['title' => 'Google Business Profile (Google Maps)', 'text' => 'Full set-up and optimisation of your profile, so people searching for services nearby find you quickly.'],
+                            ['title' => 'Brand identity', 'text' => 'A logo, a colour palette, fonts and the basic graphic elements.'],
+                            ['title' => 'Website copywriting', 'text' => 'Accurate, clear and convincing texts for the main pages.'],
+                            ['title' => 'Basic tracking', 'text' => 'Google Analytics 4 and Meta Pixel set up, to show where your first visitors and enquiries come from.'],
+                        ],
+                    ],
+                    [
+                        'title' => 'Technical care and support',
+                        'points' => [
+                            ['title' => 'Hosting, SSL and security', 'text' => 'We take over the hosting, the SSL certificate, round-the-clock protection, daily backups and technical service, so the site runs without interruption.'],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Active Marketing',
+                'from' => 'from',
+                'monthly' => 800,
+                'yearly' => 8000,
+                'audience' => 'For businesses with a working product that look for predictability. The focus here is not just having a website, but actively attracting new customers every day through Google and Meta ads, dedicated email campaigns and custom software built around the needs of the business.',
+                'groups' => [
+                    [
+                        'title' => 'Marketing strategy and control',
+                        'points' => [
+                            ['title' => 'Cutting wasted spend in Google', 'text' => 'Stopping the wrong searches (negative keywords) and separating the people who already know you by name, so the ads are spent only on real customers.'],
+                            ['title' => 'Developing an advertising strategy for Meta', 'text' => 'Texts, concepts and briefs for visuals and videos, based on why people really buy from you.'],
+                            ['title' => 'Regular working calls', 'text' => 'Going through the results, analysing what works and planning the next steps.'],
+                        ],
+                    ],
+                    [
+                        'title' => 'Channel management, software and campaigns',
+                        'points' => [
+                            ['title' => 'Clean code website with support', 'text' => 'Building and fully maintaining a fast site, with hosting, security and regular content updates included.'],
+                            ['title' => 'AI search optimisation (GEO)', 'text' => 'Fully structuring your information so that your brand becomes the first recommended option in ChatGPT, Gemini and Perplexity.'],
+                            ['title' => 'Google Ads (Search and Performance Max)', 'text' => 'Setting up and managing search ads for people who are already looking to buy your products or services.'],
+                            ['title' => 'Meta Ads (Facebook and Instagram)', 'text' => 'Building ad campaigns and testing new visuals, videos and texts to attract new customers.'],
+                            ['title' => 'Landing pages', 'text' => 'Designing and programming dedicated pages for specific offers and a higher conversion rate.'],
+                            ['title' => 'Email marketing to find contacts', 'text' => 'Sending bulk messages and campaigns through a dedicated system to find new potential customers.'],
+                            ['title' => 'Custom software development', 'text' => 'Building custom software modules, scripts and internal tools that automate your workflow.'],
+                            ['title' => 'Review management (Google Maps)', 'text' => 'Collecting good reviews systematically, to raise the share of visitors who become customers.'],
+                        ],
+                    ],
+                    [
+                        'title' => 'Transparent analysis and tracking',
+                        'points' => [
+                            ['title' => 'GA4 and Meta CAPI tracking', 'text' => 'Server-side tracking (Conversions API) set up so the ads learn from your real customers and not from simple clicks.'],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Strategic Marketing',
+                'from' => 'from',
+                'monthly' => 1200,
+                'yearly' => 12000,
+                'audience' => 'For established companies, online shops and B2B businesses that want to scale and lead their market. The work here is like a full marketing and technology department that optimises the whole business economy, manages many advertising channels, builds software systems and automates sales.',
+                'groups' => [
+                    [
+                        'title' => 'Marketing, technology and scaling',
+                        'points' => [
+                            ['title' => 'A synchronised ad mix', 'text' => 'Meta finds the new traffic, Google catches ready intent, and the new AI search tools recommend your brand.'],
+                            ['title' => 'Order economics and scaling', 'text' => 'We work on the cost of a new customer (CAC), the average order (AOV), repeat purchases and the real margin after advertising.'],
+                            ['title' => 'Automated email funnels and CRM', 'text' => 'We connect the site to your sales team and bring the customer you already won back for a 2nd and 3rd purchase, with no new ad spend.'],
+                            ['title' => 'A personal marketing strategist', 'text' => 'We follow the numbers and compare the ad reports with your bank account, so you grow without losing money.'],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'g_steps_title' => 'Our 5 steps',
+        'g_steps' => [
+            ['title' => 'First contact and request', 'text' => 'You fill in the contact form or call us directly. At this stage we collect the first information about your project, your current online presence and the main challenges you face.'],
+            ['title' => 'Strategy call and analysis', 'text' => 'Within 24 hours we hold a detailed consultation. We analyse your niche, the competition, the technical requirements and the specific goals of your business. We define the exact scope of the systems you need, from the structure of the site to the marketing channels and software integrations.'],
+            ['title' => 'Concept, demo and proposal', 'text' => 'We prepare an individual technical and strategic proposal. We build an initial demo of the concept, so you can see the visual direction, the structure and the functionality of the future platform, shaped around the needs and scale of your business.'],
+            ['title' => 'Development, software integrations and approval', 'text' => 'Once you confirm the offer, we move on to the actual clean code programming, building the marketing funnels, setting up the tracking systems and developing the software modules you need. The standard delivery time is 1 to 2 weeks, and we stay in touch throughout.'],
+            ['title' => 'Final tests and official launch', 'text' => 'We run a full audit of the code, security, mobile performance and the integrations with the analytics platforms. The site and the ad systems go live only after your final review and confirmation.'],
+        ],
         'billing' => [
             'yearly_months' => 10,
             'yearly_label' => 'Yearly, 2 months free',

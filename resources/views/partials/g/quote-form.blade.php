@@ -1,4 +1,4 @@
-{{-- „Получете оферта“ in design G (same fields and route as partials/quote-form). $plans, $selectedPlan. --}}
+{{-- „Изпратете запитване“ (the quote form) in design G (same fields and route as partials/quote-form). $plans, $selectedPlan. --}}
 @php
     $chosen = old('plan', $selectedPlan ?? 0);
     $mainFields = [
@@ -24,7 +24,7 @@
             <a class="g-btn g-ghost" href="{{ lroute('home') }}">{{ __('Към началото') }}</a>
         </div>
     @else
-        <h2 class="g-h g-fh">{{ __('Получете оферта') }}</h2>
+        <h2 class="g-h g-fh">{{ __('Изпратете запитване') }}</h2>
         <p class="g-fintro">{{ __('Оставете име, бизнес и имейл или телефон. Ще ви изпратим оферта за избрания пакет.') }}</p>
         <form method="POST" action="{{ lroute('quote.submit') }}" class="g-f">
             @csrf
@@ -33,8 +33,9 @@
             <div class="g-fld">
                 <label for="quote-plan">{{ __('Пакет') }}</label>
                 <select id="quote-plan" name="plan" class="g-in">
-                    @foreach($plans['items'] ?? [] as $i => $plan)
-                        <option value="{{ $i }}" @selected((string) $chosen === (string) $i)>{{ $plan['name'] }}</option>
+                    @php($quotePlans = \App\Support\GPlans::cards($plans) ?: collect($plans['items'] ?? [])->map(fn ($plan, $i) => ['index' => $i, 'name' => $plan['name']])->all())
+                    @foreach($quotePlans as $plan)
+                        <option value="{{ $plan['index'] }}" @selected((string) $chosen === (string) $plan['index'])>{{ $plan['name'] }}</option>
                     @endforeach
                 </select>
                 @error('plan')<p class="g-err">{{ $message }}</p>@enderror

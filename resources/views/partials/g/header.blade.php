@@ -1,4 +1,4 @@
-{{-- Header of the redesign (concept G): a text wordmark, four links, the theme and language switches and one button. --}}
+{{-- Header of the redesign (concept G): the logo image (white one in the dark theme), four links, the theme and language switches and one button. --}}
 @php
     $gNav = [
         [__('Услуги'), lroute('services'), $is('services', 'services.show', 'site-check')],
@@ -10,7 +10,10 @@
 @endphp
 <header class="g-hd">
     <div class="g-wrap g-hd-in">
-        <a class="g-logo" href="{{ lroute('home') }}" aria-label="{{ __('Creatium Lab, начало') }}">Creatium Lab<span class="g-dot" aria-hidden="true"></span></a>
+        <a class="g-logo" href="{{ lroute('home') }}" aria-label="{{ __('Creatium Lab, начало') }}">
+            <img class="g-logo-d" src="{{ asset('images/logo.webp') }}" srcset="{{ asset('images/logo-224.webp') }} 224w, {{ asset('images/logo-352.webp') }} 352w, {{ asset('images/logo.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" fetchpriority="high">
+            <img class="g-logo-w" src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="" aria-hidden="true" width="445" height="64">
+        </a>
         <nav class="g-nav" aria-label="{{ __('Основна навигация') }}">
             @foreach($gNav as [$label, $href, $active])
                 <a href="{{ $href }}" @if($active) aria-current="page" @endif>{{ $label }}</a>
@@ -21,7 +24,7 @@
             <button type="button" class="g-tbtn" data-theme-toggle aria-label="{{ __('Тъмна тема') }}" aria-pressed="false">
                 <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.8a6.2 6.2 0 0 0 0 12.4z" fill="currentColor"/></svg>
             </button>
-            <a class="g-btn g-sm g-offer" href="{{ $offerUrl }}">{{ __('Получете оферта') }}</a>
+            <a class="g-btn g-sm g-offer" href="{{ $offerUrl }}">{{ __('Изпратете запитване') }}</a>
             <button type="button" class="mobile-menu-button g-tbtn g-burger" aria-label="{{ __('Меню') }}" aria-expanded="false" aria-controls="mobile-menu">
                 <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path class="g-b1" d="M2 6h14" stroke="currentColor" stroke-width="1.4"/><path class="g-b2" d="M2 12h14" stroke="currentColor" stroke-width="1.4"/></svg>
             </button>
@@ -39,7 +42,7 @@
             @auth
                 <a href="{{ route('admin.dashboard') }}" class="g-sub">{{ __('Административен панел') }}</a>
             @endauth
-            <a href="{{ $offerUrl }}" class="g-btn g-mm-cta">{{ __('Получете оферта') }}</a>
+            <a href="{{ $offerUrl }}" class="g-btn g-mm-cta">{{ __('Изпратете запитване') }}</a>
         </div>
     </div>
 </header>

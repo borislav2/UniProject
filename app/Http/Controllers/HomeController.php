@@ -32,11 +32,14 @@ class HomeController extends Controller
             'contact' => config('creatium.contact'),
         ];
 
-        // The redesign (concept G): the same data plus the packages for the price cards.
+        // The redesign (concept G): the same data plus the packages for the price cards and the real projects.
         if (\App\Support\Design::is('g')) {
             $plans = $content->withDefaults('plans');
 
-            return view('g.home', $data + ['plans' => $plans, 'billing' => \App\Support\PlanBilling::config($plans)]);
+            // Real public projects come first in the projects grid, then every concept site.
+            $projects = Project::with('category')->where('is_public', true)->where('status', 'Completed')->orderByDesc('end_date')->get();
+
+            return view('g.home', $data + ['plans' => $plans, 'billing' => \App\Support\PlanBilling::config($plans), 'projects' => $projects]);
         }
 
         return view('home', $data);
