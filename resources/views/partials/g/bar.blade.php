@@ -4,5 +4,5 @@
     @if($gPhone)
         <a class="g-bar-call" href="tel:{{ preg_replace('/[^0-9+]/', '', $gPhone[0]) }}">{{ __('Обадете се') }}</a>
     @endif
-    <a class="g-bar-offer" href="{{ lroute('packages') }}#oferta">{{ __('Получете оферта') }}</a>
+    <a class="g-bar-offer" href="{{ lroute('packages') }}#oferta">{{ __('Изпратете запитване') }}</a>
 </div>

@@ -76,7 +76,7 @@
                         @endforeach
                     </div>
                     <div class="g-cta">
-                        <a class="g-btn g-onband" href="{{ lroute('packages') }}#oferta">{{ __('Получете оферта') }}<i></i></a>
+                        <a class="g-btn g-onband" href="{{ lroute('packages') }}#oferta">{{ __('Изпратете запитване') }}<i></i></a>
                         <a class="g-btn g-ghost g-onband-ghost" href="{{ lroute('packages') }}">{{ __('Вижте пакетите') }}</a>
                     </div>
                 </div>

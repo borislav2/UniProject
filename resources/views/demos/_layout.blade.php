@@ -27,7 +27,7 @@
 
     @yield('content')
 
-    @includeWhen(! empty($demo['problems']), 'partials.demo-case')
+    @includeWhen(! empty($demo['problems']), \App\Support\Design::is('g') ? 'partials.demo-case-g' : 'partials.demo-case')
 
     <div class="bg-[#0f1a2b] text-white">
         <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">

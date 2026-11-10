@@ -59,19 +59,21 @@
 .design-g .g-cells h3 { font: 400 1.3rem/1.2 var(--g-head); letter-spacing: -.02em; margin: 10px 0 8px; }
 .design-g .g-cells p { color: var(--g-mute); font-size: 15.5px; max-width: 28em; }
 
-/* Packages: smaller text than the home cards, the audience line and the link to the full list */
-.design-g .g-packs-wrap .g-tog { margin-top: 34px; }
-.design-g .g-packs-sm .g-pk { padding: clamp(22px, 2.4vw, 34px); gap: 16px; }
-.design-g .g-packs-sm .g-name h2 { font: 400 1.3rem/1.2 var(--g-head); letter-spacing: -.02em; }
-.design-g .g-packs-sm .g-name p { margin-top: 8px; font-size: 14px; line-height: 1.45; }
-.design-g .g-packs-sm .g-price { font-size: clamp(2.3rem, 3.2vw, 3.1rem); }
-.design-g .g-packs-sm .g-then { font-size: 14px; min-height: 3.1em; }
-.design-g .g-packs-sm li { font-size: 14.5px; }
-.design-g .g-packs-sm .g-body { display: grid; align-content: start; gap: 14px; }
-.design-g .g-packs-sm .g-body ul { flex: none; }
-.design-g .g-packs-sm .g-body .g-link { margin-top: 0; font-size: 14px; }
-.design-g .g-packs-sm .g-pk.g-rec .g-link { color: var(--g-on-ink); }
-.design-g .g-packs-sm .g-pk.g-rec .g-body ul { border-color: rgba(236, 238, 240, .2); }
+/* Packages page: the switch under the lead, and the five steps in a row (columns on a wide screen, a swipeable row below) */
+.design-g .g-ph .g-plans-wrap .g-tog { margin-top: 34px; }
+.design-g .g-steps { list-style: none; display: flex; gap: 0; overflow-x: auto; scroll-snap-type: x mandatory; border-top: 1px solid var(--g-line-strong); -webkit-overflow-scrolling: touch; padding-bottom: 8px; }
+.design-g .g-steps li { flex: 0 0 min(78vw, 300px); scroll-snap-align: start; padding: 22px 24px 8px 0; position: relative; border-right: 1px solid var(--g-line); margin-right: 24px; }
+.design-g .g-steps li:last-child { border-right: 0; margin-right: 0; }
+.design-g .g-steps li::before { content: ""; position: absolute; left: 0; top: -1px; height: 2px; width: 36px; background: var(--g-accent); }
+.design-g .g-steps .g-n { color: var(--g-accent-text); }
+.design-g .g-steps h3 { margin: 12px 0 12px; font: 400 1.15rem/1.25 var(--g-head); letter-spacing: -.02em; }
+.design-g .g-steps p { color: var(--g-mute); font-size: 14.5px; line-height: 1.6; }
+@media (min-width: 1100px) {
+    .design-g .g-steps { display: grid; grid-template-columns: repeat(5, 1fr); overflow: visible; padding-bottom: 0; }
+    .design-g .g-steps li { flex: none; margin-right: 0; padding-right: 26px; padding-left: 0; }
+    .design-g .g-steps li + li { padding-left: 26px; }
+    .design-g .g-steps h3 { min-height: 3.75em; }
+}
 
 /* Accordions (hairlines) */
 .design-g .g-acc-list { border-top: 1px solid var(--g-line-strong); }

@@ -83,24 +83,41 @@ class DesignGTest extends TestCase
         config(['creatium.design' => 'g']);
         $html = $this->get('/')->assertOk()->getContent();
 
-        foreach (['Бранд', 'Сайт', 'Google', 'Реклами', 'Имейли', 'Грижа'] as $part) {
-            $this->assertStringContainsString("<b>{$part}</b>", $html);
+        // No „Една система“ section and no news list: the projects come right after the hero.
+        $this->assertStringNotContainsString('Една система', $html);
+        $this->assertStringNotContainsString('id="sistema"', $html);
+        $this->assertStringNotContainsString('g-news', $html);
+        $this->assertStringContainsString('Проекти, създадени с мисъл за растеж', $html);
+        $this->assertStringContainsString('Разгледайте част от нашите персонализирани концепции за различни индустрии.', $html);
+        $this->assertLessThan(strpos($html, 'id="paketi"'), strpos($html, 'id="proekti"'));
+
+        // All six concepts, each with its micro description and a link to the concept page.
+        $this->assertSame(6, substr_count($html, 'data-concept-chip'));
+        $this->assertSame(6, substr_count($html, 'class="g-micro"'));
+        foreach (collect(config('creatium.demos')) as $demo) {
+            $this->assertStringContainsString('href="' . url('/demo/' . $demo['slug']) . '"', $html);
+            $this->assertStringContainsString($demo['g_micro'], $html);
         }
-        $this->assertStringContainsString('Една система. Шест части.', $html);
-        $this->assertStringContainsString('Успешен бизнес', $html);
-        $this->assertSame(4, substr_count($html, 'data-concept-chip'));
-        $this->assertStringContainsString('Концепция', $html);
-        $this->assertStringContainsString('href="' . url('/demo/restorant') . '"', $html);
-        $this->assertSame(3, substr_count($html, 'class="g-pk'));
-        foreach (['от €400', 'от €800', 'от €1' . PlanBilling::THIN_SPACE . '200'] as $price) {
+
+        // Packages: the owners' names, prices (monthly and yearly in the page), groups that open on demand.
+        $this->assertStringContainsString('План за всеки етап от вашия бизнес', $html);
+        $this->assertStringContainsString('Ясна структура за изграждане, поддръжка и устойчив растеж.', $html);
+        $this->assertSame(3, substr_count($html, 'class="g-plan '));
+        foreach (['Дигитален старт', 'Активен маркетинг', 'Стратегически маркетинг'] as $name) {
+            $this->assertStringContainsString("<h3>{$name}</h3>", $html);
+        }
+        $nb = "\u{00A0}";
+        foreach (['от</span> €500', 'от</span> €800', "от</span> €1{$nb}200"] as $price) {
             $this->assertStringContainsString($price, $html);
         }
-        $this->assertStringContainsString('€200 / месец', $html);
-        $this->assertStringContainsString(PlanBilling::money(2000) . ' / година', $html);
-        $this->assertStringContainsString('€650 / месец', $html);
-        $this->assertStringContainsString(PlanBilling::money(6500) . ' / година', $html);
+        $this->assertStringContainsString('/месец', $html);
+        $this->assertStringContainsString("€5{$nb}000<span class=\"g-per\">/година", $html);
+        $this->assertStringContainsString('2 месеца безплатно', $html);
+        $this->assertStringContainsString('<details class="g-grp">', $html);
+        $this->assertStringNotContainsString('<details class="g-grp" open', $html);
+        $this->assertStringContainsString('<b>Разбор на бизнеса</b>', $html);
+
         $this->assertStringContainsString('Стратегия, дизайн, технологии и маркетинг <em>под един покрив</em>.', $html);
-        $this->assertStringContainsString('Фиксирана цена', $html);
         $this->assertStringContainsString('Запазете час за разговор', $html);
         $this->assertStringContainsString('data-contact-form', $html);
         $this->assertStringContainsString('<em>успех</em>.', $html);
@@ -113,16 +130,18 @@ class DesignGTest extends TestCase
         config(['creatium.design' => 'g']);
         $html = $this->get('/en')->assertOk()->getContent();
 
-        foreach (['Brand', 'Website', 'Google', 'Ads', 'Emails', 'Care'] as $part) {
+        foreach (['Brand positioning', 'Digital platforms and websites', 'Online reputation and location', 'Digital support and protection'] as $part) {
             $this->assertStringContainsString("<b>{$part}</b>", $html);
         }
-        $this->assertStringContainsString('One system. Six parts.', $html);
-        $this->assertSame(4, substr_count($html, 'data-concept-chip'));
+        $this->assertSame(6, substr_count($html, 'data-concept-chip'));
         $this->assertStringContainsString('Concept', $html);
-        $this->assertStringContainsString('from €400', $html);
+        $this->assertStringContainsString('Projects built with growth in mind', $html);
+        $this->assertStringContainsString('A plan for every stage of your business', $html);
+        $this->assertStringContainsString('>from</span> €500', $html);
         $this->assertStringContainsString('Monthly', $html);
         $this->assertStringContainsString('Yearly', $html);
-        $this->assertStringContainsString('€2,000', $html);
+        $this->assertStringContainsString('/month', $html);
+        $this->assertStringContainsString('€5,000', $html);
         $this->assertStringContainsString('Strategy, design, technology and marketing <em>under one roof</em>.', $html);
         $this->assertStringContainsString('Book a call', $html);
         // No Bulgarian text on the English page (the footer's industry row is Bulgarian only and is not shown in English).
@@ -168,39 +187,51 @@ class DesignGTest extends TestCase
         $this->assertStringContainsString('data-g-bar', $html);
         $this->assertStringContainsString('Обадете се', $html);
         $this->assertMatchesRegularExpression('/class="g-bar-call" href="tel:\+?[0-9]+"/', $html);
-        $this->assertStringContainsString('class="g-bar-offer" href="' . url('/paketi') . '#oferta"', $html);
+        $this->assertStringContainsString('class="g-bar-offer" href="' . url('/paketi') . '#oferta">Изпратете запитване', $html);
+        $this->assertStringNotContainsString('Получете оферта', $html);
 
         // Inner pages carry it too, in English as well.
         $this->get('/paketi')->assertOk()->assertSee('data-g-bar', false);
-        $this->get('/en')->assertOk()->assertSee('Call us')->assertSee('Get a quote');
+        $this->get('/en')->assertOk()->assertSee('Call us')->assertSee('Send inquiry');
     }
 
-    public function test_the_hero_has_a_trust_line_and_a_link_to_the_website_check(): void
+    public function test_the_hero_has_the_three_new_points_and_no_eyebrow_or_site_check_link(): void
     {
         config(['creatium.design' => 'g']);
         $html = $this->get('/')->assertOk()->getContent();
 
-        foreach (['Фиксирана цена в офертата', 'Отговор до един работен ден', 'Месечен отчет'] as $line) {
+        foreach (['Прозрачно бюджетно планиране', 'AI за маркетинг и криейтив', 'Стратегически брандинг'] as $line) {
             $this->assertStringContainsString("<li>{$line}</li>", $html);
         }
-        $this->assertStringContainsString('href="' . url('/proverka-na-sait') . '">Проверете сайта си безплатно', $html);
-        $this->get('/en')->assertSee('Check your website for free');
+        $hero = substr($html, strpos($html, 'class="g-hero"'), strpos($html, 'id="proekti"') - strpos($html, 'class="g-hero"'));
+        $this->assertStringNotContainsString('g-eyebrow', $hero);
+        $this->assertStringNotContainsString('Дигитална агенция', $hero);
+        $this->assertStringNotContainsString('Проверете сайта си безплатно', $hero);
+        $this->assertStringNotContainsString('/proverka-na-sait', $hero);
+        $this->assertStringContainsString('Изпратете запитване', $hero);
+
+        // The header uses the logo image (a white one for the dark theme), and every CTA reads „Изпратете запитване“.
+        $this->assertStringContainsString('class="g-logo-d" src="' . asset('images/logo.webp') . '"', $html);
+        $this->assertStringContainsString('class="g-logo-w" src="' . asset('images/logo-white.webp') . '"', $html);
+        $this->assertStringNotContainsString('Получете оферта', $html);
+        $this->assertStringContainsString('class="g-btn g-sm g-offer" href="' . url('/paketi') . '#oferta">Изпратете запитване', $html);
     }
 
-    public function test_the_six_parts_link_to_their_service_pages_with_a_short_line(): void
+    public function test_the_six_services_have_the_owners_titles_and_link_to_their_service_pages(): void
     {
         config(['creatium.design' => 'g']);
         $html = $this->get('/')->assertOk()->getContent();
 
-        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('website') . '"><span class="g-mono">02</span><b>Сайт</b><small>', $html);
-        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('google') . '"><span class="g-mono">03</span><b>Google</b>', $html);
-        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('seo') . '"><span class="g-mono">04</span><b>Реклами</b>', $html);
-        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('email') . '"><span class="g-mono">05</span><b>Имейли</b>', $html);
-        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('support') . '"><span class="g-mono">06</span><b>Грижа</b>', $html);
-        $this->assertStringContainsString('<a href="' . url('/uslugi') . '"><span class="g-mono">01</span><b>Бранд</b>', $html);
+        $this->assertStringContainsString('<a href="' . url('/uslugi') . '"><span class="g-mono">01</span><b>Бранд позициониране</b>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('website') . '"><span class="g-mono">02</span><b>Дигитални платформи &amp; Сайтове</b><small>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('google') . '"><span class="g-mono">03</span><b>Онлайн репутация &amp; Локация</b>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('seo') . '"><span class="g-mono">04</span><b>Кампании за запитвания &amp; Продажби</b>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('email') . '"><span class="g-mono">05</span><b>Задържане &amp; Връзка с клиентите</b>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('support') . '"><span class="g-mono">06</span><b>Дигитална поддръжка &amp; Защита</b>', $html);
+        $this->assertStringContainsString('стимулират повторни поръчки', $html);
 
         $en = $this->get('/en')->assertOk()->getContent();
-        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('website', 'en') . '"><span class="g-mono">02</span><b>Website</b>', $en);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('website', 'en') . '"><span class="g-mono">02</span><b>Digital platforms and websites</b>', $en);
     }
 
     public function test_the_proof_block_is_hidden_without_data_and_shown_with_a_review_count(): void
@@ -355,25 +386,74 @@ class DesignGTest extends TestCase
         $this->get('/nope')->assertNotFound()->assertSee('text-6xl', false);
     }
 
-    public function test_g_packages_has_three_cards_a_billing_toggle_and_no_trust_strip_guarantee_or_comparison(): void
+    public function test_g_packages_has_the_new_plans_five_steps_and_only_the_quote_form_at_the_end(): void
     {
         config(['creatium.design' => 'g']);
 
         $html = $this->get('/paketi')->assertOk()
             ->assertSee('data-g-billing-root', false)
             ->assertSee('Месечно')->assertSee('Годишно')
-            ->assertSee('от €400')->assertSee('от €800')->assertSee('Индивидуална оферта')
-            ->assertSee('id="vsichko-0"', false)->assertSee('id="oferta"', false)
-            ->assertSee('Предпочитате разговор?')
+            ->assertSee('План за всеки етап от вашия бизнес')
+            ->assertSee('Дигитален старт')->assertSee('Стратегически маркетинг')
+            ->assertSee('id="oferta"', false)
+            ->assertSee('Нашите 5 стъпки')
+            ->assertSee('Първичен контакт и заявка')->assertSee('Финални тестове и официален старт')
+            ->assertDontSee('Всичко включено')->assertDontSee('Как започваме')
+            ->assertDontSee('Предпочитате разговор?')->assertDontSee('Условия')->assertDontSee('Въпроси')
             ->assertDontSee('data-sticky-cta', false)
             ->getContent();
-        $this->assertSame(3, substr_count($html, 'class="g-pk'));
+        $this->assertSame(3, substr_count($html, 'class="g-plan '));
+        $this->assertStringContainsString('class="g-steps"', $html);
+        $this->assertSame(5, substr_count($html, '<span class="g-n g-mono">0'));
         $this->assertStringContainsString('data-bv="y"', $html);
+        $this->assertStringContainsString('data-bv="m"', $html);
+        $this->assertStringNotContainsString('FAQPage', $html);
         $this->assertStringNotContainsString('<table', $html);
-        $this->assertStringNotContainsString('Гаранция', $html);
-        $this->assertStringNotContainsString('при заявка за оферта', substr($html, strpos($html, 'class="g-packs'), strpos($html, 'id="vsichko-0"') - strpos($html, 'class="g-packs')), 'no deposit line on the cards');
-        // Both prices are in the page; the monthly one shows without JavaScript.
-        $this->assertStringContainsString('след това €200 / месец', $html);
+        $this->assertStringContainsString('<details class="g-grp">', $html);
+        $this->assertGreaterThanOrEqual(7, substr_count($html, '<details class="g-grp">'));
+        $nb = "\u{00A0}";
+        $this->assertStringContainsString('от</span> €500', $html);
+        $this->assertStringContainsString('от</span> €800', $html);
+        $this->assertStringContainsString("от</span> €1{$nb}200", $html);
+        // Yearly default is the monthly figure times ten (2 months free) until the owners confirm their own.
+        $this->assertStringContainsString("€5{$nb}000<span class=\"g-per\">/година", $html);
+        $this->assertStringContainsString("€12{$nb}000<span class=\"g-per\">/година", $html);
+        $this->assertStringContainsString('2 месеца безплатно', $html);
+        // The quote form's plan list uses the new names.
+        $this->assertStringContainsString('>Активен маркетинг</option>', $html);
+    }
+
+    public function test_the_yearly_figure_is_the_saved_one_or_the_monthly_one_times_the_free_months_rule(): void
+    {
+        $plans = ['g_items' => [['name' => 'A', 'monthly' => 500, 'yearly' => 4800], ['name' => 'B', 'monthly' => 800, 'yearly' => '']], 'billing' => ['yearly_months' => 10]];
+        $cards = \App\Support\GPlans::cards($plans);
+        $this->assertSame("€4\u{00A0}800", $cards[0]['yearly']);
+        $this->assertSame("€8\u{00A0}000", $cards[1]['yearly']);
+        $this->assertSame(0, \App\Support\GPlans::indexFor(['g_items' => [1, 2, 3], 'items' => [['name' => 'Стартов двигател'], ['name' => 'Активен маркетинг и растеж']]], 'Стартов двигател'));
+        $this->assertSame(2, \App\Support\GPlans::indexFor(['g_items' => [1, 2, 3], 'items' => []], null));
+    }
+
+    public function test_the_concept_page_in_g_ends_with_four_blocks_and_no_faq_while_the_current_design_is_unchanged(): void
+    {
+        $current = $this->get('/demo/restorant')->assertOk()->getContent();
+        $this->assertStringContainsString('Въпроси и отговори', $current);
+        $this->assertStringContainsString('Проблемите на бранша', $current);
+        $this->assertStringNotContainsString('Анализ на бранша', $current);
+
+        config(['creatium.design' => 'g']);
+        $html = $this->get('/demo/restorant')->assertOk()->getContent();
+        foreach (['Анализ на бранша', 'Нашето решение', 'Какво се случва след пускането на сайта?', 'Дигитален старт'] as $text) {
+            $this->assertStringContainsString($text, $html);
+        }
+        $this->assertStringContainsString('Заявките пристигат при вас', $html);
+        $this->assertStringContainsString('href="' . url('/paketi') . '?paket=0#oferta"', $html);
+        $this->assertStringNotContainsString('Въпроси и отговори', $html);
+        $this->assertStringNotContainsString('<details', $html);
+
+        // A concept without a standard package points to the last plan.
+        $shop = $this->get('/demo/onlain-magazin')->assertOk()->getContent();
+        $this->assertStringContainsString('Стратегически маркетинг', $shop);
+        $this->assertStringContainsString('?paket=2#oferta', $shop);
     }
 
     public function test_g_projects_is_one_grid_with_real_projects_first_and_labelled_concepts(): void
