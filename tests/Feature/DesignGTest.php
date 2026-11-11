@@ -212,8 +212,8 @@ class DesignGTest extends TestCase
         $this->assertStringContainsString('Изпратете запитване', $hero);
 
         // The header uses the logo image (a white one for the dark theme), and every CTA reads „Изпратете запитване“.
-        $this->assertStringContainsString('class="g-logo-d" src="' . asset('images/logo.webp') . '"', $html);
-        $this->assertStringContainsString('class="g-logo-w" src="' . asset('images/logo-white.webp') . '"', $html);
+        $this->assertStringContainsString('class="g-logo-d" src="' . asset('images/logo-g.webp') . '"', $html);
+        $this->assertStringContainsString('class="g-logo-w" src="' . asset('images/logo-g-dark.webp') . '"', $html);
         $this->assertStringNotContainsString('Получете оферта', $html);
         $this->assertStringContainsString('class="g-btn g-sm g-offer" href="' . url('/paketi') . '#oferta">Изпратете запитване', $html);
     }

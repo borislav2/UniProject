@@ -3,7 +3,7 @@
     <div class="g-wrap">
         <div class="g-ft-top">
             <div class="g-ft-brand">
-                <a class="g-logo" href="{{ lroute('home') }}" aria-label="{{ __('Creatium Lab, начало') }}"><img class="g-logo-d" src="{{ asset('images/logo.webp') }}" srcset="{{ asset('images/logo-224.webp') }} 224w, {{ asset('images/logo-352.webp') }} 352w, {{ asset('images/logo.webp') }} 445w" sizes="224px" alt="Creatium Lab" width="445" height="64" loading="lazy" decoding="async"><img class="g-logo-w" src="{{ asset('images/logo-white.webp') }}" srcset="{{ asset('images/logo-white-224.webp') }} 224w, {{ asset('images/logo-white-352.webp') }} 352w, {{ asset('images/logo-white.webp') }} 445w" sizes="224px" alt="" aria-hidden="true" width="445" height="64" loading="lazy" decoding="async"></a>
+                <a class="g-logo" href="{{ lroute('home') }}" aria-label="{{ __('Creatium Lab, начало') }}"><img class="g-logo-d" src="{{ asset('images/logo-g.webp') }}" srcset="{{ asset('images/logo-g-224.webp') }} 224w, {{ asset('images/logo-g-352.webp') }} 352w, {{ asset('images/logo-g.webp') }} 445w" sizes="224px" alt="Creatium Lab" width="445" height="64" loading="lazy" decoding="async"><img class="g-logo-w" src="{{ asset('images/logo-g-dark.webp') }}" srcset="{{ asset('images/logo-g-dark-224.webp') }} 224w, {{ asset('images/logo-g-dark-352.webp') }} 352w, {{ asset('images/logo-g-dark.webp') }} 445w" sizes="224px" alt="" aria-hidden="true" width="445" height="64" loading="lazy" decoding="async"></a>
                 <p>{{ __('Дигитална агенция за бизнеси') }}</p>
             </div>
             <div class="g-ft-col">
