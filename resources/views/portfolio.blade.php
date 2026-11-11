@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', __('Проекти и концепции за сайтове за ресторант, салон и автосервиз'))
-@section('meta_description', __('Концепции за сайтове за ресторант, салон, зъболекар, автосервиз, строителна фирма и онлайн магазин. Вижте как изглежда сайт, който носи запитвания.'))
+@section('title', __('Проекти и сайтове за ресторант, хотел, салон и автосервиз'))
+@section('meta_description', __('Сайтове за ресторант, хотел, салон, фитнес, зъболекар, адвокат, автосервиз, покриви, имоти и онлайн магазин. Вижте как изглежда сайт, който носи запитвания.'))
 
 @section('content')
 @include('partials/page-header', ['heading' => __('Проекти'), 'sub' => __('Разгледайте работата ни')])
@@ -9,7 +9,7 @@
 @if($projects->isNotEmpty() || ! empty($demos))
 <section class="py-16 bg-white dark:bg-ink-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {{-- Един списък: първо истинските проекти, после концепциите; картите са еднакви, само концепциите носят етикет „Концепция“. --}}
+        {{-- Един списък: първо истинските проекти, после сайтовете по браншове; картите са еднакви и без етикети. --}}
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" data-portfolio-grid>
             @foreach($projects as $project)
                 <article class="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white card-hover reveal dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ ($loop->index % 3) * 100 }}ms">
@@ -46,7 +46,6 @@
                         @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
                             <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" alt="" width="960" height="600" loading="lazy" class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
                         @endif
-                        <span class="absolute left-3 top-3 rounded-full bg-brand-950/90 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white" data-concept-chip>{{ __('Концепция') }}</span>
                     </a>
                     <div class="flex flex-1 flex-col p-6">
                         <span class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-300">{{ $demo['industry'] }}</span>
@@ -64,7 +63,7 @@
             @endforeach
         </div>
         @if(app()->getLocale() === 'en' && ! empty($demos))
-            <p class="mt-8 text-sm text-gray-500 dark:text-gray-400">{{ __('Сайтовете-концепции са на български.') }}</p>
+            <p class="mt-8 text-sm text-gray-500 dark:text-gray-400">{{ __('Сайтовете по браншове са на български.') }}</p>
         @endif
         <p class="mt-6 text-gray-600 dark:text-gray-300">{{ __('Ако искате вашият да е един от тях, пишете ни.') }} <a href="{{ lroute('contact') }}" class="font-semibold text-brand-700 underline dark:text-brand-300">{{ __('Свържете се с нас') }}</a></p>
     </div>

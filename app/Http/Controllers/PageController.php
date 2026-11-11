@@ -253,7 +253,7 @@ class PageController extends Controller
             $lines[] = '- Телефон ' . $phone;
         }
         $lines[] = '- Запазете час за разговор на ' . lroute('contact', [], 'bg') . '#konsultatsiya';
-        $lines[] = '- Проекти и концепции за сайтове на ' . lroute('portfolio', [], 'bg');
+        $lines[] = '- Проекти и сайтове по браншове на ' . lroute('portfolio', [], 'bg');
 
         return response(implode("\n", $lines) . "\n")->header('Content-Type', 'text/markdown; charset=UTF-8');
     }

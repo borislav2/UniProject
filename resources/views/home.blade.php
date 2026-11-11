@@ -241,7 +241,6 @@
                         @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
                             <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" alt="" width="960" height="600" loading="lazy" decoding="async" class="h-full w-full object-cover object-top opacity-90 transition duration-500 group-hover:scale-[1.03] group-hover:opacity-100">
                         @endif
-                        <span class="absolute top-3 left-3 rounded-full bg-brand-950/80 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white ring-1 ring-white/20">{{ __('Концепция') }}</span>
                     </span>
                     <span class="block p-5">
                         <span class="block text-xs font-bold uppercase tracking-[0.18em] text-brand-300">{{ $demo['industry'] }}</span>

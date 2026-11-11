@@ -88,12 +88,13 @@ class DesignGTest extends TestCase
         $this->assertStringNotContainsString('id="sistema"', $html);
         $this->assertStringNotContainsString('g-news', $html);
         $this->assertStringContainsString('Проекти, създадени с мисъл за растеж', $html);
-        $this->assertStringContainsString('Разгледайте част от нашите персонализирани концепции за различни индустрии.', $html);
+        $this->assertStringContainsString('Разгледайте част от нашите персонализирани решения за различни индустрии.', $html);
         $this->assertLessThan(strpos($html, 'id="paketi"'), strpos($html, 'id="proekti"'));
 
-        // All six concepts, each with its micro description and a link to the concept page.
-        $this->assertSame(6, substr_count($html, 'data-concept-chip'));
-        $this->assertSame(6, substr_count($html, 'class="g-micro"'));
+        // All ten industry sites, each with its micro description and a link to its page; none carries a label.
+        $this->assertStringNotContainsString('data-concept-chip', $html);
+        $this->assertStringNotContainsString('Концепция', $html);
+        $this->assertSame(10, substr_count($html, 'class="g-micro"'));
         foreach (collect(config('creatium.demos')) as $demo) {
             $this->assertStringContainsString('href="' . url('/demo/' . $demo['slug']) . '"', $html);
             $this->assertStringContainsString($demo['g_micro'], $html);
@@ -133,8 +134,8 @@ class DesignGTest extends TestCase
         foreach (['Brand positioning', 'Digital platforms and websites', 'Online reputation and location', 'Digital support and protection'] as $part) {
             $this->assertStringContainsString("<b>{$part}</b>", $html);
         }
-        $this->assertSame(6, substr_count($html, 'data-concept-chip'));
-        $this->assertStringContainsString('Concept', $html);
+        $this->assertStringNotContainsString('data-concept-chip', $html);
+        $this->assertSame(10, substr_count($html, 'class="g-micro"'));
         $this->assertStringContainsString('Projects built with growth in mind', $html);
         $this->assertStringContainsString('A plan for every stage of your business', $html);
         $this->assertStringContainsString('>from</span> €500', $html);
@@ -462,10 +463,10 @@ class DesignGTest extends TestCase
         $category = \App\Models\Category::create(['name' => 'Уебсайт']);
         \App\Models\Project::create(['name' => 'Реален клиент ООД', 'description' => 'Нов сайт', 'status' => 'Completed', 'is_public' => true, 'category_id' => $category->id, 'start_date' => now()->subMonth(), 'end_date' => now(), 'manager' => 'Борислав']);
 
-        $html = $this->get('/proekti')->assertOk()->assertSee('data-concept-chip', false)->getContent();
+        $html = $this->get('/proekti')->assertOk()->assertDontSee('data-concept-chip', false)->assertDontSee('Концепция')->getContent();
         $this->assertSame(1, substr_count($html, 'data-portfolio-grid'));
-        $this->assertLessThan(strpos($html, 'data-concept-chip'), strpos($html, 'Реален клиент ООД'));
-        $this->assertGreaterThanOrEqual(6, substr_count($html, 'data-concept-chip'));
+        $this->assertLessThan(strpos($html, config('creatium.demos.0.name')), strpos($html, 'Реален клиент ООД'));
+        $this->assertSame(11, substr_count($html, 'class="g-case"'));
         $this->assertSame(substr_count($html, 'class="g-frame"'), substr_count($html, 'class="g-case"'));
     }
 
@@ -563,7 +564,7 @@ class DesignGTest extends TestCase
 
         $service = $this->get('/uslugi/izrabotka-na-sait')->assertOk()->assertSee('"@type":"FAQPage"', false)->assertSee('class="g-acc"', false)->assertSee('Включено в пакет')->getContent();
         $this->assertGreaterThan(0, preg_match_all('/<details class="g-acc"/', $service));
-        $this->get('/izrabotka-na-sait-za-restorant')->assertOk()->assertSee('"@type":"Service"', false)->assertSee('data-concept-chip', false)->assertSee('Подходящ пакет');
+        $this->get('/izrabotka-na-sait-za-restorant')->assertOk()->assertSee('"@type":"Service"', false)->assertDontSee('data-concept-chip', false)->assertSee('Подходящ пакет');
     }
 
     public function test_g_legal_pages_keep_their_text_in_g_typography(): void

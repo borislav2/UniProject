@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
-{{-- /proekti in design G: one grid of equal 16:10 previews, real projects first, then the concepts with the „Концепция“ chip. --}}
-@section('title', __('Проекти и концепции за сайтове за ресторант, салон и автосервиз'))
-@section('meta_description', __('Концепции за сайтове за ресторант, салон, зъболекар, автосервиз, строителна фирма и онлайн магазин. Вижте как изглежда сайт, който носи запитвания.'))
+{{-- /proekti in design G: one grid of equal 16:10 previews, real projects first, then the industry sites, with no label. --}}
+@section('title', __('Проекти и сайтове за ресторант, хотел, салон и автосервиз'))
+@section('meta_description', __('Сайтове за ресторант, хотел, салон, фитнес, зъболекар, адвокат, автосервиз, покриви, имоти и онлайн магазин. Вижте как изглежда сайт, който носи запитвания.'))
 @section('g_lean', 'inner')
 
 @php
@@ -54,7 +54,6 @@
                             </a>
                             <figcaption>
                                 <span class="g-no g-mono">{{ $pad(++$n) }}</span>
-                                <span class="g-chip g-mono" data-concept-chip>{{ __('Концепция') }}</span>
                                 <strong>{{ $demo['industry'] }}</strong>
                             </figcaption>
                         </figure>
@@ -68,7 +67,7 @@
                 @endforeach
             </div>
             @if(app()->getLocale() === 'en' && ! empty($demos))
-                <p class="g-hint g-after">{{ __('Сайтовете-концепции са на български.') }}</p>
+                <p class="g-hint g-after">{{ __('Сайтовете по браншове са на български.') }}</p>
             @endif
             <p class="g-after">{{ __('Ако искате вашият да е един от тях, пишете ни.') }} <a class="g-link" href="{{ lroute('contact') }}">{{ __('Свържете се с нас') }}</a></p>
         @else
