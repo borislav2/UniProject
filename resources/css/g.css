@@ -176,7 +176,7 @@ html.design-g.dark .g-logo .g-logo-w { display: block; }
 /* Concepts: two equal columns, previews all 16:10, cropped from the top */
 .design-g .g-work { display: grid; gap: clamp(32px, 3.4vw, 48px) 28px; grid-template-columns: 1fr; }
 @media (min-width: 760px) { .design-g .g-work { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1100px) { .design-g .g-work[data-g-projects] { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1100px) { .design-g .g-work { grid-template-columns: repeat(3, 1fr); } }
 .design-g .g-work .g-card { min-width: 0; }
 .design-g .g-work figcaption { flex-wrap: wrap; row-gap: 6px; }
 .design-g .g-work[data-g-projects] figcaption strong { font-size: 1.15rem; }

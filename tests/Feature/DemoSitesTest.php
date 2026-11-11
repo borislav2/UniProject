@@ -16,24 +16,26 @@ class DemoSitesTest extends TestCase
         return trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags($html))));
     }
 
-    public function test_every_concept_site_loads_marked_as_concept_and_not_indexed(): void
+    public function test_every_industry_site_loads_without_any_label_and_is_not_indexed(): void
     {
         foreach (config('creatium.demos') as $demo) {
             $response = $this->get('/demo/' . $demo['slug'])
                 ->assertOk()
                 ->assertSee('<meta name="robots" content="noindex">', false)
-                ->assertSee('Примерен сайт на Creatium Lab за ' . mb_strtolower($demo['industry']))
-                ->assertSee('Формата е част от концепцията и не изпраща запитване.')
+                ->assertSee('Изработка <strong class="font-semibold text-white">Creatium Lab</strong>', false)
+                ->assertSee('Формите и бутоните за връзка на тази страница не изпращат данни.')
                 ->assertSee('data-demo-form', false);
 
+            // Nothing on the page (title and toast included) calls it a demo, a concept, a sample or made up.
             $html = $response->getContent();
             $text = mb_strtolower($this->visibleText($html) . ' ' . (preg_match('#<title>(.*?)</title>#s', $html, $m) ? $m[1] : '') . ' ' . (preg_match('#id="demo-toast"[^>]*>(.*?)</div>#s', $html, $t) ? $t[1] : ''));
-            $this->assertStringContainsString('концепция', $text);
-            $this->assertStringNotContainsString('демо', $text, $demo['slug']);
-            $this->assertStringNotContainsString('измисл', $text, $demo['slug']);
+            foreach (['демо', 'концепц', 'измисл', 'примерен', 'примерн'] as $word) {
+                $this->assertStringNotContainsString($word, $text, $demo['slug'] . ': ' . $word);
+            }
             $this->assertStringNotContainsString('#demo', $html);
         }
-        $this->assertCount(6, config('creatium.demos'));
+        $this->assertCount(10, config('creatium.demos'));
+        $this->assertSame(array_column(config('creatium.demos'), 'slug'), array_column(config('creatium_en.demos'), 'slug'));
     }
 
     public function test_unknown_demo_is_404(): void
@@ -41,7 +43,7 @@ class DemoSitesTest extends TestCase
         $this->get('/demo/nyama-takova')->assertNotFound();
     }
 
-    public function test_projects_page_is_one_grid_with_concept_chips_only_on_the_concept_cards(): void
+    public function test_projects_page_is_one_grid_of_twelve_cards_without_labels(): void
     {
         $category = \App\Models\Category::create(['name' => 'Уебсайт']);
         \App\Models\Project::create([
@@ -55,19 +57,19 @@ class DemoSitesTest extends TestCase
 
         $this->assertStringNotContainsString('демо', mb_strtolower($this->visibleText($html)));
         $this->assertSame(1, substr_count($html, 'data-portfolio-grid'));
-        $this->assertSame(count(config('creatium.demos')), substr_count($html, 'data-concept-chip'));
+        $this->assertStringNotContainsString('data-concept-chip', $html);
+        $this->assertStringNotContainsString('концепц', mb_strtolower($this->visibleText($html)));
         $this->assertSame(count(config('creatium.demos')) + 1, substr_count($html, '<article'));
 
-        // Real projects first, then the concepts; the real card has no chip.
+        // Real projects first, then the industry sites.
         $page->assertSeeInOrder(['Истински проект', config('creatium.demos.0.name')]);
-        $this->assertStringNotContainsString('data-concept-chip', explode('</article>', substr($html, strpos($html, '<article')))[0]);
 
         foreach (config('creatium.demos') as $demo) {
             $page->assertSee($demo['name'])->assertSee(route('demo.show', $demo['slug']), false)->assertSee('images/demos/' . $demo['slug'] . '.webp', false);
             $this->assertFileExists(public_path('images/demos/' . $demo['slug'] . '.webp'));
         }
 
-        $en = $this->get('/en/projects')->assertOk()->assertSee('Concept')->assertSee('Lozata Restaurant')->assertSee('The concept sites are in Bulgarian.');
+        $en = $this->get('/en/projects')->assertOk()->assertDontSee('Concept')->assertSee('Lozata Restaurant')->assertSee('Byala Reka Guest House')->assertSee('The industry websites are in Bulgarian.');
         $this->assertStringNotContainsString('demo', mb_strtolower($this->visibleText($en->getContent())));
     }
 
@@ -116,5 +118,28 @@ class DemoSitesTest extends TestCase
     public function test_demos_are_not_in_the_sitemap(): void
     {
         $this->get('/sitemap.xml')->assertOk()->assertDontSee('/demo/', false);
+    }
+
+    public function test_industry_sites_wording_migration_replaces_only_exact_old_texts_and_backs_up(): void
+    {
+        $old = 'Разработихме концепции за ключови сектори. Всяка от тях адресира специфичните предизвикателства на бранша, пътя на купувача и необходимите интеграции за генериране на запитвания.';
+        \App\Models\ContentBlock::create(['key' => 'home_trust', 'locale' => 'bg', 'value' => [
+            'demos_text' => $old, 'demos_count_label' => 'Концепции за сектори', 'demos_subtitle' => 'Мое подзаглавие с концепции',
+        ]]);
+
+        $this->assertSame(['home_trust/bg'], \App\Support\IndustrySitesWording2026::apply());
+
+        $trust = \App\Models\ContentBlock::where('key', 'home_trust')->first()->value;
+        $this->assertSame(config('creatium.home_trust.demos_text'), $trust['demos_text']);
+        $this->assertSame('Сайта за сектори', $trust['demos_count_label']);
+        $this->assertSame('Мое подзаглавие с концепции', $trust['demos_subtitle']);
+        $this->assertSame($old, \App\Models\ContentBlock::where('key', 'home_trust:backup-2026-11-11')->first()->value['demos_text']);
+        $this->assertSame([], \App\Support\IndustrySitesWording2026::apply());
+
+        // Every new text is the current default in one of the two languages.
+        $defaults = array_merge(array_values(config('creatium.home_trust')), array_values(config('creatium_en.home_trust')));
+        foreach (\App\Support\IndustrySitesWording2026::REPLACE as $new) {
+            $this->assertContains($new, $defaults);
+        }
     }
 }

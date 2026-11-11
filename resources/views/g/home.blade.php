@@ -99,8 +99,8 @@
                 <article class="g-card">
                     <a href="{{ route('demo.show', $demo['slug']) }}">
                         <figure>
-                            <div class="g-frame"><img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 760px) 33vw, 100vw" alt="{{ __('Концепция') }}, {{ $demo['industry'] }}" width="960" height="600" loading="lazy" decoding="async"></div>
-                            <figcaption><span class="g-no g-mono">{{ $pad($projects->count() + $loop->iteration) }}</span><span class="g-chip g-mono" data-concept-chip>{{ __('Концепция') }}</span><strong>{{ $demo['industry'] }}</strong></figcaption>
+                            <div class="g-frame"><img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 760px) 33vw, 100vw" alt="{{ $demo['name'] }}, {{ $demo['industry'] }}" width="960" height="600" loading="lazy" decoding="async"></div>
+                            <figcaption><span class="g-no g-mono">{{ $pad($projects->count() + $loop->iteration) }}</span><strong>{{ $demo['industry'] }}</strong></figcaption>
                         </figure>
                         <p class="g-micro">{{ filled($demo['g_micro'] ?? null) ? $demo['g_micro'] : ($demo['description'] ?? '') }}</p>
                     </a>

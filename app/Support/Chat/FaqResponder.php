@@ -64,7 +64,7 @@ class FaqResponder
         $demos = site('demos') ?? [];
         $topics[] = [
             __('Имате ли примери, портфолио или проекти, които сте правили?'),
-            __('Вижте нашите проекти и концепциите за сайтове за различни браншове.') . ' ' . implode(', ', array_map(fn ($d) => $d['name'] . ' (' . $d['industry'] . ')', $demos)) . '. ' . lroute('portfolio'),
+            __('Вижте нашите проекти и сайтовете за различни браншове.') . ' ' . implode(', ', array_map(fn ($d) => $d['name'] . ' (' . $d['industry'] . ')', $demos)) . '. ' . lroute('portfolio'),
         ];
         $steps = site('home_process')['steps'] ?? [];
         if ($steps) {

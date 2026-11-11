@@ -56,7 +56,7 @@
         <div class="g-sh">
             <p class="g-mono"><b>02</b>Бранш</p>
             <h2 class="g-h">Сайт за вашия бранш</h2>
-            <p class="g-sh-text">Какво трябва да има сайтът, с концепция и подходящ пакет за всеки бранш.</p>
+            <p class="g-sh-text">Какво трябва да има сайтът, с пример и подходящ пакет за всеки бранш.</p>
         </div>
         <div class="g-news g-links">
             @foreach(config('creatium.industry_pages') as $industrySlug => $industry)

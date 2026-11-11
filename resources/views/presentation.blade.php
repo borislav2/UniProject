@@ -211,7 +211,6 @@
                         @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
                             <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" alt="" class="w-full h-full object-cover object-top">
                         @endif
-                        <span class="absolute top-3 left-3 rounded-full bg-brand-950/85 px-3 py-1 text-xs font-bold uppercase tracking-wider ring-1 ring-white/20">{{ __('Концепция') }}</span>
                     </div>
                     <div class="p-5"><span class="block text-xs font-bold uppercase tracking-[0.2em] text-brand-300">{{ $demo['industry'] }}</span><span class="mt-1 block text-xl font-extrabold">{{ $demo['name'] }}</span></div>
                 </div>

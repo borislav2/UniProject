@@ -12,12 +12,11 @@
         <div class="reveal">
             <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="group block overflow-hidden rounded-3xl border border-gray-200 bg-gray-100 shadow-xl shadow-brand-900/10 dark:border-white/10 dark:bg-white/5">
                 @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
-                    <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 1024px) 540px, 100vw" alt="Концепция: {{ $demo['name'] }}" width="960" height="600" class="aspect-[8/5] w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
+                    <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 1024px) 540px, 100vw" alt="Сайт: {{ $demo['name'] }}" width="960" height="600" class="aspect-[8/5] w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
                 @endif
             </a>
             <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
-                <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">Вижте концепцията {{ $demo['name'] }} <x-icon name="arrow-right" class="text-xs" /></a>
-                <span class="rounded-full border border-gray-300 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:border-white/20 dark:text-gray-400">Концепция</span>
+                <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">Вижте сайта {{ $demo['name'] }} <x-icon name="arrow-right" class="text-xs" /></a>
             </div>
         </div>
 

@@ -13,15 +13,15 @@
 <section class="g-s">
     <div class="g-wrap g-sys g-ind">
         <div class="g-sh">
-            <p class="g-mono"><b>01</b>Концепция</p>
+            <p class="g-mono"><b>01</b>Сайтът</p>
             <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="g-frame-link">
                 <div class="g-frame">
                     @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
-                        <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 900px) 40vw, 100vw" alt="Концепция {{ $demo['industry'] }}" width="960" height="600" loading="eager" decoding="async">
+                        <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 900px) 40vw, 100vw" alt="Сайт за {{ $demo['industry'] }}" width="960" height="600" loading="eager" decoding="async">
                     @endif
                 </div>
             </a>
-            <p class="g-case-links"><span class="g-chip g-mono" data-concept-chip>Концепция</span><a class="g-link" href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener">Вижте сайта</a></p>
+            <p class="g-case-links"><a class="g-link" href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener">Вижте сайта</a></p>
         </div>
         <div>
             <h2 class="g-h g-rows-h">{{ $page['must_have_title'] }}</h2>
