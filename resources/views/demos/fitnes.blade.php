@@ -27,9 +27,24 @@
     <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         <a href="#" class="text-2xl font-extrabold uppercase tracking-tight">Пулс<span class="text-[#c6ff3d]">/</span></a>
         <div class="hidden items-center gap-8 text-sm font-semibold md:flex">
-            <a href="#grafik" class="hover:text-[#c6ff3d]">График</a><a href="#karti" class="hover:text-[#c6ff3d]">Карти</a><a href="#trenyori" class="hover:text-[#c6ff3d]">Треньори</a><a href="#kontakt" class="hover:text-[#c6ff3d]">Контакт</a>
+            <a href="#grafik" class="pl-link">График</a><a href="#karti" class="pl-link">Карти</a><a href="#trenyori" class="pl-link">Треньори</a><a href="#kontakt" class="pl-link">Контакт</a>
         </div>
-        <a href="#probna" class="rounded-full bg-[#c6ff3d] px-5 py-2 text-sm font-extrabold text-black hover:bg-white">Безплатна тренировка</a>
+        <div class="flex items-center gap-2">
+            <a href="#probna" class="rounded-full bg-[#c6ff3d] px-4 py-2 text-sm font-extrabold text-black transition hover:bg-white sm:px-5"><span class="sm:hidden">Безплатна проба</span><span class="hidden sm:inline">Безплатна тренировка</span></a>
+            <details data-menu class="md:hidden">
+                <summary aria-label="Меню" class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full border border-white/25 text-white [&::-webkit-details-marker]:hidden">
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path class="pl-b1" d="M4 7h16"/><path class="pl-b2" d="M4 12h16"/><path class="pl-b3" d="M4 17h16"/></svg>
+                </summary>
+                <div class="absolute inset-x-0 top-16 border-b border-white/10 bg-[#0b0c0e] px-4 pb-6 pt-2 shadow-2xl">
+                    <div class="flex flex-col divide-y divide-white/10 text-xl font-extrabold uppercase">
+                        @foreach([['#grafik', 'График'], ['#karti', 'Карти'], ['#trenyori', 'Треньори'], ['#kontakt', 'Контакт']] as [$href, $label])
+                            <a href="{{ $href }}" class="py-4 hover:text-[#c6ff3d]">{{ $label }}</a>
+                        @endforeach
+                    </div>
+                    <a href="#probna" class="mt-4 block rounded-full bg-[#c6ff3d] py-3.5 text-center font-extrabold text-black">Запиши безплатна тренировка</a>
+                </div>
+            </details>
+        </div>
     </nav>
 </header>
 
@@ -55,23 +70,45 @@
         <div class="lg:col-span-5">
             <x-demo-photo :slug="$demo['slug']" name="hero" alt="Тренировка в студио Пулс" class="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] bg-[linear-gradient(160deg,#1b1e22,#0b0c0e)] ring-1 ring-white/10">
                 <svg viewBox="0 0 400 500" class="absolute inset-0 h-full w-full" fill="none">
-                    <circle cx="200" cy="230" r="150" stroke="#c6ff3d" stroke-opacity=".25" stroke-width="2"/><circle cx="200" cy="230" r="105" stroke="#c6ff3d" stroke-opacity=".4" stroke-width="2"/>
-                    <path d="M40 230h90l22-60 36 130 30-96 20 50 24-24h98" stroke="#c6ff3d" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-                    <g fill="#fff"><rect x="70" y="386" width="260" height="14" rx="7"/><rect x="92" y="352" width="26" height="82" rx="8"/><rect x="282" y="352" width="26" height="82" rx="8"/><rect x="56" y="366" width="26" height="54" rx="8" opacity=".6"/><rect x="318" y="366" width="26" height="54" rx="8" opacity=".6"/></g>
+                    <defs>
+                        <linearGradient id="pl-h-lime" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2ff8a"/><stop offset="1" stop-color="#9fd400"/></linearGradient>
+                        <radialGradient id="pl-h-glow" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="#c6ff3d" stop-opacity=".32"/><stop offset="1" stop-color="#c6ff3d" stop-opacity="0"/></radialGradient>
+                        <linearGradient id="pl-h-iron" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3f46"/><stop offset="1" stop-color="#16181b"/></linearGradient>
+                    </defs>
+                    <rect width="400" height="500" fill="url(#pl-h-glow)"/>
+                    <circle class="pl-ring" cx="200" cy="230" r="160" stroke="#c6ff3d" stroke-opacity=".22" stroke-width="2" stroke-dasharray="4 10"/><circle cx="200" cy="230" r="112" stroke="#c6ff3d" stroke-opacity=".35" stroke-width="2"/>
+                    <path d="M0 330h400" stroke="#fff" stroke-opacity=".08" stroke-width="2"/>
+                    <g transform="translate(0 26)">
+                        
+                        <path d="M150 300c-10 34-14 70-12 134h30c0-44 10-86 32-98 22 12 32 54 32 98h30c2-64-2-100-12-134Z" fill="url(#pl-h-lime)"/>
+                        <path d="M148 168c0-20 14-30 52-30s52 10 52 30l10 120c-20 22-92 22-124 0Z" fill="url(#pl-h-lime)"/>
+                        <path d="M148 172c-26 20-38 52-40 84l22 6c4-24 14-42 30-54Zm104 0c26 20 38 52 40 84l-22 6c-4-24-14-42-30-54Z" fill="#b5e82a"/>
+                        <circle cx="200" cy="104" r="30" fill="url(#pl-h-lime)"/><path d="M174 100c4-20 20-28 38-24 12 3 18 10 20 22-18-10-40-10-58 2Z" fill="#0b0c0e" opacity=".55"/>
+                        <path d="M184 128h32v18c-8 8-24 8-32 0Z" fill="#b5e82a"/>
+                        <path d="M130 258c2 20 18 28 40 26m100-26c-2 20-18 28-40 26" stroke="#b5e82a" stroke-width="14" stroke-linecap="round"/>
+                        <g class="pl-bell"><path d="M176 272c-10-34 48-34 48 0" stroke="#e8e8e8" stroke-width="9" stroke-linecap="round"/><circle cx="200" cy="318" r="34" fill="url(#pl-h-iron)" stroke="#fff" stroke-opacity=".6" stroke-width="2"/><ellipse cx="188" cy="306" rx="9" ry="5" fill="#fff" opacity=".4" transform="rotate(-30 188 306)"/></g>
+                    </g>
+                    <g><rect x="40" y="410" width="22" height="70" rx="6" fill="url(#pl-h-iron)" stroke="#c6ff3d" stroke-opacity=".5"/><rect x="66" y="396" width="26" height="98" rx="7" fill="url(#pl-h-iron)" stroke="#c6ff3d" stroke-opacity=".5"/><rect x="96" y="382" width="30" height="126" rx="8" fill="url(#pl-h-iron)" stroke="#c6ff3d" stroke-opacity=".5"/></g>
+                    <path class="pl-line" d="M0 380h110l18-44 28 92 24-72 18 36 16-16h186" stroke="#c6ff3d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
+                    <g fill="#c6ff3d"><circle cx="330" cy="120" r="5"/><circle cx="352" cy="146" r="3" opacity=".6"/><circle cx="64" cy="170" r="4" opacity=".7"/></g>
                 </svg>
-                <div class="absolute left-5 top-5 rounded-2xl bg-black/60 px-4 py-3 backdrop-blur"><p class="text-xs font-light text-gray-300">Следваща тренировка</p><p class="font-semibold">Функционална · 19:30</p><p class="text-xs font-semibold text-[#c6ff3d]">Остават 2 места</p></div>
+                <div class="pl-float absolute left-5 top-5 rounded-2xl bg-black/60 px-4 py-3 backdrop-blur"><p class="text-xs font-light text-gray-300">Следваща тренировка</p><p class="font-semibold">Функционална · 19:30</p><p class="text-xs font-semibold text-[#c6ff3d]">Остават 2 места</p></div>
             </x-demo-photo>
         </div>
     </div>
 </section>
 
 {{-- Marquee --}}
-<div class="overflow-hidden border-y border-white/10 bg-[#c6ff3d] py-3 text-black">
-    <p class="flex gap-10 whitespace-nowrap text-sm font-extrabold uppercase tracking-widest">@foreach(range(1, 3) as $r)<span>Кросфит</span><span>/</span><span>Пилатес</span><span>/</span><span>Бокс</span><span>/</span><span>Йога</span><span>/</span><span>Силови</span><span>/</span><span>Персонални</span><span>/</span>@endforeach</p>
+<div class="pl-marquee overflow-hidden border-y border-white/10 bg-[#c6ff3d] py-3 text-black" aria-hidden="true">
+    <div class="pl-track flex w-max text-sm font-extrabold uppercase tracking-widest">
+        @foreach(range(1, 2) as $half)
+            <p class="flex shrink-0 gap-10 whitespace-nowrap pr-10">@foreach(range(1, 3) as $r)<span>Кросфит</span><span>/</span><span>Пилатес</span><span>/</span><span>Бокс</span><span>/</span><span>Йога</span><span>/</span><span>Силови</span><span>/</span><span>Персонални</span><span>/</span>@endforeach</p>
+        @endforeach
+    </div>
 </div>
 
 {{-- Schedule --}}
-<section id="grafik" class="scroll-mt-16 px-4 py-20">
+<section id="grafik" class="dr scroll-mt-16 px-4 py-20">
     <div class="mx-auto max-w-7xl" data-group>
         <div class="flex flex-wrap items-end justify-between gap-6">
             <div><p class="text-sm font-semibold uppercase tracking-widest text-[#c6ff3d]">График</p><h2 class="mt-3 text-4xl font-extrabold uppercase tracking-tight md:text-5xl">Запази място за секунди</h2></div>
@@ -101,7 +138,7 @@
 </section>
 
 {{-- Memberships --}}
-<section id="karti" class="scroll-mt-16 bg-[#131518] px-4 py-20">
+<section id="karti" class="dr scroll-mt-16 bg-[#131518] px-4 py-20">
     <div class="mx-auto max-w-7xl" data-plans>
         <div class="flex flex-wrap items-end justify-between gap-6">
             <h2 class="text-4xl font-extrabold uppercase tracking-tight md:text-5xl">Карти без дребен шрифт</h2>
@@ -112,7 +149,7 @@
         </div>
         <div class="mt-12 grid gap-6 lg:grid-cols-3">
             @foreach($plans as [$name, $sub, $price, $items, $top])
-                <article class="relative flex flex-col rounded-[2rem] p-8 {{ $top ? 'bg-[#c6ff3d] text-black' : 'bg-white/[0.04] ring-1 ring-white/10' }}">
+                <article class="pl-lift relative flex flex-col rounded-[2rem] p-8 {{ $top ? 'bg-[#c6ff3d] text-black' : 'bg-white/[0.04] ring-1 ring-white/10' }}">
                     @if($top)<span class="absolute right-6 top-6 rounded-full bg-black px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#c6ff3d]">Най-избирана</span>@endif
                     <h3 class="text-2xl font-extrabold uppercase">{{ $name }}</h3>
                     <p class="{{ $top ? 'text-black/70' : 'text-gray-400' }} font-light">{{ $sub }}</p>
@@ -134,9 +171,22 @@
         <h2 class="max-w-2xl text-4xl font-extrabold uppercase tracking-tight md:text-5xl">Треньори, не надзиратели</h2>
         <div class="dr mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
             @foreach($coaches as $i => [$name, $role, $color])
-                <article class="group relative overflow-hidden rounded-[1.75rem] bg-[#131518] ring-1 ring-white/10">
+                <article class="pl-lift group relative overflow-hidden rounded-[1.75rem] bg-[#131518] ring-1 ring-white/10">
                     <x-demo-photo :slug="$demo['slug']" name="coach-{{ $i + 1 }}" alt="{{ $name }}" class="relative block aspect-[3/4] w-full">
-                        <svg viewBox="0 0 150 200" class="h-full w-full" fill="none"><circle cx="75" cy="200" r="110" fill="{{ $color }}" opacity=".16"/><circle cx="75" cy="74" r="26" fill="{{ $color }}"/><path d="M18 200c0-44 24-72 57-72s57 28 57 72Z" fill="{{ $color }}"/><path d="M50 150h50" stroke="#0b0c0e" stroke-width="5" stroke-linecap="round"/></svg>
+                        <svg viewBox="0 0 150 200" class="h-full w-full" fill="none">
+                            <defs><linearGradient id="pl-c{{ $i }}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{{ $color }}"/><stop offset="1" stop-color="{{ $color }}" stop-opacity=".55"/></linearGradient></defs>
+                            <circle cx="75" cy="200" r="110" fill="{{ $color }}" opacity=".14"/><circle cx="75" cy="86" r="62" stroke="{{ $color }}" stroke-opacity=".25" stroke-width="2"/>
+                            @if($i === 0)
+                                <path d="M8 200c0-48 24-72 67-72s67 24 67 72Z" fill="url(#pl-c0)"/><rect x="62" y="104" width="26" height="28" rx="8" fill="url(#pl-c0)"/><circle cx="75" cy="78" r="26" fill="url(#pl-c0)"/><path d="M52 70c4-18 18-24 34-20 10 3 14 10 14 20-14-8-30-10-48 0Z" fill="#0b0c0e" opacity=".5"/><path d="M12 128h126" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".85"/><rect x="2" y="114" width="12" height="28" rx="3" fill="#fff" opacity=".85"/><rect x="136" y="114" width="12" height="28" rx="3" fill="#fff" opacity=".85"/>
+                            @elseif($i === 1)
+                                <path d="M28 200c0-40 16-66 47-66s47 26 47 66Z" fill="url(#pl-c1)"/><rect x="66" y="108" width="18" height="30" rx="8" fill="url(#pl-c1)"/><circle cx="75" cy="82" r="22" fill="url(#pl-c1)"/><circle cx="75" cy="48" r="11" fill="url(#pl-c1)"/><path d="M53 80c0-18 10-26 22-26s22 8 22 26c-8-8-14-12-22-12s-14 4-22 12Z" fill="#0b0c0e" opacity=".4"/><path d="M40 160c-14-6-24-14-30-26m100 26c14-6 24-14 30-26" stroke="url(#pl-c1)" stroke-width="10" stroke-linecap="round"/>
+                            @elseif($i === 2)
+                                <path d="M4 200c4-44 28-70 71-70s67 26 71 70Z" fill="url(#pl-c2)"/><rect x="60" y="104" width="30" height="30" rx="10" fill="url(#pl-c2)"/><circle cx="75" cy="78" r="27" fill="url(#pl-c2)"/><path d="M48 74c2-20 16-30 30-28 14 2 24 12 24 28-8-4-14-10-18-18-8 10-22 16-36 18Z" fill="#0b0c0e" opacity=".5"/><circle cx="26" cy="150" r="22" fill="#e9edf0"/><circle cx="124" cy="150" r="22" fill="#e9edf0"/><circle cx="26" cy="150" r="10" fill="#0b0c0e" opacity=".35"/><circle cx="124" cy="150" r="10" fill="#0b0c0e" opacity=".35"/>
+                            @else
+                                <path d="M20 200c0-42 20-68 55-68s55 26 55 68Z" fill="url(#pl-c3)"/><rect x="65" y="106" width="20" height="28" rx="8" fill="url(#pl-c3)"/><circle cx="75" cy="80" r="23" fill="url(#pl-c3)"/><path d="M50 78c0-22 12-32 26-32s24 10 24 30c-4-10-10-16-24-16s-22 6-26 18Z" fill="#0b0c0e" opacity=".5"/><path d="M96 56c22-4 34 10 30 36-6-4-10-10-12-18-4 2-10 0-18-4Z" fill="url(#pl-c3)"/><path d="M30 168l30-14m60 14l-30-14" stroke="#0b0c0e" stroke-width="5" stroke-linecap="round" opacity=".45"/>
+                            @endif
+                            <path d="M52 156h46" stroke="#0b0c0e" stroke-width="5" stroke-linecap="round" opacity=".6"/>
+                        </svg>
                     </x-demo-photo>
                     <div class="absolute inset-x-0 bottom-0 bg-[linear-gradient(0deg,#0b0c0e_10%,transparent)] p-5 pt-16"><h3 class="font-extrabold md:text-lg">{{ $name }}</h3><p class="text-sm font-light text-gray-300">{{ $role }}</p></div>
                 </article>
@@ -148,14 +198,23 @@
                 ['Запазвам си място от телефона в трамвая. Групите са малки и треньорът поправя всяко движение.', 'Биляна С., 29'],
                 ['Дойдох заради болки в кръста. След три месеца пилатес при Ирина не помня кога ме е боляло.', 'Росица Л., 52'],
             ] as [$quote, $who])
-                <figure class="rounded-[1.75rem] border border-white/10 p-7"><blockquote class="text-lg font-light leading-relaxed">„{{ $quote }}“</blockquote><figcaption class="mt-4 text-sm font-semibold text-[#c6ff3d]">{{ $who }}</figcaption></figure>
+                <figure class="pl-lift rounded-[1.75rem] border border-white/10 p-7"><blockquote class="text-lg font-light leading-relaxed">„{{ $quote }}“</blockquote><figcaption class="mt-4 text-sm font-semibold text-[#c6ff3d]">{{ $who }}</figcaption></figure>
             @endforeach
         </div>
     </div>
 </section>
 
+{{-- In the gym --}}
+<section class="dr px-4 pb-20">
+    <div class="mx-auto grid max-w-7xl grid-cols-2 gap-px overflow-hidden rounded-[2rem] bg-white/10 ring-1 ring-white/10 lg:grid-cols-4">
+        @foreach([['6:30', 'отваряме всеки делничен ден'], ['12', 'души най-много в група'], ['3', 'зони за сила, кардио и стречинг'], ['0 €', 'встъпителна такса']] as [$n, $t])
+            <div class="bg-[#0b0c0e] p-6 md:p-8"><p class="text-4xl font-extrabold text-[#c6ff3d] md:text-5xl">{{ $n }}</p><p class="mt-2 text-sm font-light text-gray-300">{{ $t }}</p></div>
+        @endforeach
+    </div>
+</section>
+
 {{-- Trial --}}
-<section id="probna" class="scroll-mt-16 px-4 pb-20">
+<section id="probna" class="dr scroll-mt-16 px-4 pb-20">
     <div class="mx-auto grid max-w-7xl overflow-hidden rounded-[2rem] bg-[#c6ff3d] text-black lg:grid-cols-2">
         <div class="p-8 md:p-12">
             <h2 class="text-4xl font-extrabold uppercase leading-none tracking-tight md:text-6xl">Първата тренировка е безплатна</h2>
@@ -188,8 +247,42 @@
 </div>
 @endsection
 
+@push('head')
+<style>
+    .pl-link { position: relative; padding: .25rem 0; }
+    .pl-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; background: #c6ff3d; transform: scaleX(0); transform-origin: left; }
+    .pl-link:hover { color: #c6ff3d; }
+    details[data-menu][open] .pl-b1 { transform: translateY(5px) rotate(45deg); transform-origin: center; transform-box: fill-box; }
+    details[data-menu][open] .pl-b2 { opacity: 0; }
+    details[data-menu][open] .pl-b3 { transform: translateY(-5px) rotate(-45deg); transform-origin: center; transform-box: fill-box; }
+    .pl-track { transform: translateX(0); }
+    @media (prefers-reduced-motion: no-preference) {
+        .pl-link::after { transition: transform .3s ease; }
+        .pl-link:hover::after { transform: scaleX(1); }
+        .pl-lift { transition: transform .3s ease, box-shadow .3s ease; }
+        .pl-lift:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -20px rgba(198, 255, 61, .35); }
+        [data-key] { animation: pl-in .3s ease; }
+        details[data-menu] svg path { transition: transform .25s ease, opacity .2s ease; }
+        details[data-menu][open] > div { animation: pl-in .25s ease; }
+        .pl-track { animation: pl-marquee 28s linear infinite; }
+        .pl-marquee:hover .pl-track { animation-play-state: paused; }
+        .pl-float { animation: pl-floaty 4.5s ease-in-out infinite; }
+        .pl-ring { transform-origin: 200px 230px; animation: pl-spin 60s linear infinite; }
+        .pl-line { stroke-dasharray: 900; animation: pl-draw 3.6s ease-in-out infinite; }
+        .pl-bell { transform-origin: 200px 290px; animation: pl-swing 2.4s ease-in-out infinite; }
+        @keyframes pl-marquee { to { transform: translateX(-50%); } }
+        @keyframes pl-floaty { 50% { transform: translateY(-8px); } }
+        @keyframes pl-spin { to { transform: rotate(360deg); } }
+        @keyframes pl-draw { from { stroke-dashoffset: 900; } 70%, to { stroke-dashoffset: 0; } }
+        @keyframes pl-swing { 50% { transform: rotate(-6deg); } }
+        @keyframes pl-in { from { opacity: 0; transform: translateY(6px); } }
+    }
+</style>
+@endpush
+
 @push('scripts')
 <script>
+    document.querySelectorAll('details[data-menu] a').forEach(function (a) { a.addEventListener('click', function () { a.closest('details').open = false; }); });
     document.querySelector('[data-pick="billing"]').addEventListener('pick', function (e) {
         var year = e.detail === 'year';
         document.querySelectorAll('[data-plan-price]').forEach(function (el) { el.textContent = year ? Math.round(el.dataset.planPrice * 10 / 12) : el.dataset.planPrice; });

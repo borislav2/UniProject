@@ -10,25 +10,79 @@
     ];
 @endphp
 
+@push('head')
+<style>
+    .pk-link { position: relative; }
+    .pk-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: #e8703f; transform: scaleX(0); transform-origin: left; }
+    .pk-link:hover::after { transform: scaleX(1); }
+    details[data-menu] > summary::-webkit-details-marker { display: none; }
+    details[data-menu][open] .pk-bars { display: none; }
+    details[data-menu]:not([open]) .pk-close { display: none; }
+    @media (prefers-reduced-motion: no-preference) {
+        .pk-link::after { transition: transform .25s ease; }
+        .pk-lift { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+        .pk-lift:hover { transform: translateY(-5px); box-shadow: 0 18px 34px -16px rgba(28, 39, 48, .35); }
+        [data-value] { transition: background-color .2s ease, border-color .2s ease; }
+        @keyframes pk-smoke { 0% { transform: translateY(0) scale(.7); opacity: .0; } 20% { opacity: .5; } 100% { transform: translateY(-70px) scale(1.5); opacity: 0; } }
+        @keyframes pk-cloud { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(22px); } }
+        @keyframes pk-wave { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(8deg); } }
+        .pk-smoke { animation: pk-smoke 5s ease-out infinite; }
+        .pk-smoke-2 { animation-delay: 1.7s; }
+        .pk-smoke-3 { animation-delay: 3.4s; }
+        .pk-cloud { animation: pk-cloud 14s ease-in-out infinite; }
+        .pk-wave { transform-origin: 1166px 322px; animation: pk-wave 2.4s ease-in-out infinite; }
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="demo-geo">
 <header class="sticky top-0 z-50 bg-[#1c2730] text-white">
     <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         <a href="#" class="flex items-center gap-2 text-xl font-extrabold"><svg viewBox="0 0 40 28" class="h-7 w-10" fill="none"><path d="M2 26 20 4l18 22" stroke="#e8703f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 26 20 15l9 11" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>Здрав покрив</a>
         <div class="hidden items-center gap-8 text-sm font-semibold md:flex">
-            <a href="#kalkulator" class="hover:text-[#e8703f]">Калкулатор</a><a href="#uslugi" class="hover:text-[#e8703f]">Услуги</a><a href="#obekti" class="hover:text-[#e8703f]">Обекти</a><a href="#garanciya" class="hover:text-[#e8703f]">Гаранция</a>
+            <a href="#kalkulator" class="pk-link hover:text-[#e8703f]">Калкулатор</a><a href="#uslugi" class="pk-link hover:text-[#e8703f]">Услуги</a><a href="#obekti" class="pk-link hover:text-[#e8703f]">Обекти</a><a href="#garanciya" class="pk-link hover:text-[#e8703f]">Гаранция</a>
         </div>
-        <a href="#ogled" class="rounded-md bg-[#e8703f] px-5 py-2 text-sm font-extrabold hover:bg-[#f08556]">Безплатен оглед</a>
+        <div class="flex items-center gap-2">
+            <a href="#ogled" class="rounded-md bg-[#e8703f] px-4 py-2 text-sm font-extrabold hover:bg-[#f08556] sm:px-5">Безплатен оглед</a>
+            <details data-menu class="md:hidden">
+                <summary aria-label="Меню" class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-md border border-white/25 text-lg hover:border-[#e8703f] hover:text-[#e8703f]"><span class="pk-bars"><x-icon name="bars" /></span><span class="pk-close text-2xl leading-none">&times;</span></summary>
+                <div class="absolute inset-x-0 top-full border-b-4 border-[#e8703f] bg-[#1c2730] px-4 pb-5 pt-2 shadow-2xl">
+                    <div class="grid text-lg font-extrabold">
+                        @foreach([['#kalkulator', 'Калкулатор'], ['#uslugi', 'Услуги'], ['#obekti', 'Обекти'], ['#garanciya', 'Гаранция']] as [$href, $label])
+                            <a href="{{ $href }}" class="border-b border-white/10 py-4 hover:text-[#e8703f]">{{ $label }}</a>
+                        @endforeach
+                    </div>
+                    <a href="#ogled" class="mt-4 block rounded-md bg-[#e8703f] py-4 text-center font-extrabold">Заявете безплатен оглед</a>
+                </div>
+            </details>
+        </div>
     </nav>
 </header>
 
 {{-- Hero --}}
 <section class="relative overflow-hidden bg-[#1c2730] text-white">
     <svg viewBox="0 0 1440 520" preserveAspectRatio="xMidYMax slice" class="absolute inset-0 h-full w-full" fill="none" aria-hidden="true">
-        <path d="M620 520 1040 150l500 370Z" fill="#26343f"/><path d="M760 520 1040 270l330 250Z" fill="#c8552d"/>
-        <g stroke="#1c2730" stroke-opacity=".35" stroke-width="3"><path d="M820 470h470M870 420h370M925 370h260M980 320h150"/></g>
-        <path d="M1100 250v-90h60v140" fill="#26343f"/><circle cx="1260" cy="110" r="46" fill="#f2c14e" opacity=".9"/>
+        <defs>
+            <linearGradient id="pk-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2730"/><stop offset=".7" stop-color="#32495a"/><stop offset="1" stop-color="#5d6a6e"/></linearGradient>
+            <linearGradient id="pk-roof" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e0683a"/><stop offset="1" stop-color="#a8431f"/></linearGradient>
+            <linearGradient id="pk-roof2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".25"/><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>
+            <radialGradient id="pk-sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe29a" stop-opacity=".95"/><stop offset=".45" stop-color="#f2c14e" stop-opacity=".55"/><stop offset="1" stop-color="#f2c14e" stop-opacity="0"/></radialGradient>
+            <pattern id="pk-tiles" width="46" height="30" patternUnits="userSpaceOnUse"><path d="M0 30V15a23 15 0 0 0 46 0v15" stroke="#5a200c" stroke-opacity=".38" stroke-width="2.5"/><path d="M-23 15a23 15 0 0 0 46 0" stroke="#5a200c" stroke-opacity=".38" stroke-width="2.5"/></pattern>
+        </defs>
+        <rect width="1440" height="520" fill="url(#pk-sky)"/>
+        <circle cx="1280" cy="110" r="150" fill="url(#pk-sun)"/><circle cx="1280" cy="110" r="42" fill="#f6d58a"/>
+        <g fill="#fff" opacity=".1" class="pk-cloud"><ellipse cx="520" cy="96" rx="110" ry="20"/><ellipse cx="590" cy="82" rx="70" ry="18"/><ellipse cx="900" cy="64" rx="90" ry="14"/></g>
+        <path d="M0 430c160-60 300-70 460-20s320 30 480-30 340-20 500 20v120H0Z" fill="#26343f"/>
+        <path d="M600 520 1040 140l440 380Z" fill="url(#pk-roof)"/><path d="M600 520 1040 140l440 380Z" fill="url(#pk-tiles)"/><path d="M600 520 1040 140l440 380Z" fill="url(#pk-roof2)"/>
+        <path d="M600 520 1040 140l440 380" stroke="#7d2e12" stroke-width="10" stroke-linejoin="round"/><path d="M1020 160l20-18 20 18" stroke="#f2a07a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="880" y="190" width="56" height="96" fill="#8f3a1c"/><g stroke="#5a200c" stroke-opacity=".4" stroke-width="2"><path d="M880 214h56M880 238h56M880 262h56M906 190v24M920 214v24M900 238v24"/></g><rect x="872" y="178" width="72" height="16" fill="#26343f"/>
+        <g fill="#dfe6ea"><circle cx="908" cy="160" r="14" class="pk-smoke"/><circle cx="912" cy="160" r="14" class="pk-smoke pk-smoke-2"/><circle cx="904" cy="160" r="14" class="pk-smoke pk-smoke-3"/></g>
+        <rect x="700" y="488" width="680" height="32" fill="#e9dcc8" opacity=".9"/>
+        <g stroke="#d9c7a6" stroke-width="7" stroke-linecap="round"><path d="M1336 520 1250 330M1366 520 1280 330"/></g><g stroke="#d9c7a6" stroke-width="5"><path d="M1327 500l36 0M1319 474l36 0M1311 448l36 0M1303 422l36 0M1295 396l36 0M1287 370l36 0M1279 344l36 0"/></g>
+        <g><path d="M1150 336v-34" stroke="#26343f" stroke-width="12" stroke-linecap="round"/><path d="M1176 336v-34" stroke="#26343f" stroke-width="12" stroke-linecap="round"/><rect x="1142" y="256" width="42" height="56" rx="10" fill="#f2c14e"/><path d="M1142 276h42" stroke="#fff" stroke-opacity=".7" stroke-width="5"/><g class="pk-wave"><path d="M1184 266l30-20" stroke="#f2c14e" stroke-width="11" stroke-linecap="round"/></g><path d="M1142 268l-18 22" stroke="#f2c14e" stroke-width="11" stroke-linecap="round"/><circle cx="1163" cy="238" r="15" fill="#f0c9a4"/><path d="M1145 236a18 16 0 0 1 36 0Z" fill="#fff"/><rect x="1141" y="234" width="44" height="6" rx="3" fill="#fff"/></g>
     </svg>
+    <div class="absolute inset-0 bg-gradient-to-r from-[#1c2730] via-[#1c2730]/60 to-transparent lg:via-[#1c2730]/20"></div>
     <div class="relative mx-auto max-w-7xl px-4 py-16 lg:py-24">
         <div class="max-w-2xl">
             <p class="inline-flex items-center gap-2 rounded-md bg-white/10 px-3 py-1.5 text-sm font-semibold"><span class="text-[#f2c14e]">★ 4,9</span> от 214 отзива · Стара Загора и областта</p>
@@ -53,7 +107,7 @@
 </div>
 
 {{-- Calculator --}}
-<section id="kalkulator" class="scroll-mt-16 px-4 py-20">
+<section id="kalkulator" class="dr scroll-mt-16 px-4 py-20">
     <div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-12" data-roof>
         <div class="lg:col-span-5">
             <p class="text-sm font-extrabold uppercase tracking-widest text-[#c8552d]">Калкулатор</p>
@@ -96,7 +150,7 @@
                 ['Хидроизолация', 'Плоски покриви, тераси и гаражи с мембрана на два слоя.', 'shield-halved'],
                 ['Улуци и обшивки', 'Олуци, водосточни тръби, комини и капандури.', 'hammer'],
             ] as [$name, $text, $icon])
-                <article class="rounded-2xl border border-[#e6ded2] p-7 transition hover:-translate-y-1 hover:border-[#c8552d] hover:shadow-lg">
+                <article class="pk-lift rounded-2xl border border-[#e6ded2] p-7 hover:border-[#c8552d]">
                     <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#1c2730] text-xl text-[#e8703f]"><x-icon :name="$icon" /></span>
                     <h3 class="mt-5 text-xl font-extrabold">{{ $name }}</h3>
                     <p class="mt-2 font-light leading-relaxed text-[#4c5b66]">{{ $text }}</p>
@@ -115,14 +169,39 @@
         </div>
         <div class="dr mt-12 grid gap-6 md:grid-cols-3">
             @foreach($projects as $i => [$name, $text, $days, $color])
-                <article class="overflow-hidden rounded-3xl bg-white ring-1 ring-[#e6ded2]">
+                <article class="pk-lift overflow-hidden rounded-3xl bg-white ring-1 ring-[#e6ded2]">
                     <div class="relative aspect-[4/3] select-none overflow-hidden" data-compare style="--pos: 50%">
                         <x-demo-photo :slug="$demo['slug']" name="after-{{ $i + 1 }}" alt="{{ $name }} след ремонта" class="absolute inset-0 h-full w-full bg-[#cfe3f0]">
-                            <svg viewBox="0 0 400 300" class="h-full w-full" preserveAspectRatio="xMidYMid slice" fill="none"><path d="M40 190 200 70l160 120Z" fill="{{ $color }}"/><g stroke="#fff" stroke-opacity=".35" stroke-width="3"><path d="M84 160h232M124 130h152M164 100h72"/></g><path d="M70 190h260v110H70Z" fill="#f5f0e8"/><path d="M110 220h50v50h-50Zm130 0h50v80h-50Z" fill="#1c2730" opacity=".8"/></svg>
+                            <svg viewBox="0 0 400 300" class="h-full w-full" preserveAspectRatio="xMidYMid slice" fill="none">
+                                <rect width="400" height="300" fill="#cfe3f0"/><circle cx="340" cy="50" r="22" fill="#fff4cf"/><path d="M0 250h400v50H0Z" fill="#a9b98f"/>
+                                @if($i === 0)
+                                    <path d="M92 168h216v100H92Z" fill="#f5f0e8"/><path d="M52 176 200 66l148 110Z" fill="{{ $color }}"/><path d="M52 176 200 66l148 110" stroke="#7d2e12" stroke-width="6" stroke-linejoin="round"/><g stroke="#fff" stroke-opacity=".4" stroke-width="3"><path d="M84 152h232M118 126h164M152 100h96"/></g><rect x="256" y="84" width="22" height="46" fill="#8f3a1c"/><rect x="252" y="78" width="30" height="8" fill="#41586a"/>
+                                    <rect x="112" y="196" width="46" height="42" fill="#1c2730" opacity=".85"/><rect x="242" y="196" width="46" height="42" fill="#1c2730" opacity=".85"/><rect x="176" y="208" width="48" height="60" fill="#8a5a3a"/><path d="M52 178h296" stroke="#41586a" stroke-width="5"/>
+                                @elseif($i === 1)
+                                    <path d="M70 92h260v178H70Z" fill="#e8e2d6"/><path d="M62 84h276v12H62Z" fill="#f5f0e8"/><path d="M70 96h260v14H70Z" fill="{{ $color }}"/>
+                                    <g fill="#1c2730" opacity=".78">@foreach([128, 172, 216] as $y)@foreach([92, 138, 184, 230, 276] as $x)<rect x="{{ $x }}" y="{{ $y }}" width="28" height="28"/>@endforeach @endforeach</g><rect x="188" y="250" width="26" height="20" fill="#41586a"/><rect x="262" y="62" width="40" height="22" fill="#9fb0bc"/>
+                                @else
+                                    <path d="M40 160h320v110H40Z" fill="#e9e4d9"/><path d="M24 166 200 104l176 62Z" fill="{{ $color }}"/><g stroke="#fff" stroke-opacity=".4" stroke-width="3"><path d="M96 146v20M146 130v36M200 112v54M254 130v36M304 146v20"/></g><path d="M24 168h352" stroke="#41586a" stroke-width="5"/>
+                                    <rect x="70" y="196" width="72" height="74" fill="#41586a"/><rect x="164" y="196" width="72" height="74" fill="#41586a"/><path d="M70 214h72M70 232h72M70 250h72M164 214h72M164 232h72M164 250h72" stroke="#fff" stroke-opacity=".3" stroke-width="2"/><rect x="266" y="204" width="60" height="30" fill="#1c2730" opacity=".78"/>
+                                @endif
+                            </svg>
                         </x-demo-photo>
                         <div class="absolute inset-0 overflow-hidden" style="width: var(--pos)">
                             <x-demo-photo :slug="$demo['slug']" name="before-{{ $i + 1 }}" alt="{{ $name }} преди ремонта" class="absolute inset-y-0 left-0 h-full bg-[#b9bfc2]" data-compare-before>
-                                <svg viewBox="0 0 400 300" class="h-full w-full" preserveAspectRatio="xMidYMid slice" fill="none"><path d="M40 190 200 70l160 120Z" fill="#6f6a63"/><path d="M120 150l30 14 20-30 34 26 22-18" stroke="#3a3632" stroke-width="5"/><circle cx="250" cy="150" r="14" fill="#3a3632"/><path d="M70 190h260v110H70Z" fill="#d8d2c8"/><path d="M110 220h50v50h-50Zm130 0h50v80h-50Z" fill="#1c2730" opacity=".6"/><path d="M300 190v70" stroke="#5b6f55" stroke-width="8" opacity=".6"/></svg>
+                                <svg viewBox="0 0 400 300" class="h-full w-full" preserveAspectRatio="xMidYMid slice" fill="none">
+                                    <rect width="400" height="300" fill="#b9bfc2"/><path d="M0 250h400v50H0Z" fill="#8a9279"/>
+                                    @if($i === 0)
+                                        <path d="M92 168h216v100H92Z" fill="#d8d2c8"/><path d="M52 176 200 66l148 110Z" fill="#6f6a63"/><path d="M52 176 200 66l148 110" stroke="#3a3632" stroke-width="6" stroke-linejoin="round"/><path d="M120 152l30 14 20-30 34 26 22-18M170 112l24 18" stroke="#3a3632" stroke-width="4"/><circle cx="240" cy="148" r="14" fill="#3a3632"/><g fill="#5b6f55" opacity=".7"><ellipse cx="130" cy="164" rx="22" ry="7"/><ellipse cx="290" cy="160" rx="18" ry="6"/></g>
+                                        <rect x="256" y="84" width="22" height="46" fill="#7a6a60"/><path d="M262 84l8 22-6 24" stroke="#3a3632" stroke-width="3"/><rect x="252" y="78" width="30" height="8" fill="#5b5651"/>
+                                        <rect x="112" y="196" width="46" height="42" fill="#1c2730" opacity=".6"/><rect x="242" y="196" width="46" height="42" fill="#1c2730" opacity=".6"/><rect x="176" y="208" width="48" height="60" fill="#6d5a48"/><path d="M52 178l120 0 20 14 156-14" stroke="#5b5651" stroke-width="5"/><path d="M92 190v60" stroke="#8a847c" stroke-width="5" opacity=".5"/>
+                                    @elseif($i === 1)
+                                        <path d="M70 92h260v178H70Z" fill="#cfc9be"/><path d="M62 84h276v12H62Z" fill="#a8a39a"/><path d="M70 96h260v14H70Z" fill="#4a4d50"/><path d="M96 98c30 8 20 24 40 30M200 98c-6 20 8 24 4 44M290 98c10 16-2 26 6 40" stroke="#6d675f" stroke-width="7" stroke-linecap="round" opacity=".45"/><ellipse cx="150" cy="90" rx="34" ry="5" fill="#7b8a96"/><ellipse cx="260" cy="89" rx="22" ry="4" fill="#7b8a96"/>
+                                        <g fill="#1c2730" opacity=".6">@foreach([128, 172, 216] as $y)@foreach([92, 138, 184, 230, 276] as $x)<rect x="{{ $x }}" y="{{ $y }}" width="28" height="28"/>@endforeach @endforeach</g><rect x="188" y="250" width="26" height="20" fill="#6d675f"/><rect x="262" y="62" width="40" height="22" fill="#8a8f93"/>
+                                    @else
+                                        <path d="M40 160h320v110H40Z" fill="#cfc8bb"/><path d="M24 166 200 104l176 62Z" fill="#8a5a3a"/><g fill="#3a2a1e"><circle cx="110" cy="150" r="9"/><circle cx="262" cy="142" r="7"/><path d="M180 126l16 10-4 18-14-6Z"/></g><path d="M130 148l30 8M300 152l24 6" stroke="#5b3a22" stroke-width="6" stroke-linecap="round"/><path d="M24 168h352" stroke="#6b6560" stroke-width="5"/><path d="M300 168v34" stroke="#6b6560" stroke-width="5"/>
+                                        <rect x="70" y="196" width="72" height="74" fill="#5f6a72"/><rect x="164" y="196" width="72" height="74" fill="#5f6a72"/><path d="M70 214h72M70 232h72M70 250h72M164 214h72M164 232h72M164 250h72" stroke="#fff" stroke-opacity=".2" stroke-width="2"/><rect x="266" y="204" width="60" height="30" fill="#1c2730" opacity=".6"/><path d="M100 160c-6 22 6 40 0 56" stroke="#8a7a60" stroke-width="6" opacity=".5"/>
+                                    @endif
+                                </svg>
                             </x-demo-photo>
                         </div>
                         <span class="pointer-events-none absolute inset-y-0 w-1 -translate-x-1/2 bg-white shadow" style="left: var(--pos)"><span class="absolute left-1/2 top-1/2 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white text-xs font-extrabold text-[#1c2730] shadow-lg">↔</span></span>
@@ -141,7 +220,7 @@
 </section>
 
 {{-- Guarantee and process --}}
-<section id="garanciya" class="scroll-mt-16 bg-[#1c2730] px-4 py-20 text-white">
+<section id="garanciya" class="dr scroll-mt-16 bg-[#1c2730] px-4 py-20 text-white">
     <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-2">
         <div>
             <p class="text-sm font-extrabold uppercase tracking-widest text-[#e8703f]">Гаранция</p>
@@ -169,7 +248,7 @@
 </section>
 
 {{-- Inspection form --}}
-<section id="ogled" class="scroll-mt-16 px-4 py-20">
+<section id="ogled" class="dr scroll-mt-16 px-4 py-20">
     <div class="mx-auto grid max-w-6xl overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-black/5 lg:grid-cols-5">
         <div class="bg-[#c8552d] p-8 text-white md:p-10 lg:col-span-2">
             <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Безплатен оглед до 48 часа</h2>
@@ -213,6 +292,8 @@
 @push('scripts')
 <script>
     (function () {
+        var menu = document.querySelector('details[data-menu]');
+        if (menu) menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { menu.open = false; }); });
         var box = document.querySelector('[data-roof]'), range = box.querySelector('[data-range]'), old = box.querySelector('[data-old]'), price = 62;
         function money(n) { return (Math.round(n / 100) * 100).toLocaleString('bg-BG').replace(/ /g, ' '); }
         function draw() {

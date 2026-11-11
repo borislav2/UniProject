@@ -18,12 +18,21 @@
 @section('content')
 <div class="bg-[#3a2413] px-4 py-2 text-center text-sm text-[#fbe7b8]">Безплатна доставка за поръчки над 40 € · Доставка до 2 работни дни с Еконт и Спиди</div>
 <header class="sticky top-0 z-40 border-b border-[#f0e2c4] bg-[#fff9ec]/95 backdrop-blur">
-    <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-        <a href="#" class="demo-serif flex items-center gap-2 text-2xl font-semibold"><svg viewBox="0 0 28 32" class="h-8 w-7"><path d="M14 1 27 8.500v15L14 31 1 23.500v-15Z" fill="#e8a317"/><path d="M14 9 20 12.500v7L14 23l-6-3.500v-7Z" fill="#fff9ec"/></svg>Медена пита</a>
+    <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4">
+        <a href="#" class="demo-serif flex items-center gap-2 text-xl font-semibold sm:text-2xl"><svg viewBox="0 0 28 32" class="h-8 w-7 shrink-0"><path d="M14 1 27 8.500v15L14 31 1 23.500v-15Z" fill="#e8a317"/><path d="M14 9 20 12.500v7L14 23l-6-3.500v-7Z" fill="#fff9ec"/></svg>Медена пита</a>
         <div class="hidden items-center gap-8 text-sm font-semibold md:flex">
-            <a href="#magazin" class="hover:text-[#b9770a]">Магазин</a><a href="#pchelin" class="hover:text-[#b9770a]">Пчелинът</a><a href="#otzivi" class="hover:text-[#b9770a]">Отзиви</a><a href="#dostavka" class="hover:text-[#b9770a]">Доставка</a>
+            <a href="#magazin" class="nav-u hover:text-[#b9770a]">Магазин</a><a href="#pchelin" class="nav-u hover:text-[#b9770a]">Пчелинът</a><a href="#otzivi" class="nav-u hover:text-[#b9770a]">Отзиви</a><a href="#dostavka" class="nav-u hover:text-[#b9770a]">Доставка</a>
         </div>
-        <button type="button" data-cart-open class="relative inline-flex items-center gap-2 rounded-full bg-[#3a2413] px-5 py-2 text-sm font-semibold text-white hover:bg-[#553720]"><x-icon name="bag-shopping" /> Количка <span data-cart-count class="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#e8a317] px-1 text-xs font-bold text-[#3a2413]">0</span></button>
+        <div class="flex items-center gap-2">
+            <button type="button" data-cart-open aria-label="Количка" class="relative inline-flex items-center gap-2 rounded-full bg-[#3a2413] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#553720] sm:px-5"><x-icon name="bag-shopping" /> <span class="max-sm:hidden">Количка</span> <span data-cart-count class="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#e8a317] px-1 text-xs font-bold text-[#3a2413]">0</span></button>
+            <details data-menu class="md:hidden">
+                <summary aria-label="Меню" class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full bg-[#fde9b5] text-[#3a2413] [&::-webkit-details-marker]:hidden"><svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
+                <div class="absolute inset-x-0 top-full border-b border-[#f0e2c4] bg-[#fff9ec] px-4 pb-5 pt-2 shadow-xl">
+                    <a href="#magazin" class="demo-serif block border-b border-[#f0e2c4] py-3.5 text-xl">Магазин</a><a href="#pchelin" class="demo-serif block border-b border-[#f0e2c4] py-3.5 text-xl">Пчелинът</a><a href="#otzivi" class="demo-serif block border-b border-[#f0e2c4] py-3.5 text-xl">Отзиви</a><a href="#dostavka" class="demo-serif block py-3.5 text-xl">Доставка</a>
+                    <a href="#magazin" class="mt-2 block rounded-full bg-[#e8a317] py-3.5 text-center font-bold text-[#3a2413]">Към магазина</a>
+                </div>
+            </details>
+        </div>
     </nav>
 </header>
 
@@ -50,11 +59,47 @@
         </div>
         <x-demo-photo :slug="$demo['slug']" name="hero" alt="Буркани с мед" class="relative mx-auto aspect-square w-full max-w-md">
             <svg viewBox="0 0 400 400" class="h-full w-full" fill="none">
-                <circle cx="200" cy="210" r="170" fill="#fde9b5"/>
-                <g transform="translate(60 150)"><rect x="10" y="0" width="90" height="22" rx="6" fill="#3a2413"/><path d="M0 40c0-10 8-18 18-18h74c10 0 18 8 18 18v120c0 12-10 22-22 22H22c-12 0-22-10-22-22Z" fill="#c98a2a"/><rect x="14" y="70" width="82" height="60" rx="6" fill="#fff9ec"/><path d="M55 84 67 91v14l-12 7-12-7V91Z" fill="#e8a317"/></g>
-                <g transform="translate(150 96)"><rect x="12" y="0" width="106" height="26" rx="7" fill="#3a2413"/><path d="M0 48c0-12 10-22 22-22h86c12 0 22 10 22 22v150c0 14-12 26-26 26H26c-14 0-26-12-26-26Z" fill="#f1c453"/><path d="M0 120c30-18 60 14 130-6v84c0 14-12 26-26 26H26c-14 0-26-12-26-26Z" fill="#e8a317"/><rect x="18" y="84" width="94" height="74" rx="8" fill="#fff9ec"/><path d="M65 100 81 109.500v19L65 138l-16-9.500v-19Z" fill="#e8a317"/><path d="M34 148h62" stroke="#3a2413" stroke-width="3" stroke-linecap="round"/></g>
-                <g transform="translate(262 176)"><rect x="8" y="0" width="74" height="18" rx="5" fill="#3a2413"/><path d="M0 34c0-9 7-16 16-16h58c9 0 16 7 16 16v104c0 10-8 18-18 18H18c-10 0-18-8-18-18Z" fill="#7a4a1e"/><rect x="12" y="60" width="66" height="50" rx="5" fill="#fff9ec"/><path d="M45 71 55 77v12l-10 6-10-6V77Z" fill="#e8a317"/></g>
-                <g fill="#3a2413"><ellipse cx="330" cy="92" rx="13" ry="9"/><path d="M322 84c-8-14 4-20 10-8m4 0c6-12 18-6 10 8" fill="#fff" stroke="#3a2413" stroke-width="2"/></g><path d="M250 60c20 10 40 10 62 26" stroke="#3a2413" stroke-width="2" stroke-dasharray="3 7" stroke-linecap="round"/>
+                <defs>
+                    <radialGradient id="hj-bg" cx=".5" cy=".45" r=".55"><stop offset="0" stop-color="#fff3cf"/><stop offset="1" stop-color="#fde9b5"/></radialGradient>
+                    <linearGradient id="hj1-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset=".5" stop-color="#f1b73a"/><stop offset="1" stop-color="#c47f12"/></linearGradient>
+                    <linearGradient id="hj2-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd05a"/><stop offset=".5" stop-color="#e8a317"/><stop offset="1" stop-color="#a86a0a"/></linearGradient>
+                    <linearGradient id="hj3-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b8782f"/><stop offset=".5" stop-color="#7a4a1e"/><stop offset="1" stop-color="#3f230d"/></linearGradient>
+                </defs>
+                <circle cx="200" cy="210" r="172" fill="url(#hj-bg)"/>
+                <g fill="none" stroke="#f3d48a" stroke-width="2"><path d="M60 90l18-10 18 10v20l-18 10-18-10zM96 110l18-10 18 10v20l-18 10-18-10zM330 280l18-10 18 10v20l-18 10-18-10z"/></g>
+                <ellipse cx="200" cy="352" rx="150" ry="14" fill="#8a5a06" opacity=".16"/>
+                <rect x="40" y="340" width="320" height="10" rx="5" fill="#d9a548" opacity=".5"/>
+                <g transform="translate(40 138) scale(0.78)">
+                    <ellipse cx="62" cy="214" rx="66" ry="9" fill="#3a2413" opacity=".18"/>
+                    <path d="M0 48c0-12 10-22 22-22h86c12 0 22 10 22 22v150c0 14-12 26-26 26H26c-14 0-26-12-26-26Z" fill="url(#hj3-g)"/>
+                    <path d="M0 104c26-14 52 10 130-4v98c0 14-12 26-26 26H26c-14 0-26-12-26-26Z" fill="#e8a317" opacity=".55"/>
+                    <rect x="12" y="0" width="106" height="28" rx="8" fill="#3a2413"/><rect x="12" y="20" width="106" height="8" fill="#000" opacity=".18"/><path d="M22 6h86" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".35"/>
+                    <rect x="16" y="84" width="98" height="76" rx="9" fill="#fff9ec"/><path d="M65 98 81 107.500v19L65 136l-16-9.500v-19Z" fill="#e8a317"/><path d="M32 148h66" stroke="#3a2413" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M10 54c-3 30-4 60-2 100" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".5" fill="none"/><path d="M118 62c2 22 2 44 0 66" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".3" fill="none"/>
+                </g>
+                <g transform="translate(250 152) scale(0.7)">
+                    <ellipse cx="62" cy="214" rx="66" ry="9" fill="#3a2413" opacity=".18"/>
+                    <path d="M0 48c0-12 10-22 22-22h86c12 0 22 10 22 22v150c0 14-12 26-26 26H26c-14 0-26-12-26-26Z" fill="url(#hj3-g)"/>
+                    <path d="M0 104c26-14 52 10 130-4v98c0 14-12 26-26 26H26c-14 0-26-12-26-26Z" fill="#c98a2a" opacity=".55"/>
+                    <rect x="12" y="0" width="106" height="28" rx="8" fill="#3a2413"/><rect x="12" y="20" width="106" height="8" fill="#000" opacity=".18"/><path d="M22 6h86" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".35"/>
+                    <rect x="16" y="84" width="98" height="76" rx="9" fill="#fff9ec"/><path d="M65 98 81 107.500v19L65 136l-16-9.500v-19Z" fill="#c98a2a"/><path d="M32 148h66" stroke="#3a2413" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M10 54c-3 30-4 60-2 100" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".5" fill="none"/><path d="M118 62c2 22 2 44 0 66" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".3" fill="none"/>
+                </g>
+                <g transform="translate(128 66) scale(1)">
+                    <ellipse cx="62" cy="214" rx="66" ry="9" fill="#3a2413" opacity=".18"/>
+                    <path d="M0 48c0-12 10-22 22-22h86c12 0 22 10 22 22v150c0 14-12 26-26 26H26c-14 0-26-12-26-26Z" fill="url(#hj1-g)"/>
+                    <path d="M0 104c26-14 52 10 130-4v98c0 14-12 26-26 26H26c-14 0-26-12-26-26Z" fill="#e8a317" opacity=".55"/>
+                    <rect x="12" y="0" width="106" height="28" rx="8" fill="#3a2413"/><rect x="12" y="20" width="106" height="8" fill="#000" opacity=".18"/><path d="M22 6h86" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".35"/>
+                    <rect x="16" y="84" width="98" height="76" rx="9" fill="#fff9ec"/><path d="M65 98 81 107.500v19L65 136l-16-9.500v-19Z" fill="#e8a317"/><path d="M32 148h66" stroke="#3a2413" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M10 54c-3 30-4 60-2 100" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".5" fill="none"/><path d="M118 62c2 22 2 44 0 66" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".3" fill="none"/>
+                </g>
+                <path d="M193 58c0-22 -2-34 0-46" stroke="#e8a317" stroke-width="5" stroke-linecap="round" opacity=".95"/>
+                <g class="honey-drip"><path d="M193 40c-5 8-5 13 0 13s5-5 0-13Z" fill="#f1b73a"/></g>
+                <path d="M150 90c18 6 30 10 44 -2" stroke="#fff" stroke-width="3" opacity=".0"/>
+                <g transform="translate(72 258)"><path d="M0 0c8 14 18 14 18 28s-6 22 -14 22" stroke="#f1b73a" stroke-width="0"/></g>
+                <path d="M138 100c-4 6-4 12 0 18c4-6 4-12 0-18Z" fill="#ffe08a" opacity=".0"/>
+                <g class="bee-float"><ellipse cx="330" cy="92" rx="14" ry="10" fill="#f1b73a"/><path d="M322 83v18M330 82v20M338 84v16" stroke="#3a2413" stroke-width="4"/><ellipse cx="322" cy="78" rx="10" ry="6" fill="#fff" opacity=".85" transform="rotate(-25 322 78)"/><ellipse cx="338" cy="77" rx="10" ry="6" fill="#fff" opacity=".85" transform="rotate(25 338 77)"/><circle cx="343" cy="92" r="2" fill="#3a2413"/><path d="M250 60c20 10 40 10 62 26" stroke="#3a2413" stroke-width="2" stroke-dasharray="3 7" stroke-linecap="round" fill="none"/></g>
+                <g fill="#fff" opacity=".6"><circle cx="86" cy="204" r="3"/><circle cx="318" cy="238" r="2.500"/><circle cx="62" cy="170" r="2"/></g>
             </svg>
         </x-demo-photo>
     </div>
