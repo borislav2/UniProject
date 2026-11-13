@@ -28,11 +28,19 @@ class SiteKnowledge
         }
         $team = site('team') ?? [];
         if ($team) {
-            $out[] = 'Founders and owners of Creatium Lab (the whole team; they do the work themselves, the client talks directly to them):';
-            foreach ($team as $person) {
-                $out[] = '- ' . trim(($person['name'] ?? '') . ', ' . ($person['role'] ?? ''), ', ') . ': ' . ($person['description'] ?? '')
-                    . (! empty($person['bio']) ? ' ' . implode(' ', (array) $person['bio']) : '')
-                    . (! empty($person['skills']) ? ' Skills: ' . implode(', ', (array) $person['skills']) . '.' : '');
+            // Първите двама са собствениците и основателите, останалите са колеги от екипа.
+            $line = fn ($person) => '- ' . trim(($person['name'] ?? '') . ', ' . ($person['role'] ?? ''), ', ') . ': ' . ($person['description'] ?? '')
+                . (! empty($person['bio']) ? ' ' . implode(' ', (array) $person['bio']) : '')
+                . (! empty($person['skills']) ? ' Skills: ' . implode(', ', (array) $person['skills']) . '.' : '');
+            $out[] = 'Founders and owners of Creatium Lab (they do the work themselves, the client talks directly to them):';
+            foreach (array_slice($team, 0, 2) as $person) {
+                $out[] = $line($person);
+            }
+            if (count($team) > 2) {
+                $out[] = 'Other members of the team (colleagues, not owners or founders):';
+                foreach (array_slice($team, 2) as $person) {
+                    $out[] = $line($person);
+                }
             }
         }
         $legal = config('creatium.legal');

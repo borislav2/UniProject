@@ -14,7 +14,7 @@
             <div class="g-info">
                 <div>
                     <span class="g-mono">{{ __('Телефон') }}</span>
-                    @include('partials.g.phones', ['phones' => $contact['phones'] ?? []])
+                    @include('partials.g.phones', ['phones' => g_phones()])
                 </div>
                 <div>
                     <span class="g-mono">{{ __('Имейл') }}</span>

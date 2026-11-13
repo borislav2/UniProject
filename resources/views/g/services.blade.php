@@ -6,8 +6,11 @@
 @section('g_lean', 'inner')
 
 @php
-    $cardPages = ['websites' => 'website', 'geo-seo' => 'seo', 'email' => 'email', 'monitoring' => 'support'];
     $pad = fn ($n) => str_pad((string) $n, 2, '0', STR_PAD_LEFT);
+    // Fifth round (13.11.2026): the six services in plain words, each from service_pages (what it is, what we do, what you get, the package).
+    $servicePages = (array) site('service_pages');
+    $services = collect(['website', 'seo', 'google', 'email', 'support', 'shopping'])->filter(fn ($key) => isset($servicePages[$key]))->mapWithKeys(fn ($key) => [$key => $servicePages[$key]]);
+    $gPlans = collect(\App\Support\GPlans::cards(app(\App\Support\Content::class)->withDefaults('plans')))->keyBy('index');
 @endphp
 
 @section('content')
@@ -16,41 +19,33 @@
 <section class="g-s">
     <div class="g-wrap">
         <div class="g-sh">
-            <p class="g-mono"><b>01</b>{{ __('Компонентите') }}</p>
+            <p class="g-mono"><b>01</b>{{ __('Шестте ни услуги') }}</p>
         </div>
         <div class="g-svc-list">
-            @foreach($page['cards'] as $card)
-                <article id="{{ $card['slug'] }}" class="g-svc">
-                    <div class="g-svc-no"><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><x-icon :name="$card['icon']" class="g-ico" /></div>
+            @foreach($services as $key => $service)
+                @php($gPlan = $gPlans->get($service['package'] ?? -1))
+                <article id="{{ $service['slug'] }}" class="g-svc" data-g-service="{{ $key }}">
+                    <div class="g-svc-no"><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><x-icon :name="$service['icon']" class="g-ico" /></div>
                     <div class="g-svc-main">
-                        <p class="g-mono g-mute">{{ $card['label'] }}</p>
-                        <h2 class="g-h">{{ $card['title'] }}</h2>
-                        <p class="g-svc-tag">{{ $card['tag'] }}</p>
-                        <p class="g-svc-desc">{{ $card['description'] }}</p>
+                        <h2 class="g-h">{{ $service['menu'] }}</h2>
+                        <p class="g-svc-tag">{{ filled($service['g_what'] ?? null) ? $service['g_what'] : $service['lead'] }}</p>
+                        <div class="g-get">
+                            <p class="g-mono g-mute">{{ __('Какво получавате') }}</p>
+                            <p>{{ $service['result'] }}</p>
+                        </div>
+                        <p class="g-svc-pkg">
+                            @if($gPlan)<span class="g-mono g-mute">{{ __('Включено в пакет') }}</span> <b>{{ $gPlan['name'] }}</b>@if(filled($gPlan['monthly'])), {{ trim($gPlan['from'] . ' ' . $gPlan['monthly']) }}{{ __('/месец') }}@endif
+                            @else<span class="g-mono g-mute">{{ __('Цена') }}</span> <b>{{ __('Цена по оферта') }}</b>@endif
+                        </p>
+                        <a class="g-link" href="{{ \App\Http\Controllers\PageController::serviceUrl($key) }}">{{ __('Научете повече') }}</a>
                     </div>
                     <div class="g-svc-inc">
-                        <h3 class="g-mono g-mute">{{ __('Какво получавате') }}</h3>
+                        <h3 class="g-mono g-mute">{{ __('Какво правим') }}</h3>
                         <ul class="g-list">
-                            @foreach($card['includes'] as $item)<li><span>{{ $item }}</span></li>@endforeach
+                            @foreach($service['includes'] as $item)<li><span>{{ $item }}</span></li>@endforeach
                         </ul>
-                        @if($pageKey = $cardPages[$card['slug']] ?? null)
-                            <a class="g-link" href="{{ \App\Http\Controllers\PageController::serviceUrl($pageKey) }}">{{ __('Научете повече') }}</a>
-                        @endif
                     </div>
                 </article>
-            @endforeach
-
-            @foreach(['google', 'shopping'] as $featuredKey)
-                @if($featured = site('service_pages')[$featuredKey] ?? null)
-                    <article class="g-svc g-svc-new">
-                        <div class="g-svc-no"><span class="g-chip g-mono">{{ __('Ново') }}</span><x-icon :name="$featured['icon']" class="g-ico" /></div>
-                        <div class="g-svc-main">
-                            <h2 class="g-h">{{ $featured['title'] }}</h2>
-                            <p class="g-svc-desc">{{ $featured['lead'] }}</p>
-                        </div>
-                        <div class="g-svc-inc"><a class="g-btn" href="{{ \App\Http\Controllers\PageController::serviceUrl($featuredKey) }}">{{ __('Научете повече') }}<i></i></a></div>
-                    </article>
-                @endif
             @endforeach
         </div>
     </div>

@@ -10,7 +10,7 @@
                 <p class="g-mono">{{ __('Контакти') }}</p>
                 <ul>
                     <li><a href="mailto:{{ config('creatium.contact.email') }}">{{ config('creatium.contact.email') }}</a></li>
-                    @foreach(config('creatium.contact.phones') as $phone)
+                    @foreach(g_phones() as $phone)
                         <li><a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}">{{ $phone }}</a></li>
                     @endforeach
                     @if(config('creatium.contact.facebook'))

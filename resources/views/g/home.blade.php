@@ -49,8 +49,9 @@
     <canvas id="g-topo" aria-hidden="true"></canvas>
     <div class="g-wrap">
         <h1 class="g-h" data-g-clear>{!! $accent($hero['title'], $hero['accent'] ?? []) !!}</h1>
-        @if(filled($hero['highlight'] ?? null))
-            <p class="g-lead" data-g-clear>{{ $hero['highlight'] }}</p>
+        @php($heroLead = filled($hero['g_highlight'] ?? null) ? $hero['g_highlight'] : ($hero['highlight'] ?? null))
+        @if(filled($heroLead))
+            <p class="g-lead" data-g-clear>{{ $heroLead }}</p>
         @endif
         <div class="g-cta">
             <a class="g-btn" data-g-clear href="{{ lroute('packages') }}#oferta">{{ __('Изпратете запитване') }}<i></i></a>
@@ -103,6 +104,7 @@
                             <figcaption><span class="g-no g-mono">{{ $pad($projects->count() + $loop->iteration) }}</span><strong>{{ $demo['industry'] }}</strong></figcaption>
                         </figure>
                         <p class="g-micro">{{ filled($demo['g_micro'] ?? null) ? $demo['g_micro'] : ($demo['description'] ?? '') }}</p>
+                        @include('partials.g.facts', ['facts' => $demo['g_facts'] ?? []])
                     </a>
                 </article>
             @endforeach
@@ -158,11 +160,12 @@
 </section>
 @endif
 
-{{-- The agency: one idea and three promises (no team size, no portraits) --}}
-<section class="g-band" id="agentsiyata">
+{{-- Our goal (fifth round, 13.11.2026, instead of "The agency"): one sentence, a short text and the three promises --}}
+<section class="g-band" id="tsel">
     <div class="g-wrap">
-        <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Агенцията') }}</p>
-        <h2 class="g-h">{!! $accent($trust['agency_title'] ?? '', $trust['agency_accent'] ?? []) !!}</h2>
+        <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Нашата цел') }}</p>
+        <h2 class="g-h">{!! $accent($trust['g_goal_title'] ?? $trust['agency_title'] ?? '', $trust['g_goal_accent'] ?? $trust['agency_accent'] ?? []) !!}</h2>
+        @if(filled($trust['g_goal_text'] ?? null))<p class="g-goal-text">{{ $trust['g_goal_text'] }}</p>@endif
         @if(! empty($trust['agency_facts']))
             <div class="g-pr">
                 @foreach($trust['agency_facts'] as $fact)
@@ -173,23 +176,22 @@
     </div>
 </section>
 
-{{-- Contact: the simple form, phones and email as text --}}
+{{-- Contact: the form on the left, the text with the phone and the email on the right (text first on phones) --}}
 <section class="g-s" id="kontakt" style="border-bottom:0">
     <div class="g-wrap g-ct">
-        <div>
-            <div class="g-sh" style="margin-bottom:34px">
-                <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Контакти') }}</p>
-                <h2 class="g-h">{{ __('Запазете час за разговор') }}</h2>
-            </div>
+        <div class="g-ct-info">
+            <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Контакти') }}</p>
+            <h2 class="g-h g-ct-h">{{ $trust['g_contact_title'] ?? __('Запазете час за разговор') }}</h2>
+            @if(filled($trust['g_contact_text'] ?? null))<p class="g-ct-text">{{ $trust['g_contact_text'] }}</p>@endif
             <div class="g-info">
-                @foreach($contact['phones'] as $phone)
+                @foreach(g_phones() as $phone)
                     <div><span class="g-mono">{{ __('Телефон') }}</span><a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}">{{ $phone }}</a></div>
                 @endforeach
                 <div><span class="g-mono">{{ __('Имейл') }}</span><a href="mailto:{{ $contact['email'] }}">{{ $contact['email'] }}</a></div>
             </div>
         </div>
-        <div class="g-form">
-            @include('partials/contact-form')
+        <div class="g-ct-form">
+            @include('partials.g.contact-form')
         </div>
     </div>
 </section>

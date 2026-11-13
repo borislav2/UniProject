@@ -61,6 +61,8 @@ class HomeController extends Controller
             'interests' => 'nullable|array',
             'interests.*' => ['string', Rule::in(array_keys(config('creatium.contact_interests')))],
             'message' => 'nullable|string|max:5000',
+            // Design G only (fifth round): the optional monthly marketing budget.
+            'budget' => ['nullable', 'string', Rule::in(array_keys((array) config('creatium.contact_budgets')))],
             'site_url' => 'nullable|string|max:255',
             'consultation' => ['nullable', 'string', function ($attribute, $value, $fail) {
                 if (! Booking::resolve($value)) {
@@ -77,6 +79,7 @@ class HomeController extends Controller
             'email.email' => __('Моля, въведете валиден имейл.'),
             'service.in' => __('Моля, изберете статус от списъка.'),
             'interests.*.in' => __('Моля, изберете услуга от списъка.'),
+            'budget.in' => __('Моля, изберете бюджет от списъка.'),
             'consent.accepted' => __('Моля, потвърдете, че сте запознати с Политиката за поверителност.'),
         ]);
 
@@ -174,6 +177,7 @@ class HomeController extends Controller
         $lines = array_filter([
             $interests ? 'Интересува се от ' . implode(', ', $interests) . '.' : '',
             $site !== '' ? 'Сегашен сайт ' . $site : '',
+            ! empty($data['budget']) ? 'Месечен маркетингов бюджет: ' . config('creatium.contact_budgets')[$data['budget']] : '',
         ], 'strlen');
         $lines = implode("\n", $lines);
         $message = trim((string) ($data['message'] ?? ''));

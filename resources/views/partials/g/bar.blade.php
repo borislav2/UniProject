@@ -1,5 +1,5 @@
 {{-- Phone bar of the redesign (concept G): call and quote, below md only; hidden while a form is in view (resources/js/g-bar.js). --}}
-@php($gPhone = (array) config('creatium.contact.phones'))
+@php($gPhone = g_phones())
 <div class="g-bar" data-g-bar>
     @if($gPhone)
         <a class="g-bar-call" href="tel:{{ preg_replace('/[^0-9+]/', '', $gPhone[0]) }}">{{ __('Обадете се') }}</a>

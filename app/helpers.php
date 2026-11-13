@@ -49,3 +49,18 @@ if (! function_exists('gview')) {
         return view(\App\Support\Design::is('g') ? 'g.' . $name : ($current ?? $name), $data);
     }
 }
+
+if (! function_exists('g_phones')) {
+    /**
+     * The phone list design G shows: only `creatium.g_phone` (one number, owners 13.11.2026), or all of `contact.phones` when it is empty.
+     * The current design keeps listing every phone from `contact.phones`.
+     *
+     * @return list<string>
+     */
+    function g_phones(): array
+    {
+        $one = trim((string) config('creatium.g_phone'));
+
+        return $one !== '' ? [$one] : array_values((array) config('creatium.contact.phones'));
+    }
+}

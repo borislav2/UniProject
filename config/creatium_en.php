@@ -29,6 +29,18 @@ return [
             'image' => 'images/team/vladimir-tsonchev.webp',
             'linkedin' => 'https://www.linkedin.com/in/vladimirtsonchev/',
         ],
+        [
+            'name' => 'Maria Florova',
+            'role' => 'Branding, email campaigns and social media',
+            'description' => 'I make sure your business looks and sounds the same everywhere, from the logo to every email and every post.',
+            'bio' => [
+                'My part is the face of your business. I build your brand identity, which means the logo, the colours and the tone you use with customers. That way people recognise you and remember you wherever they meet you.',
+                'I also run email campaigns that bring customers back to you and look after your social media profiles. The posts match your brand, and afterwards I check what they bring and what we should change.',
+            ],
+            'skills' => ['A recognisable brand', 'Email campaigns', 'Social media', 'One tone everywhere'],
+            'image' => 'images/team/maria-florova.webp',
+            'linkedin' => '',
+        ],
     ],
 
     // Страница „Често задавани въпроси“ (/vaprosi). „group“ подрежда въпросите в теми; празно = без тема.
@@ -77,7 +89,7 @@ return [
             ['title' => 'A transparent report', 'text' => 'Every month you get a clear report on what was done and the next steps.'],
             ['title' => 'A direct line', 'text' => 'You talk directly to the people who do the work.'],
         ],
-        'g_founders_title' => 'Founders',
+        'g_founders_title' => 'The team',
         'story_title' => 'Why we do it',
         'story' => [
             'The website is ready, the ads are running, and the phone stays silent.',
@@ -90,6 +102,7 @@ return [
     'home_hero' => [
         'title' => 'Digital solutions built with your success in mind.',
         'highlight' => 'Custom websites. Branded marketing. Strategic solutions for more customers.',
+        'g_highlight' => 'Branded marketing. Custom websites. Strategic solutions for more customers.',
         'button' => 'Get a quote',
         'accent' => ['success'],
     ],
@@ -244,7 +257,7 @@ return [
         // Design G, fourth round (the owners' audit, November 2026): read only by the g views.
         'g_hero_points' => ['Transparent budget planning', 'AI for marketing and creative', 'Strategic branding'],
         'g_parts' => [
-            ['title' => 'Brand positioning', 'text' => 'We build a look and a tone of voice that make your brand recognisable and preferred by customers and business partners.', 'service' => ''],
+            ['title' => 'Brand identity and positioning', 'text' => 'We build a look and a tone of voice that make your brand recognisable and preferred by customers and business partners.', 'service' => ''],
             ['title' => 'Digital platforms and websites', 'text' => 'A fast, clear and easy online presence that leads the visitor step by step to the contact or buy button.', 'service' => 'website'],
             ['title' => 'Online reputation and location', 'text' => 'We optimise your Google Maps and search profile, so every new customer finds you easily and sees your good reviews.', 'service' => 'google'],
             ['title' => 'Campaigns for enquiries and sales', 'text' => 'We show your offer only to people who search for your solutions in Google and AI search, with full tracking of every enquiry.', 'service' => 'seo'],
@@ -255,6 +268,11 @@ return [
         'g_projects_subtitle' => 'Explore some of our custom solutions for different industries. Every project is built with a focus on speed, design and high conversion.',
         'testimonials' => [['quote' => '', 'name' => '', 'business' => '']],
         'results' => [['value' => '', 'text' => '']],
+        'g_goal_title' => 'To lend a hand to every business that needs a digital presence.',
+        'g_goal_accent' => ['lend a hand'],
+        'g_goal_text' => 'We want to support every small, medium and large business in Bulgaria and abroad, and to truly help everyone who needs a digital presence. We work as an agency that goes into the detail, speaks plainly and stays with you after the site goes live. We start with a conversation and a clear plan for the next steps.',
+        'g_contact_title' => 'Looking for a team that will truly dive into your project?',
+        'g_contact_text' => 'Every detail of the build, the maintenance and the marketing is done with precision and a constant line to you. Get in touch for an introductory conversation. We will analyse your needs and propose a clear plan.',
         'agency_title' => 'Strategy, design, technology and marketing under one roof.',
         'agency_accent' => ['under one roof'],
         'agency_facts' => [
@@ -432,6 +450,7 @@ return [
             'seo_title' => 'Website design for your business | Creatium Lab',
             'seo_description' => 'A fast, modern website with enquiry forms, bookings and online payments. Fixed price from €400 to start and your approval before launch.',
             'lead' => 'A fast, modern website that turns visitors into enquiries. You see it on a demo before it goes live.',
+            'g_what' => 'We build you a website that loads fast on a phone and leads the visitor to a call, an enquiry or a booking.',
             'problems' => ['The site is slow or breaks on phones', 'People can\'t find how to call or write to you', 'Every change waits weeks for a developer'],
             'includes' => [
                 'Mobile-first design that loads in seconds',
@@ -455,6 +474,7 @@ return [
             'seo_title' => 'SEO, local SEO and visibility in ChatGPT | Creatium Lab',
             'seo_description' => 'Show up in Google, Google Maps and in ChatGPT and Gemini answers when customers search for what you offer.',
             'lead' => 'People now ask Google and ChatGPT for "the best one nearby". We make sure the answer is you.',
+            'g_what' => 'We set up your site and profiles so customers find you in Google, in Google Maps and in the answers of ChatGPT.',
             'problems' => ['Competitors show up before you on Google Maps', 'You have a website, but nobody finds it', 'You don\'t know where customers come from'],
             'includes' => [
                 'Local SEO for Google Maps and "near me" searches',
@@ -478,6 +498,7 @@ return [
             'seo_title' => 'Google Business Profile and review management | Creatium Lab',
             'seo_description' => 'A complete Google Business Profile, a reply to every review and more new reviews. Rank higher on Google Maps.',
             'lead' => 'For many customers the first impression is not your website but your Google Maps profile. We make it win.',
+            'g_what' => 'We keep your Google Maps profile up to date and answer your reviews, so more people choose you.',
             'problems' => ['Reviews go unanswered and bad ones scare new customers away', 'Opening hours, photos or phone are out of date', 'A competitor with a better profile shows up first'],
             'includes' => [
                 'Full Google Business Profile setup',
@@ -502,6 +523,7 @@ return [
             'seo_title' => 'Email marketing and automation for your business',
             'seo_description' => 'Automatic emails after an enquiry, booking or purchase. Bring customers back without manual work.',
             'lead' => 'Finding a new customer is expensive. Email brings back the ones who already know you, automatically.',
+            'g_what' => 'We send useful emails to the customers who already know you, so they come back and order again.',
             'problems' => ['Customers come once and forget you', 'You answer enquiries by hand, and late', 'Your contact list sits unused'],
             'includes' => [
                 'Forms and a pop-up that collect subscribers',
@@ -525,6 +547,7 @@ return [
             'seo_title' => 'Website maintenance, hosting and 24/7 monitoring',
             'seo_description' => '24/7 monitoring, daily backups, security and fast response. Hosting, domain and site changes in one monthly plan.',
             'lead' => 'Your website works every day, and we look after it. You don\'t have to think about the tech.',
+            'g_what' => 'We take over the hosting, the security and the changes to the site, so it keeps working while you run your business.',
             'problems' => ['The site goes down and you hear it from a customer', 'An expired domain or certificate', 'Prices need changing and nobody can do it'],
             'includes' => [
                 '24/7 monitoring and fast response to outages',
@@ -548,6 +571,7 @@ return [
             'seo_title' => 'Google Shopping readiness in Bulgaria | Creatium Lab',
             'seo_description' => 'Google Shopping is expected in Bulgaria, with no official date. We prepare the feed, Merchant Center, policies and tracking so you are ready on launch day.',
             'lead' => 'Google Shopping is expected in Bulgaria, but there is no official date. The shops that have their data ready on launch day win. We get yours ready.',
+            'g_what' => 'We prepare the products, the prices and the data of your shop for Google Shopping, so you do not start from zero on the day it launches in Bulgaria.',
             'problems' => [
                 'You don\'t know what Google checks in your shop. Without clear contacts and policies the account can be suspended',
                 'Product data is incomplete or differs between the website and other places',
@@ -615,16 +639,16 @@ return [
 
     // Card texts for the industry sites (same slugs and order as config/creatium.php; the sites themselves are in Bulgarian).
     'demos' => [
-        ['slug' => 'restorant', 'name' => 'Lozata Restaurant', 'industry' => 'Restaurant', 'description' => 'A restaurant website with a seasonal menu, table booking by day and time, and event evenings.', 'g_micro' => 'A menu by category, table booking with day, time and party size, and opening hours in plain sight.'],
-        ['slug' => 'kashta-za-gosti', 'name' => 'Byala Reka Guest House', 'industry' => 'Hotel and guest house', 'description' => 'A guest house website with rooms, a price for the chosen dates and direct booking without commission.', 'g_micro' => 'Pick dates and a room, see the total at once and book directly for less than on the portals.'],
-        ['slug' => 'salon', 'name' => 'Lavandula Studio', 'industry' => 'Beauty salon', 'description' => 'A salon website with a price for every treatment and appointment booking in three steps.', 'g_micro' => 'Booking with a choice of treatment, specialist and day, with the price and duration in front of you.'],
-        ['slug' => 'fitnes', 'name' => 'Puls Studio', 'industry' => 'Gym and fitness studio', 'description' => 'A fitness studio website with the class timetable, membership prices and a first class sign-up.', 'g_micro' => 'A daily timetable with free places, monthly and yearly membership prices and a first class sign-up.'],
-        ['slug' => 'dentalen-centar', 'name' => 'Byala Usmivka Dental Centre', 'industry' => 'Dental clinic', 'description' => 'A calm dental centre website with the dentists, the prices and a check-up request.', 'g_micro' => 'An appointment request with the reason for the visit, a price list and an instalment calculator.'],
-        ['slug' => 'advokatska-kantora', 'name' => 'Velchev and Barova Law Firm', 'industry' => 'Law firm', 'description' => 'A law firm website with practice areas, indicative fees and a consultation request.', 'g_micro' => 'The client picks their case and sees what follows, the usual time frame and the indicative fee.'],
-        ['slug' => 'avtoservis', 'name' => 'Motor Pro Car Service', 'industry' => 'Car repair shop', 'description' => 'A car service website with a repair price calculator and appointment booking.', 'g_micro' => 'A price estimate by car type and repair, and a call button that is always under the thumb.'],
-        ['slug' => 'pokrivi', 'name' => 'Zdrav Pokriv', 'industry' => 'Construction and roofing', 'description' => 'A roofing company website with a price calculator, before and after projects and a free inspection.', 'g_micro' => 'A price calculator by area and covering, before and after projects and an inspection request with a photo.'],
-        ['slug' => 'nedvizhimi-imoti', 'name' => 'Nov Prag Real Estate', 'industry' => 'Real estate', 'description' => 'A real estate agency website with a search, filtered listings, a mortgage calculator and a free valuation.', 'g_micro' => 'A search by type, district and price, filtered listings, a mortgage calculator and a valuation request.'],
-        ['slug' => 'onlain-magazin', 'name' => 'Medena Pita', 'industry' => 'Online shop', 'description' => 'An online shop for honey products with a catalogue, a working basket and a free delivery bar.', 'g_micro' => 'A catalogue with filters, a basket with a free delivery bar and clear payment and return terms.'],
+        ['slug' => 'restorant', 'name' => 'Lozata Restaurant', 'industry' => 'Restaurant', 'description' => 'A restaurant website with a seasonal menu, table booking by day and time, and event evenings.', 'g_micro' => 'The menu is split by category and shows the price of every dish. A guest picks the day, time and party size, sends a table request and sees the opening hours in plain sight, without searching social media.', 'g_facts' => [['value' => '17', 'label' => 'dishes with prices on the menu'], ['value' => '5', 'label' => 'categories with a filter'], ['value' => '8', 'label' => 'time slots to choose from']]],
+        ['slug' => 'kashta-za-gosti', 'name' => 'Byala Reka Guest House', 'industry' => 'Hotel and guest house', 'description' => 'A guest house website with rooms, a price for the chosen dates and direct booking without commission.', 'g_micro' => 'A guest picks the dates, the number of guests and a room and instantly sees the total price of the stay. Booking is made directly on the site, and the cancellation terms and the amenities of the house are described in one place.', 'g_facts' => [['value' => '3', 'label' => 'rooms with a price per night'], ['value' => '3', 'label' => 'fields to a booking'], ['value' => '6', 'label' => 'amenities on one screen']]],
+        ['slug' => 'salon', 'name' => 'Lavandula Studio', 'industry' => 'Beauty salon', 'description' => 'A salon website with a price for every treatment and appointment booking in three steps.', 'g_micro' => 'A client picks a treatment, a specialist, a day and a time in three steps and sees the price and the duration before booking. The price list is split into four categories, and a gift voucher can be bought on the site too.', 'g_facts' => [['value' => '3', 'label' => 'steps to a booked time'], ['value' => '16', 'label' => 'treatments with price and duration'], ['value' => '8', 'label' => 'time slots to choose from']]],
+        ['slug' => 'fitnes', 'name' => 'Puls Studio', 'industry' => 'Gym and fitness studio', 'description' => 'A fitness studio website with the class timetable, membership prices and a first class sign-up.', 'g_micro' => 'The timetable shows every class with the coach, the length and the places left, and filters by day. The three memberships have a clear price and a switch between monthly and yearly billing, and the first class is booked from the site.', 'g_facts' => [['value' => '8', 'label' => 'classes in the timetable'], ['value' => '6', 'label' => 'days with a filter'], ['value' => '3', 'label' => 'memberships with a price']]],
+        ['slug' => 'dentalen-centar', 'name' => 'Byala Usmivka Dental Centre', 'industry' => 'Dental clinic', 'description' => 'A calm dental centre website with the dentists, the prices and a check-up request.', 'g_micro' => 'A patient picks the reason for the visit and a convenient time and sends an appointment request. The services and the price list show the prices in advance, and the calculator works out the monthly instalment for 3, 6, 12 or 24 months.', 'g_facts' => [['value' => '6', 'label' => 'services with a from price'], ['value' => '7', 'label' => 'prices in the price list'], ['value' => '4', 'label' => 'instalment terms in the calculator']]],
+        ['slug' => 'advokatska-kantora', 'name' => 'Velchev and Barova Law Firm', 'industry' => 'Law firm', 'description' => 'A law firm website with practice areas, indicative fees and a consultation request.', 'g_micro' => 'A client picks their situation and sees what happens next, the usual time frame and the indicative fee. The twelve practice areas are split for individuals and for business, and a consultation is requested at the office, online or by phone.', 'g_facts' => [['value' => '12', 'label' => 'practice areas'], ['value' => '5', 'label' => 'cases with a fee and a time frame'], ['value' => '3', 'label' => 'ways to have a consultation']]],
+        ['slug' => 'avtoservis', 'name' => 'Motor Pro Car Service', 'industry' => 'Car repair shop', 'description' => 'A car service website with a repair price calculator and appointment booking.', 'g_micro' => 'The calculator works out an indicative price from the size of the car and the chosen repairs and shows the time for each one. The eight repairs come with a price and a duration, the services are arranged in six groups, and the call button is in plain sight.', 'g_facts' => [['value' => '8', 'label' => 'repairs with price and time'], ['value' => '4', 'label' => 'car sizes in the calculator'], ['value' => '6', 'label' => 'groups of services']]],
+        ['slug' => 'pokrivi', 'name' => 'Zdrav Pokriv', 'industry' => 'Construction and roofing', 'description' => 'A roofing company website with a price calculator, before and after projects and a free inspection.', 'g_micro' => 'The calculator works out an indicative price from the roof area, the chosen covering and the type of work. Finished projects are shown before and after, with a comparison slider, the area and the time it took, and an inspection is requested with a photo.', 'g_facts' => [['value' => '4', 'label' => 'coverings in the calculator'], ['value' => '4', 'label' => 'types of work to choose from'], ['value' => '3', 'label' => 'projects before and after']]],
+        ['slug' => 'nedvizhimi-imoti', 'name' => 'Nov Prag Real Estate', 'industry' => 'Real estate', 'description' => 'A real estate agency website with a search, filtered listings, a mortgage calculator and a free valuation.', 'g_micro' => 'The search filters the listings by type, district, rooms and price, and every listing shows the area, rooms and floor with a button to request a viewing. The mortgage calculator works out the monthly payment from the price, the down payment and the term.', 'g_facts' => [['value' => '6', 'label' => 'listings with area and floor'], ['value' => '5', 'label' => 'criteria in the search'], ['value' => '3', 'label' => 'sliders in the mortgage calculator']]],
+        ['slug' => 'onlain-magazin', 'name' => 'Medena Pita', 'industry' => 'Online shop', 'description' => 'An online shop for honey products with a catalogue, a working basket and a free delivery bar.', 'g_micro' => 'The catalogue has category filters, and the basket shows how much is left for free delivery. Every product comes with a weight and a price, and the delivery terms and the 14 day returns are described clearly on the site.', 'g_facts' => [['value' => '8', 'label' => 'products with price and weight'], ['value' => '3', 'label' => 'categories with a filter'], ['value' => '€40', 'label' => 'free delivery threshold']]],
     ],
 
     // Labels only: the keys must match config/creatium.php.
@@ -641,6 +665,15 @@ return [
         'month' => 'Within a month',
         'quarter' => 'In the next 3 months',
         'exploring' => 'Just exploring',
+    ],
+
+    'contact_budgets' => [
+        'under-1000' => 'Under €1,000',
+        '1000-2000' => '€1,000 to €2,000',
+        '2000-5000' => '€2,000 to €5,000',
+        '5000-10000' => '€5,000 to €10,000',
+        '10000-20000' => '€10,000 to €20,000',
+        'over-20000' => 'Over €20,000',
     ],
 
     'contact_interests' => [
@@ -668,7 +701,7 @@ return [
         'intro' => 'Three ways to work together, from a professional online presence to an outside marketing department for your company.',
         // Design G, fourth round: the plans and the five steps (read only by the g views). The yearly figure is monthly × 10 until the owners confirm it.
         'g_title' => 'A plan for every stage of your business',
-        'g_subtitle' => 'A clear structure for building, maintaining and growing steadily.',
+        'g_subtitle' => 'From a starting idea to scaling in the market, we build a lasting digital foundation, keep it stable and secure long term growth for you. Explore our packages and choose the solution that fits your current goals exactly.',
         'g_includes_label' => 'What it includes',
         'g_yearly_note' => '2 months free',
         'g_items' => [
@@ -677,7 +710,7 @@ return [
                 'from' => 'from',
                 'monthly' => 500,
                 'yearly' => 5000,
-                'audience' => 'For new or small businesses that have no website, or whose current site is just a business card that brings no enquiries or orders. The focus here is a fast launch, building trust and winning your first local customers.',
+                'audience' => 'New or small businesses that have no established online presence, do not use active marketing, or whose current website simply does not generate enquiries and sales. The focus here is a fast market launch, building first trust and winning your first customers.',
                 'groups' => [
                     [
                         'title' => 'Strategy and positioning',
