@@ -7,6 +7,12 @@
 @php
     $chatSuggestions = [__('Колко струва един сайт?'), __('За колко време е готов?'), __('Какво включва месечната поддръжка?'), __('Искам да запазя час за разговор')];
 @endphp
+<style>
+    @media (max-width: 639px) {
+        #chat [data-chat-panel] { top: var(--chat-top, 0px); bottom: auto; height: var(--chat-h, 100dvh); max-height: none; }
+        html.chat-open, html.chat-open body { overflow: hidden; overscroll-behavior: none; }
+    }
+</style>
 <div id="chat" class="fixed bottom-4 right-4 z-[55] sm:bottom-5 sm:right-5" data-chat
      data-send="{{ route('chat.send') }}" data-history="{{ url('/chat') }}" data-token="{{ csrf_token() }}" data-locale="{{ app()->getLocale() }}"
      data-error="{{ __('Нещо се обърка. Опитайте пак след малко или ни пишете на :email.', ['email' => config('creatium.contact.email')]) }}"
@@ -83,6 +89,21 @@
             conversation = sessionStorage.getItem(KEY);
         } catch (e) {}
 
+        // Само приветствието (и подсказките): показваме от началото. С истински съобщения: най-новото най-долу.
+        function toEnd() {
+            log.scrollTop = log.querySelector('[data-chat-greeting]') && suggestions && suggestions.isConnected ? 0 : log.scrollHeight;
+        }
+        // На телефон панелът е точно колкото видимата част от екрана (клавиатурата го смалява).
+        var vv = window.visualViewport, phone = window.matchMedia ? window.matchMedia('(max-width: 639px)') : null;
+        function fit() {
+            if (!vv || !phone || !phone.matches || panel.classList.contains('hidden')) { panel.style.removeProperty('--chat-h'); panel.style.removeProperty('--chat-top'); return; }
+            panel.style.setProperty('--chat-h', vv.height + 'px');
+            panel.style.setProperty('--chat-top', vv.offsetTop + 'px');
+            if (window.scrollY) window.scrollTo(0, 0);
+            toEnd();
+        }
+        if (vv) { vv.addEventListener('resize', fit); vv.addEventListener('scroll', fit); }
+
         function push(event, extra) { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: event }, extra || {})); }
 
         // Text from the server goes in as text nodes; only http(s) addresses become links.
@@ -106,7 +127,7 @@
             });
             row.appendChild(p);
             log.appendChild(row);
-            log.scrollTop = log.scrollHeight;
+            toEnd();
             return row;
         }
 
@@ -115,7 +136,7 @@
             row.className = 'flex justify-start';
             row.innerHTML = '<span class="inline-flex gap-1 rounded-2xl rounded-bl-md bg-white px-4 py-3.5 ring-1 ring-gray-200 dark:bg-white/[0.06] dark:ring-white/10"><span class="typing-dot w-1.5 h-1.5 rounded-full bg-gray-400"></span><span class="typing-dot w-1.5 h-1.5 rounded-full bg-gray-400" style="animation-delay:.15s"></span><span class="typing-dot w-1.5 h-1.5 rounded-full bg-gray-400" style="animation-delay:.3s"></span></span>';
             log.appendChild(row);
-            log.scrollTop = log.scrollHeight;
+            toEnd();
             return row;
         }
 
@@ -137,6 +158,8 @@
             panel.classList.toggle('flex', state);
             toggle.setAttribute('aria-expanded', state ? 'true' : 'false');
             toggle.classList.toggle('max-sm:hidden', state);
+            document.documentElement.classList.toggle('chat-open', state);
+            fit();
             if (state) root.querySelector('[data-chat-teaser]').classList.add('hidden');
             if (state) { loadHistory(); setTimeout(function () { input.focus(); }, 50); push('chat_open'); }
         }
@@ -195,6 +218,7 @@
             try { sessionStorage.removeItem(KEY); } catch (e) {}
             log.innerHTML = initialLog;
             suggestions = log.querySelector('[data-chat-suggestions]');
+            toEnd();
             input.focus();
             push('chat_new');
         });

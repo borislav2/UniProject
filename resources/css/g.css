@@ -120,6 +120,8 @@ html.design-g.dark .g-logo .g-logo-w { display: block; }
 
 /* Preview pill (only for admins who opened ?dizain=g) */
 .design-g .g-preview { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); white-space: nowrap; z-index: 60; display: inline-flex; gap: 8px; align-items: center; padding: 9px 14px; background: var(--g-ink); color: var(--g-on-ink); font: 500 12px var(--g-mono); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--g-accent); }
+/* the chat panel covers the page on phones: the preview pill must not lie on its input */
+html.chat-open .g-preview { display: none; }
 .design-g .g-preview:hover { background: var(--g-accent-btn); color: var(--g-accent-btn-fg); }
 
 
