@@ -6,7 +6,9 @@
     $interests = site('contact_interests') ?? [];
     $oldInterests = (array) old('interests', in_array(request('interest'), array_keys($interests), true) ? [request('interest')] : []);
     $bookingOpen = filled(old('consultation')) || $errors->has('consultation');
-    $firstPhone = (config('creatium.contact.phones') ?? [])[0] ?? null;
+    $firstPhone = g_phones()[0] ?? null;
+    $budgets = site('contact_budgets') ?? [];
+    $oldBudget = old('budget');
 @endphp
 <span id="contact-form"></span>
 <div id="g-contact-form" class="g-fbox">
@@ -73,6 +75,20 @@
                 </fieldset>
             @endif
 
+            @if($budgets)
+                <div class="g-fld">
+                    <label for="budget">{{ __('Месечен маркетингов бюджет') }}</label>
+                    <select class="g-in" id="budget" name="budget">
+                        <option value="">{{ __('Не съм сигурен') }}</option>
+                        @foreach($budgets as $key => $label)
+                            <option value="{{ $key }}"{{ $oldBudget === (string) $key ? ' selected' : '' }}>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                    <p class="g-hint">{{ __('По желание. Помага ни да предложим подходящ план.') }}</p>
+                    @error('budget')<p class="g-err">{{ $message }}</p>@enderror
+                </div>
+            @endif
+
             <div class="g-fld">
                 <label for="message">{{ __('Разкажете ни накратко за бизнеса си и какво търсите') }}</label>
                 <textarea class="g-in" id="message" name="message" rows="4" maxlength="5000">{{ old('message') }}</textarea>
@@ -92,7 +108,6 @@
                 @error('consent')<p class="g-err">{{ $message }}</p>@enderror
             </div>
             @include('partials.turnstile')
-            <p class="g-promise">{{ __('Ще ви отговорим до един работен ден.') }}</p>
             <button type="submit" class="g-btn g-big">{{ __('Изпратете') }}<i></i></button>
         </form>
     @endif

@@ -35,10 +35,14 @@ class FaqResponder
         $topics = [];
 
         if ($team) {
-            $people = implode(__(' и '), array_map(fn ($p) => trim(($p['name'] ?? '') . ' (' . ($p['role'] ?? '') . ')'), $team));
+            // Собственици и основатели са първите двама; останалите са колеги от екипа.
+            $label = fn ($p) => trim(($p['name'] ?? '') . ' (' . ($p['role'] ?? '') . ')');
+            $people = implode(__(' и '), array_map($label, array_slice($team, 0, 2)));
+            $colleagues = array_slice($team, 2);
             $topics[] = [
                 __('Кои са собствениците, основателите, екипът и хората зад Creatium Lab? Кой стои зад вас, кой ще прави сайта, с кого ще работя, кои сте вие?'),
                 __('Creatium Lab са :people. Те са основателите и сами правят работата, така че говорите директно с хората, които правят сайта и маркетинга.', ['people' => $people])
+                    . ($colleagues ? ' ' . __('В екипа е и :people.', ['people' => implode(__(' и '), array_map($label, $colleagues))]) : '')
                     . (filled($team[0]['description'] ?? null) ? "\n" . implode("\n", array_map(fn ($p) => ($p['name'] ?? $p['role']) . '. ' . ($p['description'] ?? ''), $team)) : '')
                     . "\n" . lroute('about'),
             ];

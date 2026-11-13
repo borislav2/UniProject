@@ -5,10 +5,14 @@
 @section('breadcrumb', $page['menu'])
 @section('g_lean', 'inner')
 
-@php($pad = fn ($n) => str_pad((string) $n, 2, '0', STR_PAD_LEFT))
+@php
+    $pad = fn ($n) => str_pad((string) $n, 2, '0', STR_PAD_LEFT);
+    // The package in the names of design G (Дигитален старт ...), the same order as plans.items.
+    $gPlan = collect(\App\Support\GPlans::cards(app(\App\Support\Content::class)->withDefaults('plans')))->keyBy('index')->get($page['package'] ?? -1);
+@endphp
 
 @section('content')
-@include('partials.g.page-head', ['eyebrow' => __('Услуги'), 'heading' => $page['title'], 'sub' => $page['lead']])
+@include('partials.g.page-head', ['eyebrow' => __('Услуги'), 'heading' => $page['title'], 'sub' => filled($page['g_what'] ?? null) ? $page['g_what'] : $page['lead']])
 
 <section class="g-s">
     <div class="g-wrap g-sys">
@@ -24,8 +28,11 @@
                 @foreach($page['includes'] as $item)
                     <li><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><h3>{{ $item }}</h3></li>
                 @endforeach
-                <li class="g-end"><span class="g-n g-mono g-eq">=</span><h3>{{ $page['result'] }}</h3></li>
             </ol>
+            <div class="g-get g-get-line">
+                <p class="g-mono g-mute">{{ __('Какво получавате') }}</p>
+                <p>{{ $page['result'] }}</p>
+            </div>
         </div>
     </div>
 </section>
@@ -33,10 +40,10 @@
 <section class="g-band">
     <div class="g-wrap g-pkgcard">
         <div>
-            @if($plan)
+            @if($gPlan)
                 <p class="g-mono">{{ __('Включено в пакет') }}</p>
-                <h2 class="g-h">{{ $plan['name'] }}</h2>
-                <p class="g-band-text">{{ $plan['prices'][0] ?? '' }}</p>
+                <h2 class="g-h">{{ $gPlan['name'] }}</h2>
+                @if(filled($gPlan['monthly']))<p class="g-band-text">{{ trim($gPlan['from'] . ' ' . $gPlan['monthly']) }}{{ __('/месец') }}</p>@endif
             @else
                 <p class="g-mono">{{ __('Цена') }}</p>
                 <h2 class="g-h">{{ __('Цена по оферта') }}</h2>

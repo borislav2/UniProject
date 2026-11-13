@@ -46,48 +46,50 @@
         <div class="reveal max-w-3xl">
             <p class="kicker kicker-light">{{ __('Екипът') }}</p>
         </div>
-        <div class="mt-12 grid md:grid-cols-2 gap-6">
+        {{-- One horizontal card per member, stacked: photo (or initials) on the left from md, on top on phones. --}}
+        <div class="mt-12 flex flex-col gap-6">
             @foreach($team as $member)
                 @php
                     $initials = collect(preg_split('/\s+/u', trim((string) ($member['name'] ?? '')), -1, PREG_SPLIT_NO_EMPTY))->take(2)->map(fn ($w) => mb_strtoupper(mb_substr($w, 0, 1)))->implode('');
+                    $hasPhoto = ! empty($member['image']) && is_file(public_path($member['image']));
                     $linkedin = str_starts_with((string) ($member['linkedin'] ?? ''), 'https://') ? $member['linkedin'] : null;
                 @endphp
-                <article class="reveal card-hover flex flex-col rounded-3xl border border-gray-200 bg-white p-7 md:p-9 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ $loop->index * 100 }}ms">
-                    @if(!empty($member['name']))
-                        <div class="flex items-center gap-5">
-                            @if(!empty($member['image']))
-                                <img src="{{ asset($member['image']) }}" alt="{{ $member['name'] }}" width="112" height="112" loading="lazy" class="w-24 h-24 md:w-28 md:h-28 shrink-0 rounded-2xl object-cover ring-1 ring-gray-200 dark:ring-white/20">
-                            @else
-                                <span class="w-24 h-24 md:w-28 md:h-28 shrink-0 rounded-2xl bg-brand-gradient flex items-center justify-center text-2xl font-extrabold text-white" aria-hidden="true">{{ $initials }}</span>
-                            @endif
-                            <div>
-                                <h3 class="mt-1 text-2xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $member['name'] }}</h3>
-                                <p class="mt-1 font-semibold text-brand-600 dark:text-brand-300">{{ $member['role'] }}</p>
-                            </div>
-                        </div>
+                <article class="reveal card-hover flex flex-col md:flex-row gap-6 md:gap-10 rounded-3xl border border-gray-200 bg-white p-6 md:p-8 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ $loop->index * 100 }}ms">
+                    @if($hasPhoto)
+                        <img src="{{ asset($member['image']) }}" alt="{{ $member['name'] ?? $member['role'] }}" width="260" height="260" loading="lazy" class="w-full max-w-xs mx-auto md:mx-0 md:w-64 lg:w-72 aspect-square md:self-start shrink-0 rounded-2xl object-cover object-top ring-1 ring-gray-200 dark:ring-white/20">
                     @else
-                        <h3 class="text-2xl font-extrabold tracking-tight text-brand-600 dark:text-brand-300">{{ $member['role'] }}</h3>
+                        <span class="w-full max-w-xs mx-auto md:mx-0 md:w-64 lg:w-72 aspect-square md:self-start shrink-0 rounded-2xl bg-brand-gradient flex items-center justify-center text-6xl font-extrabold text-white" aria-hidden="true">{{ $initials !== '' ? $initials : '·' }}</span>
                     @endif
-                    <p class="mt-6 text-lg font-semibold text-brand-950 dark:text-white">{{ $member['description'] }}</p>
-                    @if(!empty($member['bio']))
-                        <div class="mt-4 space-y-3 leading-relaxed text-gray-600 dark:text-gray-300">
-                            @foreach((array) $member['bio'] as $paragraph)
-                                <p>{{ $paragraph }}</p>
-                            @endforeach
-                        </div>
-                    @endif
-                    @if(!empty($member['skills']))
-                        <ul class="mt-6 flex flex-wrap gap-2">
-                            @foreach((array) $member['skills'] as $skill)
-                                <li class="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700 dark:border-white/10 dark:bg-white/5 dark:text-gray-200">{{ $skill }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
-                    @if($linkedin)
-                        <a href="{{ $linkedin }}" target="_blank" rel="noopener" class="mt-auto pt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">
-                            {{ __('Профил в LinkedIn') }} <x-icon name="arrow-up-right-from-square" class="text-xs" />
-                        </a>
-                    @endif
+                    <div class="min-w-0 flex-1 flex flex-col">
+                        @if(!empty($member['name']))
+                            <h3 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $member['name'] }}</h3>
+                            <p class="mt-1 font-semibold text-brand-600 dark:text-brand-300">{{ $member['role'] }}</p>
+                        @else
+                            <h3 class="text-2xl font-extrabold tracking-tight text-brand-600 dark:text-brand-300">{{ $member['role'] }}</h3>
+                        @endif
+                        @if(!empty($member['description']))
+                            <p class="mt-5 text-lg font-semibold text-brand-950 dark:text-white">{{ $member['description'] }}</p>
+                        @endif
+                        @if(!empty($member['bio']))
+                            <div class="mt-4 space-y-3 leading-relaxed text-gray-600 dark:text-gray-300">
+                                @foreach((array) $member['bio'] as $paragraph)
+                                    <p>{{ $paragraph }}</p>
+                                @endforeach
+                            </div>
+                        @endif
+                        @if(!empty($member['skills']))
+                            <ul class="mt-6 flex flex-wrap gap-2">
+                                @foreach((array) $member['skills'] as $skill)
+                                    <li class="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700 dark:border-white/10 dark:bg-white/5 dark:text-gray-200">{{ $skill }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+                        @if($linkedin)
+                            <a href="{{ $linkedin }}" target="_blank" rel="noopener" class="mt-auto pt-6 inline-flex items-center gap-2 self-start text-sm font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">
+                                {{ __('Профил в LinkedIn') }} <x-icon name="arrow-up-right-from-square" class="text-xs" />
+                            </a>
+                        @endif
+                    </div>
                 </article>
             @endforeach
         </div>

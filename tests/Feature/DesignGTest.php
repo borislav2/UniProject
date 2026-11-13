@@ -102,7 +102,7 @@ class DesignGTest extends TestCase
 
         // Packages: the owners' names, prices (monthly and yearly in the page), groups that open on demand.
         $this->assertStringContainsString('План за всеки етап от вашия бизнес', $html);
-        $this->assertStringContainsString('Ясна структура за изграждане, поддръжка и устойчив растеж.', $html);
+        $this->assertStringContainsString('От стартиращата идея до мащабирането на пазара, изграждаме устойчив дигитален фундамент', $html);
         $this->assertSame(3, substr_count($html, 'class="g-plan '));
         foreach (['Дигитален старт', 'Активен маркетинг', 'Стратегически маркетинг'] as $name) {
             $this->assertStringContainsString("<h3>{$name}</h3>", $html);
@@ -118,8 +118,10 @@ class DesignGTest extends TestCase
         $this->assertStringNotContainsString('<details class="g-grp" open', $html);
         $this->assertStringContainsString('<b>Разбор на бизнеса</b>', $html);
 
-        $this->assertStringContainsString('Стратегия, дизайн, технологии и маркетинг <em>под един покрив</em>.', $html);
-        $this->assertStringContainsString('Запазете час за разговор', $html);
+        // Section 03 is „Нашата цел“ now (the old „Агенцията“ title stays in config, unused by g).
+        $this->assertStringContainsString('Да <em>подадем ръка</em> на всеки бизнес', $html);
+        $this->assertStringNotContainsString('Стратегия, дизайн, технологии и маркетинг <em>под един покрив</em>.', $html);
+        $this->assertStringContainsString('Търсите екип, който наистина ще се потопи във вашия проект?', $html);
         $this->assertStringContainsString('data-contact-form', $html);
         $this->assertStringContainsString('<em>успех</em>.', $html);
         // SEO of the home page is the same: the JSON-LD blocks are still there.
@@ -131,7 +133,7 @@ class DesignGTest extends TestCase
         config(['creatium.design' => 'g']);
         $html = $this->get('/en')->assertOk()->getContent();
 
-        foreach (['Brand positioning', 'Digital platforms and websites', 'Online reputation and location', 'Digital support and protection'] as $part) {
+        foreach (['Brand identity and positioning', 'Digital platforms and websites', 'Online reputation and location', 'Digital support and protection'] as $part) {
             $this->assertStringContainsString("<b>{$part}</b>", $html);
         }
         $this->assertStringNotContainsString('data-concept-chip', $html);
@@ -143,8 +145,8 @@ class DesignGTest extends TestCase
         $this->assertStringContainsString('Yearly', $html);
         $this->assertStringContainsString('/month', $html);
         $this->assertStringContainsString('€5,000', $html);
-        $this->assertStringContainsString('Strategy, design, technology and marketing <em>under one roof</em>.', $html);
-        $this->assertStringContainsString('Book a call', $html);
+        $this->assertStringContainsString('To <em>lend a hand</em> to every business', $html);
+        $this->assertStringContainsString('Looking for a team that will truly dive into your project?', $html);
         // No Bulgarian text on the English page (the footer's industry row is Bulgarian only and is not shown in English).
         $this->assertDoesNotMatchRegularExpression('/[А-Яа-я]/u', PlainCopyTest::visibleText($html));
     }
@@ -223,7 +225,7 @@ class DesignGTest extends TestCase
         config(['creatium.design' => 'g']);
         $html = $this->get('/')->assertOk()->getContent();
 
-        $this->assertStringContainsString('<a href="' . url('/uslugi') . '"><span class="g-mono">01</span><b>Бранд позициониране</b>', $html);
+        $this->assertStringContainsString('<a href="' . url('/uslugi') . '"><span class="g-mono">01</span><b>Бранд идентичност и позициониране</b>', $html);
         $this->assertStringContainsString('<a href="' . PageController::serviceUrl('website') . '"><span class="g-mono">02</span><b>Дигитални платформи &amp; Сайтове</b><small>', $html);
         $this->assertStringContainsString('<a href="' . PageController::serviceUrl('google') . '"><span class="g-mono">03</span><b>Онлайн репутация &amp; Локация</b>', $html);
         $this->assertStringContainsString('<a href="' . PageController::serviceUrl('seo') . '"><span class="g-mono">04</span><b>Кампании за запитвания &amp; Продажби</b>', $html);
@@ -477,7 +479,7 @@ class DesignGTest extends TestCase
         $html = $this->get('/kontakti')->assertOk()
             ->assertSee('id="g-contact-form"', false)->assertSee('id="contact-form"', false)->assertSee('id="konsultatsiya"', false)
             ->assertSee('Как да се обръщаме към вас.')->assertSee('Тук ще получите отговора.')
-            ->assertSee('Ще ви отговорим до един работен ден.')->assertSee('Отговаряме до един работен ден.')
+            ->assertDontSee('Ще ви отговорим до един работен ден.')->assertSee('Отговаряме до един работен ден.')
             ->assertSee('Viber')->assertSee('WhatsApp')
             ->getContent();
         foreach (['name', 'site_url', 'email', 'phone', 'message', 'consent', 'website', 'consultation'] as $field) {
@@ -486,8 +488,6 @@ class DesignGTest extends TestCase
         $this->assertStringContainsString('name="interests[]"', $html);
         $this->assertMatchesRegularExpression('/<label for="name">Име и фамилия/u', $html);
         $this->assertMatchesRegularExpression('/href="tel:\+?[0-9]+"/', $html);
-        // The promise comes before the button.
-        $this->assertLessThan(strpos($html, 'class="g-btn g-big">Изпратете'), strpos($html, 'Ще ви отговорим до един работен ден.'));
         // The booking stays in the collapsed block.
         $this->assertMatchesRegularExpression('/<details class="g-more-fields" data-booking-details>/', $html);
     }
@@ -523,12 +523,12 @@ class DesignGTest extends TestCase
             ->assertSee('Дигитална агенция за бизнеси')
             ->assertSee('Как работим')->assertSee('Разговор и преглед')->assertSee('Грижа и растеж')
             ->assertSee('Нашите стандарти')->assertSee('Фиксирана цена')
-            ->assertSee('Основатели')->assertSee('Борислав Костадинов')->assertSee('Владимир Цончев')
+            ->assertSee('Екипът')->assertSee('Борислав Костадинов')->assertSee('Владимир Цончев')
             ->getContent();
         $this->assertStringNotContainsString('двама', $html);
         $this->assertStringNotContainsString('Сайтът е готов, рекламата върви', $html, 'the personal story stays out of the g page');
 
-        $en = $this->get('/en/about')->assertOk()->assertSee('A digital agency for businesses')->assertSee('How we work')->assertSee('Founders');
+        $en = $this->get('/en/about')->assertOk()->assertSee('A digital agency for businesses')->assertSee('How we work')->assertSee('The team');
         $this->assertDoesNotMatchRegularExpression('/\p{Cyrillic}/u', PlainCopyTest::visibleText($en->getContent()));
     }
 
@@ -594,6 +594,249 @@ class DesignGTest extends TestCase
             $text = preg_replace('/[„“]/u', '', PlainCopyTest::visibleText($response->getContent()));
             // Bulgarian legal names and the Bulgarian concept sites are allowed; the interface text is not.
             $this->assertDoesNotMatchRegularExpression('/\b[А-Яа-я]{4,}\b/u', preg_replace('/Борислав|Костадинов|Владимир|Цончев|Креo/u', '', $text), $path);
+        }
+    }
+
+    // ----- Fifth round (13.11.2026, the owners' second audit) -----
+
+    public function test_g_hero_subtitle_uses_g_highlight_even_with_an_older_admin_save_and_the_old_design_keeps_highlight(): void
+    {
+        \App\Models\ContentBlock::create(['key' => 'home_hero', 'locale' => 'bg', 'value' => ['title' => 'Мое заглавие', 'highlight' => 'Стар админ текст.', 'accent' => []]]);
+        app(\App\Support\Content::class)->flush();
+
+        config(['creatium.design' => 'g']);
+        $this->get('/')->assertOk()->assertSee('Брандиран маркетинг. Персонализирани сайтове. Стратегически решения за повече клиенти.')->assertDontSee('Стар админ текст.');
+
+        config(['creatium.design' => 'current']);
+        $this->get('/')->assertOk()->assertSee('Стар админ текст.')->assertDontSee('Брандиран маркетинг. Персонализирани сайтове.');
+    }
+
+    public function test_g_shows_only_the_one_phone_while_the_current_design_keeps_both(): void
+    {
+        config(['creatium.design' => 'g']);
+        foreach (['/', '/kontakti', '/uslugi'] as $path) {
+            $html = $this->get($path)->assertOk()->getContent();
+            $this->assertStringContainsString('+359 877 200 546', $html, $path);
+            $this->assertStringContainsString('href="tel:+359877200546"', $html, $path);
+            // Visible text and links (the invisible structured data of the home page keeps listing the company's numbers).
+            $this->assertStringNotContainsString('895 457 247', PlainCopyTest::visibleText($html), $path);
+            $this->assertStringNotContainsString('tel:+359895457247', $html, $path);
+            $this->assertStringNotContainsString('viber://chat?number=%2B359895457247', $html, $path);
+        }
+        $this->assertSame(['+359 877 200 546'], g_phones());
+
+        config(['creatium.design' => 'current']);
+        $html = $this->get('/kontakti')->assertOk()->getContent();
+        $this->assertStringContainsString('895 457 247', $html);
+        $this->assertStringContainsString('877 200 546', $html);
+    }
+
+    public function test_g_contact_block_has_the_form_and_the_new_text_without_the_old_promise_line(): void
+    {
+        config(['creatium.design' => 'g']);
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertStringContainsString('g-ct-info', $html);
+        $this->assertStringContainsString('Търсите екип, който наистина ще се потопи във вашия проект?', $html);
+        $this->assertStringContainsString('Всеки детайл от изграждането, поддръжката и маркетинга се прави с прецизност и постоянна връзка с вас. Свържете се с нас за първоначален разговор. Ще анализираме нуждите ви и ще предложим ясен план.', $html);
+        $this->assertStringContainsString('id="g-contact-form"', $html);
+        $this->assertStringNotContainsString('Ще ви отговорим до един работен ден.', $html);
+        $this->assertStringNotContainsString('g-promise', $html);
+        $this->assertStringContainsString('name="budget"', $html);
+        // The text block comes before the form in the markup (so phones read it first), CSS puts the form on the left on desktop.
+        $this->assertLessThan(strpos($html, 'class="g-ct-form"'), strpos($html, 'class="g-ct-info"'));
+        $this->assertStringContainsString('.design-g .g-ct > :first-child { order: 2; }', file_get_contents(resource_path('css/g.css')));
+    }
+
+    public function test_the_budget_select_exists_only_in_design_g_and_is_saved_to_the_lead(): void
+    {
+        config(['creatium.design' => 'g']);
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('<select class="g-in" id="budget" name="budget">', $html);
+        $this->assertStringContainsString('Месечен маркетингов бюджет', $html);
+        $this->assertStringContainsString('<option value="">Не съм сигурен</option>', $html);
+        foreach (['under-1000' => 'Под €1 000', '1000-2000' => '€1 000 до €2 000', '2000-5000' => '€2 000 до €5 000', '5000-10000' => '€5 000 до €10 000', '10000-20000' => '€10 000 до €20 000', 'over-20000' => 'Над €20 000'] as $key => $label) {
+            $this->assertStringContainsString('<option value="' . $key . '">' . $label . '</option>', $html);
+        }
+        $this->get('/kontakti')->assertOk()->assertSee('name="budget"', false);
+        $this->get('/en')->assertOk()->assertSee('Monthly marketing budget')->assertSee('Under €1,000', false)->assertSee('Not sure');
+
+        config(['creatium.design' => 'current']);
+        $this->get('/')->assertOk()->assertDontSee('name="budget"', false)->assertDontSee('Месечен маркетингов бюджет');
+        $this->get('/kontakti')->assertOk()->assertDontSee('name="budget"', false);
+
+        $payload = ['name' => 'Иван Петров', 'phone' => '0888123456', 'email' => 'ivan@example.com', 'consent' => '1', 'interests' => ['website']];
+        $this->post('/kontakti', $payload + ['budget' => '2000-5000'])->assertSessionHasNoErrors();
+        $lead = \App\Models\Project::latest('id')->first();
+        $this->assertStringContainsString('Месечен маркетингов бюджет: €2 000 до €5 000', $lead->description);
+
+        // Empty (not sure) saves no line; an unknown value is rejected.
+        $this->post('/kontakti', $payload + ['budget' => ''])->assertSessionHasNoErrors();
+        $this->assertStringNotContainsString('бюджет', \App\Models\Project::latest('id')->first()->description);
+        $this->post('/kontakti', $payload + ['budget' => 'a-million'])->assertSessionHasErrors('budget');
+    }
+
+    public function test_section_three_is_our_goal_in_both_languages_with_the_three_promises(): void
+    {
+        config(['creatium.design' => 'g']);
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('id="tsel"', $html);
+        $this->assertStringContainsString('Нашата цел', $html);
+        $this->assertStringNotContainsString('id="agentsiyata"', $html);
+        $this->assertStringContainsString('Да <em>подадем ръка</em> на всеки бизнес, който има нужда от дигитално присъствие.', $html);
+        $this->assertStringContainsString('всеки малък, среден и голям бизнес в България и в чужбина', $html);
+        $this->assertStringContainsString('<b>Фиксирана цена</b>', $html);
+
+        $en = $this->get('/en')->assertOk()->assertSee('Our goal')->assertSee('every small, medium and large business in Bulgaria and abroad');
+        $this->assertDoesNotMatchRegularExpression('/\p{Cyrillic}/u', PlainCopyTest::visibleText($en->getContent()));
+    }
+
+    public function test_every_industry_site_has_a_longer_micro_text_and_exactly_three_facts_shown_on_home_and_projects(): void
+    {
+        foreach (['config/creatium.php' => config('creatium.demos'), 'config/creatium_en.php' => config('creatium_en.demos')] as $file => $demos) {
+            $this->assertCount(10, $demos, $file);
+            foreach ($demos as $demo) {
+                $this->assertGreaterThanOrEqual(180, mb_strlen($demo['g_micro']), $demo['slug']);
+                $this->assertLessThanOrEqual(270, mb_strlen($demo['g_micro']), $demo['slug']);
+                $this->assertCount(3, $demo['g_facts'], $demo['slug']);
+                foreach ($demo['g_facts'] as $fact) {
+                    $this->assertNotSame('', trim($fact['value']));
+                    $this->assertNotSame('', trim($fact['label']));
+                }
+            }
+        }
+        // The English facts carry the same numbers in the same order as the Bulgarian ones.
+        foreach (config('creatium.demos') as $i => $demo) {
+            $this->assertSame($demo['slug'], config('creatium_en.demos')[$i]['slug']);
+            $this->assertSame(
+                array_map(fn ($f) => trim(str_replace('€', '', $f['value'])), $demo['g_facts']),
+                array_map(fn ($f) => trim(str_replace('€', '', $f['value'])), config('creatium_en.demos')[$i]['g_facts']),
+                $demo['slug']
+            );
+        }
+
+        config(['creatium.design' => 'g']);
+        foreach (['/', '/proekti', '/en', '/en/projects'] as $path) {
+            $html = $this->get($path)->assertOk()->getContent();
+            $this->assertSame(10, substr_count($html, 'class="g-facts"'), $path);
+            $this->assertSame(30, substr_count($html, '<dd>'), $path);
+        }
+        $this->get('/')->assertSee('17')->assertSee('ястия с цени в менюто')->assertSee('праг за безплатна доставка');
+        $this->get('/en')->assertSee('dishes with prices on the menu');
+
+        // The current design does not show them.
+        config(['creatium.design' => 'current']);
+        $this->assertStringNotContainsString('g-facts', $this->get('/proekti')->getContent());
+    }
+
+    public function test_the_home_gap_after_the_projects_is_tightened_in_the_css(): void
+    {
+        $css = file_get_contents(resource_path('css/g.css'));
+        $this->assertStringContainsString('section#proekti { padding-bottom: clamp(32px, 4vw, 56px); }', $css);
+    }
+
+    public function test_g_services_page_has_six_plain_services_each_with_what_we_do_what_you_get_and_a_package(): void
+    {
+        config(['creatium.design' => 'g']);
+        $html = $this->get('/uslugi')->assertOk()->getContent();
+
+        $this->assertSame(6, substr_count($html, 'data-g-service="'));
+        foreach (['website', 'seo', 'google', 'email', 'support', 'shopping'] as $key) {
+            $this->assertStringContainsString('data-g-service="' . $key . '"', $html);
+            $this->assertStringContainsString('href="' . PageController::serviceUrl($key) . '"', $html);
+        }
+        $this->assertSame(6, substr_count($html, 'Какво получавате'));
+        $this->assertSame(6, substr_count($html, 'Какво правим'));
+        $this->assertStringContainsString('Правим ви сайт, който се зарежда бързо на телефон', $html);
+        $this->assertStringContainsString('Дигитален старт', $html);
+        $this->assertStringContainsString('Цена по оферта', $html);
+        $this->assertStringContainsString('Подготвяме продуктите, цените и данните на магазина', $html);
+
+        // The service page: „Какво получавате“ is its own block and the package uses the g names.
+        $page = $this->get(PageController::serviceUrl('website'))->assertOk()->assertSee('Какво получавате')->assertSee('Дигитален старт');
+        $this->assertStringNotContainsString('Стартов двигател', $page->getContent());
+
+        $en = $this->get('/en/services')->assertOk();
+        $this->assertSame(6, substr_count($en->getContent(), 'data-g-service="'));
+        $this->assertDoesNotMatchRegularExpression('/\p{Cyrillic}/u', PlainCopyTest::visibleText($en->getContent()));
+    }
+
+    public function test_g_about_shows_team_cards_with_photo_or_initials_for_any_number_of_members(): void
+    {
+        config(['creatium.design' => 'g']);
+        $html = $this->get('/za-nas')->assertOk()->getContent();
+        $this->assertSame(3, substr_count($html, 'class="g-member"'));
+        $this->assertStringContainsString('Full-Stack Developer', $html);
+        $this->assertStringContainsString('Правя сайта ви така, че да се зарежда бързо', $html);
+        $this->assertStringContainsString('<li>Сайт, който се зарежда бързо</li>', $html);
+        $this->assertStringContainsString('href="https://www.linkedin.com/in/borislav-kostadinov-7ba990285/"', $html);
+        $this->assertStringContainsString('Профил в LinkedIn', $html);
+        $this->assertStringContainsString('images/team/borislav-kostadinov.webp', $html);
+
+        // A fourth member without a photo gets initials in a circle (square) instead of a broken image.
+        $team = config('creatium.team');
+        $team[] = ['name' => 'Мария Иванова', 'role' => 'Дизайн', 'description' => 'Грижа за визията.', 'skills' => ['Брандинг'], 'image' => '', 'linkedin' => ''];
+        config(['creatium.team' => $team]);
+        $html = $this->get('/za-nas')->assertOk()->getContent();
+        $this->assertSame(4, substr_count($html, 'class="g-member"'));
+        $this->assertStringContainsString('<span class="g-initials" aria-hidden="true">МИ</span>', $html);
+        $this->assertSame(3, substr_count($html, '<img src="' . asset('images/team/')), 'only the members with a photo get an image');
+
+        // A single member, and one whose image file does not exist.
+        config(['creatium.team' => [['name' => 'Само Един', 'role' => 'Роля', 'description' => 'Описание.', 'image' => 'images/team/nope.webp']]]);
+        $html = $this->get('/za-nas')->assertOk()->getContent();
+        $this->assertSame(1, substr_count($html, 'class="g-member"'));
+        $this->assertStringContainsString('>СЕ</span>', $html);
+        $this->assertStringNotContainsString('nope.webp', $html);
+
+        // The current design keeps its own cards.
+        config(['creatium.design' => 'current']);
+        $this->assertStringNotContainsString('g-member', $this->get('/za-nas')->getContent());
+    }
+
+    public function test_the_g_audit_migration_replaces_only_exact_old_defaults_and_backs_up(): void
+    {
+        $oldAudience = 'Подходящо за нови или малки бизнеси, които нямат уебсайт или настоящият им сайт стои просто като визитка, която не носи запитвания и поръчки. Фокусът тук е бързото пускане на пазара, изграждането на доверие и привличането на първите локални клиенти.';
+        \App\Models\ContentBlock::create(['key' => 'plans', 'locale' => 'bg', 'value' => [
+            'g_subtitle' => 'Ясна структура за изграждане, поддръжка и устойчив растеж.',
+            'g_items' => [['name' => 'Дигитален старт', 'audience' => $oldAudience], ['name' => 'Активен маркетинг', 'audience' => 'Мой собствен текст.']],
+            'intro' => 'Ясна структура за изграждане, поддръжка и устойчив растеж.',
+        ]]);
+        \App\Models\ContentBlock::create(['key' => 'home_trust', 'locale' => 'bg', 'value' => [
+            'g_parts' => [['title' => 'Бранд позициониране', 'text' => 'х'], ['title' => 'Бранд позициониране', 'text' => 'у']],
+        ]]);
+        \App\Models\ContentBlock::create(['key' => 'about', 'locale' => 'bg', 'value' => ['g_founders_title' => 'Основатели']]);
+        \App\Models\ContentBlock::create(['key' => 'about', 'locale' => 'en', 'value' => ['g_founders_title' => 'Our own title']]);
+
+        $this->assertEqualsCanonicalizing(['plans/bg', 'home_trust/bg', 'about/bg'], \App\Support\GAudit2026::apply());
+
+        $plans = \App\Models\ContentBlock::where('key', 'plans')->first()->value;
+        $this->assertSame(config('creatium.plans.g_subtitle'), $plans['g_subtitle']);
+        $this->assertSame(config('creatium.plans.g_items')[0]['audience'], $plans['g_items'][0]['audience']);
+        $this->assertSame('Мой собствен текст.', $plans['g_items'][1]['audience']);
+        $this->assertSame('Ясна структура за изграждане, поддръжка и устойчив растеж.', $plans['intro'], 'only the g_ paths change');
+        $this->assertSame($oldAudience, \App\Models\ContentBlock::where('key', 'plans:backup-2026-11-13')->first()->value['g_items'][0]['audience']);
+
+        $parts = \App\Models\ContentBlock::where('key', 'home_trust')->first()->value['g_parts'];
+        $this->assertSame('Бранд идентичност и позициониране', $parts[0]['title']);
+        $this->assertSame('Бранд позициониране', $parts[1]['title'], 'only the first part is renamed');
+        $this->assertSame('Екипът', \App\Models\ContentBlock::where('key', 'about')->where('locale', 'bg')->first()->value['g_founders_title']);
+        $this->assertSame('Our own title', \App\Models\ContentBlock::where('key', 'about')->where('locale', 'en')->first()->value['g_founders_title']);
+
+        // A second run changes nothing and never overwrites a backup.
+        $this->assertSame([], \App\Support\GAudit2026::apply());
+        $this->assertSame('Основатели', \App\Models\ContentBlock::where('key', 'about:backup-2026-11-13')->first()->value['g_founders_title']);
+
+        // Every new text is the current default in config.
+        foreach (\App\Support\GAudit2026::CHANGES as $key => $paths) {
+            foreach ($paths as $path => $map) {
+                foreach ($map as $old => $new) {
+                    $this->assertTrue(
+                        data_get(config('creatium.' . $key), $path) === $new || data_get(config('creatium_en.' . $key), $path) === $new,
+                        "$key.$path: the new text is not a config default"
+                    );
+                }
+            }
         }
     }
 }

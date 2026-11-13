@@ -483,6 +483,7 @@
     " и ": " and ",
     "Кои са собствениците, основателите, екипът и хората зад Creatium Lab? Кой стои зад вас, кой ще прави сайта, с кого ще работя, кои сте вие?": "Who are the owners, founders, team and people behind Creatium Lab? Who will build the website, who will I work with, who are you?",
     "Creatium Lab са :people. Те са основателите и сами правят работата, така че говорите директно с хората, които правят сайта и маркетинга.": "Creatium Lab is :people. They are the founders and do the work themselves, so you talk directly to the people who build the website and run the marketing.",
+    "В екипа е и :people.": "The team also includes :people.",
     "Откога работите, колко години опит имате, каква е историята ви и защо го правите?": "How long have you been working, how many years of experience do you have, what is your story and why do you do it?",
     "Какъв е телефонът, имейлът и адресът ви? Как да се свържа с вас, да ви се обадя или пиша? Къде се намирате, в кой град работите?": "What is your phone, email and address? How do I contact you, call or write? Where are you located, which city?",
     "Имейлът ни е :email, а телефонът :phones. Намираме се в :city и работим с бизнеси от цяла България.": "Our email is :email and our phone is :phones. We are based in :city and work with businesses across Bulgaria.",
@@ -785,5 +786,11 @@
     "Годишно плащане": "Yearly payment",
     "Пакети и цени за сайт и дигитален маркетинг от €500": "Website and digital marketing packages and prices from €500",
     "Дигитален старт от €500, Активен маркетинг от €800 и Стратегически маркетинг от €1 200 на месец. Ясна структура за изграждане, поддръжка и устойчив растеж.": "Digital Start from €500, Active Marketing from €800 and Strategic Marketing from €1,200 a month. A clear structure for building, maintaining and growing steadily.",
-    "Изработка на сайтове и дигитален маркетинг от €500": "Website design and digital marketing from €500"
+    "Изработка на сайтове и дигитален маркетинг от €500": "Website design and digital marketing from €500",
+    "Нашата цел": "Our goal",
+    "Месечен маркетингов бюджет": "Monthly marketing budget",
+    "Не съм сигурен": "Not sure",
+    "По желание. Помага ни да предложим подходящ план.": "Optional. It helps us suggest a suitable plan.",
+    "Моля, изберете бюджет от списъка.": "Please choose a budget from the list.",
+    "Шестте ни услуги": "Our six services"
 }

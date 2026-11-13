@@ -13,7 +13,7 @@
     }
     $method = array_values(array_filter((array) ($about['g_method'] ?? []), fn ($m) => filled($m['title'] ?? null)));
     $standards = array_values(array_filter((array) ($about['g_standards'] ?? []), fn ($m) => filled($m['title'] ?? null)));
-    $founders = array_values(array_filter((array) $team, fn ($m) => filled($m['name'] ?? null)));
+    $founders = array_values(array_filter((array) $team, fn ($m) => filled($m['name'] ?? null) || filled($m['role'] ?? null)));
     $legal = config('creatium.legal');
     $legalLine = collect([
         $legal['company'] ?? null,
@@ -67,19 +67,45 @@
 @endif
 
 @if($founders)
-<section class="g-s">
+<section class="g-s" id="ekip">
     <div class="g-wrap">
         <div class="g-sh">
-            <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ $about['g_founders_title'] ?? __('Основатели') }}</p>
+            <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ $about['g_founders_title'] ?? __('Екипът') }}</p>
         </div>
-        <ul class="g-founders">
+        {{-- Team cards (fifth round): photo or initials, name, role, a short description, the longer text, skills and LinkedIn. Horizontal cards, one per row, any number of members. --}}
+        <div class="g-team" data-g-team>
             @foreach($founders as $member)
-                <li>
-                    @if(! empty($member['image']))<img src="{{ asset($member['image']) }}" alt="{{ $member['name'] }}" width="72" height="72" loading="lazy" decoding="async">@endif
-                    <div><b>{{ $member['name'] }}</b><span class="g-mono g-mute">{{ $member['role'] }}</span></div>
-                </li>
+                @php
+                    $name = trim((string) ($member['name'] ?? ''));
+                    $initials = collect(preg_split('/\s+/u', $name, -1, PREG_SPLIT_NO_EMPTY))->take(2)->map(fn ($w) => mb_strtoupper(mb_substr($w, 0, 1)))->implode('');
+                    $hasPhoto = ! empty($member['image']) && is_file(public_path($member['image']));
+                    $linkedin = str_starts_with((string) ($member['linkedin'] ?? ''), 'https://') ? $member['linkedin'] : null;
+                @endphp
+                <article class="g-member">
+                    @if($hasPhoto)
+                        <img src="{{ asset($member['image']) }}" alt="{{ $name !== '' ? $name : ($member['role'] ?? '') }}" width="260" height="260" loading="lazy" decoding="async">
+                    @else
+                        <span class="g-initials" aria-hidden="true">{{ $initials !== '' ? $initials : '·' }}</span>
+                    @endif
+                    <div class="g-member-body">
+                        @if($name !== '')<h3>{{ $name }}</h3>@endif
+                        <p class="g-mono g-mute">{{ $member['role'] ?? '' }}</p>
+                        @if(filled($member['description'] ?? null))<p class="g-member-lead">{{ $member['description'] }}</p>@endif
+                        @if(! empty($member['bio']))
+                            <div class="g-member-bio">
+                                @foreach((array) $member['bio'] as $paragraph)<p>{{ $paragraph }}</p>@endforeach
+                            </div>
+                        @endif
+                        @if(! empty($member['skills']))
+                            <ul class="g-skills">
+                                @foreach((array) $member['skills'] as $skill)<li>{{ $skill }}</li>@endforeach
+                            </ul>
+                        @endif
+                        @if($linkedin)<a class="g-link g-member-link" href="{{ $linkedin }}" target="_blank" rel="noopener">{{ __('Профил в LinkedIn') }}</a>@endif
+                    </div>
+                </article>
             @endforeach
-        </ul>
+        </div>
         <p class="g-legal-line g-mono g-mute">{{ $legalLine }}</p>
     </div>
 </section>

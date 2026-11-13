@@ -58,7 +58,8 @@
                             </figcaption>
                         </figure>
                         <h2 class="g-case-name">{{ $demo['name'] }}</h2>
-                        <p class="g-case-text">{{ $demo['description'] }}</p>
+                        <p class="g-case-text">{{ filled($demo['g_micro'] ?? null) ? $demo['g_micro'] : $demo['description'] }}</p>
+                        @include('partials.g.facts', ['facts' => $demo['g_facts'] ?? []])
                         <div class="g-case-links">
                             <a class="g-link" href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener">{{ __('Вижте сайта') }}</a>
                             @if($industrySlug !== false)<a class="g-link g-sub" href="{{ route('industry', $industrySlug) }}">{{ config("creatium.industry_pages.$industrySlug.title") }}</a>@endif
