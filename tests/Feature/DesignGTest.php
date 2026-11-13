@@ -78,6 +78,16 @@ class DesignGTest extends TestCase
             ->assertDontSee('g-preview', false);
     }
 
+    public function test_the_chat_teaser_is_switched_off_in_design_g_only(): void
+    {
+        $old = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('lastTeaser > 3 * 864e5) {', $old);
+
+        config(['creatium.design' => 'g']);
+        $g = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('lastTeaser > 3 * 864e5 && false) {', $g);
+    }
+
     public function test_design_g_home_in_bulgarian(): void
     {
         config(['creatium.design' => 'g']);
