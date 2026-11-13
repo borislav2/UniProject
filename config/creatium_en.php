@@ -32,12 +32,12 @@ return [
         [
             'name' => 'Maria Florova',
             'role' => 'Branding, email campaigns and social media',
-            'description' => 'I make sure your business looks and sounds the same everywhere, from the logo to every email and every post.',
+            'description' => 'I believe good marketing is more than communication. It creates a brand experience and turns interest into real growth.',
             'bio' => [
-                'My part is the face of your business. I build your brand identity, which means the logo, the colours and the tone you use with customers. That way people recognise you and remember you wherever they meet you.',
-                'I also run email campaigns that bring customers back to you and look after your social media profiles. The posts match your brand, and afterwards I check what they bring and what we should change.',
+                'I graduated in Media and Communications in England, where besides the theory I gained hands-on experience in an international team. It shaped my strategic thinking, my creative approach and a wider view of modern marketing.',
+                'I work on email marketing, branding, CRM, B2B marketing, paid ads, content and video. I combine creativity, strategy and data analysis to run campaigns with measurable results. To me a strong brand is built on consistency, authenticity and a real connection with people.',
             ],
-            'skills' => ['A recognisable brand', 'Email campaigns', 'Social media', 'One tone everywhere'],
+            'skills' => ['Branding', 'Email marketing and CRM', 'Paid advertising', 'Content and video'],
             'image' => 'images/team/maria-florova.webp',
             'linkedin' => '',
         ],
