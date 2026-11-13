@@ -354,9 +354,23 @@ html.design-g.dark .g-plan.g-rec .g-grp summary b { color: #C4300F; }
 }
 .design-g #chat { z-index: 55; }
 @media (min-width: 768px) { .design-g #chat { bottom: 20px; right: 20px; } }
-.design-g .chat-toggle { padding: 6px; gap: 0; }
+.design-g .chat-toggle { width: 44px; height: 44px; padding: 0; gap: 0; justify-content: center; border-radius: 50%; background: var(--g-ink); color: var(--g-on-ink); box-shadow: none; --tw-ring-shadow: 0 0 #0000; transform: none; transition: background-color .2s, color .2s; }
+.design-g .chat-toggle:hover { background: var(--g-accent-btn); color: var(--g-accent-btn-fg); transform: none; box-shadow: none; }
+.design-g .chat-toggle:focus-visible { outline: 2px solid var(--g-accent); outline-offset: 3px; }
 .design-g .chat-toggle > span:last-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.design-g .chat-teaser { right: 0; }
+.design-g .chat-toggle .chat-pulse { display: none; }
+.design-g .chat-toggle > span:nth-child(2) { width: auto; height: auto; background: none; box-shadow: none; --tw-ring-shadow: 0 0 #0000; }
+.design-g .chat-toggle > span:nth-child(2) > span { display: none; }
+.design-g .chat-toggle svg { color: inherit; width: 18px; height: 18px; }
+.design-g [data-chat-teaser] { display: none !important; }
+@media (max-width: 767px) { .design-g .chat-toggle { width: 42px; height: 42px; } }
+/* opened panel in the design colours */
+.design-g [data-chat-panel] > div:first-child { background: var(--g-band); color: var(--g-band-fg); }
+.design-g [data-chat-panel] > div:first-child > span:first-child { background: #E8431B; box-shadow: none; --tw-ring-shadow: 0 0 #0000; border-radius: 10px; }
+.design-g [data-chat-panel] > div:first-child > span:first-child svg { color: #fff; }
+.design-g [data-chat-panel] > div:first-child > span:first-child > span { display: none; }
+.design-g [data-chat-send] { background: var(--g-accent-btn); color: var(--g-accent-btn-fg); }
+.design-g [data-chat-send]:hover { background: var(--g-accent-text); }
 
 @media (max-width: 520px) {
     .design-g .g-hd-in { height: 60px; gap: 12px; }

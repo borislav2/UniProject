@@ -177,7 +177,7 @@
         }
         var lastTeaser = 0;
         try { lastTeaser = Number(localStorage.getItem(TEASER)) || 0; } catch (e) {}
-        if (!conversation && Date.now() - lastTeaser > 3 * 864e5) {
+        if (!conversation && Date.now() - lastTeaser > 3 * 864e5{!! \App\Support\Design::is('g') ? ' && false' : '' !!}) {
             setTimeout(function () {
                 if (panel.classList.contains('hidden') && !toggle.classList.contains('opacity-0')) { teaser.classList.remove('hidden'); push('chat_teaser_shown'); }
             }, 6000);
