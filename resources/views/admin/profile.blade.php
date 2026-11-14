@@ -17,6 +17,12 @@
         <input id="email" type="email" name="email" value="{{ old('email', $user->email) }}" required autocomplete="username" class="{{ $input }}">
     </div>
 
+    <div class="border-t border-gray-200 pt-5">
+        <p class="text-sm font-semibold text-gray-700 mb-1">Профил в админа</p>
+        <p class="text-gray-900"><span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold">{{ \App\Support\Admin\Profiles::label($user->profile()) }}</span></p>
+        <p class="mt-2 text-sm text-gray-500">{{ \App\Support\Admin\Profiles::description($user->profile()) }} Профилът се сменя от администратор в „Потребители“. Другите раздели не са заключени: намирате ги в „Всички раздели“ и в търсенето.</p>
+    </div>
+
     <fieldset class="border-t border-gray-200 pt-5 space-y-4">
         <legend class="text-base font-bold text-gray-900">Смяна на паролата</legend>
         <p class="text-sm text-gray-500">Оставете празно, ако не я сменяте. Новата парола трябва да е поне 10 знака.</p>

@@ -5,7 +5,7 @@
 @section('content')
 <div class="mb-6 flex justify-between items-center">
     <h2 class="text-2xl font-bold text-gray-800">Потребители</h2>
-    <a href="{{ route('admin.users.create') }}" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+    <a href="{{ route('admin.users.create') }}" class="adm-btn">
         <x-icon name="plus" class="mr-2" />Нов потребител
     </a>
 </div>
@@ -17,6 +17,7 @@
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Име</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Имейл</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Профил</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Създаден</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                 </tr>
@@ -34,8 +35,9 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm text-gray-900">{{ $user->email }}</div>
                         </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-800">{{ \App\Support\Admin\Profiles::label($user->profile()) }}</span></td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ $user->created_at->format('M d, Y') }}</div>
+                            <div class="text-sm text-gray-900">{{ $user->created_at->format('d.m.Y') }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <a href="{{ route('admin.users.show', $user) }}" class="text-blue-600 hover:text-blue-900 mr-3">Отвори</a>
@@ -49,7 +51,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">Няма потребители.</td>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Няма потребители.</td>
                     </tr>
                 @endforelse
             </tbody>

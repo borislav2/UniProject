@@ -26,7 +26,7 @@
 @include('admin.outreach._call-stats')
 
 <div class="mb-6 flex flex-wrap items-center gap-3">
-    <a href="{{ route('admin.outreach.calls.next', array_filter(['city' => $filters['city'], 'industry' => $filters['industry'], 'mobile' => $filters['mobile']])) }}" class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700"><x-icon name="phone" /> Следващо обаждане</a>
+    <a href="{{ route('admin.outreach.calls.next', array_filter(['city' => $filters['city'], 'industry' => $filters['industry'], 'mobile' => $filters['mobile']])) }}" class="adm-btn"><x-icon name="phone" /> Следващо обаждане</a>
     <span class="text-sm text-gray-600">{{ $queueCount }} в опашката с тези филтри: първо уговорените за днес, после новите (мобилните първи), после неотговорилите от предишни дни.</span>
 </div>
 
@@ -72,7 +72,7 @@
             <div class="whitespace-nowrap">
                 @forelse($call->phones() as $phone)
                     @if($phone['href'])
-                        <a href="{{ $phone['href'] }}" class="mb-1 flex items-center gap-2 rounded-lg bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-700"><x-icon name="phone" /> {{ $phone['label'] }}@if($phone['mobile'])<span class="rounded bg-white/20 px-1.5 text-xs font-normal">мобилен</span>@endif</a>
+                        <a href="{{ $phone['href'] }}" class="adm-btn sm mb-1"><x-icon name="phone" /> {{ $phone['label'] }}@if($phone['mobile'])<span class="rounded bg-white/20 px-1.5 text-xs font-normal">мобилен</span>@endif</a>
                     @else
                         <span class="block text-sm text-gray-400">{{ $phone['label'] }}</span>
                     @endif

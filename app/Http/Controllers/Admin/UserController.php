@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Support\Admin\Profiles;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -27,13 +29,15 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed'
+            'password' => 'required|string|min:8|confirmed',
+            'profile' => ['nullable', Rule::in(Profiles::keys())],
         ]);
         
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'profile' => Profiles::normalize($request->input('profile')),
         ]);
         
         return redirect()->route('admin.users.index')
@@ -55,13 +59,18 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed'
+            'password' => 'nullable|string|min:8|confirmed',
+            'profile' => ['nullable', Rule::in(Profiles::keys())],
         ]);
         
         $data = [
             'name' => $request->name,
-            'email' => $request->email
+            'email' => $request->email,
         ];
+
+        if ($request->filled('profile')) {
+            $data['profile'] = $request->input('profile');
+        }
         
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);

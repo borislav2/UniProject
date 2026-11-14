@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Support\Admin\Profiles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile',
     ];
 
     /**
@@ -80,22 +82,6 @@ class User extends Authenticatable
     }
     
     /**
-     * Check if user is a project manager
-     */
-    public function isProjectManager(): bool
-    {
-        return $this->hasRole('project-manager');
-    }
-    
-    /**
-     * Check if user is a developer
-     */
-    public function isDeveloper(): bool
-    {
-        return $this->hasRole('developer');
-    }
-    
-    /**
      * Check if user can access admin panel
      */
     public function canAccessAdminPanel(): bool
@@ -103,11 +89,15 @@ class User extends Authenticatable
         return $this->hasAnyRole(['admin', 'project-manager', 'developer']);
     }
     
-    /**
-     * Get the user's primary role (for display purposes)
-     */
-    public function getPrimaryRoleAttribute(): ?string
+    /** Профилът в админа: ключ от App\Support\Admin\Profiles (празен или непознат = all). */
+    public function profile(): string
     {
-        return $this->roles->first()?->slug;
+        return Profiles::normalize($this->attributes['profile'] ?? null);
+    }
+
+    /** Общият акаунт „Админ“: профил all, записан изрично. Без записан профил човекът вижда всичко, но „Днес“ е личен. */
+    public function isMaster(): bool
+    {
+        return ($this->attributes['profile'] ?? null) === 'all';
     }
 }

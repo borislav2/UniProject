@@ -45,7 +45,7 @@
         @else
             <span></span>
         @endif
-        <button type="submit" class="rounded-lg bg-gray-800 px-4 py-1.5 font-semibold text-white hover:bg-gray-700">Запази</button>
+        <button type="submit" class="adm-btn sm">Запази</button>
     </div>
 </form>
 

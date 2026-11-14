@@ -34,6 +34,10 @@
                         <p class="text-gray-900">{{ $user->email }}</p>
                     </div>
                     <div>
+                        <h4 class="text-sm font-medium text-gray-500">Профил в админа</h4>
+                        <p class="text-gray-900">{{ \App\Support\Admin\Profiles::label($user->profile()) }}</p>
+                    </div>
+                    <div>
                         <h4 class="text-sm font-medium text-gray-500">ID</h4>
                         <p class="text-gray-900">#{{ $user->id }}</p>
                     </div>
@@ -42,7 +46,7 @@
                         <p class="text-gray-900">
                             @if($user->email_verified_at)
                                 <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
-                                    {{ $user->email_verified_at->format('M d, Y') }}
+                                    {{ $user->email_verified_at->format('d.m.Y') }}
                                 </span>
                             @else
                                 <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">
@@ -53,11 +57,11 @@
                     </div>
                     <div>
                         <h4 class="text-sm font-medium text-gray-500">Създаден</h4>
-                        <p class="text-gray-900">{{ $user->created_at->format('M d, Y H:i') }}</p>
+                        <p class="text-gray-900">{{ $user->created_at->format('d.m.Y H:i') }}</p>
                     </div>
                     <div>
                         <h4 class="text-sm font-medium text-gray-500">Последна промяна</h4>
-                        <p class="text-gray-900">{{ $user->updated_at->format('M d, Y H:i') }}</p>
+                        <p class="text-gray-900">{{ $user->updated_at->format('d.m.Y H:i') }}</p>
                     </div>
                 </div>
             </div>

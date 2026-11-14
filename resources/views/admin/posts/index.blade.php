@@ -52,27 +52,27 @@
     <table class="min-w-full divide-y divide-gray-200 text-sm">
         <thead class="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
             <tr>
-                <th class="px-6 py-3">Заглавие</th>
-                <th class="px-6 py-3">Езици</th>
-                <th class="px-6 py-3">Категория</th>
-                <th class="px-6 py-3">Статус</th>
-                <th class="px-6 py-3">Дата</th>
-                <th class="px-6 py-3">Facebook</th>
-                <th class="px-6 py-3">LinkedIn</th>
-                <th class="px-6 py-3"></th>
+                <th class="px-3 py-3 w-full min-w-[260px]">Заглавие</th>
+                <th class="px-3 py-3">Езици</th>
+                <th class="px-3 py-3">Категория</th>
+                <th class="px-3 py-3">Статус</th>
+                <th class="px-3 py-3">Дата</th>
+                <th class="px-3 py-3">Facebook</th>
+                <th class="px-3 py-3">LinkedIn</th>
+                <th class="px-3 py-3"></th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
             @forelse($posts as $post)
                 <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 font-medium text-gray-900"><a href="{{ route('admin.posts.edit', $post) }}" class="hover:text-brand-700">{{ $post->tr('title', 'bg') ?? $post->tr('title', 'en') }}</a></td>
-                    <td class="px-6 py-4">
+                    <td class="px-3 py-3 font-medium text-gray-900 w-full min-w-[260px]"><a href="{{ route('admin.posts.edit', $post) }}" class="hover:text-brand-700">{{ $post->tr('title', 'bg') ?? $post->tr('title', 'en') }}</a></td>
+                    <td class="px-3 py-3 whitespace-nowrap">
                         @foreach(['bg' => 'BG', 'en' => 'EN'] as $l => $label)
                             <span class="px-2 py-0.5 rounded text-xs font-semibold {{ $post->tr('title', $l) ? 'bg-brand-50 text-brand-700' : 'bg-gray-100 text-gray-400 line-through' }}">{{ $label }}</span>
                         @endforeach
                     </td>
-                    <td class="px-6 py-4 text-gray-600">{{ $post->category?->trOrBg('name', 'bg') ?? '—' }}</td>
-                    <td class="px-6 py-4">
+                    <td class="px-3 py-3 text-gray-600 whitespace-nowrap">{{ $post->category?->trOrBg('name', 'bg') ?? '—' }}</td>
+                    <td class="px-3 py-3 whitespace-nowrap">
                         @if($post->status === 'published' && $post->published_at?->isFuture())
                             <span class="px-2 py-0.5 rounded-full text-xs bg-amber-100 text-amber-800">Насрочена</span>
                         @elseif($post->status === 'published')
@@ -81,8 +81,8 @@
                             <span class="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-700">Чернова</span>
                         @endif
                     </td>
-                    <td class="px-6 py-4 text-gray-600 whitespace-nowrap">{{ ($post->published_at ?? $post->updated_at)->format('d.m.Y') }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td class="px-3 py-3 text-gray-600 whitespace-nowrap">{{ ($post->published_at ?? $post->updated_at)->format('d.m.Y') }}</td>
+                    <td class="px-3 py-3 whitespace-nowrap">
                         @if($post->facebook_post_id)
                             <a href="{{ $fb::postUrl($post) }}" target="_blank" rel="noopener" class="px-2 py-0.5 rounded-full text-xs bg-blue-100 text-blue-800 hover:underline" title="{{ $post->facebook_posted_at?->timezone('Europe/Sofia')->format('d.m.Y H:i') }}">Публикувана</a>
                         @elseif($post->isVisible('bg'))
@@ -101,7 +101,7 @@
                             <span class="text-xs text-gray-400">—</span>
                         @endif
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td class="px-3 py-3 whitespace-nowrap">
                         @if($post->linkedin_post_id)
                             <a href="{{ $li::postUrl($post) }}" target="_blank" rel="noopener" class="px-2 py-0.5 rounded-full text-xs bg-blue-100 text-blue-800 hover:underline" title="{{ $post->linkedin_posted_at?->timezone('Europe/Sofia')->format('d.m.Y H:i') }}">Публикувана</a>
                         @elseif($post->isVisible('bg'))
@@ -120,7 +120,7 @@
                             <span class="text-xs text-gray-400">—</span>
                         @endif
                     </td>
-                    <td class="px-6 py-4 text-right whitespace-nowrap">
+                    <td class="px-3 py-3 text-right whitespace-nowrap">
                         @foreach($post->locales() as $l)
                             <a href="{{ $post->url($l) }}" target="_blank" class="text-gray-500 hover:text-brand-700 mr-3" title="Виж на сайта ({{ strtoupper($l) }})"><x-icon name="arrow-up-right-from-square" /> {{ strtoupper($l) }}</a>
                         @endforeach

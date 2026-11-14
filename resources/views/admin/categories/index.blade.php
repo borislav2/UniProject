@@ -5,7 +5,7 @@
 @section('content')
 <div class="mb-6 flex justify-between items-center">
     <h2 class="text-2xl font-bold text-gray-800">Категории на проекти</h2>
-    <a href="{{ route('admin.categories.create') }}" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+    <a href="{{ route('admin.categories.create') }}" class="adm-btn">
         <x-icon name="plus" class="mr-2" />Нова категория
     </a>
 </div>
@@ -36,7 +36,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                {{ $category->projects_count }} projects
+                                {{ $category->projects_count }} проекта
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">

@@ -6,7 +6,7 @@
 @php($groups = \App\Support\ClientEmails::groups($tpl['fields']))
 
 @section('content')
-<a href="{{ route('admin.client-emails.index', $project ? ['project' => $project->id] : []) }}" class="inline-block mb-4 text-sm text-blue-600 hover:underline">← Всички шаблони</a>
+<a href="{{ route('admin.client-emails.index', $project ? ['project' => $project->id] : []) }}" class="inline-block mb-4 text-sm font-semibold text-gray-700">← Всички шаблони</a>
 
 @if($mailNotConfigured)
     <div class="mb-6 rounded-lg border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-900" role="alert">
@@ -66,15 +66,15 @@
         </div>
 
         <div class="flex flex-wrap gap-3 pt-2">
-            <button type="submit" name="send" value="1" class="inline-flex items-center gap-2 bg-brand-950 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-brand-800"><x-icon name="paper-plane" /> Изпрати</button>
-            <button type="submit" formaction="{{ route('admin.client-emails.preview', $tpl['key']) }}" formtarget="email-preview" formnovalidate class="inline-flex items-center gap-2 border border-gray-300 px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-gray-50"><x-icon name="eye" /> Обнови прегледа</button>
+            <button type="submit" name="send" value="1" class="adm-btn"><x-icon name="paper-plane" /> Изпрати</button>
+            <button type="submit" formaction="{{ route('admin.client-emails.preview', $tpl['key']) }}" formtarget="email-preview" formnovalidate class="adm-btn ghost"><x-icon name="eye" /> Обнови прегледа</button>
         </div>
         <p class="text-xs text-gray-500">Имейлът се праща от {{ config('mail.from.address') }}. Отговорите на клиента идват на {{ config('creatium.contact.email') }}.</p>
     </form>
 
-    <div class="bg-white rounded-lg shadow overflow-hidden flex flex-col min-h-[70vh]">
+    <div class="bg-white rounded-lg shadow overflow-hidden flex flex-col h-[70vh] xl:h-[calc(100vh-112px)] xl:sticky xl:top-[88px] self-start">
         <div class="px-4 py-2 border-b text-sm text-gray-500">Преглед: така ще го види клиентът</div>
-        <iframe name="email-preview" title="Преглед на имейла" class="w-full flex-1 min-h-[70vh] bg-[#eef1f5]"></iframe>
+        <iframe name="email-preview" title="Преглед на имейла" class="w-full flex-1 min-h-0 bg-[#eef1f5]"></iframe>
     </div>
 </div>
 

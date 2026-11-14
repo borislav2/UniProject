@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="mb-6">
-    <h2 class="text-2xl font-bold text-gray-800">Edit User: {{ $user->name }}</h2>
+    <h2 class="text-2xl font-bold text-gray-800">Редакция на {{ $user->name }}</h2>
 </div>
 
 <div class="bg-white rounded-lg shadow p-6">
@@ -47,6 +47,25 @@
                 @error('password_confirmation')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
+            </div>
+
+            @php $current = $user->profile(); @endphp
+            <div>
+                <label for="profile" class="block text-sm font-medium text-gray-700 mb-2">Профил в админа</label>
+                <select name="profile" id="profile" class="w-full px-3 py-2 border rounded-lg" data-profile-select>
+                    @foreach(\App\Support\Admin\Profiles::PROFILES as $key => $p)
+                        <option value="{{ $key }}" @selected(old('profile', $current) === $key)>{{ $p['label'] }}</option>
+                    @endforeach
+                </select>
+                <p class="mt-1 text-sm text-gray-500" data-profile-hint>{{ \App\Support\Admin\Profiles::description(old('profile', $current)) }}</p>
+                @error('profile')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                <script>
+                    (function () {
+                        var d = @json(collect(\App\Support\Admin\Profiles::PROFILES)->map(fn ($p) => $p['description']));
+                        var s = document.querySelector('[data-profile-select]'), h = document.querySelector('[data-profile-hint]');
+                        s.addEventListener('change', function () { h.textContent = d[s.value] || ''; });
+                    })();
+                </script>
             </div>
         </div>
 
