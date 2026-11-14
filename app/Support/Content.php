@@ -43,8 +43,6 @@ class Content
         'cookies' => 'Политика за бисквитките',
     ];
 
-    public const SEO_FIELDS = ['meta_title', 'meta_description', 'canonical_url', 'og_title', 'og_description', 'og_image'];
-
     /** Labels for content fields in the admin form. Unknown keys are shown as they are. */
     public const FIELD_LABELS = [
         'title' => 'Заглавие', 'highlight' => 'Заглавие: втора част (в цвят)', 'subtitle' => 'Подзаглавие', 'text' => 'Текст',

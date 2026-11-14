@@ -52,22 +52,8 @@
     }
 }
 
-@utility text-gradient {
-    background-image: linear-gradient(90deg, var(--color-brand-700), var(--color-brand-500));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
 @utility bg-brand-gradient {
     background-image: linear-gradient(135deg, var(--color-brand-950) 0%, var(--color-brand-800) 55%, var(--color-brand-600) 100%);
-}
-
-@utility bg-grid {
-    background-image:
-        linear-gradient(to right, rgb(15 26 43 / 0.06) 1px, transparent 1px),
-        linear-gradient(to bottom, rgb(15 26 43 / 0.06) 1px, transparent 1px);
-    background-size: 36px 36px;
 }
 
 @utility bg-grid-light {
@@ -75,11 +61,6 @@
         linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
         linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
     background-size: 36px 36px;
-}
-
-/* Used by the login page header */
-.hero-gradient {
-    background-image: linear-gradient(135deg, var(--color-brand-950) 0%, var(--color-brand-800) 55%, var(--color-brand-600) 100%);
 }
 
 .card-hover {
@@ -93,16 +74,6 @@
 }
 
 /* Dark theme versions of the custom utilities */
-.dark .text-gradient {
-    background-image: linear-gradient(90deg, var(--color-brand-300), var(--color-brand-400));
-}
-
-.dark .bg-grid {
-    background-image:
-        linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
-}
-
 .dark .card-hover:hover {
     box-shadow: 0 20px 40px -20px rgb(0 0 0 / 0.7);
     border-color: var(--color-brand-700);
@@ -205,7 +176,7 @@
     text-wrap: balance;
 }
 
-/* Badge with a light running around its border (static where @property is unsupported) */
+/* Animated angle for the rotating conic halo (static where @property is unsupported) */
 @property --angle {
     syntax: '<angle>';
     inherits: false;
@@ -214,15 +185,6 @@
 
 @keyframes spin-angle {
     to { --angle: 360deg; }
-}
-
-.badge-glow {
-    border: 1px solid transparent;
-    background:
-        linear-gradient(rgb(11 20 36 / 0.85), rgb(11 20 36 / 0.85)) padding-box,
-        conic-gradient(from var(--angle), transparent 55%, var(--color-brand-300) 75%, transparent 90%) border-box,
-        linear-gradient(rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.14)) border-box;
-    animation: spin-angle 5s linear infinite;
 }
 
 /* Primary button on dark: white with a soft blue halo */
@@ -246,24 +208,6 @@
     background-clip: text;
     color: transparent;
     user-select: none;
-}
-
-/* Process timeline: the line fills as the list scrolls through the viewport (scroll-driven, static where unsupported) */
-.timeline-fill {
-    transform-origin: top;
-}
-
-@supports (animation-timeline: view()) {
-    .timeline-fill {
-        animation: timeline-grow linear both;
-        animation-timeline: view();
-        animation-range: entry 20% cover 60%;
-    }
-}
-
-@keyframes timeline-grow {
-    from { transform: scaleY(0); }
-    to { transform: scaleY(1); }
 }
 
 /* Scroll reveal: only hidden when JS is running, so content never disappears without it */
@@ -307,17 +251,6 @@
     animation-delay: var(--d, 0ms);
 }
 
-@keyframes pop-in {
-    0% { opacity: 0; transform: translateY(12px) scale(0.85); }
-    70% { opacity: 1; transform: translateY(-2px) scale(1.03); }
-    100% { opacity: 1; transform: none; }
-}
-
-.pop-in {
-    animation: pop-in 0.7s var(--ease-out-soft) both;
-    animation-delay: var(--d, 0ms);
-}
-
 /* Slowly drifting light blobs behind the hero */
 @keyframes aurora-a {
     0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
@@ -331,25 +264,6 @@
 
 .aurora-a { animation: aurora-a 18s ease-in-out infinite; will-change: transform; }
 .aurora-b { animation: aurora-b 22s ease-in-out infinite; will-change: transform; }
-
-/* Gradient text that slowly flows (the highlighted word in the hero) */
-@keyframes shimmer {
-    to { background-position: 200% center; }
-}
-
-.text-shimmer {
-    background-image: linear-gradient(90deg, var(--color-brand-700), var(--color-brand-500), var(--color-brand-300), var(--color-brand-500), var(--color-brand-700));
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: shimmer 6s linear infinite;
-}
-
-.dark .text-shimmer,
-.on-dark .text-shimmer {
-    background-image: linear-gradient(90deg, var(--color-brand-300), var(--color-brand-400), var(--color-brand-100), var(--color-brand-400), var(--color-brand-300));
-}
 
 /* Light sweep over buttons on hover */
 .btn-shine {
@@ -544,28 +458,6 @@
     animation: typing-dot 1s ease-in-out infinite;
 }
 
-/* Process steps: a bar fills in when the step scrolls into view */
-.js .step-bar {
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 1s var(--ease-out-soft) calc(var(--reveal-delay, 0ms) + 250ms);
-}
-
-.js .is-visible .step-bar {
-    transform: scaleX(1);
-}
-
-/* Slowly moving gradient (contact section) */
-@keyframes gradient-pan {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-}
-
-.bg-animated {
-    background-size: 200% 200%;
-    animation: gradient-pan 16s ease infinite;
-}
-
 /* Header gets a shadow once the page is scrolled (JS adds .is-scrolled) */
 [data-header] > div {
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -647,16 +539,6 @@
 
 .dark .numeral {
     background-image: linear-gradient(135deg, var(--color-brand-300), var(--color-brand-500));
-}
-
-/* The hub of the engine diagram breathes slowly */
-@keyframes engine-pulse {
-    0% { transform: scale(1); opacity: 0.8; }
-    100% { transform: scale(1.35); opacity: 0; }
-}
-
-.engine-pulse {
-    animation: engine-pulse 2.8s var(--ease-out-soft) infinite;
 }
 
 .engine-lines path {
@@ -774,14 +656,12 @@
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .js .reveal { opacity: 1; transform: none; filter: none; transition: none; }
-    .animate-float, .rise-in, .rise-text, .pop-in, .aurora-a, .aurora-b, .text-shimmer, .bg-animated, .halo-spin, .hint-arrows, .chat-pulse, .chat-teaser, .slide, .slide-zoom, .slide-toast, .phone-scroll, .ai-typing, .ai-answer, .typing-dot { animation: none; }
+    .animate-float, .rise-in, .rise-text, .aurora-a, .aurora-b, .halo-spin, .hint-arrows, .chat-pulse, .chat-teaser, .slide, .slide-zoom, .slide-toast, .phone-scroll, .ai-typing, .ai-answer, .typing-dot { animation: none; }
     .ai-typing { display: none; }
     .slide[style*="--i: 0"], .slide-toast[style*="--i: 0"] { opacity: 1; }
     .card-hover:hover, .card-hover:hover .icon-pop, .tilt { transform: none; }
     .btn-shine::after, .scroll-progress { display: none; }
-    .js .step-bar { transform: none; transition: none; }
-    .badge-glow, .timeline-fill, .engine-pulse { animation: none; }
     .btn-glow:hover { transform: none; }
-    .plan-card, .plan-card *, .plan-card::before, .plan-range::-webkit-slider-thumb, .plan-range::-moz-range-thumb { transition: none; }
+    .plan-card, .plan-card *, .plan-card::before { transition: none; }
     .plan-card[data-rec="true"] { transform: none; }
 }

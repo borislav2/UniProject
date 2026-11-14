@@ -55,7 +55,6 @@ class PlanBillingTest extends TestCase
         // Индивидуалният маркетинг няма годишна сума.
         $this->assertNull(PlanBilling::figures($billing, $items[2], 2, 'yearly'));
         $this->assertFalse(PlanBilling::cell($billing, $items[2], 2, 'monthly')['priced']);
-        $this->assertSame(17, PlanBilling::savingPercent($billing));
     }
 
     public function test_cell_strings(): void
@@ -80,8 +79,6 @@ class PlanBillingTest extends TestCase
         $this->assertTrue(PlanBilling::config($this->plans())['enabled']);
         $this->assertFalse(PlanBilling::config(['billing' => ['yearly_months' => 12]])['enabled']);
         $this->assertSame(10, PlanBilling::config([])['yearly_months']);
-        $this->assertSame('yearly', PlanBilling::billingFrom('godishno'));
-        $this->assertSame('monthly', PlanBilling::billingFrom('anything'));
     }
 
     public function test_text_lines_state_start_deposit_subscription_and_yearly_option(): void

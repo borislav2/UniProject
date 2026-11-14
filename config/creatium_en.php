@@ -691,12 +691,6 @@ return [
         'support' => 'Technical support, analytics and digital growth',
     ],
 
-    'business_sizes' => [
-        'small' => 'Small',
-        'medium' => 'Medium',
-        'large' => 'Large',
-    ],
-
     'plans' => [
         'intro' => 'Three ways to work together, from a professional online presence to an outside marketing department for your company.',
         // Design G, fourth round: the plans and the five steps (read only by the g views). The yearly figure is monthly × 10 until the owners confirm it.
