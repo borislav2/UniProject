@@ -293,8 +293,9 @@ html.js.design-g .g-tog { display: inline-flex; }
 .design-g .g-pr span { color: var(--g-band-mute); }
 
 /* Contact: the form on the left, the text with the phone and the email on the right; on phones the text comes first. */
-.design-g .g-ct { display: grid; gap: 40px; }
-@media (min-width: 900px) { .design-g .g-ct { grid-template-columns: 7fr 5fr; gap: clamp(48px, 6vw, 96px); align-items: start; } .design-g .g-ct > :first-child { order: 2; } .design-g .g-ct-info { position: sticky; top: 100px; } }
+.design-g .g-ct { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
+.design-g .g-ct > * { min-width: 0; }
+@media (min-width: 900px) { .design-g .g-ct { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(48px, 6vw, 96px); align-items: start; } .design-g .g-ct > :first-child { order: 2; } .design-g .g-ct-info { position: sticky; top: 100px; } }
 .design-g .g-ct-info { display: grid; gap: 20px; align-content: start; min-width: 0; }
 .design-g .g-ct-h { font-size: clamp(1.8rem, 2.8vw, 2.5rem); max-width: 16em; }
 .design-g .g-ct-text { color: var(--g-mute); font-size: 17px; max-width: 30em; }
@@ -369,9 +370,11 @@ html.js.design-g .g-tog { display: inline-flex; }
 .design-g .g-fbox { border: 1px solid var(--g-line-strong); padding: clamp(20px, 3vw, 40px); background: var(--g-surface); }
 .design-g .g-qf { scroll-margin-top: 90px; }
 .design-g .g-fh { font-size: clamp(1.5rem, 2.2vw, 1.9rem); max-width: none; margin-bottom: 20px; }
-.design-g .g-f { display: grid; gap: 20px; }
-.design-g .g-fgrid { display: grid; gap: 20px 20px; }
-@media (min-width: 640px) { .design-g .g-fgrid { grid-template-columns: 1fr 1fr; } }
+.design-g .g-f { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.design-g .g-f > * { min-width: 0; }
+.design-g .g-fgrid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px 20px; }
+.design-g .g-fgrid > * { min-width: 0; }
+@media (min-width: 640px) { .design-g .g-fgrid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 .design-g .g-trap { position: absolute; left: -9999px; }
 .design-g .g-fld { min-width: 0; border: 0; padding: 0; margin: 0; }
 .design-g .g-fld > label, .design-g .g-fld > legend { display: block; font: 500 14px/1.4 var(--g-body); color: var(--g-ink); margin-bottom: 8px; padding: 0; }
@@ -415,7 +418,7 @@ html.design-g.dark .g-err { color: #FF8A7A; }
 .design-g .g-book { border: 0; padding: 0; min-width: 0; margin: 0; }
 .design-g .g-book legend { padding: 0; margin-bottom: 6px; color: var(--g-ink); }
 .design-g .g-book legend span { color: var(--g-mute); text-transform: none; letter-spacing: 0; }
-.design-g .g-days { display: flex; gap: 8px; overflow-x: auto; padding: 14px 0 4px; scrollbar-width: thin; }
+.design-g .g-days { display: flex; max-width: 100%; gap: 8px; overflow-x: auto; padding: 14px 0 4px; scrollbar-width: thin; }
 .design-g .g-days button { flex: none; width: 64px; padding: 8px 4px; border: 1px solid var(--g-line-strong); background: transparent; color: var(--g-ink); cursor: pointer; display: grid; justify-items: center; gap: 1px; border-radius: 0; font-family: var(--g-body); }
 .design-g .g-days button b { font: 500 1.2rem/1.2 var(--g-head); }
 .design-g .g-days button .g-mono { font-size: 11px; color: var(--g-mute); }
