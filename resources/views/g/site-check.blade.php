@@ -26,7 +26,6 @@
 <section class="g-s">
     <div class="g-wrap g-sys">
         <div class="g-sh">
-            <p class="g-mono"><b>01</b>{{ __('Проверка') }}</p>
             <h2 class="g-h">{{ __('Какво проверяваме') }}</h2>
             <p class="g-sh-text">{{ __('Автоматично обхождаме до :n страници на сайта ви. Отчетът е на разбираем език, с обяснение какво значи всеки резултат и къде е проблемът.', ['n' => config('creatium.site_check.crawl_limit')]) }}</p>
             <div id="site-check-form" class="g-fbox g-sticky-form">
@@ -64,29 +63,29 @@
                         </div>
                         @include('partials.turnstile')
                         <p class="g-promise">{{ __('Безплатно и без ангажимент. Не изпращаме реклами.') }}</p>
-                        <button type="submit" class="g-btn g-big">{{ __('Проверете сайта') }}<i></i></button>
+                        <button type="submit" class="g-btn g-big">{{ __('Проверете сайта') }}</button>
                     </form>
                 @endif
             </div>
         </div>
         <ol class="g-rows g-rows-tight">
             @foreach($checks as [$icon, $title, $text])
-                <li><span class="g-n g-mono">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span><h3>{{ $title }}</h3><p>{{ $text }}</p></li>
+                <li><h3>{{ $title }}</h3><p>{{ $text }}</p></li>
             @endforeach
         </ol>
     </div>
 </section>
 
-<section class="g-s" style="border-bottom:0">
+<section class="g-s g-last">
     <div class="g-wrap">
         <div class="g-sh">
-            <p class="g-mono"><b>02</b>{{ __('След отчета') }}</p>
+            <h2 class="g-h g-sub-h">{{ __('След отчета') }}</h2>
         </div>
-        <div class="g-cells">
-            <div><span class="g-mono g-mute">01</span><h3>{{ __('Оправяте сами') }}</h3><p>{{ __('Всеки резултат е обяснен. Много от нещата се оправят за минути от човека, който поддържа сайта.') }}</p></div>
-            <div><span class="g-mono g-mute">02</span><h3>{{ __('Подробен одит') }}</h3><p>{{ __('Преглеждаме целия сайт ръчно и ви даваме план какво да оправите първо. Цената е според големината на сайта.') }}</p></div>
-            <div><span class="g-mono g-mute">03</span><h3>{{ __('Оправяме ние') }}</h3><p>{{ __('Ако не искате да се занимавате, кажете ни. Ще ви кажем цената, преди да започнем.') }}</p></div>
-        </div>
+        <ul class="g-rows g-rows-tight">
+            <li><h3>{{ __('Оправяте сами') }}</h3><p>{{ __('Всеки резултат е обяснен. Много от нещата се оправят за минути от човека, който поддържа сайта.') }}</p></li>
+            <li><h3>{{ __('Подробен одит') }}</h3><p>{{ __('Преглеждаме целия сайт ръчно и ви даваме план какво да оправите първо. Цената е според големината на сайта.') }}</p></li>
+            <li><h3>{{ __('Оправяме ние') }}</h3><p>{{ __('Ако не искате да се занимавате, кажете ни. Ще ви кажем цената, преди да започнем.') }}</p></li>
+        </ul>
         <p class="g-after"><a class="g-link" href="{{ lroute('contact') }}">{{ __('Свържете се с нас') }}</a></p>
     </div>
 </section>

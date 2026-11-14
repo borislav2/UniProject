@@ -15,6 +15,19 @@
     ];
     $openExtra = collect(['position', 'sector', 'city', 'site_url', 'goal', 'timeline'])->contains(fn ($n) => filled(old($n)) || $errors->has($n));
 @endphp
+<section class="g-s g-last" id="oferta-s">
+<div class="g-wrap g-ct">
+    <div class="g-ct-info">
+        <h2 class="g-h g-ct-h">{{ __('Изпратете запитване') }}</h2>
+        <p class="g-ct-text">{{ __('Оставете име, бизнес и имейл или телефон. Ще ви изпратим оферта за избрания пакет.') }}</p>
+        <ol class="g-next">
+            <li><b>{{ __('Преглеждаме запитването') }}</b><span>{{ __('Прочитаме какво търсите и подготвяме въпросите си.') }}</span></li>
+            <li><b>{{ __('Отговаряме до един работен ден') }}</b><span>{{ __('По имейл или телефон, както сте оставили.') }}</span></li>
+            <li><b>{{ __('Уговаряме разговор') }}</b><span>{{ __('Предлагаме следващата стъпка и ясна оферта.') }}</span></li>
+        </ol>
+        <p class="g-promise">{{ __('Без ангажимент. Отговор до 1 работен ден.') }}</p>
+    </div>
+    <div class="g-ct-form">
 <div id="oferta" class="g-qf g-fbox">
     @if(session('quote_sent'))
         <div class="g-thanks" role="status">
@@ -24,8 +37,6 @@
             <a class="g-btn g-ghost" href="{{ lroute('home') }}">{{ __('Към началото') }}</a>
         </div>
     @else
-        <h2 class="g-h g-fh">{{ __('Изпратете запитване') }}</h2>
-        <p class="g-fintro">{{ __('Оставете име, бизнес и имейл или телефон. Ще ви изпратим оферта за избрания пакет.') }}</p>
         <form method="POST" action="{{ lroute('quote.submit') }}" class="g-f">
             @csrf
             <div class="g-trap" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
@@ -86,8 +97,10 @@
             </div>
 
             @include('partials.turnstile')
-            <p class="g-promise">{{ __('Без ангажимент. Отговор до 1 работен ден.') }}</p>
-            <button type="submit" class="g-btn g-big">{{ __('Изпратете запитването') }}<i></i></button>
+            <button type="submit" class="g-btn g-big">{{ __('Изпратете запитването') }}</button>
         </form>
     @endif
 </div>
+    </div>
+</div>
+</section>

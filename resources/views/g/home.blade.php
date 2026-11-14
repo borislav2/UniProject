@@ -21,7 +21,6 @@
 
         return $text;
     };
-    $pad = fn ($n) => str_pad((string) $n, 2, '0', STR_PAD_LEFT);
 
     // The six services of the first screen (owners' audit, November 2026): number, title, text and the service page each one links to (empty = all services).
     $servicePages = (array) config('creatium.service_pages');
@@ -39,7 +38,6 @@
     $results = collect((array) ($trust['results'] ?? []))->filter(fn ($r) => filled($r['value'] ?? null) && filled($r['text'] ?? null))->values();
     $hasProof = $reviewCount > 0 || $testimonials->isNotEmpty() || $results->isNotEmpty();
 
-    $n = 0;
 @endphp
 
 @section('content')
@@ -62,22 +60,27 @@
                 @foreach($heroTrust as $line)<li>{{ $line }}</li>@endforeach
             </ul>
         @endif
-        @if($parts->isNotEmpty())
-            <nav class="g-parts" data-g-clear="full" aria-label="{{ __('Услуги') }}">
-                @foreach($parts as $part)
-                    <a href="{{ $part['href'] }}"><span class="g-mono">{{ $pad($loop->iteration) }}</span><b>{{ $part['label'] }}</b>@if(filled($part['text']))<small>{{ $part['text'] }}</small>@endif</a>
-                @endforeach
-            </nav>
-        @endif
     </div>
 </section>
+
+{{-- The six services as a two column hairline list under the hero --}}
+@if($parts->isNotEmpty())
+<section class="g-s g-svc-home" aria-label="{{ __('Услуги') }}">
+    <div class="g-wrap">
+        <nav class="g-parts">
+            @foreach($parts as $part)
+                <a href="{{ $part['href'] }}"><b>{{ $part['label'] }}</b>@if(filled($part['text']))<small>{{ $part['text'] }}</small>@endif</a>
+            @endforeach
+        </nav>
+    </div>
+</section>
+@endif
 
 {{-- Projects right after the hero: real public projects first, then every concept site, each with one line on what is special in it --}}
 @if($projects->isNotEmpty() || ! empty($demos))
 <section class="g-s" id="proekti">
     <div class="g-wrap">
-        <div class="g-sh">
-            <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Проекти') }}</p>
+        <div class="g-sh g-sh-split">
             <h2 class="g-h">{{ $trust['g_projects_title'] ?? __('Проекти, създадени с мисъл за растеж') }}</h2>
             @if(filled($trust['g_projects_subtitle'] ?? null))<p class="g-sh-text g-wide">{{ $trust['g_projects_subtitle'] }}</p>@endif
         </div>
@@ -90,7 +93,7 @@
                             <div class="g-frame">
                                 @if($project->screenshot)<img src="{{ asset($project->screenshot) }}" alt="{{ $project->name }}" width="960" height="600" loading="lazy" decoding="async">@else<div class="g-noimg g-mono">{{ $project->name }}</div>@endif
                             </div>
-                            <figcaption><span class="g-no g-mono">{{ $pad($loop->iteration) }}</span><span class="g-mute g-mono">{{ $project->category->name }}</span><strong>{{ $project->name }}</strong></figcaption>
+                            <figcaption><strong>{{ $project->name }}</strong><span class="g-cat">{{ $project->category->name }}</span></figcaption>
                         </figure>
                         <p class="g-micro">{{ \Illuminate\Support\Str::limit((string) $project->description, 130) }}</p>
                     @if($host)</a>@endif
@@ -101,7 +104,7 @@
                     <a href="{{ route('demo.show', $demo['slug']) }}">
                         <figure>
                             <div class="g-frame"><img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 760px) 33vw, 100vw" alt="{{ $demo['name'] }}, {{ $demo['industry'] }}" width="960" height="600" loading="lazy" decoding="async"></div>
-                            <figcaption><span class="g-no g-mono">{{ $pad($projects->count() + $loop->iteration) }}</span><strong>{{ $demo['industry'] }}</strong></figcaption>
+                            <figcaption><strong>{{ $demo['industry'] }}</strong></figcaption>
                         </figure>
                         <p class="g-micro">{{ filled($demo['g_micro'] ?? null) ? $demo['g_micro'] : ($demo['description'] ?? '') }}</p>
                         @include('partials.g.facts', ['facts' => $demo['g_facts'] ?? []])
@@ -119,8 +122,7 @@
 {{-- Packages: three equal cards, monthly or yearly, with the groups of what is included --}}
 <section class="g-s" id="paketi">
     <div class="g-wrap">
-        <div class="g-sh">
-            <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Пакети') }}</p>
+        <div class="g-sh g-sh-split">
             <h2 class="g-h">{{ $plans['g_title'] ?? __('План за всеки етап от вашия бизнес') }}</h2>
             @if(filled($plans['g_subtitle'] ?? null))<p class="g-sh-text g-wide">{{ $plans['g_subtitle'] }}</p>@endif
         </div>
@@ -133,7 +135,6 @@
 <section class="g-s" id="dokazatelstva">
     <div class="g-wrap">
         <div class="g-sh">
-            <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Доказателства') }}</p>
             <h2 class="g-h">{{ __('Доверие, което можете да проверите') }}</h2>
         </div>
         <div class="g-proof">
@@ -163,13 +164,15 @@
 {{-- Our goal (fifth round, 13.11.2026, instead of "The agency"): one sentence, a short text and the three promises --}}
 <section class="g-band" id="tsel">
     <div class="g-wrap">
-        <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Нашата цел') }}</p>
-        <h2 class="g-h">{!! $accent($trust['g_goal_title'] ?? $trust['agency_title'] ?? '', $trust['g_goal_accent'] ?? $trust['agency_accent'] ?? []) !!}</h2>
-        @if(filled($trust['g_goal_text'] ?? null))<p class="g-goal-text">{{ $trust['g_goal_text'] }}</p>@endif
+        <p class="g-mono g-goal-k">{{ __('Нашата цел') }}</p>
+        <div class="g-goal">
+            <h2 class="g-h">{!! $accent($trust['g_goal_title'] ?? $trust['agency_title'] ?? '', $trust['g_goal_accent'] ?? $trust['agency_accent'] ?? []) !!}</h2>
+            @if(filled($trust['g_goal_text'] ?? null))<p class="g-goal-text">{{ $trust['g_goal_text'] }}</p>@endif
+        </div>
         @if(! empty($trust['agency_facts']))
             <div class="g-pr">
                 @foreach($trust['agency_facts'] as $fact)
-                    <div><b>{{ $fact['title'] }}</b><span>{{ $fact['text'] ?? '' }}</span></div>
+                    <p><b>{{ $fact['title'] }}</b><span>{{ $fact['text'] ?? '' }}</span></p>
                 @endforeach
             </div>
         @endif
@@ -177,17 +180,16 @@
 </section>
 
 {{-- Contact: the form on the left, the text with the phone and the email on the right (text first on phones) --}}
-<section class="g-s" id="kontakt" style="border-bottom:0">
+<section class="g-s g-last" id="kontakt">
     <div class="g-wrap g-ct">
         <div class="g-ct-info">
-            <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Контакти') }}</p>
             <h2 class="g-h g-ct-h">{{ $trust['g_contact_title'] ?? __('Запазете час за разговор') }}</h2>
             @if(filled($trust['g_contact_text'] ?? null))<p class="g-ct-text">{{ $trust['g_contact_text'] }}</p>@endif
             <div class="g-info">
                 @foreach(g_phones() as $phone)
-                    <div><span class="g-mono">{{ __('Телефон') }}</span><a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}">{{ $phone }}</a></div>
+                    <div><span class="g-lbl">{{ __('Телефон') }}</span><a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}">{{ $phone }}</a></div>
                 @endforeach
-                <div><span class="g-mono">{{ __('Имейл') }}</span><a href="mailto:{{ $contact['email'] }}">{{ $contact['email'] }}</a></div>
+                <div><span class="g-lbl">{{ __('Имейл') }}</span><a href="mailto:{{ $contact['email'] }}">{{ $contact['email'] }}</a></div>
             </div>
         </div>
         <div class="g-ct-form">

@@ -6,22 +6,22 @@
 @section('g_lean', 'inner')
 
 @section('content')
-@include('partials.g.page-head', ['eyebrow' => __('Контакти'), 'heading' => __('Запазете час за разговор'), 'sub' => __('Кажете ни какъв е бизнесът ви и ще ви предложим какво да направим за повече клиенти.')])
+@include('partials.g.page-head', ['heading' => __('Запазете час за разговор'), 'sub' => __('Кажете ни какъв е бизнесът ви и ще ви предложим какво да направим за повече клиенти.')])
 
-<section class="g-s" style="border-bottom:0">
+<section class="g-s g-last">
     <div class="g-wrap g-ct">
         <div class="g-ct-info">
             <div class="g-info">
                 <div>
-                    <span class="g-mono">{{ __('Телефон') }}</span>
+                    <span class="g-lbl">{{ __('Телефон') }}</span>
                     @include('partials.g.phones', ['phones' => g_phones()])
                 </div>
                 <div>
-                    <span class="g-mono">{{ __('Имейл') }}</span>
+                    <span class="g-lbl">{{ __('Имейл') }}</span>
                     <a href="mailto:{{ $contact['email'] }}">{{ $contact['email'] }}</a>
                 </div>
                 <div>
-                    <span class="g-mono">{{ __('Град') }}</span>
+                    <span class="g-lbl">{{ __('Град') }}</span>
                     <p>{{ __($contact['city']) }}, {{ __('България') }}</p>
                 </div>
             </div>

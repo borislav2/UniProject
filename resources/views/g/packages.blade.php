@@ -13,7 +13,6 @@
 @section('content')
 <section class="g-ph g-ph-packs" id="paketi">
     <div class="g-wrap">
-        <p class="g-mono g-eyebrow">{{ __('Пакети и цени') }}</p>
         <h1 class="g-h">{{ $plans['g_title'] ?? __('План за всеки етап от вашия бизнес') }}</h1>
         @if(filled($plans['g_subtitle'] ?? null))<p class="g-lead">{{ $plans['g_subtitle'] }}</p>@endif
         @include('partials.g.plan-cards')
@@ -24,7 +23,6 @@
 <section class="g-s" id="stapki">
     <div class="g-wrap">
         <div class="g-sh">
-            <p class="g-mono"><b>01</b>{{ __('Процес') }}</p>
             <h2 class="g-h">{{ $plans['g_steps_title'] ?? __('Нашите 5 стъпки') }}</h2>
         </div>
         <ol class="g-steps">
@@ -36,9 +34,5 @@
 </section>
 @endif
 
-<section class="g-s" style="border-bottom:0">
-    <div class="g-wrap">
-        @include('partials.g.quote-form', ['plans' => $plans, 'selectedPlan' => $selectedPlan])
-    </div>
-</section>
+@include('partials.g.quote-form', ['plans' => $plans, 'selectedPlan' => $selectedPlan])
 @endsection

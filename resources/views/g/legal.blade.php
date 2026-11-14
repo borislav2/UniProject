@@ -18,7 +18,7 @@
 
 @section('content')
 @include('partials.g.page-head', ['eyebrow' => __('Правна информация'), 'heading' => $headline])
-<section class="g-s" style="border-bottom:0">
+<section class="g-s g-last">
     <div class="g-wrap g-narrow">
         <div class="g-prose g-legal">{!! $text !!}</div>
     </div>
