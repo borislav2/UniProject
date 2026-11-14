@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Support\Admin\Profiles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile',
     ];
 
     /**
@@ -109,5 +111,17 @@ class User extends Authenticatable
     public function getPrimaryRoleAttribute(): ?string
     {
         return $this->roles->first()?->slug;
+    }
+
+    /** Профилът в админа: ключ от App\Support\Admin\Profiles (празен или непознат = all). */
+    public function profile(): string
+    {
+        return Profiles::normalize($this->attributes['profile'] ?? null);
+    }
+
+    /** Общият акаунт „Админ“: профил all, записан изрично. Без записан профил човекът вижда всичко, но „Днес“ е личен. */
+    public function isMaster(): bool
+    {
+        return ($this->attributes['profile'] ?? null) === 'all';
     }
 }

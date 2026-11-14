@@ -4,13 +4,14 @@ namespace App\Console\Commands;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Support\Admin\Profiles;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 
 class MakeAdmin extends Command
 {
-    protected $signature = 'creatium:make-admin {email} {--name=Admin}';
+    protected $signature = 'creatium:make-admin {email} {--name=Admin} {--profile=all : Профил в админа: all, dev, sales или brand}';
 
     protected $description = 'Create (or promote) an administrator account for the admin panel';
 
@@ -28,6 +29,13 @@ class MakeAdmin extends Command
             $this->call('db:seed', ['--class' => RoleSeeder::class, '--force' => true]);
         }
 
+        $profile = (string) $this->option('profile');
+        if (! in_array($profile, Profiles::keys(), true)) {
+            $this->error('Непознат профил. Допустими: ' . implode(', ', Profiles::keys()) . '.');
+
+            return self::FAILURE;
+        }
+
         $user = User::where('email', $email)->first();
 
         if (! $user) {
@@ -43,7 +51,10 @@ class MakeAdmin extends Command
                 'name' => $this->option('name'),
                 'email' => $email,
                 'password' => Hash::make($password),
+                'profile' => $profile,
             ]);
+        } elseif ($this->input->hasParameterOption('--profile')) {
+            $user->forceFill(['profile' => $profile])->save();
         }
 
         $user->roles()->syncWithoutDetaching([Role::where('slug', 'admin')->value('id')]);

@@ -2,7 +2,7 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>@yield('title', 'Админ') · Creatium Lab</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -10,198 +10,199 @@
     {{-- Админът може да се добави към началния екран на телефона като приложение (отваря „Днес“). --}}
     <link rel="manifest" href="{{ asset('admin.webmanifest') }}">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
-    <meta name="theme-color" content="#0f1a2b">
+    <meta name="theme-color" content="#0C0E12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Creatium">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite('resources/css/admin.css')
     @stack('head')
-    <style>
-        body.sidebar-open { overflow: hidden; }
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
-            body.sidebar-open .sidebar { transform: translateX(0); }
-            .sidebar-overlay { display: none; }
-            body.sidebar-open .sidebar-overlay { display: block; }
-        }
-    </style>
 </head>
-<body class="bg-gray-100">
-    <div class="flex h-screen">
-        <!-- Sidebar -->
-        <div class="sidebar fixed inset-y-0 left-0 z-40 w-64 bg-gray-800 text-white overflow-y-auto md:relative md:transform-none">
-            <div class="p-4">
-                <a href="{{ route('admin.dashboard') }}" class="block"><img src="{{ asset('images/logo-white.webp') }}" alt="Creatium Lab" class="h-6 w-auto"></a>
-                <p class="mt-2 text-xs uppercase tracking-wider text-gray-400">Административен панел</p>
-            </div>
-            @php
-                $unreadInquiries = \App\Models\Project::formLeads()->whereNull('read_at')->count();
-                $unreadChecks = \App\Models\Project::siteChecks()->whereNull('read_at')->count();
-                $urgentToday = \App\Support\Admin\Today::urgentCount();
-                $latePayments = \App\Models\Project::subscribers()->with('payments')->get()->filter(fn ($client) => $client->paymentState()['state'] === 'late')->count();
-                $callbacksToday = \App\Models\OutreachCall::whereNotNull('callback_on')->whereDate('callback_on', '<=', today())->count();
-                $linkedinDue = \App\Models\LinkedinProspect::due()->count();
-                // [група, [route, pattern, икона, текст, брояч]]
-                $menu = [
-                    null => [
-                        ['admin.today', 'admin.today', 'calendar', 'Днес', $urgentToday],
-                        ['admin.dashboard', 'admin.dashboard', 'tachometer-alt', 'Табло', 0],
-                    ],
-                    'Клиенти' => [
-                        ['admin.inquiries.index', 'admin.inquiries.*', 'envelope', 'Запитвания', $unreadInquiries],
-                        ['admin.site-checks.index', 'admin.site-checks.*', 'globe', 'Проверки на сайт', $unreadChecks],
-                        ['admin.projects.index', 'admin.projects.*', 'project-diagram', 'Проекти', 0],
-                        ['admin.clients.index', 'admin.clients.*', 'users', 'Абонаменти', $latePayments],
-                        ['admin.client-emails.index', 'admin.client-emails.*', 'paper-plane', 'Имейли до клиенти', 0],
-                        ['admin.chats.index', 'admin.chats.*', 'quote-left', 'Чат разговори', 0],
-                    ],
-                    'Продажби' => [
-                        ['admin.outreach.index', ['admin.outreach.*', 'admin.linkedin.*'], 'magnifying-glass', 'Потенциални клиенти', $callbacksToday + $linkedinDue],
-                        ['admin.stats', 'admin.stats', 'chart-line', 'Статистика', 0],
-                        ['admin.reviews.index', 'admin.reviews.*', 'reply', 'Отговори на отзиви', 0],
-                    ],
-                    'Сайт' => [
-                        ['admin.posts.index', 'admin.posts.*', 'newspaper', 'Блог', 0],
-                        ['admin.post-categories.index', 'admin.post-categories.*', 'tags', 'Категории на блога', 0],
-                        ['admin.content.index', 'admin.content.*', 'pen-to-square', 'Текстове по страниците', 0],
-                        ['admin.seo.index', 'admin.seo.*', 'magnifying-glass', 'SEO', 0],
-                    ],
-                    'Настройки' => array_values(array_filter([
-                        ['admin.categories.index', 'admin.categories.*', 'tags', 'Категории на проекти', 0],
-                        ['admin.technologies.index', 'admin.technologies.*', 'cogs', 'Технологии', 0],
-                        auth()->user()->isAdmin() ? ['admin.users.index', 'admin.users.*', 'users', 'Потребители', 0] : null,
-                        ['admin.health', 'admin.health', 'cogs', 'Здраве на системата', 0],
-                        ['admin.profile.edit', 'admin.profile.*', 'user-gear', 'Моят профил', 0],
-                    ])),
-                ];
-            @endphp
-            <nav class="mt-4 pb-6">
+@php
+    // Менюто идва от профила на човека (App\Support\Admin\Profiles); броячите се смятат веднъж на заявка (Badges).
+    $me = auth()->user();
+    $profileKey = $me->profile();
+    $canUsers = $me->isAdmin();
+    $menu = \App\Support\Admin\Profiles::menu($profileKey, $canUsers);
+    $others = \App\Support\Admin\Profiles::others($profileKey, $canUsers);
+    $isActive = fn (array $item) => request()->routeIs(...$item['match']);
+    $current = null;
+    $currentGroup = null;
+    foreach ([$menu, $others] as $part) {
+        foreach ($part as $group => $items) {
+            foreach ($items as $item) {
+                if (! $current && $isActive($item)) { $current = $item; $currentGroup = $group; }
+            }
+        }
+    }
+    $moreOpen = $current && collect($others)->flatten(1)->contains(fn ($i) => $i['route'] === $current['route']);
+    $title = trim($__env->yieldContent('title', 'Админ'));
+    $bottom = \App\Support\Admin\Profiles::phoneNav($profileKey);
+    $quick = \App\Support\Admin\Profiles::quickActions($profileKey);
+    $initial = mb_strtoupper(mb_substr($me->name, 0, 1));
+@endphp
+<body>
+    <div class="adm-shell">
+        <aside class="adm-side" id="adm-side" aria-label="Меню">
+            <a href="{{ route('admin.today') }}" class="adm-brand"><img src="{{ asset('images/logo-g-dark-224.webp') }}" srcset="{{ asset('images/logo-g-dark-224.webp') }} 1x, {{ asset('images/logo-g-dark-352.webp') }} 2x" alt="Creatium Lab"></a>
+            <a href="{{ route('admin.profile.edit') }}" class="adm-who" title="Моят профил">
+                <span class="adm-avatar">{{ $initial }}</span>
+                <span class="min-w-0"><b class="truncate">{{ $me->name }}</b><span>{{ \App\Support\Admin\Profiles::label($profileKey) }}</span></span>
+            </a>
+
+            <nav class="adm-nav">
                 @foreach($menu as $group => $items)
-                    @if($group)<p class="mt-5 px-4 pb-1 text-xs uppercase tracking-wider text-gray-400">{{ $group }}</p>@endif
-                    @foreach($items as [$route, $pattern, $icon, $label, $count])
-                        <a href="{{ route($route) }}" class="flex items-center justify-between gap-2 px-4 py-2 hover:bg-gray-700 {{ request()->routeIs(...(array) $pattern) ? 'bg-gray-700' : '' }}" @if(request()->routeIs(...(array) $pattern)) aria-current="page" @endif>
-                            <span><x-icon name="{{ $icon }}" class="mr-2" /> {{ $label }}</span>
-                            @if($count > 0)<span class="rounded-full bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">{{ $count }}</span>@endif
+                    @if($group !== '')<p class="adm-group">{{ $group }}</p>@endif
+                    @foreach($items as $item)
+                        @php $count = \App\Support\Admin\Badges::get($item['badge']); @endphp
+                        <a href="{{ route($item['route']) }}" class="adm-link" @if($isActive($item)) aria-current="page" @endif>
+                            <x-icon name="{{ $item['icon'] }}" />
+                            <span class="adm-label">{{ $item['label'] }}</span>
+                            @if($count > 0)<span class="adm-badge">{{ $count }}</span>@endif
                         </a>
                     @endforeach
                 @endforeach
-                <form action="{{ route('logout') }}" method="POST" class="mt-2">
-                    @csrf
-                    <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-700"><x-icon name="sign-out-alt" class="mr-2" /> Изход</button>
-                </form>
+
+                @if($others)
+                    {{-- Разделите извън профила не са заключени: стоят тук и излизат в търсенето (Ctrl+K). --}}
+                    <details class="adm-more" @if($moreOpen) open @endif>
+                        <summary>Всички раздели <x-icon name="chevron-down" /></summary>
+                        @foreach($others as $group => $items)
+                            @if($group !== '')<p class="adm-group">{{ $group }}</p>@endif
+                            @foreach($items as $item)
+                                @php $count = \App\Support\Admin\Badges::get($item['badge']); @endphp
+                                <a href="{{ route($item['route']) }}" class="adm-link" @if($isActive($item)) aria-current="page" @endif>
+                                    <x-icon name="{{ $item['icon'] }}" />
+                                    <span class="adm-label">{{ $item['label'] }}</span>
+                                    @if($count > 0)<span class="adm-badge">{{ $count }}</span>@endif
+                                </a>
+                            @endforeach
+                        @endforeach
+                    </details>
+                @endif
             </nav>
-        </div>
 
-        <!-- Sidebar Overlay (Mobile) -->
-        <div class="sidebar-overlay fixed inset-0 bg-black/50 z-30 md:hidden"></div>
+            <div class="adm-side-foot">
+                <a href="{{ route('home') }}" target="_blank" rel="noopener" class="adm-link"><x-icon name="home" /><span class="adm-label">Към сайта</span><x-icon name="arrow-up-right-from-square" /></a>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="adm-link w-full text-left"><x-icon name="sign-out-alt" /><span class="adm-label">Изход</span></button>
+                </form>
+            </div>
+        </aside>
+        <div class="adm-scrim" data-adm-close></div>
 
-        <!-- Main Content -->
-        <div class="flex-1 min-w-0 flex flex-col overflow-y-auto">
-            <!-- Header -->
-            <header class="bg-white shadow-sm border-b sticky top-0 z-20">
-                <div class="px-4 md:px-6 py-4 flex justify-between items-center gap-4">
-                    <button id="menu-toggle" class="md:hidden p-2 hover:bg-gray-100 rounded-lg">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                    <h2 class="text-lg md:text-2xl font-semibold text-gray-800 truncate">@yield('title', 'Админ')</h2>
-                    <form action="{{ route('admin.search') }}" method="GET" class="ml-auto hidden md:flex" role="search">
-                        <input type="search" name="q" value="{{ request()->routeIs('admin.search') ? request('q') : '' }}" placeholder="Търсене (Ctrl+K)" class="w-56 lg:w-72 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" data-global-search>
-                    </form>
-                    <a href="{{ route('admin.search') }}" class="ml-auto md:hidden p-2 text-gray-600" aria-label="Търсене"><x-icon name="search" /></a>
-                    <a href="{{ route('home') }}" target="_blank" rel="noopener" class="hidden sm:flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors whitespace-nowrap text-sm">
-                        <x-icon name="home" class="mr-2" />Към сайта
-                    </a>
-                    @if(\App\Support\Design::configured() !== 'g')
-                        {{-- Новият дизайн (концепция Г): прегледът за влезлите и линк за 30 дни за хора без профил в админа. --}}
-                        @php($designLink = \Illuminate\Support\Facades\URL::temporarySignedRoute('design.link', now()->addDays(30)))
-                        <a href="{{ route('home') }}?dizain=g" target="_blank" rel="noopener" class="hidden sm:flex items-center border border-gray-900 text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-900 hover:text-white transition-colors whitespace-nowrap text-sm" data-new-design>Нов дизайн</a>
-                        <button type="button" class="hidden lg:flex items-center text-gray-600 hover:text-gray-900 px-2 py-2 text-sm whitespace-nowrap" data-copy-design-link="{{ $designLink }}" title="Линк, с който всеки вижда новия дизайн 30 дни, без вход">Копирай линк за преглед</button>
-                        <script>
-                            document.querySelectorAll('[data-copy-design-link]').forEach(function (b) {
-                                b.addEventListener('click', function () {
-                                    var link = b.getAttribute('data-copy-design-link');
-                                    var done = function () { var t = b.textContent; b.textContent = 'Копирано'; setTimeout(function () { b.textContent = t; }, 1800); };
-                                    if (navigator.clipboard) { navigator.clipboard.writeText(link).then(done, function () { window.prompt('Копирайте линка', link); }); } else { window.prompt('Копирайте линка', link); }
-                                });
+        <div class="adm-main">
+            <header class="adm-top">
+                <button type="button" class="adm-burger" data-adm-toggle aria-label="Менюто" aria-controls="adm-side"><x-icon name="bars" class="text-xl" /></button>
+                <p class="adm-crumb">@if($currentGroup && $currentGroup !== '')<span>{{ $currentGroup }}</span> / @endif<b>{{ $title }}</b></p>
+
+                <form action="{{ route('admin.search') }}" method="GET" role="search" class="adm-search">
+                    <x-icon name="search" />
+                    <input type="search" name="q" value="{{ request()->routeIs('admin.search') ? request('q') : '' }}" placeholder="Търсене във всичко" aria-label="Търсене" data-global-search>
+                    <kbd>Ctrl K</kbd>
+                </form>
+                <a href="{{ route('admin.search') }}" class="adm-search-icon" aria-label="Търсене"><x-icon name="search" class="text-lg" /></a>
+
+                <details class="adm-menu adm-hide-sm" data-adm-menu>
+                    <summary class="adm-btn sm"><x-icon name="plus" /> Ново</summary>
+                    <div class="adm-pop">
+                        @foreach($quick as $action)<a href="{{ route($action[0]) }}">{{ $action[1] }}</a>@endforeach
+                    </div>
+                </details>
+
+                @if(\App\Support\Design::configured() !== 'g')
+                    {{-- Новият дизайн (концепция Г): прегледът за влезлите и линк за 30 дни за хора без профил в админа. --}}
+                    @php $designLink = \Illuminate\Support\Facades\URL::temporarySignedRoute('design.link', now()->addDays(30)); @endphp
+                    <details class="adm-menu adm-hide-sm" data-adm-menu>
+                        <summary class="adm-btn ghost sm">Нов дизайн <x-icon name="chevron-down" class="text-[10px]" /></summary>
+                        <div class="adm-pop">
+                            <a href="{{ route('home') }}?dizain=g" target="_blank" rel="noopener" data-new-design>Отвори прегледа</a>
+                            <button type="button" data-copy-design-link="{{ $designLink }}" title="Линк, с който всеки вижда новия дизайн 30 дни, без вход">Копирай линк за преглед</button>
+                        </div>
+                    </details>
+                    <script>
+                        document.querySelectorAll('[data-copy-design-link]').forEach(function (b) {
+                            b.addEventListener('click', function () {
+                                var link = b.getAttribute('data-copy-design-link');
+                                var done = function () { var t = b.textContent; b.textContent = 'Копирано'; setTimeout(function () { b.textContent = t; }, 1800); };
+                                if (navigator.clipboard) { navigator.clipboard.writeText(link).then(done, function () { window.prompt('Копирайте линка', link); }); } else { window.prompt('Копирайте линка', link); }
                             });
-                        </script>
-                    @endif
-                </div>
+                        });
+                    </script>
+                @endif
+
+                <a href="{{ route('home') }}" target="_blank" rel="noopener" class="adm-btn ghost sm adm-hide-sm"><x-icon name="home" /> Към сайта</a>
+
+                <details class="adm-menu" data-adm-menu>
+                    <summary class="adm-me" aria-label="Профил"><span class="adm-avatar">{{ $initial }}</span></summary>
+                    <div class="adm-pop">
+                        <small>{{ $me->name }} · {{ \App\Support\Admin\Profiles::label($profileKey) }}</small>
+                        <a href="{{ route('admin.profile.edit') }}"><x-icon name="user-gear" /> Моят профил</a>
+                        <hr>
+                        <form action="{{ route('logout') }}" method="POST">@csrf<button type="submit"><x-icon name="sign-out-alt" /> Изход</button></form>
+                    </div>
+                </details>
             </header>
 
-            <!-- Content -->
-            <main class="flex-1 p-4 pb-24 md:p-6">
+            <main class="adm-content">
                 @if(session('success'))
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                        {{ session('success') }}
-                    </div>
+                    <div class="adm-flash ok" role="status">{{ session('success') }}</div>
                 @endif
 
                 @if($errors->any() && request()->routeIs('admin.posts.*', 'admin.post-categories.*', 'admin.content.*', 'admin.seo.*', 'admin.profile.*', 'admin.client-emails.*'))
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
-                        <p class="font-semibold">Има грешки във формата:</p>
-                        <ul class="list-disc pl-5 mt-1 text-sm">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+                    <div class="adm-flash err" role="alert">
+                        <div>
+                            <p class="font-semibold">Има грешки във формата:</p>
+                            <ul class="list-disc pl-5 mt-1 text-sm">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                 @endif
 
                 @if(session('error'))
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                        {{ session('error') }}
-                    </div>
+                    <div class="adm-flash err" role="alert">{{ session('error') }}</div>
                 @endif
 
                 @yield('content')
             </main>
         </div>
     </div>
-    {{-- Долно меню на телефона: най-честите неща с палеца. --}}
-    <nav class="md:hidden fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)] text-[11px] font-semibold text-gray-600" aria-label="Бързо меню">
-        @foreach([
-            ['admin.today', 'admin.today', 'calendar', 'Днес', $urgentToday],
-            ['admin.inquiries.index', 'admin.inquiries.*', 'envelope', 'Запитвания', $unreadInquiries],
-            ['admin.outreach.calls.next', 'admin.outreach.calls.*', 'phone', 'Обаждания', 0],
-            ['admin.search', 'admin.search', 'search', 'Търсене', 0],
-        ] as [$route, $pattern, $icon, $label, $count])
-            <a href="{{ route($route) }}" class="relative flex flex-col items-center gap-1 py-2 {{ request()->routeIs(...(array) $pattern) ? 'text-brand-700' : '' }}">
-                <x-icon name="{{ $icon }}" class="text-lg" />{{ $label }}
-                @if($count > 0)<span class="absolute right-3 top-1 rounded-full bg-blue-500 px-1.5 text-[10px] text-white">{{ $count }}</span>@endif
+
+    {{-- Долно меню на телефона: най-честите неща с палеца, според профила. --}}
+    <nav class="adm-bottom" aria-label="Бързо меню">
+        @foreach($bottom as $item)
+            @php $count = \App\Support\Admin\Badges::get($item['badge']); @endphp
+            <a href="{{ route($item['route']) }}" @if($isActive($item)) aria-current="page" @endif>
+                <x-icon name="{{ $item['icon'] }}" />{{ $item['label'] }}
+                @if($count > 0)<span class="adm-badge">{{ $count }}</span>@endif
             </a>
         @endforeach
-        <button type="button" class="flex flex-col items-center gap-1 py-2" data-bottom-menu><svg class="h-[18px] w-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>Меню</button>
+        <button type="button" data-bottom-menu data-adm-toggle><x-icon name="bars" />Меню</button>
     </nav>
 
     <script>
-        document.querySelector('[data-bottom-menu]')?.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.querySelector('.sidebar');
-        const overlay = document.querySelector('.sidebar-overlay');
+        (function () {
+            var body = document.body;
+            document.querySelectorAll('[data-adm-toggle]').forEach(function (b) { b.addEventListener('click', function () { body.classList.toggle('adm-open'); }); });
+            document.querySelectorAll('[data-adm-close]').forEach(function (b) { b.addEventListener('click', function () { body.classList.remove('adm-open'); }); });
+            document.querySelectorAll('.adm-side a').forEach(function (a) { a.addEventListener('click', function () { body.classList.remove('adm-open'); }); });
 
-        function closeSidebar() {
-            document.body.classList.remove('sidebar-open');
-        }
-
-        menuToggle?.addEventListener('click', () => {
-            document.body.classList.toggle('sidebar-open');
-        });
-
-        overlay?.addEventListener('click', closeSidebar);
-
-        // Ctrl+K (или Cmd+K) отваря търсенето отвсякъде.
-        document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-                e.preventDefault();
-                const box = document.querySelector('[data-global-search]');
-                if (box && box.offsetParent !== null) { box.focus(); box.select(); } else { location.href = @json(route('admin.search')); }
-            }
-        });
-        sidebar?.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', closeSidebar);
-        });
+            // Само едно падащо меню е отворено; затваря се с клик отвън и с Esc.
+            var menus = document.querySelectorAll('[data-adm-menu]');
+            menus.forEach(function (m) { m.addEventListener('toggle', function () { if (m.open) menus.forEach(function (o) { if (o !== m) o.open = false; }); }); });
+            document.addEventListener('click', function (e) { menus.forEach(function (m) { if (m.open && !m.contains(e.target)) m.open = false; }); });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') { menus.forEach(function (m) { m.open = false; }); body.classList.remove('adm-open'); }
+                // Ctrl+K (или Cmd+K) отваря търсенето отвсякъде.
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                    e.preventDefault();
+                    var box = document.querySelector('[data-global-search]');
+                    if (box && box.offsetParent !== null) { box.focus(); box.select(); } else { location.href = @json(route('admin.search')); }
+                }
+            });
+        })();
     </script>
     @stack('scripts')
 </body>
