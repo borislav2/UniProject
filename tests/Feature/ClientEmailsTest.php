@@ -385,7 +385,6 @@ class ClientEmailsTest extends TestCase
 
         $template = ClientEmails::find('offer-individual');
         $this->assertSame('individual', $template['package']);
-        $this->assertSame('Индивидуален маркетинг', ClientEmails::PACKAGES['individual']);
         $this->actingAs($this->admin())->get('/admin/emails/offer-individual')->assertOk()
             ->assertDontSee('value="' . now()->addDays(7)->toDateString() . '"', false);
     }

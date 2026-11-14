@@ -30,23 +30,6 @@ class PlanBilling
         return $billing;
     }
 
-    public static function billingFrom(mixed $value): string
-    {
-        return $value === 'godishno' || $value === self::YEARLY ? self::YEARLY : self::MONTHLY;
-    }
-
-    /** The query value of a billing mode (?plashtane=). */
-    public static function billingParam(string $billing): string
-    {
-        return $billing === self::YEARLY ? 'godishno' : 'mesechno';
-    }
-
-    /** The „-17%“ on the yearly button. */
-    public static function savingPercent(array $billing): int
-    {
-        return (int) round((1 - $billing['yearly_months'] / 12) * 100);
-    }
-
     /** The first euro amount in a price line („€400 еднократно …“, „след това €200 / месец“, „от €1 200 / месец“), or null. */
     public static function amount(?string $line): ?int
     {

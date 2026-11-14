@@ -170,10 +170,6 @@ html.chat-open .g-preview { display: none; }
 .design-g .g-rows h3 { font: 300 clamp(1.7rem, 3.4vw, 2.7rem)/1.05 var(--g-head); letter-spacing: -.03em; }
 .design-g .g-rows p { grid-column: 2; color: var(--g-mute); max-width: 30em; }
 @media (min-width: 640px) { .design-g .g-rows li { grid-template-columns: 56px 1fr 1fr; } .design-g .g-rows p { grid-column: 3; } }
-.design-g .g-rows li.g-end { border-bottom: 0; padding: 34px 0 0; }
-.design-g .g-rows li.g-end h3 { color: var(--g-accent); font-weight: 400; }
-.design-g .g-rows li.g-end::before { display: none; }
-.design-g .g-rows li.g-end .g-eq { font: 300 clamp(1.7rem, 3.4vw, 2.7rem) var(--g-head); }
 
 /* Concepts: two equal columns, previews all 16:10, cropped from the top */
 .design-g .g-work { display: grid; gap: clamp(32px, 3.4vw, 48px) 28px; grid-template-columns: 1fr; }
@@ -193,7 +189,6 @@ html.chat-open .g-preview { display: none; }
 .design-g .g-work a:hover strong { color: var(--g-accent-text); }
 .design-g .g-work figcaption { display: flex; align-items: center; gap: 14px; margin-top: 16px; }
 .design-g .g-work figcaption .g-no { color: var(--g-mute); }
-.design-g .g-chip { border: 1px solid var(--g-accent-text); color: var(--g-accent-text); padding: 3px 9px; }
 .design-g .g-work figcaption strong { font: 400 1.35rem var(--g-head); letter-spacing: -.02em; margin-left: auto; transition: color .2s; }
 .design-g .g-more { margin-top: clamp(40px, 5vw, 64px); display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; }
 
@@ -395,7 +390,7 @@ html.design-g.dark .g-plan.g-rec .g-grp summary b { color: #C4300F; }
 @media (min-width: 640px) { .design-g .g-fgrid { grid-template-columns: 1fr 1fr; } }
 .design-g .g-trap { position: absolute; left: -9999px; }
 .design-g .g-fld { min-width: 0; border: 0; padding: 0; margin: 0; }
-.design-g .g-fld > label, .design-g .g-fld > legend, .design-g .g-fld > .g-lbl { display: block; font: 500 12px/1.4 var(--g-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--g-ink); margin-bottom: 6px; padding: 0; }
+.design-g .g-fld > label, .design-g .g-fld > legend { display: block; font: 500 12px/1.4 var(--g-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--g-ink); margin-bottom: 6px; padding: 0; }
 .design-g .g-fld > label b, .design-g .g-fld > legend b { color: var(--g-accent-text); }
 .design-g .g-in { width: 100%; font: 400 17px var(--g-body); color: var(--g-ink); background: transparent; border: 0; border-bottom: 1px solid var(--g-line-strong); padding: 10px 0 12px; border-radius: 0; outline: none; box-shadow: none; transition: border-color .2s; appearance: none; -webkit-appearance: none; }
 .design-g select.g-in { background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 12px) 55%, calc(100% - 7px) 55%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 28px; }

@@ -21,7 +21,7 @@
 .design-g .g-404 { min-height: 56vh; }
 
 /* Section heading helpers */
-.design-g .g-sh .g-mono b, .design-g .g-callgrid .g-mono b, .design-g .g-band .g-mono b { color: var(--g-accent-text); font-weight: 500; margin-right: 10px; }
+.design-g .g-sh .g-mono b, .design-g .g-band .g-mono b { color: var(--g-accent-text); font-weight: 500; margin-right: 10px; }
 .design-g .g-band .g-mono b { color: var(--g-accent); }
 .design-g .g-sh .g-link { align-self: start; justify-self: start; }
 .design-g .g-rows-label { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
@@ -44,8 +44,6 @@
 .design-g .g-problems li > span { color: var(--g-ink); font-size: 17px; }
 
 /* Columns and cells */
-.design-g .g-cols3 { display: grid; gap: 0; border-top: 1px solid var(--g-line-strong); }
-@media (min-width: 900px) { .design-g .g-cols3 { grid-template-columns: repeat(3, 1fr); } }
 .design-g .g-col { padding: 28px 0 36px; border-bottom: 1px solid var(--g-line); scroll-margin-top: 100px; }
 @media (min-width: 900px) { .design-g .g-col { padding: 32px 32px 40px 0; border-bottom: 0; } .design-g .g-col + .g-col { padding-left: 32px; border-left: 1px solid var(--g-line); } }
 .design-g .g-col h3 { font: 400 1.35rem/1.2 var(--g-head); letter-spacing: -.02em; margin-bottom: 6px; }
@@ -106,9 +104,9 @@
 .design-g .g-band .g-btn.g-onband-ghost:hover { background: var(--g-band-fg); color: var(--g-band); }
 .design-g .g-band .g-cta { margin-top: 0; }
 html.design-g.dark .g-band .g-btn.g-onband-ghost { border-color: rgba(236, 238, 240, .4); }
-.design-g .g-pkgcard, .design-g .g-callgrid { display: grid; gap: 40px; align-items: center; }
-@media (min-width: 900px) { .design-g .g-pkgcard, .design-g .g-callgrid { grid-template-columns: 7fr 5fr; gap: 90px; } }
-.design-g .g-pkgcard h2, .design-g .g-callgrid h2 { margin-top: 16px; font-size: clamp(1.9rem, 4.2vw, 3.6rem); }
+.design-g .g-pkgcard { display: grid; gap: 40px; align-items: center; }
+@media (min-width: 900px) { .design-g .g-pkgcard { grid-template-columns: 7fr 5fr; gap: 90px; } }
+.design-g .g-pkgcard h2 { margin-top: 16px; font-size: clamp(1.9rem, 4.2vw, 3.6rem); }
 .design-g .g-pr4 { }
 @media (min-width: 800px) { .design-g .g-pr4 { grid-template-columns: repeat(4, 1fr); } }
 .design-g .g-engine h2 { margin-top: 18px; font-size: clamp(2rem, 4.6vw, 4rem); max-width: 16em; }
@@ -139,11 +137,7 @@ html.design-g.dark .g-band .g-btn.g-onband-ghost { border-color: rgba(236, 238, 
 .design-g .g-svc .g-n { color: var(--g-accent-text); }
 .design-g .g-svc-main h2 { margin-top: 10px; font-size: clamp(1.9rem, 3.6vw, 3rem); }
 .design-g .g-svc-tag { margin-top: 12px; font: 400 1.15rem/1.35 var(--g-head); letter-spacing: -.015em; }
-.design-g .g-svc-desc { margin-top: 14px; color: var(--g-mute); max-width: 36em; }
 .design-g .g-svc-inc .g-list { margin-bottom: 22px; }
-.design-g .g-svc-new { background: var(--g-surface); padding-inline: clamp(16px, 2.4vw, 32px); }
-.design-g .g-svc-new .g-svc-main h2 { margin-top: 0; font-size: clamp(1.6rem, 2.8vw, 2.3rem); }
-.design-g .g-svc-new .g-svc-no { align-items: center; }
 .design-g .g-next-band, .design-g .g-checkbar { display: grid; gap: 28px; align-items: center; }
 @media (min-width: 900px) { .design-g .g-next-band, .design-g .g-checkbar { grid-template-columns: 1fr auto; gap: 80px; } }
 .design-g .g-next-band h2 { margin-top: 14px; font-size: clamp(1.9rem, 4vw, 3.4rem); max-width: 18em; }
@@ -231,11 +225,6 @@ html.design-g.dark .g-band .g-btn.g-onband-ghost { border-color: rgba(236, 238, 
 .design-g .g-big-prose { font-size: clamp(1.25rem, 2vw, 1.6rem); line-height: 1.45; font-family: var(--g-head); font-weight: 300; letter-spacing: -.015em; max-width: 30em; }
 
 /* About */
-.design-g .g-founders { list-style: none; display: grid; gap: 0; border-top: 1px solid var(--g-line-strong); }
-@media (min-width: 700px) { .design-g .g-founders { grid-template-columns: repeat(2, 1fr); gap: 0 40px; } }
-.design-g .g-founders li { display: flex; gap: 18px; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--g-line); }
-.design-g .g-founders img { width: 72px; height: 72px; object-fit: cover; object-position: top; border: 1px solid var(--g-line); flex: none; }
-.design-g .g-founders b { display: block; font: 400 1.4rem/1.2 var(--g-head); letter-spacing: -.02em; margin-bottom: 4px; }
 .design-g .g-legal-line { margin-top: 28px; text-transform: none; letter-spacing: .02em; }
 
 /* The funnel (on the dark band): customers fall through the levels; a stopped level turns the section signal red */
