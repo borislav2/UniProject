@@ -6,14 +6,12 @@
 @section('g_lean', 'inner')
 
 @php
-    $pad = fn ($n) => str_pad((string) $n, 2, '0', STR_PAD_LEFT);
-    $n = 0;
 @endphp
 
 @section('content')
-@include('partials.g.page-head', ['eyebrow' => __('Проекти'), 'heading' => __('Разгледайте работата ни')])
+@include('partials.g.page-head', ['heading' => __('Разгледайте работата ни')])
 
-<section class="g-s" style="border-bottom:0">
+<section class="g-s g-last">
     <div class="g-wrap">
         @if($projects->isNotEmpty() || ! empty($demos))
             <div class="g-work" data-portfolio-grid>
@@ -31,11 +29,10 @@
                             </div>
                             @if($project->website_url)</a>@endif
                             <figcaption>
-                                <span class="g-no g-mono">{{ $pad(++$n) }}</span>
-                                <span class="g-mute g-mono">{{ $project->category->name }}</span>
-                                <strong>{{ $project->name }}</strong>
+                                <strong>{{ $project->category->name }}</strong>
                             </figcaption>
                         </figure>
+                        <h2 class="g-case-name">{{ $project->name }}</h2>
                         <p class="g-case-text">{{ $project->description }}</p>
                         @if($project->website_url)<a class="g-link" href="{{ $project->website_url }}" target="_blank" rel="noopener">{{ __('Посетете сайта') }} {{ $host }}</a>@endif
                     </article>
@@ -53,7 +50,6 @@
                                 </div>
                             </a>
                             <figcaption>
-                                <span class="g-no g-mono">{{ $pad(++$n) }}</span>
                                 <strong>{{ $demo['industry'] }}</strong>
                             </figcaption>
                         </figure>
@@ -75,7 +71,7 @@
             <div class="g-empty">
                 <h2 class="g-h">{{ __('Тук скоро ще има проекти') }}</h2>
                 <p>{{ __('Ако искате вашият да е един от тях, пишете ни.') }}</p>
-                <a class="g-btn" href="{{ lroute('contact') }}">{{ __('Свържете се с нас') }}<i></i></a>
+                <a class="g-btn" href="{{ lroute('contact') }}">{{ __('Свържете се с нас') }}</a>
             </div>
         @endif
     </div>

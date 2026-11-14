@@ -38,7 +38,7 @@
         </div>
     </header>
 
-    <div class="g-s" style="border-bottom:0">
+    <div class="g-s g-last">
         <div class="g-wrap g-narrow">
             @if($post->cover_image)
                 <div class="g-frame g-cover"><img src="{{ asset($post->cover_image) }}" alt="" width="1200" height="675" fetchpriority="high"></div>
@@ -71,7 +71,7 @@
 </article>
 
 @if($related->isNotEmpty())
-    <section class="g-s" style="border-top:1px solid var(--g-line)">
+    <section class="g-s g-related">
         <div class="g-wrap">
             <div class="g-sh"><p class="g-mono">{{ __('Още новини') }}</p></div>
             <div class="g-posts">

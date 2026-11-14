@@ -7,7 +7,6 @@
     $gRec = collect((array) ($plans['items'] ?? []))->search(fn ($p) => ! empty($p['highlighted']));
     $gBadge = collect((array) ($plans['items'] ?? []))->pluck('badge')->filter()->first() ?: __('Препоръчваме');
     $gSwitch = ! empty($billing['enabled']) && collect($gCards)->contains(fn ($c) => $c['yearly'] !== null);
-    $gPad = fn ($n) => str_pad((string) $n, 2, '0', STR_PAD_LEFT);
 @endphp
 @if($gCards)
 <div data-g-billing="m" data-g-billing-root class="g-plans-wrap">
@@ -19,7 +18,7 @@
         @foreach($gCards as $card)
             @php($isRec = $card['index'] === $gRec)
             <article id="paket-{{ $card['index'] }}" class="g-plan {{ $isRec ? 'g-rec' : '' }}" data-plan="{{ $card['index'] }}">
-                <div class="g-top"><span class="g-mono {{ $isRec ? '' : 'g-mute' }}">{{ $gPad($loop->iteration) }}.</span>@if($isRec)<span class="g-mono">{{ $gBadge }}</span>@endif</div>
+                <div class="g-top">@if($isRec)<span class="g-tag g-mono">{{ $gBadge }}</span>@endif</div>
                 <h3>{{ $card['name'] }}</h3>
                 <div class="g-pricebox">
                     @if($card['monthly'] !== null)
@@ -31,12 +30,12 @@
                     @endif
                 </div>
                 <p class="g-aud">{{ $card['audience'] }}</p>
-                <a class="g-btn" href="{{ lroute('packages') }}?paket={{ $card['index'] }}#oferta">{{ __('Изпратете запитване') }}<i></i></a>
+                <a class="g-btn" href="{{ lroute('packages') }}?paket={{ $card['index'] }}#oferta">{{ __('Изпратете запитване') }}</a>
                 <div class="g-incl">
-                    <p class="g-mono g-mute">{{ $plans['g_includes_label'] ?? __('Какво включва') }}</p>
+                    <p class="g-incl-h">{{ $plans['g_includes_label'] ?? __('Какво включва') }}</p>
                     @foreach($card['groups'] as $group)
                         <details class="g-grp">
-                            <summary><span>@if(count($card['groups']) > 1)<b class="g-mono">{{ $loop->iteration }}.</b> @endif{{ $group['title'] }}</span><i aria-hidden="true"></i></summary>
+                            <summary><span>{{ $group['title'] }}</span><i aria-hidden="true"></i></summary>
                             <ul>
                                 @foreach($group['points'] as $point)
                                     <li><b>{{ $point['title'] }}</b>@if(filled($point['text'] ?? null))<span>{{ $point['text'] }}</span>@endif</li>

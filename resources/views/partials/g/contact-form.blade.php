@@ -39,7 +39,6 @@
                 <div class="g-fld">
                     <label for="name">{{ __('Име и фамилия') }} <b aria-hidden="true">*</b></label>
                     <input class="g-in" type="text" id="name" name="name" value="{{ old('name') }}" required maxlength="255" autocomplete="name">
-                    <p class="g-hint">{{ __('Как да се обръщаме към вас.') }}</p>
                     @error('name')<p class="g-err">{{ $message }}</p>@enderror
                 </div>
                 <div class="g-fld">
@@ -51,13 +50,11 @@
                 <div class="g-fld">
                     <label for="email">{{ __('Имейл') }} <b aria-hidden="true">*</b></label>
                     <input class="g-in" type="email" id="email" name="email" value="{{ old('email') }}" required maxlength="255" autocomplete="email" placeholder="{{ __('ime@firma.bg') }}">
-                    <p class="g-hint">{{ __('Тук ще получите отговора.') }}</p>
                     @error('email')<p class="g-err">{{ $message }}</p>@enderror
                 </div>
                 <div class="g-fld">
                     <label for="phone">{{ __('Телефон') }} <b aria-hidden="true">*</b></label>
                     <input class="g-in" type="tel" id="phone" name="phone" value="{{ old('phone') }}" required autocomplete="tel" inputmode="tel" placeholder="{{ __('08X XXX XXXX') }}">
-                    <p class="g-hint">{{ __('За да можем да ви се обадим.') }}</p>
                     @error('phone')<p class="g-err">{{ $message }}</p>@enderror
                 </div>
             </div>
@@ -108,7 +105,7 @@
                 @error('consent')<p class="g-err">{{ $message }}</p>@enderror
             </div>
             @include('partials.turnstile')
-            <button type="submit" class="g-btn g-big">{{ __('Изпратете') }}<i></i></button>
+            <button type="submit" class="g-btn g-big">{{ __('Изпратете') }}</button>
         </form>
     @endif
 </div>

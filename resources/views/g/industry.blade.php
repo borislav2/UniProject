@@ -5,15 +5,12 @@
 @section('breadcrumb', $page['title'])
 @section('g_lean', 'inner')
 
-@php($pad = fn ($n) => str_pad((string) $n, 2, '0', STR_PAD_LEFT))
-
 @section('content')
-@include('partials.g.page-head', ['eyebrow' => 'Изработка на сайт', 'heading' => $page['title'], 'sub' => $page['lead']])
+@include('partials.g.page-head', ['heading' => $page['title'], 'sub' => $page['lead']])
 
 <section class="g-s">
     <div class="g-wrap g-sys g-ind">
         <div class="g-sh">
-            <p class="g-mono"><b>01</b>Сайтът</p>
             <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="g-frame-link">
                 <div class="g-frame">
                     @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
@@ -27,7 +24,7 @@
             <h2 class="g-h g-rows-h">{{ $page['must_have_title'] }}</h2>
             <ol class="g-rows">
                 @foreach($page['must_have'] as [$title, $text])
-                    <li><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><h3>{{ $title }}</h3><p>{{ $text }}</p></li>
+                    <li><h3>{{ $title }}</h3><p>{{ $text }}</p></li>
                 @endforeach
             </ol>
         </div>
@@ -37,39 +34,40 @@
 <section class="g-s">
     <div class="g-wrap">
         <div class="g-sh">
-            <p class="g-mono"><b>02</b>{{ $demo['industry'] }}</p>
             <h2 class="g-h">Къде губите клиенти и как го оправяме</h2>
         </div>
         <div class="g-two-cols">
             <div class="g-col">
-                <h3 class="g-mono g-mute">Къде се губят клиенти</h3>
+                <h3 class="g-col-h">Къде се губят клиенти</h3>
                 <ol class="g-rows g-rows-tight">
-                    @foreach($demo['problems'] as [$title, $text])<li><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><h3>{{ $title }}</h3><p>{{ $text }}</p></li>@endforeach
+                    @foreach($demo['problems'] as [$title, $text])<li><h3>{{ $title }}</h3><p>{{ $text }}</p></li>@endforeach
                 </ol>
             </div>
             <div class="g-col">
-                <h3 class="g-mono g-mute">Как го оправя сайтът</h3>
+                <h3 class="g-col-h">Как го оправя сайтът</h3>
                 <ol class="g-rows g-rows-tight">
-                    @foreach($demo['solutions'] as [$title, $text])<li><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><h3>{{ $title }}</h3><p>{{ $text }}</p></li>@endforeach
+                    @foreach($demo['solutions'] as [$title, $text])<li><h3>{{ $title }}</h3><p>{{ $text }}</p></li>@endforeach
                 </ol>
             </div>
         </div>
     </div>
 </section>
 
-<section class="g-band">
-    <div class="g-wrap g-pkgcard">
-        <div>
-            <p class="g-mono">Подходящ пакет</p>
-            <h2 class="g-h">{{ $plan['name'] ?? 'Индивидуална оферта' }}</h2>
-            @if($plan)
-                <ul class="g-band-list">@foreach($plan['prices'] as $price)<li>{{ $price }}</li>@endforeach</ul>
-            @endif
-            <p class="g-band-text">{{ $demo['package']['why'] }}</p>
-        </div>
-        <div class="g-cta">
-            <a class="g-btn g-onband" href="{{ lroute('contact') }}#konsultatsiya">Запазете час за разговор<i></i></a>
-            <a class="g-btn g-ghost g-onband-ghost" href="{{ lroute('packages') }}">Вижте пакетите</a>
+<section class="g-s">
+    <div class="g-wrap">
+        <div class="g-pkgcard">
+            <div>
+                <p class="g-mono g-mute">Подходящ пакет</p>
+                <h2 class="g-h">{{ $plan['name'] ?? 'Индивидуална оферта' }}</h2>
+                @if($plan)
+                    <ul class="g-pkg-list">@foreach($plan['prices'] as $price)<li>{{ $price }}</li>@endforeach</ul>
+                @endif
+                <p class="g-pkg-note">{{ $demo['package']['why'] }}</p>
+            </div>
+            <div class="g-cta">
+                <a class="g-btn" href="{{ lroute('contact') }}#konsultatsiya">Запазете час за разговор</a>
+                <a class="g-btn g-ghost" href="{{ lroute('packages') }}">Вижте пакетите</a>
+            </div>
         </div>
     </div>
 </section>
@@ -77,21 +75,20 @@
 <section class="g-s">
     <div class="g-wrap g-sys">
         <div class="g-sh">
-            <p class="g-mono"><b>03</b>Въпроси</p>
             <h2 class="g-h">Често задавани въпроси</h2>
         </div>
         @include('partials.g.faq', ['items' => $demo['faq']])
     </div>
 </section>
 
-<section class="g-s" style="border-bottom:0">
+<section class="g-s g-last">
     <div class="g-wrap">
-        <div class="g-sh"><p class="g-mono">Сайт за друг бранш</p></div>
-        <div class="g-news g-links">
+        <div class="g-sh"><h2 class="g-h g-sub-h">Сайт за друг бранш</h2></div>
+        <div class="g-links">
             @foreach($others as $otherSlug => $other)
-                <a href="{{ route('industry', $otherSlug) }}"><span class="g-mono">{{ $pad($loop->iteration) }}</span><span>{{ $other['title'] }}</span></a>
+                <a href="{{ route('industry', $otherSlug) }}"><span>{{ $other['title'] }}</span></a>
             @endforeach
-            <a href="{{ \App\Http\Controllers\PageController::serviceUrl('website') }}"><span class="g-mono">+</span><span>Изработка на сайт за всеки бизнес</span></a>
+            <a href="{{ \App\Http\Controllers\PageController::serviceUrl('website') }}"><span>Изработка на сайт за всеки бизнес</span></a>
         </div>
     </div>
 </section>

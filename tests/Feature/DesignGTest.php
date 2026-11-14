@@ -235,16 +235,16 @@ class DesignGTest extends TestCase
         config(['creatium.design' => 'g']);
         $html = $this->get('/')->assertOk()->getContent();
 
-        $this->assertStringContainsString('<a href="' . url('/uslugi') . '"><span class="g-mono">01</span><b>Бранд идентичност и позициониране</b>', $html);
-        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('website') . '"><span class="g-mono">02</span><b>Дигитални платформи &amp; Сайтове</b><small>', $html);
-        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('google') . '"><span class="g-mono">03</span><b>Онлайн репутация &amp; Локация</b>', $html);
-        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('seo') . '"><span class="g-mono">04</span><b>Кампании за запитвания &amp; Продажби</b>', $html);
-        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('email') . '"><span class="g-mono">05</span><b>Задържане &amp; Връзка с клиентите</b>', $html);
-        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('support') . '"><span class="g-mono">06</span><b>Дигитална поддръжка &amp; Защита</b>', $html);
+        $this->assertStringContainsString('<a href="' . url('/uslugi') . '"><b>Бранд идентичност и позициониране</b>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('website') . '"><b>Дигитални платформи &amp; Сайтове</b><small>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('google') . '"><b>Онлайн репутация &amp; Локация</b>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('seo') . '"><b>Кампании за запитвания &amp; Продажби</b>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('email') . '"><b>Задържане &amp; Връзка с клиентите</b>', $html);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('support') . '"><b>Дигитална поддръжка &amp; Защита</b>', $html);
         $this->assertStringContainsString('стимулират повторни поръчки', $html);
 
         $en = $this->get('/en')->assertOk()->getContent();
-        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('website', 'en') . '"><span class="g-mono">02</span><b>Digital platforms and websites</b>', $en);
+        $this->assertStringContainsString('<a href="' . PageController::serviceUrl('website', 'en') . '"><b>Digital platforms and websites</b>', $en);
     }
 
     public function test_the_proof_block_is_hidden_without_data_and_shown_with_a_review_count(): void
@@ -488,7 +488,7 @@ class DesignGTest extends TestCase
 
         $html = $this->get('/kontakti')->assertOk()
             ->assertSee('id="g-contact-form"', false)->assertSee('id="contact-form"', false)->assertSee('id="konsultatsiya"', false)
-            ->assertSee('Как да се обръщаме към вас.')->assertSee('Тук ще получите отговора.')
+            ->assertSee('Ако имате сайт, ще го прегледаме преди разговора.')->assertDontSee('Как да се обръщаме към вас.')
             ->assertDontSee('Ще ви отговорим до един работен ден.')->assertSee('Отговаряме до един работен ден.')
             ->assertSee('Viber')->assertSee('WhatsApp')
             ->getContent();
@@ -729,7 +729,7 @@ class DesignGTest extends TestCase
         foreach (['/', '/proekti', '/en', '/en/projects'] as $path) {
             $html = $this->get($path)->assertOk()->getContent();
             $this->assertSame(10, substr_count($html, 'class="g-facts"'), $path);
-            $this->assertSame(30, substr_count($html, '<dd>'), $path);
+            $this->assertSame(30, preg_match_all('~<li><b>[^<]+</b> [^<]+</li>~u', $html), $path);
         }
         $this->get('/')->assertSee('17')->assertSee('ястия с цени в менюто')->assertSee('праг за безплатна доставка');
         $this->get('/en')->assertSee('dishes with prices on the menu');
@@ -742,7 +742,9 @@ class DesignGTest extends TestCase
     public function test_the_home_gap_after_the_projects_is_tightened_in_the_css(): void
     {
         $css = file_get_contents(resource_path('css/g.css'));
-        $this->assertStringContainsString('section#proekti { padding-bottom: clamp(32px, 4vw, 56px); }', $css);
+        // One spacing scale for every section (48 / 72 / 96), no special gap after the projects.
+        $this->assertStringContainsString('--g-pad: 96px', $css);
+        $this->assertStringContainsString('section.g-s { padding-block: var(--g-pad);', $css);
     }
 
     public function test_g_services_page_has_six_plain_services_each_with_what_we_do_what_you_get_and_a_package(): void

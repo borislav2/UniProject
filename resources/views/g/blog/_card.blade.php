@@ -8,7 +8,7 @@
             @endif
         </div>
     </a>
-    <div class="g-post-meta g-mono">
+    <div class="g-post-meta">
         @if($post->category)<span>{{ $post->category->trOrBg('name') }}</span>@endif
         <time datetime="{{ $post->published_at->toDateString() }}">{{ $post->published_at->locale(app()->getLocale())->translatedFormat('j F Y') }}</time>
     </div>

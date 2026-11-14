@@ -18,22 +18,22 @@
 @endpush
 
 @section('content')
-@include('partials.g.page-head', ['eyebrow' => __('Въпроси'), 'heading' => __('Често задавани въпроси'), 'sub' => __('Цени, срокове, Google и AI, грижата след пускането. Ако не намерите отговор, попитайте ни директно.')])
+@include('partials.g.page-head', ['heading' => __('Често задавани въпроси'), 'sub' => __('Цени, срокове, Google и AI, грижата след пускането. Ако не намерите отговор, попитайте ни директно.')])
 
-<section class="g-s" style="border-bottom:0">
+<section class="g-s g-last">
     <div class="g-wrap g-sys">
         <div class="g-sh">
             @if($groups->keys()->filter()->isNotEmpty())
                 <nav class="g-topics" aria-label="{{ __('Теми') }}">
                     @foreach($groups->keys()->filter() as $group)
-                        <a href="#{{ Str::slug($group, '-', 'bg') }}"><span class="g-mono">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>{{ $group }}</a>
+                        <a href="#{{ Str::slug($group, '-', 'bg') }}">{{ $group }}</a>
                     @endforeach
                 </nav>
             @endif
             <div class="g-askbox">
-                <p class="g-mono">{{ __('Не намерихте отговор?') }}</p>
-                <p>{{ __('Запазете час за разговор и ще отговорим на всичко за вашия бизнес.') }}</p>
-                <a class="g-btn" href="{{ lroute('contact') }}#konsultatsiya">{{ __('Запазете час') }}<i></i></a>
+                <p class="g-askbox-h">{{ __('Не намерихте отговор?') }}</p>
+                <p class="g-askbox-t">{{ __('Запазете час за разговор и ще отговорим на всичко за вашия бизнес.') }}</p>
+                <a class="g-btn" href="{{ lroute('contact') }}#konsultatsiya">{{ __('Запазете час') }}</a>
             </div>
         </div>
         <div class="g-faq-groups">

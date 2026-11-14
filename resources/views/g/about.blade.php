@@ -21,31 +21,18 @@
         $legal['address'] ?? null,
         __(config('creatium.contact.city')) . ', ' . __('България'),
     ])->filter()->implode(', ');
-    $n = 0;
 @endphp
 
 @section('content')
-@include('partials.g.page-head', ['eyebrow' => __('За нас'), 'heading' => $about['g_intro_title'] ?? __('Дигитална агенция за бизнеси'), 'sub' => $intro[0] ?? null])
-
-@if(count($intro) > 1)
-<section class="g-s">
-    <div class="g-wrap g-sys">
-        <div class="g-sh"><p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Кои сме ние') }}</p></div>
-        <div class="g-prose g-big-prose">
-            @foreach(array_slice($intro, 1) as $paragraph)<p>{{ $paragraph }}</p>@endforeach
-        </div>
-    </div>
-</section>
-@endif
+@include('partials.g.page-head', ['heading' => $about['g_intro_title'] ?? __('Дигитална агенция за бизнеси'), 'sub' => $intro[0] ?? null, 'more' => array_slice($intro, 1)])
 
 @if($method)
 <section class="g-s">
     <div class="g-wrap g-sys">
         <div class="g-sh">
-            <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Метод') }}</p>
             <h2 class="g-h">{{ $about['g_method_title'] ?? __('Как работим') }}</h2>
         </div>
-        <ol class="g-rows">
+        <ol class="g-rows g-numbered">
             @foreach($method as $step)
                 <li><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><h3>{{ $step['title'] }}</h3><p>{{ $step['text'] ?? '' }}</p></li>
             @endforeach
@@ -55,13 +42,14 @@
 @endif
 
 @if($standards)
-<section class="g-band">
-    <div class="g-wrap">
-        <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ __('Стандарти') }}</p>
-        <h2 class="g-h">{{ $about['g_standards_title'] ?? __('Нашите стандарти') }}</h2>
-        <div class="g-pr g-pr4">
-            @foreach($standards as $item)<div><b>{{ $item['title'] }}</b><span>{{ $item['text'] ?? '' }}</span></div>@endforeach
+<section class="g-s">
+    <div class="g-wrap g-sys">
+        <div class="g-sh">
+            <h2 class="g-h">{{ $about['g_standards_title'] ?? __('Нашите стандарти') }}</h2>
         </div>
+        <dl class="g-defs">
+            @foreach($standards as $item)<div><dt>{{ $item['title'] }}</dt><dd>{{ $item['text'] ?? '' }}</dd></div>@endforeach
+        </dl>
     </div>
 </section>
 @endif
@@ -70,7 +58,7 @@
 <section class="g-s" id="ekip">
     <div class="g-wrap">
         <div class="g-sh">
-            <p class="g-mono"><b>{{ $pad(++$n) }}</b>{{ $about['g_founders_title'] ?? __('Екипът') }}</p>
+            <h2 class="g-h">{{ $about['g_founders_title'] ?? __('Екипът') }}</h2>
         </div>
         {{-- Team cards (fifth round): photo or initials, name, role, a short description, the longer text, skills and LinkedIn. Horizontal cards, one per row, any number of members. --}}
         <div class="g-team" data-g-team>
@@ -89,7 +77,7 @@
                     @endif
                     <div class="g-member-body">
                         @if($name !== '')<h3>{{ $name }}</h3>@endif
-                        <p class="g-mono g-mute">{{ $member['role'] ?? '' }}</p>
+                        <p class="g-role">{{ $member['role'] ?? '' }}</p>
                         @if(filled($member['description'] ?? null))<p class="g-member-lead">{{ $member['description'] }}</p>@endif
                         @if(! empty($member['bio']))
                             <div class="g-member-bio">
@@ -106,21 +94,10 @@
                 </article>
             @endforeach
         </div>
-        <p class="g-legal-line g-mono g-mute">{{ $legalLine }}</p>
+        <p class="g-legal-line">{{ $legalLine }}</p>
     </div>
 </section>
 @endif
 
-<section class="g-s" style="border-bottom:0">
-    <div class="g-wrap g-next-band">
-        <div>
-            <p class="g-mono g-mute">{{ __('Имате въпроси?') }}</p>
-            <h2 class="g-h">{{ __('Запазете час за разговор') }}</h2>
-        </div>
-        <div class="g-cta">
-            <a class="g-btn g-big" href="{{ lroute('contact') }}#konsultatsiya">{{ __('Запазете час') }}<i></i></a>
-            <a class="g-btn g-ghost g-big" href="{{ lroute('faq') }}">{{ __('Към въпросите') }}</a>
-        </div>
-    </div>
-</section>
+@include('partials.g.closer', ['kicker' => __('Имате въпроси?'), 'text' => __('Запазете час за разговор'), 'label' => __('Запазете час'), 'href' => lroute('contact') . '#konsultatsiya', 'link' => ['label' => __('Към въпросите'), 'href' => lroute('faq')]])
 @endsection

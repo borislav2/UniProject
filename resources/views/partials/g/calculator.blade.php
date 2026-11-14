@@ -34,8 +34,7 @@
 @endphp
 <section id="kalkulator" class="g-s g-calc" data-calc data-locale="{{ $bg ? 'bg-BG' : 'en-GB' }}">
     <div class="g-wrap">
-        <div class="g-sh">
-            <p class="g-mono">@if(filled($number ?? null))<b>{{ $number }}</b>@endif{{ __('Калкулатор') }}</p>
+        <div class="g-sh g-sh-split">
             <h2 class="g-h">{{ __('Колко можем да подобрим бизнеса ви?') }}</h2>
             <p class="g-sh-text">{{ __('Въведете колко посещения и запитвания имате сега и отметнете какво вече работи при вас. Калкулаторът показва с колко ще се подобрят видимостта, запитванията и конверсията, когато добавим липсващото.') }}</p>
         </div>
@@ -76,7 +75,7 @@
                         @endforeach
                     </div>
                     <div class="g-cta">
-                        <a class="g-btn g-onband" href="{{ lroute('packages') }}#oferta">{{ __('Изпратете запитване') }}<i></i></a>
+                        <a class="g-btn g-onband" href="{{ lroute('packages') }}#oferta">{{ __('Изпратете запитване') }}</a>
                         <a class="g-btn g-ghost g-onband-ghost" href="{{ lroute('packages') }}">{{ __('Вижте пакетите') }}</a>
                     </div>
                 </div>
