@@ -67,6 +67,13 @@
                     })();
                 </script>
             </div>
+            <div>
+                <label class="flex items-start gap-3 text-sm text-gray-700">
+                    <input type="hidden" name="manages_users" value="0">
+                    <input type="checkbox" name="manages_users" value="1" class="mt-1" @checked(old('manages_users', $user->isAdmin())) @disabled($user->is(auth()->user()))>
+                    <span><span class="font-medium">Управлява потребителите</span><br><span class="text-gray-500">Всеки акаунт влиза в админа и вижда всички раздели. С тази отметка може и да създава, променя и трие акаунти.</span></span>
+                </label>
+            </div>
         </div>
 
         <div class="mt-8 flex justify-end space-x-4">

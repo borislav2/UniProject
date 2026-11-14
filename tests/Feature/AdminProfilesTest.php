@@ -214,4 +214,40 @@ class AdminProfilesTest extends TestCase
             ->expectsQuestion('Парола (минимум 12 символа)', 'a-long-enough-password')->assertSuccessful();
         $this->assertSame('all', User::where('email', 'default@example.com')->firstOrFail()->profile);
     }
+
+    public function test_a_user_created_in_the_admin_can_open_the_panel(): void
+    {
+        $admin = $this->person('all', 'admin', 'Главен');
+        $form = ['name' => 'Мария Флорова', 'email' => 'maria@example.com', 'password' => 'long-enough-1', 'password_confirmation' => 'long-enough-1', 'profile' => 'brand'];
+        $this->actingAs($admin)->post('/admin/users', $form)->assertRedirect();
+
+        $maria = User::where('email', 'maria@example.com')->firstOrFail();
+        $this->assertTrue($maria->canAccessAdminPanel());
+        $this->assertFalse($maria->isAdmin());
+        $this->actingAs($maria)->get('/admin/dnes')->assertOk();
+        $this->actingAs($maria)->get('/admin/users')->assertForbidden();
+
+        // С отметката акаунтът управлява и потребителите; без нея отново не.
+        $this->actingAs($admin)->put("/admin/users/{$maria->id}", ['name' => $maria->name, 'email' => $maria->email, 'profile' => 'brand', 'manages_users' => '1'])->assertRedirect();
+        $this->assertTrue($maria->fresh()->isAdmin());
+        $this->actingAs($admin)->put("/admin/users/{$maria->id}", ['name' => $maria->name, 'email' => $maria->email, 'profile' => 'brand', 'manages_users' => '0'])->assertRedirect();
+        $this->assertFalse($maria->fresh()->isAdmin());
+        $this->assertTrue($maria->fresh()->canAccessAdminPanel());
+
+        // Никой не си отнема сам управлението.
+        $this->actingAs($admin)->put("/admin/users/{$admin->id}", ['name' => $admin->name, 'email' => $admin->email, 'profile' => 'all', 'manages_users' => '0'])->assertRedirect();
+        $this->assertTrue($admin->fresh()->isAdmin());
+    }
+
+    public function test_migration_gives_access_to_accounts_that_were_saved_without_a_role(): void
+    {
+        \App\Models\Role::firstOrCreate(['slug' => 'project-manager'], ['name' => 'Project Manager']);
+        $lost = User::create(['name' => 'Владимир Цончев', 'email' => 'vladi@example.com', 'password' => bcrypt('long-enough-1')]);
+        $this->assertFalse($lost->canAccessAdminPanel());
+
+        (require database_path('migrations/2026_11_14_000002_give_roleless_users_admin_access.php'))->up();
+
+        $this->assertTrue($lost->fresh()->canAccessAdminPanel());
+        $this->assertFalse($lost->fresh()->isAdmin());
+    }
 }
