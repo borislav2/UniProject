@@ -27,4 +27,21 @@ class ClientScreenshotsTest extends TestCase
         $this->assertFileExists(public_path('images/projects/lasepro.webp'));
         $this->assertFileExists(public_path('images/projects/pokrivi-burgas.webp'));
     }
+
+    public function test_the_new_screenshots_replace_older_ones_of_the_two_client_projects_only(): void
+    {
+        $category = \App\Models\Category::create(['name' => 'Уебсайт']);
+        $make = fn (array $a) => Project::create($a + ['description' => 'Описание.', 'start_date' => now(), 'end_date' => now(), 'status' => 'Completed', 'manager' => 'Екип', 'category_id' => $category->id, 'is_public' => true]);
+        $lasepro = $make(['name' => 'Lasepro', 'website_url' => 'https://lasepro.bg', 'screenshot' => 'images/projects/lasepro.webp']);
+        $roofs = $make(['name' => 'Pokrivi Burgas', 'website_url' => 'https://pokrivi-burgas.eu', 'screenshot' => 'uploads/portfolio/old-design.webp']);
+        $other = $make(['name' => 'Друг', 'website_url' => 'https://example.bg', 'screenshot' => 'uploads/portfolio/mine.webp']);
+
+        (require database_path('migrations/2026_11_14_000003_new_client_project_screenshots.php'))->up();
+
+        $this->assertSame('images/projects/lasepro-2026-11.webp', $lasepro->fresh()->screenshot);
+        $this->assertSame('images/projects/pokrivi-burgas-2026-11.webp', $roofs->fresh()->screenshot);
+        $this->assertSame('uploads/portfolio/mine.webp', $other->fresh()->screenshot);
+        $this->assertFileExists(public_path('images/projects/lasepro-2026-11.webp'));
+        $this->assertFileExists(public_path('images/projects/pokrivi-burgas-2026-11.webp'));
+    }
 }
