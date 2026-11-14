@@ -45,7 +45,7 @@
             <a href="{{ route('admin.today') }}" class="adm-brand"><img src="{{ asset('images/logo-g-dark-224.webp') }}" srcset="{{ asset('images/logo-g-dark-224.webp') }} 1x, {{ asset('images/logo-g-dark-352.webp') }} 2x" alt="Creatium Lab"></a>
             <a href="{{ route('admin.profile.edit') }}" class="adm-who" title="Моят профил">
                 <span class="adm-avatar">{{ $initial }}</span>
-                <span class="min-w-0"><b class="truncate">{{ $me->name }}</b><span>{{ \App\Support\Admin\Profiles::label($profileKey) }}</span></span>
+                <span class="adm-id"><b class="truncate">{{ $me->name }}</b><span>{{ \App\Support\Admin\Profiles::label($profileKey) }}</span></span>
             </a>
 
             <nav class="adm-nav">

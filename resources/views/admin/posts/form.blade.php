@@ -15,11 +15,11 @@
 @section('content')
 <script type="application/json" id="editor-icons" data-upload-url="{{ route('admin.uploads.image') }}">{!! json_encode(collect(['heading', 'bold', 'italic', 'list-ul', 'list-ol', 'quote-left', 'link', 'image', 'minus', 'eye'])->mapWithKeys(fn ($i) => [$i => \App\Support\Icons::svg($i)]), JSON_HEX_TAG) !!}</script>
 
-<form action="{{ $post->exists ? route('admin.posts.update', $post) : route('admin.posts.store') }}" method="POST" enctype="multipart/form-data" class="grid xl:grid-cols-3 gap-6 items-start">
+<form action="{{ $post->exists ? route('admin.posts.update', $post) : route('admin.posts.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
     @csrf
     @if($post->exists) @method('PUT') @endif
 
-    <div class="xl:col-span-2 bg-white rounded-lg shadow p-6">
+    <div class="min-w-0 xl:col-span-2 bg-white rounded-lg shadow p-6">
         <div data-tabs class="hidden mb-6 flex gap-2 border-b border-gray-200" role="tablist">
             @foreach($languages as $l => $name)
                 <button type="button" data-tab="{{ $l }}" role="tab" class="px-4 py-2 -mb-px border-b-2 border-transparent font-semibold text-gray-500 aria-selected:border-brand-600 aria-selected:text-brand-700">
@@ -71,7 +71,7 @@
         </div>
     </div>
 
-    <div class="space-y-6">
+    <div class="min-w-0 space-y-6">
         <div class="bg-white rounded-lg shadow p-6 space-y-4">
             <div>
                 <label for="status" class="block text-sm font-semibold text-gray-700 mb-1">Статус</label>

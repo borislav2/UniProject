@@ -15,7 +15,7 @@
 
 {{-- Две фунии една до друга: всяка стъпка с броя и процента от предишната. --}}
 <div class="mb-6 grid gap-6 lg:grid-cols-2 2xl:grid-cols-3">
-    @foreach([['Писма до бизнеси', $emails, 'bg-brand-500'], ['Обаждания', $calls, 'bg-green-500'], ['LinkedIn', $linkedin, 'bg-sky-500']] as [$title, $steps, $bar])
+    @foreach([['Писма до бизнеси', $emails, 'bg-brand-500'], ['Обаждания', $calls, 'bg-brand-950'], ['LinkedIn', $linkedin, 'bg-gray-500']] as [$title, $steps, $bar])
         <section class="rounded-lg bg-white p-5 shadow">
             <h2 class="mb-4 font-semibold text-gray-800">{{ $title }}</h2>
             @php $top = max(1, $steps[0][1]); @endphp

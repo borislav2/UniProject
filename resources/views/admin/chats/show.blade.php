@@ -22,8 +22,8 @@
 <div class="space-y-3 rounded-lg bg-white p-5 shadow">
     @foreach($chat->messages as $message)
         <div class="flex {{ $message->role === 'user' ? 'justify-end' : 'justify-start' }}">
-            <div class="max-w-2xl rounded-2xl px-4 py-3 text-sm whitespace-pre-line {{ $message->role === 'user' ? 'bg-brand-950 text-white' : 'bg-gray-100 text-gray-900' }}">
-                {{ $message->text }}
+            <div class="max-w-2xl rounded-2xl px-4 py-3 text-sm {{ $message->role === 'user' ? 'bg-brand-950 text-white' : 'bg-gray-100 text-gray-900' }}">
+                <p class="whitespace-pre-line">{{ $message->text }}</p>
                 <div class="mt-1 text-[11px] {{ $message->role === 'user' ? 'text-gray-300' : 'text-gray-500' }}">
                     {{ $message->created_at?->timezone('Europe/Sofia')->format('H:i') }}
                     @if($message->source === 'faq') · от честите въпроси (без AI)@endif

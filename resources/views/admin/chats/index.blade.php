@@ -24,7 +24,7 @@
             @forelse($chats as $chat)
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-3">
-                        <a href="{{ route('admin.chats.show', $chat) }}" class="font-semibold text-brand-700 hover:underline">{{ \Illuminate\Support\Str::limit($chat->messages->first()?->text ?? '…', 90) }}</a>
+                        <a href="{{ route('admin.chats.show', $chat) }}" class="font-semibold text-gray-900 hover:text-brand-800">{{ \Illuminate\Support\Str::limit($chat->messages->first()?->text ?? '…', 90) }}</a>
                         <span class="ml-2 rounded bg-gray-100 px-1.5 py-0.5 text-xs uppercase text-gray-600">{{ $chat->locale }}</span>
                     </td>
                     <td class="px-4 py-3 text-gray-700">{{ $chat->messages_count }}</td>

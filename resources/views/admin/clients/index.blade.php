@@ -45,7 +45,7 @@
                         <form action="{{ route('admin.clients.paid', $client) }}" method="POST" class="mt-2">
                             @csrf
                             <input type="hidden" name="period" value="{{ $pay['period'] }}">
-                            <button class="rounded-lg bg-green-600 px-3 py-1.5 font-semibold text-white hover:bg-green-700">Платено за {{ $month }}</button>
+                            <button class="adm-btn sm" style="background:var(--color-green-600,#2f6b45);border-color:transparent">Платено за {{ $month }}</button>
                         </form>
                     @endunless
                 </div>
@@ -71,9 +71,9 @@
                 </div>
                 <div class="flex flex-wrap gap-2">
                     @if($client->website_url)
-                        <form action="{{ route('admin.clients.check', $client) }}" method="POST">@csrf<button class="rounded-lg border border-gray-300 px-3 py-1.5 font-semibold text-gray-700 hover:bg-gray-50">Провери сега</button></form>
+                        <form action="{{ route('admin.clients.check', $client) }}" method="POST">@csrf<button class="adm-btn ghost sm">Провери сега</button></form>
                     @endif
-                    <a href="{{ route('admin.client-emails.create', ['template' => 'monthly-report', 'project' => $client->id]) }}" class="rounded-lg bg-brand-950 px-3 py-1.5 font-semibold text-white hover:bg-brand-800">Месечен отчет</a>
+                    <a href="{{ route('admin.client-emails.create', ['template' => 'monthly-report', 'project' => $client->id]) }}" class="adm-btn ghost sm">Месечен отчет</a>
                 </div>
             </div>
         </article>

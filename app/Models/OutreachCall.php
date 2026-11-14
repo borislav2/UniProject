@@ -180,12 +180,6 @@ class OutreachCall extends Model
         return self::INDUSTRIES[mb_strtolower((string) $this->industry)] ?? $this->industry;
     }
 
-    /** Номерът за линк tel: (само цифри и водещ +). */
-    public function telHref(): ?string
-    {
-        return self::href(preg_split('/[;,\/]/', (string) $this->phone)[0] ?? '');
-    }
-
     /**
      * Търсенето по радиус хваща и бизнеси отвъд границата (около Русе: Гюргево, Румъния).
      * Чужд е номер с код, различен от +359, или град на латиница, който не е от нашите.

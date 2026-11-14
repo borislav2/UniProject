@@ -41,7 +41,7 @@
             <div class="mt-5 flex flex-col gap-2">
                 @foreach($call->phones() as $phone)
                     @if($phone['href'])
-                        <a href="{{ $phone['href'] }}" class="inline-flex items-center justify-center gap-2 rounded-lg {{ $loop->first ? 'bg-green-600 hover:bg-green-700 py-4 text-lg' : 'bg-green-50 text-green-800 hover:bg-green-100 py-2.5' }} px-4 font-semibold {{ $loop->first ? 'text-white' : '' }}">
+                        <a href="{{ $phone['href'] }}" class="inline-flex items-center justify-center gap-2 rounded-lg {{ $loop->first ? 'bg-brand-950 text-white hover:bg-brand-800 py-4 text-lg' : 'border border-gray-300 bg-white text-gray-800 hover:bg-gray-50 py-2.5' }} px-4 font-semibold {{ $loop->first ? 'text-white' : '' }}">
                             <x-icon name="phone" /> {{ $phone['label'] }}
                             <span class="text-xs font-normal opacity-80">{{ $phone['mobile'] ? 'мобилен' : 'стационарен' }}</span>
                         </a>

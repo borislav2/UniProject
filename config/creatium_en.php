@@ -130,7 +130,6 @@ return [
                 'text' => 'We build communication processes that turn initial interest into long-term relationships.',
             ],
         ],
-        'stats_label' => 'What the data shows when everything works together',
         'stats' => [
             ['icon' => 'location-dot', 'value' => '28%', 'text' => 'of searches for a business nearby on a phone end in a purchase', 'meaning' => 'People searching for you are ready to buy. What matters is that they find you right then.', 'source' => 'Google', 'url' => 'https://www.thinkwithgoogle.com/data/local-search-conversion-statistics/'],
             ['icon' => 'store', 'value' => '+70%', 'text' => 'more likely to visit you with a complete Google profile, and 50% more likely to buy', 'meaning' => 'Photos, reviews and accurate opening hours build trust before the first conversation.', 'source' => 'Google', 'url' => 'https://support.google.com/business/answer/10515606'],
@@ -245,15 +244,6 @@ return [
         'proof_label' => '',
         // Шестте светещи възела в мрежата на първия екран (една система, не отделни услуги). Празно = мрежата не се показва.
         'network_nodes' => ['Brand', 'Website', 'Google', 'Ads', 'Emails', 'Care'],
-        'hero_trust' => ['Fixed price written into the offer', 'A reply within one working day', 'A monthly report'],
-        'parts' => [
-            ['label' => 'Brand', 'text' => 'A logo, a visual system and a tone that speak with one voice', 'service' => ''],
-            ['label' => 'Website', 'text' => 'A fast site that turns visitors into enquiries', 'service' => 'website'],
-            ['label' => 'Google', 'text' => 'A Google Maps profile and reviews that win customers', 'service' => 'google'],
-            ['label' => 'Ads', 'text' => 'Visibility in Google and AI assistants, measured down to the enquiry', 'service' => 'seo'],
-            ['label' => 'Emails', 'text' => 'Emails that bring back the customers who already know you', 'service' => 'email'],
-            ['label' => 'Care', 'text' => 'Hosting, support and monitoring so the site works every day', 'service' => 'support'],
-        ],
         // Design G, fourth round (the owners' audit, November 2026): read only by the g views.
         'g_hero_points' => ['Transparent budget planning', 'AI for marketing and creative', 'Strategic branding'],
         'g_parts' => [

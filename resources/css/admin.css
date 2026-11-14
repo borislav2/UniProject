@@ -257,12 +257,13 @@ input::placeholder, textarea::placeholder { color: #7B818A; }
 input:focus, select:focus, textarea:focus { --tw-ring-color: var(--accent); border-color: var(--accent) !important; outline: none; }
 input[type=checkbox], input[type=radio] { accent-color: var(--accent-text); width: 16px; height: 16px; }
 label.block, label.text-sm { color: var(--ink-2); }
-::file-selector-button { background: var(--ink); color: #fff; border: 0; padding: 7px 12px; margin-right: 12px; border-radius: 2px; cursor: pointer; font: 500 13px var(--body); }
+::file-selector-button { background: transparent; color: var(--ink); border: 1px solid var(--line-strong); padding: 6px 12px; margin-right: 12px; border-radius: 2px; cursor: pointer; font: 500 13px var(--body); }
 
 /* ==== Buttons: any element with a filled utility background keeps its look through the palette; shared metrics ==== */
 button, a[class*="bg-"][class*="text-white"], a[class*="px-"][class*="font-semibold"] { transition: background-color .18s, color .18s, border-color .18s, box-shadow .18s; }
 button[class*="bg-"], a[class*="bg-blue-5"], a[class*="bg-green-"][class*="text-white"], a[class*="bg-brand-9"] { font-weight: 600; }
 button:disabled { opacity: .5; cursor: not-allowed; }
+button.adm-btn:disabled, button[class*="bg-"]:disabled { opacity: 1; background: #DADDE1 !important; color: #5C626B !important; border-color: transparent !important; }
 
 /* ==== Tables ==== */
 table { border-collapse: collapse; }
@@ -297,6 +298,7 @@ summary::marker { color: var(--mute-2); }
 .EasyMDEContainer .editor-toolbar button { color: var(--ink-2); border-radius: 2px; }
 .EasyMDEContainer .editor-toolbar button:hover, .EasyMDEContainer .editor-toolbar button.active { background: #fff; border-color: var(--line-strong); }
 .EasyMDEContainer .CodeMirror { border-color: rgba(12, 14, 18, .28); background: #fff; color: var(--ink); font: 400 15.5px/1.6 var(--body); border-radius: 0 0 2px 2px; }
+.EasyMDEContainer .cm-header-1, .EasyMDEContainer .cm-header-2, .EasyMDEContainer .cm-header-3, .EasyMDEContainer .cm-header-4 { font-size: 1.05em !important; line-height: 1.6; font-weight: 600; }
 .EasyMDEContainer .CodeMirror-focused { border-color: var(--accent); }
 .editor-preview, .editor-preview-side { background: #fff; color: var(--ink); }
 
@@ -319,8 +321,9 @@ body.adm-open { overflow: hidden; }
 .adm-who { margin: 0 12px 6px; padding: 12px; border: 1px solid var(--side-line); display: flex; gap: 12px; align-items: center; text-decoration: none; color: inherit; }
 .adm-who:hover { border-color: rgba(236, 238, 240, .4); }
 .adm-avatar { flex: none; width: 34px; height: 34px; display: grid; place-items: center; background: var(--accent); color: #0C0E12; font: 600 14px var(--head); border-radius: 2px; }
+.adm-who .adm-id { min-width: 0; }
 .adm-who b { display: block; font: 600 14px/1.2 var(--body); color: #fff; }
-.adm-who span { display: block; font: 500 10.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--side-mute); margin-top: 3px; }
+.adm-who .adm-id span { display: block; font: 500 10.5px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--side-mute); margin-top: 3px; }
 .adm-nav { flex: 1; overflow-y: auto; padding: 6px 0 16px; scrollbar-width: thin; scrollbar-color: rgba(236, 238, 240, .2) transparent; }
 .adm-group { padding: 18px 20px 6px; font: 500 10.5px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--side-mute); }
 .adm-link { position: relative; display: flex; align-items: center; gap: 12px; padding: 9px 20px; font-size: 14.5px; color: #C9CED6; text-decoration: none; transition: background .15s, color .15s; }

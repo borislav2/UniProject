@@ -113,13 +113,13 @@
 
     <dl class="mt-4 grid gap-3 text-sm sm:grid-cols-3">
         @if($inquiry->client_phone)
-            <div><dt class="text-gray-500">Телефон</dt><dd><x-phone :number="$inquiry->client_phone" /></dd></div>
+            <div><dt class="text-xs uppercase tracking-wider text-gray-500">Телефон</dt><dd><x-phone :number="$inquiry->client_phone" /></dd></div>
         @endif
         @if($inquiry->client_email)
-            <div><dt class="text-gray-500">Имейл</dt><dd class="font-semibold"><a href="mailto:{{ $inquiry->client_email }}" class="text-blue-600 hover:underline break-all">{{ $inquiry->client_email }}</a></dd></div>
+            <div><dt class="text-xs uppercase tracking-wider text-gray-500">Имейл</dt><dd class="font-semibold"><a href="mailto:{{ $inquiry->client_email }}" class="text-blue-600 hover:underline break-all">{{ $inquiry->client_email }}</a></dd></div>
         @endif
         @if($inquiry->website_url && ! $summary)
-            <div><dt class="text-gray-500">Сайт</dt><dd class="font-semibold"><a href="{{ $inquiry->website_url }}" target="_blank" rel="noopener" class="text-blue-600 hover:underline break-all">{{ $inquiry->website_url }}</a></dd></div>
+            <div><dt class="text-xs uppercase tracking-wider text-gray-500">Сайт</dt><dd class="font-semibold"><a href="{{ $inquiry->website_url }}" target="_blank" rel="noopener" class="text-blue-600 hover:underline break-all">{{ $inquiry->website_url }}</a></dd></div>
         @endif
         @if($inquiry->consultation_at)
             <div class="sm:col-span-3 rounded-md bg-amber-50 px-3 py-2"><dt class="text-amber-800">Консултация</dt><dd class="font-semibold text-gray-900">{{ \App\Support\Booking::label($inquiry->consultation_at) }}
@@ -129,7 +129,7 @@
 
     @unless($summary)
         <div class="mt-4">
-            <p class="text-sm text-gray-500">Съобщение</p>
+            <p class="text-xs uppercase tracking-wider text-gray-500">Съобщение</p>
             <p class="mt-1 whitespace-pre-line rounded-md bg-white/80 border border-gray-100 p-3 text-gray-800">{{ $inquiry->description }}</p>
         </div>
     @endunless
@@ -139,12 +139,12 @@
     @endif
 
     <details class="mt-4" @if($isNew) open @endif>
-        <summary class="cursor-pointer text-sm font-semibold text-blue-600">Етап, кой го води и следваща стъпка</summary>
+        <summary class="cursor-pointer text-sm font-semibold text-gray-800">Етап, кой го води и следваща стъпка</summary>
         <div class="mt-2">@include('admin.projects._pipeline', ['project' => $inquiry])</div>
     </details>
 
-    <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
-        <p class="{{ $inquiry->email_sent_at ? 'text-gray-500' : 'text-red-600 font-semibold' }}">
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 pt-3 text-sm">
+        <p class="text-xs {{ $inquiry->email_sent_at ? 'text-gray-500' : 'text-red-600' }}">
             @if($inquiry->email_sent_at)
                 Имейл до {{ $notifyEmail }}: изпратен {{ $inquiry->email_sent_at->timezone('Europe/Sofia')->format('d.m.Y H:i') }}
             @else
@@ -152,18 +152,18 @@
             @endif
         </p>
         <div class="flex flex-wrap items-center gap-2">
+            <form action="{{ route($isNew ? 'admin.inquiries.read' : 'admin.inquiries.unread', $inquiry) }}" method="POST">
+                @csrf
+                <button type="submit" class="adm-btn ghost sm">{{ $isNew ? 'Маркирай като прочетено' : 'Маркирай като непрочетено' }}</button>
+            </form>
+            <a href="{{ route('admin.projects.show', $inquiry) }}" class="adm-btn ghost sm">История</a>
             @if($inquiry->assigned_to !== auth()->id())
                 <form action="{{ route('admin.inquiries.take', $inquiry) }}" method="POST">
                     @csrf
-                    <button type="submit" class="rounded-lg bg-green-600 px-3 py-1.5 font-semibold text-white hover:bg-green-700">Поемам го</button>
+                    <button type="submit" class="adm-btn ghost sm">Поемам го</button>
                 </form>
             @endif
-            <a href="{{ route('admin.client-emails.index', ['project' => $inquiry->id]) }}" class="inline-flex items-center gap-1.5 rounded-lg bg-brand-950 px-3 py-1.5 font-semibold text-white hover:bg-brand-800"><x-icon name="paper-plane" class="text-xs" /> Изпрати имейл</a>
-            <a href="{{ route('admin.projects.show', $inquiry) }}" class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 font-semibold text-gray-700 hover:bg-gray-50">История</a>
-            <form action="{{ route($isNew ? 'admin.inquiries.read' : 'admin.inquiries.unread', $inquiry) }}" method="POST">
-                @csrf
-                <button type="submit" class="rounded-lg border px-3 py-1.5 font-semibold {{ $isNew ? 'border-blue-300 bg-white text-blue-700 hover:bg-blue-100' : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50' }}">{{ $isNew ? 'Маркирай като прочетено' : 'Маркирай като непрочетено' }}</button>
-            </form>
+            <a href="{{ route('admin.client-emails.index', ['project' => $inquiry->id]) }}" class="adm-btn sm"><x-icon name="paper-plane" class="text-xs" /> Изпрати имейл</a>
         </div>
     </div>
 </article>

@@ -82,22 +82,6 @@ class User extends Authenticatable
     }
     
     /**
-     * Check if user is a project manager
-     */
-    public function isProjectManager(): bool
-    {
-        return $this->hasRole('project-manager');
-    }
-    
-    /**
-     * Check if user is a developer
-     */
-    public function isDeveloper(): bool
-    {
-        return $this->hasRole('developer');
-    }
-    
-    /**
      * Check if user can access admin panel
      */
     public function canAccessAdminPanel(): bool
@@ -105,14 +89,6 @@ class User extends Authenticatable
         return $this->hasAnyRole(['admin', 'project-manager', 'developer']);
     }
     
-    /**
-     * Get the user's primary role (for display purposes)
-     */
-    public function getPrimaryRoleAttribute(): ?string
-    {
-        return $this->roles->first()?->slug;
-    }
-
     /** Профилът в админа: ключ от App\Support\Admin\Profiles (празен или непознат = all). */
     public function profile(): string
     {

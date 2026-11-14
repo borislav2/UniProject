@@ -7,12 +7,12 @@
     <form action="{{ route('admin.projects.search') }}" method="GET" class="flex w-full sm:max-w-sm">
         <input type="search" name="search" placeholder="Търсене по име, клиент, телефон…"
                value="{{ $search ?? '' }}"
-               class="min-w-0 flex-1 px-4 py-2 border rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <button type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-r hover:bg-gray-700" aria-label="Търси">
+               class="min-w-0 flex-1">
+        <button type="submit" class="adm-btn" style="height:auto" aria-label="Търси">
             <x-icon name="search" />
         </button>
     </form>
-    <a href="{{ route('admin.projects.create') }}" class="inline-flex items-center justify-center px-4 py-2 bg-brand-950 text-white rounded hover:bg-brand-800">
+    <a href="{{ route('admin.projects.create') }}" class="adm-btn justify-center">
         <x-icon name="plus" class="mr-2" />Нов проект
     </a>
 </div>
@@ -25,29 +25,29 @@
 </nav>
 
 @if(isset($search))
-    <div class="mb-4 flex items-center justify-between bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded">
+    <div class="adm-flash ok justify-between items-center">
         <span>Резултати за: <strong>{{ $search }}</strong></span>
         <a href="{{ route('admin.projects.index') }}" class="text-blue-600 hover:underline">Изчисти</a>
     </div>
 @endif
 
 <div class="bg-white rounded-lg shadow overflow-hidden">
-    <table class="min-w-full">
+    <table class="min-w-full block md:table">
         <thead class="bg-gray-50 hidden md:table-header-group">
             <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Проект</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-full">Проект</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Категория</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Статус</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Начало</th>
                 <th class="px-6 py-3"></th>
             </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200">
+        <tbody class="divide-y divide-gray-200 block md:table-row-group">
             @forelse($projects as $project)
-                <tr class="hover:bg-gray-50">
-                    <td class="px-4 md:px-6 py-4">
+                <tr class="hover:bg-gray-50 block md:table-row">
+                    <td class="block md:table-cell px-4 md:px-6 py-3 md:w-full">
                         <div class="flex flex-wrap items-center gap-2 text-sm font-medium">
-                            <a href="{{ route('admin.projects.show', $project) }}" class="text-blue-600 hover:underline">{{ $project->name }}</a>
+                            <a href="{{ route('admin.projects.show', $project) }}" class="font-semibold text-gray-900 hover:text-brand-800">{{ $project->name }}</a>
                             @if($project->stage)
                                 <span class="px-2 py-0.5 text-xs rounded-full font-semibold {{ $project->stageClass() }}">{{ $project->stageLabel() }}</span>
                             @endif
@@ -69,10 +69,11 @@
                         @endif
                         @if($project->client_phone || $project->client_email)
                             <div class="mt-1 flex flex-wrap gap-x-4 text-sm">
-                                @if($project->client_phone)<a href="tel:{{ preg_replace('/[^\d+]/', '', $project->client_phone) }}" class="text-blue-600 hover:underline">{{ $project->client_phone }}</a>@endif
-                                @if($project->client_email)<a href="mailto:{{ $project->client_email }}" class="text-blue-600 hover:underline">{{ $project->client_email }}</a>@endif
+                                @if($project->client_phone)<a href="tel:{{ preg_replace('/[^\d+]/', '', $project->client_phone) }}" class="text-gray-700">{{ $project->client_phone }}</a>@endif
+                                @if($project->client_email)<a href="mailto:{{ $project->client_email }}" class="text-gray-700">{{ $project->client_email }}</a>@endif
                             </div>
                         @endif
+                        <a href="{{ route('admin.projects.edit', $project) }}" class="adm-btn ghost sm mt-3 md:hidden">Редактирай</a>
                     </td>
                     <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $project->category?->name }}</td>
                     <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap">
@@ -80,12 +81,12 @@
                     </td>
                     <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $project->start_date->format('d.m.Y') }}</td>
                     <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="{{ route('admin.projects.edit', $project) }}" class="text-indigo-600 hover:text-indigo-900">Редактирай</a>
+                        <a href="{{ route('admin.projects.edit', $project) }}" class="adm-btn ghost sm">Редактирай</a>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="px-6 py-8 text-center text-gray-500">Няма проекти тук.</td>
+                    <td colspan="5" class="block md:table-cell px-6 py-8 text-center text-gray-500">Няма проекти тук.</td>
                 </tr>
             @endforelse
         </tbody>
