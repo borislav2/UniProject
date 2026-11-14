@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Role;
 use App\Models\User;
 use App\Support\Admin\Profiles;
 use Illuminate\Validation\Rule;
@@ -33,12 +34,13 @@ class UserController extends Controller
             'profile' => ['nullable', Rule::in(Profiles::keys())],
         ]);
         
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'profile' => Profiles::normalize($request->input('profile')),
         ]);
+        $this->syncAccess($user, $request->boolean('manages_users'));
         
         return redirect()->route('admin.users.index')
             ->with('success', 'Потребителят е създаден.');
@@ -77,6 +79,8 @@ class UserController extends Controller
         }
         
         $user->update($data);
+        // Никой не може да си отнеме сам управлението на потребителите (иначе може да няма кой да го върне).
+        $this->syncAccess($user, $request->boolean('manages_users') || $user->is($request->user()));
         
         return redirect()->route('admin.users.index')
             ->with('success', 'Промените са запазени.');
@@ -88,5 +92,23 @@ class UserController extends Controller
         
         return redirect()->route('admin.users.index')
             ->with('success', 'Потребителят е изтрит.');
+    }
+
+    /**
+     * Всеки акаунт, създаден тук, влиза в админа. Без роля входът връща към началната страница,
+     * затова ролята се задава винаги: admin (управлява и потребителите) или project-manager.
+     */
+    private function syncAccess(User $user, bool $managesUsers): void
+    {
+        // Старите роли project-manager и developer дават един и същ достъп: запазват се, ако вече ги има.
+        if (! $managesUsers && $user->hasAnyRole(['project-manager', 'developer']) && ! $user->isAdmin()) {
+            return;
+        }
+
+        $role = Role::where('slug', $managesUsers ? 'admin' : 'project-manager')->first();
+
+        if ($role) {
+            $user->roles()->sync([$role->id]);
+        }
     }
 }
