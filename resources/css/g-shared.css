@@ -39,18 +39,7 @@
     html { scroll-behavior: smooth; }
 }
 
-@utility bg-brand-gradient {
-    background-image: linear-gradient(135deg, var(--color-brand-950) 0%, var(--color-brand-800) 55%, var(--color-brand-600) 100%);
-}
-
 /* The few app.css rules the chat widget needs */
-.surface-night {
-    background-color: var(--color-ink-950);
-    background-image:
-        radial-gradient(60% 55% at 50% -5%, rgb(59 119 189 / 0.38), transparent 70%),
-        radial-gradient(35% 40% at 90% 10%, rgb(45 99 163 / 0.28), transparent 70%),
-        radial-gradient(30% 35% at 5% 60%, rgb(39 79 132 / 0.22), transparent 70%);
-}
 .chat-pulse { border: 2px solid rgb(93 145 205 / 0.7); animation: chat-pulse 2.4s ease-out infinite; will-change: transform, opacity; }
 @keyframes chat-pulse { 0% { transform: scale(1); opacity: 1; } 70%, 100% { transform: scale(1.12, 1.35); opacity: 0; } }
 .chat-teaser:not(.hidden) { animation: chat-teaser-in .35s ease-out both; }

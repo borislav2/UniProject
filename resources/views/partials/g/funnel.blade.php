@@ -20,7 +20,7 @@
     ];
 @endphp
 @if($funnelSteps->count() >= 2)
-    <div class="g-fn" style="margin-top:clamp(40px,6vw,72px)" data-funnel data-funnel-data='@json($funnelData)'>
+    <div class="g-fn g-fn-start" data-funnel data-funnel-data='@json($funnelData)'>
         <div class="g-fn-left">
             <div class="g-fn-box" data-funnel-box>
                 <div class="g-fn-top">

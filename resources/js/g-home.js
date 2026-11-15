@@ -1,6 +1,6 @@
 // Home page of design G: the topographic hero map (the monthly / yearly switch is in g-bar.js, shared with /paketi).
 
-// Topographic contours: a noise field drifts, bends around the cursor, and its iso-lines are drawn with marching squares.
+// Topographic contours: a noise field drifts on its own and its iso-lines are drawn with marching squares.
 // One line is in the signal colour; it is clipped away from the headline, the text and the buttons.
 function initTopo() {
     const canvas = document.getElementById('g-topo');
@@ -19,7 +19,7 @@ function initTopo() {
 
     let W = 0, H = 0, dpr = 1, CELL = 14, nx = 0, ny = 0, field = null;
     let colors = null, clear = [];
-    let visible = true, t = 3.2, px = -1e4, py = -1e4, tx = -1e4, ty = -1e4, last = 0, frame = 0;
+    let visible = true, t = 3.2, last = 0, frame = 0;
 
     function readColors() {
         const s = getComputedStyle(root);
@@ -54,15 +54,12 @@ function initTopo() {
 
     function fill() {
         const k = W < 600 ? 0.075 : 0.05;
-        const R2 = 2 * Math.pow(W < 600 ? 90 : 150, 2);
         for (let j = 0; j < ny; j++) {
             for (let i = 0; i < nx; i++) {
                 const u = i * k, v = j * k;
                 let f = 0.55 * Math.sin(u * 1.3 + t * 0.35 + 1.7 * Math.sin(v * 0.7 - t * 0.2))
                     + 0.45 * Math.cos(v * 1.1 - t * 0.28 + 0.8 * Math.sin(u * 0.9 + t * 0.15))
                     + 0.5 * Math.sin((u + v) * 0.6 + t * 0.1);
-                const dx = i * CELL - px, dy = j * CELL - py;
-                f += 1.25 * Math.exp(-(dx * dx + dy * dy) / R2);
                 field[j * nx + i] = f;
             }
         }
@@ -124,8 +121,6 @@ function initTopo() {
         if (visible && ts - last > 33) {
             last = ts;
             t += 0.012;
-            px += (tx - px) * 0.12;
-            py += (ty - py) * 0.12;
             if (++frame % 40 === 0) { readColors(); readClear(); }
             draw();
         }
@@ -142,13 +137,6 @@ function initTopo() {
 
     if (reduce) return;
 
-    hero.addEventListener('pointermove', (e) => {
-        const r = canvas.getBoundingClientRect();
-        tx = e.clientX - r.left;
-        ty = e.clientY - r.top;
-        if (px < -1e3) { px = tx; py = ty; }
-    });
-    hero.addEventListener('pointerleave', () => { tx = ty = px = py = -1e4; });
     // Pause off-screen and in hidden tabs.
     if ('IntersectionObserver' in window) {
         let onScreen = true;

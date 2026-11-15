@@ -851,4 +851,19 @@ class DesignGTest extends TestCase
             }
         }
     }
+
+    public function test_the_g_styles_have_none_of_the_template_look_tells(): void
+    {
+        $css = '';
+        foreach (['g.css', 'g-pages.css', 'g-shared.css'] as $file) {
+            $css .= file_get_contents(resource_path('css/' . $file));
+        }
+        $js = file_get_contents(resource_path('js/g-home.js')) . file_get_contents(resource_path('js/g-bar.js'));
+
+        $this->assertDoesNotMatchRegularExpression('/backdrop-filter|font-style:\s*italic|font:\s*italic|\bnoise\b|\bgrain\b/i', $css);
+        $this->assertDoesNotMatchRegularExpression('/(?<!-)(linear|radial|conic)-gradient\((?!100deg|45deg|135deg)/', $css);
+        $this->assertDoesNotMatchRegularExpression('/\.reveal|data-aos/', $css . $js);
+        $this->assertStringNotContainsString('mousemove', $js);
+        $this->assertStringNotContainsString('pointermove', $js);
+    }
 }
