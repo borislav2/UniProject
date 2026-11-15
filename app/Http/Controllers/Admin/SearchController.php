@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ChatConversation;
 use App\Models\LinkedinProspect;
+use App\Models\Opportunity;
 use App\Models\OutreachCall;
 use App\Models\OutreachProspect;
 use App\Models\Post;
@@ -39,6 +40,11 @@ class SearchController extends Controller
                     'title' => $p->name, 'meta' => collect([$p->stageLabel() ?? $p->statusLabel(), $p->client_phone, $p->client_email])->filter()->join(' · '),
                     'url' => route('admin.projects.show', $p),
                 ]),
+                'Възможности' => Opportunity::where(fn ($w) => $w->where('title', 'like', $like)->orWhere('buyer', 'like', $like))
+                    ->orderByDesc('score')->limit(10)->get()->map(fn ($o) => [
+                        'title' => $o->title, 'meta' => collect([$o->kindLabel(), $o->statusLabel(), $o->countryName(), $o->buyer])->filter()->join(' · '),
+                        'url' => route('admin.opportunities.show', $o),
+                    ]),
                 'Потенциални клиенти (писма)' => OutreachProspect::where(function ($w) use ($like, $phoneMatch) {
                     $w->where('company', 'like', $like)->orWhere('email', 'like', $like)->orWhere('website', 'like', $like);
                     $phoneMatch($w, 'phone');

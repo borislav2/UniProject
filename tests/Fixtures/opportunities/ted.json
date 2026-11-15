@@ -1,0 +1,721 @@
+{
+ "notices": [
+  {
+   "title-proc": {
+    "deu": "Lernplattform ILIAS - PR1272158-9753-I"
+   },
+   "deadline-receipt-tender-date-lot": [
+    "2026-11-23+01:00"
+   ],
+   "notice-type": "cn-standard",
+   "publication-number": "738840-2026",
+   "buyer-legal-type": [
+    "pub-undert"
+   ],
+   "framework-agreement-lot": [
+    "none"
+   ],
+   "buyer-country": [
+    "DEU"
+   ],
+   "place-of-performance-country-proc": [
+    "DEU"
+   ],
+   "description-lot": {
+    "deu": [
+     "1 x Lernplattform ILIAS für den Transferpfad Weiterbildung: Konzeptionelle und technische Weiterentwicklung, Hosting und Support"
+    ]
+   },
+   "procedure-type": "open",
+   "classification-cpv": [
+    "72415000",
+    "72415000"
+   ],
+   "contract-nature": [
+    "services",
+    "services"
+   ],
+   "buyer-name": {
+    "deu": [
+     "Fraunhofer-Gesellschaft - Einkauf B12"
+    ]
+   },
+   "publication-date": "2026-10-26+01:00",
+   "submission-language": [
+    "DEU"
+   ],
+   "title-lot": {
+    "deu": [
+     "Lernplattform ILIAS - PR1272158-9753-I"
+    ]
+   },
+   "sme-lot": [
+    true
+   ],
+   "description-proc": {
+    "deu": "Lernplattform ILIAS"
+   }
+  },
+  {
+   "title-proc": {
+    "deu": "DÖW – Neugestaltung Website"
+   },
+   "notice-type": "cn-standard",
+   "publication-number": "744004-2026",
+   "estimated-value-lot": [
+    "1000000"
+   ],
+   "estimated-value-cur-lot": [
+    "EUR"
+   ],
+   "buyer-legal-type": [
+    "body-pl"
+   ],
+   "framework-agreement-lot": [
+    "fa-wo-rc"
+   ],
+   "estimated-value-cur-proc": "EUR",
+   "buyer-country": [
+    "AUT"
+   ],
+   "description-lot": {
+    "deu": [
+     "Neugestaltung und Neubau der DÖW-Website: Konzept, Design, Umsetzung (CMS), Anbindung Axiell/Directus, Suche, Migration der Altinhalte, Webshop/Ticketing sowie laufende Betreuung (SLA)."
+    ]
+   },
+   "procedure-type": "neg-w-call",
+   "classification-cpv": [
+    "72413000",
+    "72421000",
+    "72422000",
+    "72212224",
+    "72227000",
+    "72322000",
+    "72252000",
+    "79822500",
+    "72267000",
+    "72413000",
+    "72421000",
+    "72422000",
+    "72212224",
+    "72227000",
+    "72322000",
+    "72252000",
+    "79822500",
+    "72267000"
+   ],
+   "contract-nature": [
+    "services",
+    "services"
+   ],
+   "buyer-name": {
+    "deu": [
+     "Stiftung Dokumentationsarchiv des österreichischen Widerstandes"
+    ]
+   },
+   "publication-date": "2026-10-27+01:00",
+   "estimated-value-proc": "540000",
+   "submission-language": [
+    "DEU"
+   ],
+   "deadline": [
+    "2026-11-18T12:00:00+02:00"
+   ],
+   "title-lot": {
+    "deu": [
+     "DÖW – Neugestaltung Website"
+    ]
+   },
+   "sme-lot": [
+    true
+   ],
+   "description-proc": {
+    "deu": "Neugestaltung und Neubau der DÖW-Website: Konzept, Design, Umsetzung (CMS), Anbindung Axiell/Directus, Suche, Migration der Altinhalte, Webshop/Ticketing sowie laufende Betreuung (SLA)."
+   }
+  },
+  {
+   "title-proc": {
+    "fin": "OPH Oppimateriaalien vähälevikkisten suomen- ja ruotsinkielisten perusopetuksen tai toisen asteen oppimateriaalien graafinen suunnittelu ja taitto"
+   },
+   "deadline-receipt-tender-date-lot": [
+    "2026-12-02Z",
+    "2026-12-02Z"
+   ],
+   "notice-type": "cn-standard",
+   "publication-number": "749863-2026",
+   "estimated-value-lot": [
+    "300000",
+    "600000"
+   ],
+   "estimated-value-cur-lot": [
+    "EUR"
+   ],
+   "buyer-legal-type": [
+    "cga"
+   ],
+   "framework-agreement-lot": [
+    "fa-wo-rc",
+    "fa-wo-rc"
+   ],
+   "estimated-value-cur-proc": "EUR",
+   "buyer-country": [
+    "FIN"
+   ],
+   "description-lot": {
+    "fin": [
+     "Osa-alueen hankinnan kohteena on matematiikan sekä matemaattisten ja teknisten aineiden oppimateriaalien graafinen suunnittelu ja taitto. Palvelu sisältää pedagogisesti toimivien ja selkeiden oppimateriaalien ulkoasun suunnittelun, taiton ja toteutuksen. Asiantuntijalta edellytetään matematiikan sekä matemaattisten ja teknisten aineiden oppimateriaalien graafisen suunnittelun ja taiton erityisosaamista liitteiden 1 (Hankinnan kohteen kuvaus) ja 5.1. (Asiantuntijan referenssilomake) mukaisesti. Toimittaja vastaa työn laadusta, saavutettavuusvaatimusten huomioimisesta, sovitusta raportoinnista sekä mahdollisen tekoälyn käytön läpinäkyvyydestä toimeksiantojen toteutuksessa."
+    ]
+   },
+   "procedure-type": "open",
+   "classification-cpv": [
+    "79822500",
+    "79822500",
+    "79822500"
+   ],
+   "contract-nature": [
+    "services",
+    "services",
+    "services"
+   ],
+   "buyer-name": {
+    "fin": [
+     "Opetushallitus/ Utbildningsstyrelsen"
+    ]
+   },
+   "publication-date": "2026-10-29+01:00",
+   "estimated-value-proc": "900000",
+   "submission-language": [
+    "FIN",
+    "FIN"
+   ],
+   "deadline": [
+    "2026-11-16T11:00:00Z",
+    "2026-11-16T11:00:00Z"
+   ],
+   "title-lot": {
+    "fin": [
+     "Osa-alue 1. Matematiikan sekä matemaattisten ja teknisten aineiden oppimateriaalien graafinen suunnittelu ja taitto",
+     "Osa-alue 2. Muiden kuin matematiikan sekä matemaattisten ja teknisten aineiden oppimateriaalien graafinen suunnittelu ja taitto"
+    ]
+   },
+   "sme-lot": [
+    true,
+    true
+   ],
+   "description-proc": {
+    "fin": "Hankinnan kohteena on OPH Oppimateriaalien suomen- ja ruotsinkielisten perusopetuksen tai toisen asteen oppimateriaalien graafisen suunnittelun ja taiton palvelu. Tämä hankinta koskee ainoastaan Opetushallituksen Oppimateriaalit ja julkaisut -yksikön oppimateriaalien graafista suunnittelua ja taittoa. Opetushallituksen yleinen graafista suunnittelua ja taittoa koskeva sopimus kilpailutetaan erikseen. Opetushallitus (jäljempänä OPH) on kansallinen koulutuksen, kielen ja kansainvälistymisen asiantuntija, kehittäjä ja palveluntuottaja. OPH Oppimateriaalit on OPH:n oppimateriaalikustantamo, joka täydentää kaupallisten kustantamojen valikoimaa ja kustantaa oppimateriaaleja pienille kohderyhmille. Oppimateriaaleja tehdään eri kouluasteille (perusopetus, toinen aste) ja hyvin monenlaisille oppijoille (mm. oppimisen tuki, harvinaiset kielet, katsomusaineet ja eri ammattialat) sekä suomeksi että "
+   }
+  },
+  {
+   "title-proc": {
+    "eng": "OPW Tender for Heritage Ireland Website Development and Maintenance"
+   },
+   "deadline-receipt-tender-date-lot": [
+    "2026-12-17Z"
+   ],
+   "notice-type": "cn-standard",
+   "publication-number": "755937-2026",
+   "estimated-value-lot": [
+    "292500"
+   ],
+   "estimated-value-cur-lot": [
+    "EUR"
+   ],
+   "buyer-legal-type": [
+    "cga"
+   ],
+   "framework-agreement-lot": [
+    "none"
+   ],
+   "estimated-value-cur-proc": "EUR",
+   "buyer-country": [
+    "IRL"
+   ],
+   "place-of-performance-country-proc": [
+    "IRL"
+   ],
+   "description-lot": {
+    "eng": [
+     "Provision of support and maintenance of Heritage Ireland website inclusive of existing integrations. This includes services provided, incident management, request management, change management, upgrades where required, bug fixes, infrastructure and hosting management, technical maintenance and updates and any other technical supports necessary."
+    ]
+   },
+   "procedure-type": "open",
+   "classification-cpv": [
+    "72413000",
+    "72410000",
+    "72000000",
+    "72413000",
+    "72410000",
+    "72000000"
+   ],
+   "contract-nature": [
+    "services",
+    "services"
+   ],
+   "buyer-name": {
+    "eng": [
+     "Office of Public Works (OPW)"
+    ]
+   },
+   "publication-date": "2026-10-30+01:00",
+   "estimated-value-proc": "292500",
+   "submission-language": [
+    "ENG"
+   ],
+   "deadline": [
+    "2026-11-19T14:00:00Z"
+   ],
+   "title-lot": {
+    "eng": [
+     "OPW Tender for Heritage Ireland Website Development and Maintenance"
+    ]
+   },
+   "description-proc": {
+    "eng": "Provision of support and maintenance of Heritage Ireland website inclusive of existing integrations. This includes services provided, incident management, request management, change management, upgrades where required, bug fixes, infrastructure and hosting management, technical maintenance and updates and any other technical supports necessary."
+   }
+  },
+  {
+   "title-proc": {
+    "eng": "Tionscadal Forbartha Teicneolaíochta: Open competition for the design, implementation, support of an integrated examination management ecosystem for TEG – Phase 1 535"
+   },
+   "deadline-receipt-tender-date-lot": [
+    "2026-12-10Z"
+   ],
+   "notice-type": "cn-standard",
+   "publication-number": "756046-2026",
+   "estimated-value-lot": [
+    "130000"
+   ],
+   "estimated-value-cur-lot": [
+    "EUR"
+   ],
+   "buyer-legal-type": [
+    "body-pl"
+   ],
+   "framework-agreement-lot": [
+    "none"
+   ],
+   "estimated-value-cur-proc": "EUR",
+   "buyer-country": [
+    "IRL"
+   ],
+   "place-of-performance-country-proc": [
+    "IRL"
+   ],
+   "description-lot": {
+    "eng": [
+     "TEG (Teastas Eorpach na Gaeilge, or “European Certificate in Irish”) is a professional language testing service provided by Maynooth University’s Lárionad na Gaeilge (The Centre for Irish Language). We offer standardised Irish language proficiency exams and certification for learners and skilled users of Irish alike who wish to obtain an independent qualification in Irish that is recognised nationally and internationally. TEG is the only independent certification system available for Irish and the only system that is broadly aligned with the Common European Framework of Reference (CEFR), the most widely used international framework for measuring language ability. TEG exams cover levels A1 to C1 of the CEFR, examining four language skills: speaking, listening, reading and writing. Lárionad na Gaeilge is a member of the Association of Language Testers in Europe (ALTE), an association whose"
+    ]
+   },
+   "procedure-type": "open",
+   "classification-cpv": [
+    "72413000",
+    "72413000"
+   ],
+   "contract-nature": [
+    "services",
+    "services"
+   ],
+   "buyer-name": {
+    "eng": [
+     "Maynooth University"
+    ]
+   },
+   "publication-date": "2026-10-30+01:00",
+   "estimated-value-proc": "130000",
+   "submission-language": [
+    "ENG"
+   ],
+   "deadline": [
+    "2026-12-03T12:00:00Z"
+   ],
+   "title-lot": {
+    "eng": [
+     "Tionscadal Forbartha Teicneolaíochta: Open competition for the design, implementation, support of an integrated examination management ecosystem for TEG – Phase 1 535"
+    ]
+   },
+   "description-proc": {
+    "eng": "TEG (Teastas Eorpach na Gaeilge, or “European Certificate in Irish”) is a professional language testing service provided by Maynooth University’s Lárionad na Gaeilge (The Centre for Irish Language). We offer standardised Irish language proficiency exams and certification for learners and skilled users of Irish alike who wish to obtain an independent qualification in Irish that is recognised nationally and internationally. TEG is the only independent certification system available for Irish and the only system that is broadly aligned with the Common European Framework of Reference (CEFR), the most widely used international framework for measuring language ability. TEG exams cover levels A1 to C1 of the CEFR, examining four language skills: speaking, listening, reading and writing. Lárionad na Gaeilge is a member of the Association of Language Testers in Europe (ALTE), an association whose"
+   }
+  },
+  {
+   "title-proc": {
+    "eng": "New website for autopass.no including profile"
+   },
+   "deadline-receipt-tender-date-lot": [
+    "2026-12-07Z"
+   ],
+   "notice-type": "cn-standard",
+   "publication-number": "762336-2026",
+   "buyer-legal-type": [
+    "body-pl"
+   ],
+   "framework-agreement-lot": [
+    "none"
+   ],
+   "buyer-country": [
+    "NOR"
+   ],
+   "place-of-performance-country-proc": [
+    "NOR"
+   ],
+   "description-lot": {
+    "eng": [
+     "The contracting authority for this competition is the five regional toll money companies (BPS) listed below. These companies finance toll projects and operate toll collection in Norway and cooperate on technical system solutions. The five companies are: Ferde AS (org.nr. 918 012 745) Vegfinans AS (org.nr. 983 149 499)Fjellinjen AS (org.nr 941 856 543)Vegamot AS (org.nr. 935 162 718) Bompengeselskap Nord AS (org.nr. 817 919 472) The companies shall enter into joint contracts with the winning tenderer in the competition (SSA-B and SSA-V). The BPS shall jointly take over the operation and management of autopass.no in order to safeguard coordination assignments on communication and facilitate for more customer-friendly and efficient toll collection. In connection with this, the BPS shall jointly procure a new website for autopass.no-domenet.autopass.no is currently a website with information"
+    ]
+   },
+   "procedure-type": "open",
+   "classification-cpv": [
+    "72413000",
+    "48224000",
+    "72212224",
+    "72415000",
+    "72413000",
+    "48224000",
+    "72212224",
+    "72415000"
+   ],
+   "contract-nature": [
+    "services",
+    "services"
+   ],
+   "buyer-name": {
+    "eng": [
+     "FERDE AS"
+    ]
+   },
+   "publication-date": "2026-11-03+01:00",
+   "submission-language": [
+    "NOR"
+   ],
+   "deadline": [
+    "2026-11-30T07:00:00Z"
+   ],
+   "title-lot": {
+    "eng": [
+     "New website for autopass.no including profile"
+    ]
+   },
+   "sme-lot": [
+    true
+   ],
+   "description-proc": {
+    "eng": "The contracting authority for this competition is the five regional toll money companies (BPS) listed below. These companies finance toll projects and operate toll collection in Norway and cooperate on technical system solutions. The five companies are: Ferde AS (org.nr. 918 012 745) Vegfinans AS (org.nr. 983 149 499)Fjellinjen AS (org.nr 941 856 543)Vegamot AS (org.nr. 935 162 718) Bompengeselskap Nord AS (org.nr. 817 919 472) The companies shall enter into joint contracts with the winning tenderer in the competition (SSA-B and SSA-V). The BPS shall jointly take over the operation and management of autopass.no in order to safeguard coordination assignments on communication and facilitate for more customer-friendly and efficient toll collection. In connection with this, the BPS shall jointly procure a new website for autopass.no-domenet.autopass.no is currently a website with information"
+   }
+  },
+  {
+   "title-proc": {
+    "eng": "Provision of PR Services"
+   },
+   "deadline-receipt-tender-date-lot": [
+    "2026-12-04Z"
+   ],
+   "notice-type": "cn-standard",
+   "publication-number": "763104-2026",
+   "estimated-value-lot": [
+    "50000"
+   ],
+   "estimated-value-cur-lot": [
+    "EUR"
+   ],
+   "buyer-legal-type": [
+    "body-pl-cga"
+   ],
+   "framework-agreement-lot": [
+    "none"
+   ],
+   "estimated-value-cur-proc": "EUR",
+   "buyer-country": [
+    "IRL"
+   ],
+   "place-of-performance-country-proc": [
+    "IRL"
+   ],
+   "description-lot": {
+    "eng": [
+     "Rásaíocht Con Éireann (RCÉ) seeks to appoint a Public Relations Agency to support the delivery of a comprehensive consumer public relations programme throughout 2027, centred on the centenary celebrations of Shelbourne Park Greyhound Stadium. The successful agency will work in partnership with the RCÉ Head Office Marketing Team to implement and amplify a detailed programme of events, campaigns and storytelling activities planned for the centenary year. While activity will take place across greyhound stadia nationwide, the primary focus will be Shelbourne Park, celebrating its rich history, heritage, people, milestones and contribution to Irish sporting and social life over the past 100 years. The appointment is focused on consumer PR and media engagement."
+    ]
+   },
+   "procedure-type": "open",
+   "classification-cpv": [
+    "79416000",
+    "79416100",
+    "79416200",
+    "79416000",
+    "79416100",
+    "79416200"
+   ],
+   "contract-nature": [
+    "services",
+    "services"
+   ],
+   "buyer-name": {
+    "eng": [
+     "Rásaíocht Con Éireann"
+    ]
+   },
+   "publication-date": "2026-11-03+01:00",
+   "estimated-value-proc": "50000",
+   "submission-language": [
+    "ENG"
+   ],
+   "deadline": [
+    "2026-11-27T12:00:00Z"
+   ],
+   "title-lot": {
+    "eng": [
+     "Provision of PR Services"
+    ]
+   },
+   "description-proc": {
+    "eng": "Rásaíocht Con Éireann (RCÉ) seeks to appoint a Public Relations Agency to support the delivery of a comprehensive consumer public relations programme throughout 2027, centred on the centenary celebrations of Shelbourne Park Greyhound Stadium. The successful agency will work in partnership with the RCÉ Head Office Marketing Team to implement and amplify a detailed programme of events, campaigns and storytelling activities planned for the centenary year. While activity will take place across greyhound stadia nationwide, the primary focus will be Shelbourne Park, celebrating its rich history, heritage, people, milestones and contribution to Irish sporting and social life over the past 100 years. The appointment is focused on consumer PR and media engagement."
+   }
+  },
+  {
+   "title-proc": {
+    "bul": "„ПРОЕКТИРАНЕ, РАЗРАБОТВАНЕ, ВНЕДРЯВАНЕ, ГАРАНЦИОННА ПОДДРЪЖКА НА НОВА КОРПОРАТИВНА ИНТЕРНЕТ СТРАНИЦА НА ДП БСТ И МИГРАЦИЯ НА СЪДЪРЖАНИЕ“"
+   },
+   "deadline-receipt-tender-date-lot": [
+    "2026-12-02+02:00"
+   ],
+   "notice-type": "cn-standard",
+   "publication-number": "763766-2026",
+   "estimated-value-lot": [
+    "240000.00"
+   ],
+   "estimated-value-cur-lot": [
+    "EUR"
+   ],
+   "buyer-legal-type": [
+    "body-pl"
+   ],
+   "framework-agreement-lot": [
+    "none"
+   ],
+   "estimated-value-cur-proc": "EUR",
+   "buyer-country": [
+    "BGR"
+   ],
+   "place-of-performance-country-proc": [
+    "BGR"
+   ],
+   "description-lot": {
+    "bul": [
+     "Предметът на обществената поръчка е проектиране, разработване, внедряване, гаранционна поддръжка на нова корпоративна интернет страница на Държавно предприятие „Български спортен тотализатор“ (Единния сайт) и миграция на съдържание, като резултат от обединяването на интернет страниците toto.bg, info.toto.bg, action.toto.bg и lottery.toto.bg, с обща цел: Предоставяне на потребителите на ДП БСТ на единна точка за достъп до информацията, игрите и услугите на предприятието онлайн, чрез единен потребителски профил и единно управление на съдържанието, при пълно запазване на нормативното съответствие и на интеграцията с ЦКС „Meliora“."
+    ]
+   },
+   "procedure-type": "open",
+   "classification-cpv": [
+    "72413000",
+    "72413000"
+   ],
+   "contract-nature": [
+    "services",
+    "services"
+   ],
+   "buyer-name": {
+    "bul": [
+     "БЪЛГАРСКИ СПОРТЕН ТОТАЛИЗАТОР ДП"
+    ]
+   },
+   "publication-date": "2026-11-03+01:00",
+   "estimated-value-proc": "240000.00",
+   "submission-language": [
+    "BUL"
+   ],
+   "title-lot": {
+    "bul": [
+     "„ПРОЕКТИРАНЕ, РАЗРАБОТВАНЕ, ВНЕДРЯВАНЕ, ГАРАНЦИОННА ПОДДРЪЖКА НА НОВА КОРПОРАТИВНА ИНТЕРНЕТ СТРАНИЦА НА ДП БСТ И МИГРАЦИЯ НА СЪДЪРЖАНИЕ“"
+    ]
+   },
+   "description-proc": {
+    "bul": "Предметът на обществената поръчка е проектиране, разработване, внедряване, гаранционна поддръжка на нова корпоративна интернет страница на Държавно предприятие „Български спортен тотализатор“ (Единния сайт) и миграция на съдържание, като резултат от обединяването на интернет страниците toto.bg, info.toto.bg, action.toto.bg и lottery.toto.bg, с обща цел: Предоставяне на потребителите на ДП БСТ на единна точка за достъп до информацията, игрите и услугите на предприятието онлайн, чрез единен потребителски профил и единно управление на съдържанието, при пълно запазване на нормативното съответствие и на интеграцията с ЦКС „Meliora“."
+   }
+  },
+  {
+   "title-proc": {
+    "nld": "Europees openbare aanbesteding Websitebeheer"
+   },
+   "deadline-receipt-tender-date-lot": [
+    "2027-03-05+01:00"
+   ],
+   "notice-type": "cn-standard",
+   "publication-number": "764870-2026",
+   "estimated-value-lot": [
+    "2700000.0"
+   ],
+   "estimated-value-cur-lot": [
+    "EUR"
+   ],
+   "buyer-legal-type": [
+    "ra"
+   ],
+   "framework-agreement-lot": [
+    "fa-wo-rc"
+   ],
+   "estimated-value-cur-proc": "EUR",
+   "buyer-country": [
+    "NLD"
+   ],
+   "place-of-performance-country-proc": [
+    "NLD"
+   ],
+   "description-lot": {
+    "nld": [
+     "113 beschikt over meerdere websites die zijn opgebouwd op verschillende onderliggende technologieën en systemen. Hierdoor zijn beheer en onderhoud versnipperd, is de onderlinge samenhang beperkt en worden functionaliteiten en componenten onvoldoende hergebruikt. De huidige inrichting bemoeilijkt integraal overzicht, consistente kwaliteit en schaalbare doorontwikkeling. 113 streeft naar één centraal platform voor het ontwikkelen, beheren en hosten van meerdere websites, gebaseerd op één centraal CMS en één contentbibliotheek voor alle assets. De gekozen richting is een moderne (headless) API-gedreven architectuur. De contentlaag is ontkoppeld van de presentatielaag, zodat websites en campagnes een eigen uitstraling en gebruikerservaring kunnen krijgen zonder de centrale beheerstructuur te doorbreken. Deze opdracht is een raamovereenkomst met een maximale waarde van € 2.700.000,- exclusief"
+    ]
+   },
+   "procedure-type": "open",
+   "classification-cpv": [
+    "72410000",
+    "72413000",
+    "72415000",
+    "72410000",
+    "72413000",
+    "72415000"
+   ],
+   "contract-nature": [
+    "services",
+    "services"
+   ],
+   "buyer-name": {
+    "nld": [
+     "Stichting 113 Zelfmoordpreventie"
+    ]
+   },
+   "publication-date": "2026-11-04+01:00",
+   "estimated-value-proc": "2700000.0",
+   "submission-language": [
+    "NLD"
+   ],
+   "deadline": [
+    "2027-01-20T10:00:00+01:00"
+   ],
+   "title-lot": {
+    "nld": [
+     "Europees openbare aanbesteding Websitebeheer"
+    ]
+   },
+   "description-proc": {
+    "nld": "113 beschikt over meerdere websites die zijn opgebouwd op verschillende onderliggende technologieën en systemen. Hierdoor zijn beheer en onderhoud versnipperd, is de onderlinge samenhang beperkt en worden functionaliteiten en componenten onvoldoende hergebruikt. De huidige inrichting bemoeilijkt integraal overzicht, consistente kwaliteit en schaalbare doorontwikkeling. 113 streeft naar één centraal platform voor het ontwikkelen, beheren en hosten van meerdere websites, gebaseerd op één centraal CMS en één contentbibliotheek voor alle assets. De gekozen richting is een moderne (headless) API-gedreven architectuur. De contentlaag is ontkoppeld van de presentatielaag, zodat websites en campagnes een eigen uitstraling en gebruikerservaring kunnen krijgen zonder de centrale beheerstructuur te doorbreken. Deze opdracht is een raamovereenkomst met een maximale waarde van € 2.700.000,- exclusief"
+   }
+  },
+  {
+   "title-proc": {
+    "eng": "Westgate Vision 2040 - Multi-Disciplinary Design Team (MDDT) Consultancy Service"
+   },
+   "deadline-receipt-tender-date-lot": [
+    "2026-11-25Z"
+   ],
+   "notice-type": "cn-standard",
+   "publication-number": "770978-2026",
+   "estimated-value-lot": [
+    "900000"
+   ],
+   "estimated-value-cur-lot": [
+    "EUR"
+   ],
+   "buyer-legal-type": [
+    "la"
+   ],
+   "framework-agreement-lot": [
+    "none"
+   ],
+   "estimated-value-cur-proc": "EUR",
+   "buyer-country": [
+    "IRL"
+   ],
+   "place-of-performance-country-proc": [
+    "IRL"
+   ],
+   "description-lot": {
+    "eng": [
+     "Delivery of detailed design, tender and management of construction phase to handover for Westgate Vision Public Realm Scheme Character Area 1 and 2"
+    ]
+   },
+   "procedure-type": "open",
+   "classification-cpv": [
+    "71200000",
+    "71410000",
+    "71210000",
+    "71220000",
+    "71222000",
+    "71222100",
+    "71222200",
+    "71223000",
+    "71240000",
+    "71241000",
+    "71242000",
+    "71400000",
+    "71420000",
+    "73220000",
+    "79000000",
+    "90712000",
+    "90712100",
+    "71251000",
+    "71300000",
+    "71317200",
+    "71320000",
+    "71322000",
+    "71324000",
+    "71541000",
+    "79822500",
+    "79994000",
+    "71200000",
+    "71410000",
+    "71210000",
+    "71220000",
+    "71222000",
+    "71222100",
+    "71222200",
+    "71223000",
+    "71240000",
+    "71241000",
+    "71242000",
+    "71400000",
+    "71420000",
+    "73220000",
+    "79000000",
+    "90712000",
+    "90712100",
+    "71251000",
+    "71300000",
+    "71317200",
+    "71320000",
+    "71322000",
+    "71324000",
+    "71541000",
+    "79822500",
+    "79994000"
+   ],
+   "contract-nature": [
+    "services",
+    "services"
+   ],
+   "buyer-name": {
+    "eng": [
+     "Louth County Council_381"
+    ]
+   },
+   "publication-date": "2026-11-05+01:00",
+   "estimated-value-proc": "900000",
+   "submission-language": [
+    "ENG"
+   ],
+   "deadline": [
+    "2026-11-15T12:00:00Z"
+   ],
+   "title-lot": {
+    "eng": [
+     "Westgate Vision 2040 - Multi-Disciplinary Design Team (MDDT) Consultancy Service"
+    ]
+   },
+   "description-proc": {
+    "eng": "Delivery of detailed design, tender and management of construction phase to handover for Westgate Vision Public Realm Scheme Character Area 1 and 2"
+   }
+  }
+ ],
+ "totalNoticeCount": 10,
+ "iterationNextToken": null,
+ "timedOut": false
+}

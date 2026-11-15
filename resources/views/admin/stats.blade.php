@@ -96,6 +96,27 @@
     </div>
 </section>
 
+<section class="mb-6 rounded-lg bg-white p-5 shadow">
+    <div class="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+        <h2 class="font-semibold text-gray-800">Възможности по вид и статус</h2>
+        <a href="{{ route('admin.opportunities.index') }}" class="text-sm text-blue-600 hover:underline">Към възможностите</a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+            <thead class="text-left text-gray-600"><tr><th class="py-1 pr-4 font-semibold">Вид</th>@foreach(\App\Models\Opportunity::STATUSES as [$label])<th class="py-1 pr-4 font-semibold">{{ $label }}</th>@endforeach</tr></thead>
+            <tbody class="divide-y divide-gray-100">
+                @foreach(\App\Models\Opportunity::KINDS as $kind => $kindLabel)
+                    @continue(! isset($opportunityCounts[$kind]))
+                    <tr><td class="py-1.5 pr-4 text-gray-800">{{ $kindLabel }}</td>@foreach(\App\Models\Opportunity::STATUSES as $status => $x)<td class="pr-4">{{ $opportunityCounts[$kind][$status] ?? 0 }}</td>@endforeach</tr>
+                @endforeach
+                @if($opportunityCounts->isEmpty())
+                    <tr><td colspan="8" class="py-3 text-gray-500">Още няма възможности.</td></tr>
+                @endif
+            </tbody>
+        </table>
+    </div>
+</section>
+
 <div class="grid gap-6 lg:grid-cols-2">
     <section class="rounded-lg bg-white p-5 shadow">
         <h2 class="mb-3 font-semibold text-gray-800">Къде са запитванията сега</h2>

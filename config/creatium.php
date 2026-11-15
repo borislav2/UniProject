@@ -118,6 +118,7 @@ return [
             'category' => [
                 'dentist' => 12, 'beauty' => 12, 'hairdresser' => 12, 'physiotherapy' => 12, 'car_repair' => 12, 'builder' => 12,
                 'veterinary' => 11, 'fitness' => 10, 'restaurant' => 8, 'hotel' => 8, 'cafe' => 7, 'lawyer' => 8, 'accountant' => 8,
+                'agency' => 12, 'web_agency' => 12,
             ],
             'category_default' => 4,
             // Приоритет на пазара: къде искаме да продаваме първо.
@@ -139,11 +140,85 @@ return [
             'min_score' => 45,
             // Кои пазари, градове (празно = всички) и видове бизнес се въртят. Променя се от „Автопилот“.
             'plan' => [
-                'gb' => ['enabled' => true, 'cities' => [], 'categories' => ['dentist', 'beauty', 'hairdresser', 'physiotherapy', 'veterinary', 'car_repair', 'fitness', 'builder', 'restaurant']],
-                'ie' => ['enabled' => true, 'cities' => [], 'categories' => ['dentist', 'beauty', 'hairdresser', 'physiotherapy', 'veterinary', 'car_repair', 'fitness', 'builder', 'restaurant']],
-                'nl' => ['enabled' => true, 'cities' => [], 'categories' => ['dentist', 'beauty', 'hairdresser', 'physiotherapy', 'veterinary', 'car_repair', 'fitness', 'builder', 'restaurant']],
+                'gb' => ['enabled' => true, 'cities' => [], 'categories' => ['dentist', 'beauty', 'hairdresser', 'physiotherapy', 'veterinary', 'car_repair', 'fitness', 'builder', 'restaurant', 'agency', 'web_agency']],
+                'ie' => ['enabled' => true, 'cities' => [], 'categories' => ['dentist', 'beauty', 'hairdresser', 'physiotherapy', 'veterinary', 'car_repair', 'fitness', 'builder', 'restaurant', 'agency', 'web_agency']],
+                'nl' => ['enabled' => true, 'cities' => [], 'categories' => ['dentist', 'beauty', 'hairdresser', 'physiotherapy', 'veterinary', 'car_repair', 'fitness', 'builder', 'restaurant', 'agency', 'web_agency']],
                 'bg' => ['enabled' => true, 'cities' => [], 'categories' => ['dentist', 'beauty', 'hairdresser', 'physiotherapy', 'veterinary', 'car_repair', 'fitness', 'builder', 'restaurant']],
             ],
+        ],
+    ],
+
+    // „Възможности“ (админ): обществени поръчки (TED, Contracts Finder, Find a Tender), агенции партньори, ръчно добавени
+    // възможности. Нищо не се подава и не се праща автоматично. Тендерите са безплатни и без ключ, затова са включени по подразбиране.
+    // OPPORTUNITIES_ENABLED=false спира събирането (ръчното добавяне и екраните работят).
+    'opportunities' => [
+        'enabled' => (bool) env('OPPORTUNITIES_ENABLED', true),
+        // Всеки източник се опреснява най-много веднъж на толкова часа (от посещенията на сайта, под ключалка в кеша).
+        'interval_hours' => max(1, (int) env('OPPORTUNITIES_INTERVAL_HOURS', 6)),
+        // Колко дни назад по дата на публикуване се гледа при всяко опресняване.
+        'lookback_days' => max(1, (int) env('OPPORTUNITIES_LOOKBACK_DAYS', 21)),
+        'timeout' => 20,
+        'user_agent' => 'CreatiumLab-OpportunityFeed/1.0',
+        // Най-много страници на източник при едно опресняване (TED до 250 известия на страница, Contracts Finder и Find a Tender до 100).
+        'max_pages' => ['ted' => 2, 'contracts-finder' => 4, 'find-a-tender' => 4],
+        // Минимална оценка, за да се запази възможност (по-слабите съвпадения на ключови думи се пропускат).
+        'min_score' => (int) env('OPPORTUNITIES_MIN_SCORE', 25),
+        // Брояч в менюто: нови възможности с поне толкова точки.
+        'badge_score' => (int) env('OPPORTUNITIES_BADGE_SCORE', 60),
+        // CPV кодовете, по които се търси в TED и се разпознава в Contracts Finder и Find a Tender (код => име на български).
+        // 72000000 (всички ИТ услуги) е твърде широк и затова го няма.
+        'cpv' => [
+            '72413000' => 'Услуги по уеб дизайн',
+            '72212224' => 'Разработка на софтуер за редактиране на уеб страници',
+            '72420000' => 'Услуги по разработка за интернет',
+            '72421000' => 'Разработка на клиентски приложения за интернет или интранет',
+            '72415000' => 'Услуги по хостинг и поддръжка на уебсайт',
+            '79340000' => 'Рекламни и маркетингови услуги',
+            '79341000' => 'Рекламни услуги',
+            '79341400' => 'Услуги за рекламни кампании',
+            '79342000' => 'Маркетингови услуги',
+            '79342100' => 'Услуги по директен маркетинг',
+            '79342200' => 'Услуги по промоции',
+            '79413000' => 'Консултантски услуги по управление на маркетинга',
+            '79416000' => 'Услуги по връзки с обществеността',
+            '79822500' => 'Услуги по графичен дизайн',
+        ],
+        // Колко тежи всеки CPV код за съвпадението (0 до 40 точки): уебсайтове най-много, после маркетинг, после съседните услуги.
+        'cpv_weight' => [
+            '72413000' => 40, '72212224' => 40, '72420000' => 38, '72421000' => 36, '72415000' => 22,
+            '79340000' => 32, '79341000' => 30, '79341400' => 30, '79342000' => 32, '79342100' => 28, '79342200' => 26,
+            '79413000' => 22, '79416000' => 24, '79822500' => 26,
+        ],
+        // Пазари по ISO 3166 (две букви): висок, среден; всичко друго в ЕС е нисък, извън ЕС още по-нисък.
+        'markets' => [
+            'high' => ['BG', 'GB', 'IE', 'NL'],
+            'medium' => ['DE', 'AT', 'CH'],
+            'eu' => ['BE', 'LU', 'FR', 'ES', 'IT', 'PT', 'GR', 'CY', 'MT', 'DK', 'SE', 'FI', 'EE', 'LV', 'LT', 'PL', 'CZ', 'SK', 'SI', 'HR', 'HU', 'RO'],
+        ],
+        // Езици, на които можем да работим (ISO 639-1).
+        'languages' => ['en', 'bg', 'de', 'nl'],
+        // Реалистична стойност за малка агенция в евро: под low е дребно, между low и high е най-добре, над huge е рамково споразумение.
+        'value_band' => ['low' => 2000, 'high' => 150000, 'big' => 500000, 'huge' => 1500000],
+        // Курсове към евро за сравнението на стойностите.
+        'rates' => ['EUR' => 1.0, 'GBP' => 1.15, 'BGN' => 0.5113, 'PLN' => 0.23, 'SEK' => 0.09, 'DKK' => 0.134, 'CZK' => 0.04, 'HUF' => 0.0025, 'RON' => 0.2, 'CHF' => 1.05, 'NOK' => 0.087],
+        // Подготвени търсения в платформи за свободна практика (само връзки, нищо не се събира автоматично). Променят се от екрана.
+        'saved_searches' => [
+            ['label' => 'Upwork: уеб дизайн', 'url' => 'https://www.upwork.com/nx/search/jobs/?q=web%20design&sort=recency'],
+            ['label' => 'Upwork: WordPress и Laravel', 'url' => 'https://www.upwork.com/nx/search/jobs/?q=wordpress%20laravel&sort=recency'],
+            ['label' => 'Upwork: SEO', 'url' => 'https://www.upwork.com/nx/search/jobs/?q=seo&sort=recency'],
+            ['label' => 'Upwork: имейл маркетинг', 'url' => 'https://www.upwork.com/nx/search/jobs/?q=email%20marketing&sort=recency'],
+            ['label' => 'Malt: уеб дизайн', 'url' => 'https://www.malt.com/s?q=web+design'],
+            ['label' => 'Malt: SEO', 'url' => 'https://www.malt.com/s?q=seo'],
+            ['label' => 'freelancermap: WordPress, Laravel', 'url' => 'https://www.freelancermap.com/projects?query=wordpress+laravel'],
+            ['label' => 'freelancermap: SEO', 'url' => 'https://www.freelancermap.com/projects?query=seo'],
+            ['label' => 'PeoplePerHour: уеб дизайн', 'url' => 'https://www.peopleperhour.com/freelance-jobs?q=web+design'],
+            ['label' => 'PeoplePerHour: имейл маркетинг', 'url' => 'https://www.peopleperhour.com/freelance-jobs?q=email+marketing'],
+        ],
+        // Програми и грантове: кратък списък с връзки (без автоматично събиране).
+        'grant_links' => [
+            ['label' => 'ИСУН 2020: проекти и покани (България)', 'url' => 'https://eumis2020.government.bg/'],
+            ['label' => 'Структурни фондове на ЕС в България', 'url' => 'https://www.eufunds.bg/'],
+            ['label' => 'EU Funding & Tenders Portal', 'url' => 'https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/home'],
         ],
     ],
 

@@ -2,6 +2,7 @@
 
 namespace App\Support\Outreach;
 
+use App\Support\Opportunities\PartnerOpportunities;
 use App\Models\OutreachBusiness;
 use App\Models\OutreachCall;
 use App\Models\OutreachProspect;
@@ -156,10 +157,12 @@ class ProspectFinder
         if ($existing) {
             $existing->update($values);
             LeadScore::apply($existing);
+            PartnerOpportunities::sync($existing);
 
             return false;
         }
-        LeadScore::apply(OutreachProspect::create(['email' => $email, 'status' => 'new', 'outreach_search_id' => $search->id] + $values));
+        $prospect = LeadScore::apply(OutreachProspect::create(['email' => $email, 'status' => 'new', 'outreach_search_id' => $search->id] + $values));
+        PartnerOpportunities::sync($prospect);
 
         return true;
     }

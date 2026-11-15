@@ -25,7 +25,7 @@ class Profiles
         ],
         'sales' => [
             'label' => 'Маркетинг и продажби',
-            'description' => 'Запитвания, потенциални клиенти и обаждания, чат разговори, статистика и SEO.',
+            'description' => 'Запитвания, възможности (поръчки и партньори), потенциални клиенти и обаждания, чат разговори, статистика и SEO.',
         ],
         'brand' => [
             'label' => 'Бранд и съдържание',
@@ -55,6 +55,7 @@ class Profiles
             'outreach-search' => $item('admin.outreach.search.index', 'admin.outreach.search.*', 'search', 'Търсене на бизнеси'),
             'outreach-calls' => $item('admin.outreach.calls.index', ['admin.outreach.calls.index', 'admin.outreach.calls.import', 'admin.outreach.calls.update', 'admin.outreach.calls.lead'], 'phone', 'Без сайт, за обаждане'),
             'calls-next' => $item('admin.outreach.calls.next', ['admin.outreach.calls.next', 'admin.outreach.calls.back', 'admin.outreach.calls.skip'], 'phone-volume', 'Следващо обаждане', 'callbacks'),
+            'opportunities' => $item('admin.opportunities.index', 'admin.opportunities.*', 'file-contract', 'Възможности', 'opportunities'),
             'linkedin' => $item('admin.linkedin.index', 'admin.linkedin.*', 'linkedin', 'LinkedIn', 'linkedin_due'),
             'stats' => $item('admin.stats', 'admin.stats', 'chart-line', 'Статистика'),
             'reviews' => $item('admin.reviews.index', 'admin.reviews.*', 'reply', 'Отговори на отзиви'),
@@ -76,7 +77,7 @@ class Profiles
         return [
             '' => ['today', 'dashboard'],
             'Клиенти' => ['inquiries', 'site-checks', 'projects', 'clients', 'client-emails', 'chats'],
-            'Продажби' => ['outreach', 'outreach-queue', 'outreach-search', 'outreach-autopilot', 'outreach-calls', 'calls-next', 'linkedin', 'stats', 'reviews'],
+            'Продажби' => ['outreach', 'outreach-queue', 'outreach-search', 'outreach-autopilot', 'outreach-calls', 'calls-next', 'linkedin', 'opportunities', 'stats', 'reviews'],
             'Сайт' => ['posts', 'post-categories', 'content', 'seo'],
             'Настройки' => ['categories', 'technologies', 'users', 'health', 'profile'],
         ];
@@ -92,7 +93,7 @@ class Profiles
             ],
             'sales' => [
                 '' => ['today'],
-                'Продажби' => ['inquiries', 'outreach', 'outreach-queue', 'outreach-search', 'outreach-calls', 'calls-next', 'chats'],
+                'Продажби' => ['inquiries', 'opportunities', 'outreach', 'outreach-queue', 'outreach-search', 'outreach-calls', 'calls-next', 'chats'],
                 'Анализ' => ['stats', 'dashboard', 'seo'],
             ],
             'brand' => [
@@ -177,13 +178,14 @@ class Profiles
         $post = ['admin.posts.create', 'Статия в блога'];
         $email = ['admin.client-emails.index', 'Имейл до клиент'];
         $linkedin = ['admin.linkedin.index', 'Контакт в LinkedIn'];
+        $opportunity = ['admin.opportunities.index', 'Възможност'];
         $review = ['admin.reviews.index', 'Отговор на отзив'];
 
         return match (self::normalize($key)) {
             'dev' => [$project],
-            'sales' => [$project, ['admin.outreach.search.index', 'Търсене на бизнеси'], $linkedin],
+            'sales' => [$project, ['admin.outreach.search.index', 'Търсене на бизнеси'], $linkedin, $opportunity],
             'brand' => [$post, $email, $linkedin, $review],
-            default => [$project, $post, $email, $linkedin, $review],
+            default => [$project, $post, $email, $linkedin, $review, $opportunity],
         };
     }
 
@@ -193,7 +195,7 @@ class Profiles
      */
     public static function todaySections(?string $key): array
     {
-        $sales = ['sales-queue', 'sales-consultations', 'sales-unread', 'sales-due', 'sales-calls', 'sales-hot', 'sales-followups', 'sales-nostep'];
+        $sales = ['sales-queue', 'sales-opportunities', 'sales-deadlines', 'sales-consultations', 'sales-unread', 'sales-due', 'sales-calls', 'sales-hot', 'sales-followups', 'sales-nostep'];
         $dev = ['dev-projects', 'dev-clients', 'dev-site-checks', 'dev-leads', 'dev-health'];
         $brand = ['brand-posts', 'brand-autopost', 'brand-linkedin', 'brand-reviews', 'brand-reports', 'brand-emails'];
 

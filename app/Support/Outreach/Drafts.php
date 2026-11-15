@@ -3,6 +3,7 @@
 namespace App\Support\Outreach;
 
 use App\Models\OutreachProspect;
+use App\Support\Opportunities\PartnerPitch;
 
 /**
  * Черновите за „За одобрение“: тема и наблюдение на езика на бизнеса, подготвени от проверката на сайта му.
@@ -22,6 +23,16 @@ class Drafts
             return true;
         }
 
+        // Агенция партньор: английско писмо за бял етикет вместо наблюдение за сайта (само за пазарите с английско писмо).
+        if ($prospect->isPartner()) {
+            if ($prospect->mailLanguage() !== 'en') {
+                return false;
+            }
+            $prospect->forceFill(['draft_at' => now(), 'draft_subject' => PartnerPitch::subject($prospect), 'draft_observation' => PartnerPitch::body($prospect)])->save();
+
+            return true;
+        }
+
         $observation = $prospect->suggestedObservation();
         if ($observation === '') {
             return false;
@@ -36,6 +47,9 @@ class Drafts
     {
         if ($prospect->mailLanguage() !== 'en') {
             return null;
+        }
+        if ($prospect->isPartner()) {
+            return PartnerPitch::summaryBg();
         }
         $titles = [];
         foreach ($prospect->findings ?: [] as $finding) {

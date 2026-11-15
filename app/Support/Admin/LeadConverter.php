@@ -4,6 +4,7 @@ namespace App\Support\Admin;
 
 use App\Models\Category;
 use App\Models\LinkedinProspect;
+use App\Models\Opportunity;
 use App\Models\OutreachCall;
 use App\Models\OutreachProspect;
 use App\Models\Project;
@@ -80,6 +81,47 @@ class LeadConverter
         $prospect->forceFill(['project_id' => $lead->id])->save();
 
         return $lead;
+    }
+
+    /**
+     * Възможност (поръчка, партньор, заявка от платформа) става проект в „Проекти“: работа, не запитване. Източникът е
+     * „opportunity“, каналът „Възможности“; повторно натискане отваря същия проект. Нищо не се подава никъде.
+     */
+    public static function fromOpportunity(Opportunity $opportunity, ?User $user = null): Project
+    {
+        if ($opportunity->project_id && ($existing = Project::find($opportunity->project_id))) {
+            return $existing;
+        }
+
+        $lines = [$opportunity->kindLabel() . ' от „' . $opportunity->sourceLabel() . '“, оценка ' . $opportunity->score . '/100.', $opportunity->summaryLine()];
+        if ($opportunity->url) {
+            $lines[] = 'Адрес: ' . $opportunity->url;
+        }
+        if ($opportunity->note) {
+            $lines[] = 'Бележка: ' . $opportunity->note;
+        }
+        $category = Category::firstOrCreate(['name' => 'Възможности'], ['description' => 'Проекти, започнали от обществена поръчка, партньор или платформа за свободна практика']);
+
+        $project = Project::create([
+            'name' => 'Възможност: ' . mb_substr($opportunity->title, 0, 200),
+            'description' => implode("\n\n", $lines),
+            'start_date' => now()->toDateString(),
+            'status' => 'Planning',
+            'manager' => $user?->name ?? 'Неразпределен',
+            'category_id' => $category->id,
+            'source' => 'opportunity',
+            'lead_channel' => 'Възможности',
+            'assigned_to' => $opportunity->assigned_to ?? $user?->id,
+            'read_at' => now(),
+        ]);
+        ProjectNote::create(['project_id' => $project->id, 'user_id' => $user?->id, 'kind' => 'note', 'body' => 'Създаден от възможност: ' . $opportunity->title . '.']);
+
+        $opportunity->forceFill(['project_id' => $project->id])->save();
+        if (in_array($opportunity->status, ['new', 'interesting'], true)) {
+            $opportunity->moveTo('preparing', $user?->id);
+        }
+
+        return $project;
     }
 
     private static function create(string $name, string $description, string $channel, array $contact, ?User $user): Project
