@@ -26,13 +26,13 @@
 @include('admin.outreach._call-stats')
 
 <div class="mb-6 flex flex-wrap items-center gap-3">
-    <a href="{{ route('admin.outreach.calls.next', array_filter(['city' => $filters['city'], 'industry' => $filters['industry'], 'mobile' => $filters['mobile']])) }}" class="adm-btn"><x-icon name="phone" /> Следващо обаждане</a>
+    <a href="{{ route('admin.outreach.calls.next', array_filter(['country' => $filters['country'], 'city' => $filters['city'], 'industry' => $filters['industry'], 'mobile' => $filters['mobile']])) }}" class="adm-btn"><x-icon name="phone" /> Следващо обаждане</a>
     <span class="text-sm text-gray-600">{{ $queueCount }} в опашката с тези филтри: първо уговорените за днес, после новите (мобилните първи), после неотговорилите от предишни дни.</span>
 </div>
 
 <nav class="mb-4 flex flex-wrap gap-2 text-sm">
     {{-- „all“ държи адреса непразен, за да не се отвори пак запомненият филтър (OutreachCallController::index). --}}
-    @php $base = array_filter(['city' => $filters['city'], 'industry' => $filters['industry'], 'phone' => $filters['phone'] ? 1 : null, 'mobile' => $filters['mobile']]) ?: ['all' => 1]; @endphp
+    @php $base = array_filter(['country' => $filters['country'], 'city' => $filters['city'], 'industry' => $filters['industry'], 'phone' => $filters['phone'] ? 1 : null, 'mobile' => $filters['mobile']]) ?: ['all' => 1]; @endphp
     <a href="{{ route('admin.outreach.calls.index', $base + ['due' => 1]) }}" class="rounded-full px-3 py-1 {{ $filters['due'] ? 'bg-amber-600 text-white' : 'bg-amber-50 text-amber-800 shadow' }}">Обади се отново днес ({{ $dueCount }})</a>
     <a href="{{ route('admin.outreach.calls.index', $base) }}" class="rounded-full px-3 py-1 {{ $filters['status'] || $filters['due'] ? 'bg-white text-gray-700 shadow' : 'bg-brand-950 text-white' }}">Всички ({{ $counts->sum() }})</a>
     @foreach(\App\Models\OutreachCall::STATUSES as $key => $label)
@@ -43,6 +43,10 @@
 <form method="GET" action="{{ route('admin.outreach.calls.index') }}" class="mb-4 flex flex-wrap items-center gap-3 text-sm">
     @if($filters['status'])<input type="hidden" name="status" value="{{ $filters['status'] }}">@endif
     @if($filters['due'])<input type="hidden" name="due" value="1">@endif
+    <select name="country" class="rounded border border-gray-300 px-2 py-1.5" aria-label="Държава">
+        <option value="">Всички държави</option>
+        @foreach(\App\Support\Outreach\Markets::codes() as $code)<option value="{{ $code }}" @selected($filters['country'] === $code)>{{ \App\Support\Outreach\Markets::label($code) }} ({{ $countries[$code] ?? 0 }})</option>@endforeach
+    </select>
     <select name="city" class="rounded border border-gray-300 px-2 py-1.5" aria-label="Град">
         <option value="">Всички градове</option>
         @foreach($cities as $city)<option value="{{ $city }}" @selected($filters['city'] === $city)>{{ $city }}</option>@endforeach
@@ -66,7 +70,7 @@
         <li class="grid gap-3 p-4 md:grid-cols-[minmax(0,1.2fr)_auto_minmax(0,2fr)] md:items-start md:gap-6">
             <div class="min-w-0">
                 <span class="font-semibold text-gray-900">{{ $call->name }}</span>
-                <span class="block text-xs text-gray-500">{{ collect([$call->industryLabel(), $call->city])->filter()->join(' · ') }}</span>
+                <span class="block text-xs text-gray-500">{{ collect([$call->industryLabel(), $call->city, ($call->country ?: 'bg') !== 'bg' ? \App\Support\Outreach\Markets::label($call->country) : null])->filter()->join(' · ') }}</span>
                 @if($call->source_url)<a href="{{ $call->source_url }}" target="_blank" rel="noopener" class="text-xs text-blue-600 hover:underline">На картата</a>@endif
             </div>
             <div class="whitespace-nowrap">

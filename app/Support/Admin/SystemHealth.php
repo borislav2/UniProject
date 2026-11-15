@@ -37,6 +37,19 @@ class SystemHealth
             Outreach::configured() ? null : 'bash deploy/configure-outreach-mail.sh');
         $add('Продажби', 'Търсене в Google Maps', filled(config('services.serper.key')) ? 'ok' : 'off',
             filled(config('services.serper.key')) ? 'Търсенето на бизнеси е през Google Maps.' : 'Без ключ търсенето е в OpenStreetMap (по-малко бизнеси със сайт).', filled(config('services.serper.key')) ? null : 'SERPER_API_KEY в .env');
+        $autopilot = \App\Support\Outreach\Autopilot::class;
+        $apState = $autopilot::state();
+        $apOn = (bool) config('creatium.outreach.autopilot.enabled');
+        $apPaused = $apOn && $autopilot::settings()['paused'];
+        $apError = $apOn ? ($apState['last_error'] ?? null) : null;
+        $apLast = ! empty($apState['last_tick_at']) ? Carbon::parse($apState['last_tick_at'])->timezone('Europe/Sofia')->format('d.m H:i') : null;
+        $add('Продажби', 'Автопилот', ! $apOn ? 'off' : ($apError || $apPaused ? 'warn' : 'ok'),
+            ! $apOn ? 'Изключен: нищо не се търси само. Нищо не се праща и когато е включен.' : sprintf(
+                '%s. Днес %d нови бизнеса от %d, %d търсения от %d (%d страници от Serper)%s.%s',
+                $apPaused ? 'На пауза' : 'Работи', $autopilot::newToday(), $autopilot::settings()['daily_new'], $autopilot::searchesToday(false), $autopilot::settings()['daily_searches'], $autopilot::pagesToday(),
+                $apLast ? ", последна стъпка {$apLast}" : '', $apError ? ' Последна грешка ' . $apError : ''
+            ),
+            ! $apOn ? 'OUTREACH_AUTOPILOT=true в .env, после php artisan config:cache' : ($apError ? 'Проверете ключа на Serper (SERPER_API_KEY) и „Автопилот“ в админа' : null));
         $add('Сайт', 'Скорост на телефон в проверката на сайт', filled(config('services.pagespeed.key')) ? 'ok' : 'off',
             filled(config('services.pagespeed.key')) ? 'Отчетът от безплатната проверка включва оценка, LCP, CLS и INP от Google PageSpeed.' : 'По желание. Без ключ отчетът няма оценка за скорост на телефон.',
             filled(config('services.pagespeed.key')) ? null : 'PAGESPEED_API_KEY=... в .env (безплатен ключ от Google Cloud, PageSpeed Insights API)');

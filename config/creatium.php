@@ -102,6 +102,49 @@ return [
         'daily_call_goal' => (int) env('OUTREACH_DAILY_CALL_GOAL', 40),
         // Покани в LinkedIn на ден (LinkedIn пуска около 100 на седмица). Брояч в „Потенциални клиенти“ → „LinkedIn“.
         'linkedin_daily_invites' => (int) env('OUTREACH_LINKEDIN_DAILY_INVITES', 15),
+
+        // Оценка на потенциалните клиенти 0 до 100 (App\Support\Outreach\LeadScore). Всяка тежест е в точки.
+        'scoring' => [
+            // Нужда от нас: точки за всяка находка на проверката на сайта (най-много три се пазят), с таван.
+            'need_fail' => 18,
+            'need_warn' => 9,
+            'need_max' => 50,
+            // Сайтът още не е проверен: средна нужда, за да не падне на дъното.
+            'need_unchecked' => 15,
+            // Качество на имейла.
+            'email' => ['verified' => 20, 'published' => 16, 'risky' => 6, 'guess' => 0],
+            'phone' => 8,
+            // Колко пасва видът бизнес на услугите ни (местни услуги, на които сайтът и Google носят клиенти).
+            'category' => [
+                'dentist' => 12, 'beauty' => 12, 'hairdresser' => 12, 'physiotherapy' => 12, 'car_repair' => 12, 'builder' => 12,
+                'veterinary' => 11, 'fitness' => 10, 'restaurant' => 8, 'hotel' => 8, 'cafe' => 7, 'lawyer' => 8, 'accountant' => 8,
+            ],
+            'category_default' => 4,
+            // Приоритет на пазара: къде искаме да продаваме първо.
+            'market' => ['bg' => 10, 'gb' => 8, 'ie' => 8, 'nl' => 5],
+            // Голяма платформа или каталог вместо собствен сайт.
+            'platform_penalty' => 60,
+        ],
+
+        // Автопилотът намира, оценява и подготвя чернови. Никога не праща писма: пращането е само с клик от човек.
+        // OUTREACH_AUTOPILOT=true го включва; от „Автопилот“ в админа се променят плановете, лимитите и паузата.
+        'autopilot' => [
+            'enabled' => (bool) env('OUTREACH_AUTOPILOT', false),
+            // Най-много нови бизнеса на ден и най-много търсения на ден (всяко търсене в Google Maps е до 3 кредита в Serper).
+            'daily_new' => (int) env('OUTREACH_AUTOPILOT_DAILY_NEW', 30),
+            'daily_searches' => (int) env('OUTREACH_AUTOPILOT_DAILY_SEARCHES', 6),
+            // Една и съща комбинация пазар, град и вид не се търси пак за толкова дни.
+            'repeat_days' => 30,
+            // Чернова се подготвя само за бизнеси с поне толкова точки.
+            'min_score' => 45,
+            // Кои пазари, градове (празно = всички) и видове бизнес се въртят. Променя се от „Автопилот“.
+            'plan' => [
+                'gb' => ['enabled' => true, 'cities' => [], 'categories' => ['dentist', 'beauty', 'hairdresser', 'physiotherapy', 'veterinary', 'car_repair', 'fitness', 'builder', 'restaurant']],
+                'ie' => ['enabled' => true, 'cities' => [], 'categories' => ['dentist', 'beauty', 'hairdresser', 'physiotherapy', 'veterinary', 'car_repair', 'fitness', 'builder', 'restaurant']],
+                'nl' => ['enabled' => true, 'cities' => [], 'categories' => ['dentist', 'beauty', 'hairdresser', 'physiotherapy', 'veterinary', 'car_repair', 'fitness', 'builder', 'restaurant']],
+                'bg' => ['enabled' => true, 'cities' => [], 'categories' => ['dentist', 'beauty', 'hairdresser', 'physiotherapy', 'veterinary', 'car_repair', 'fitness', 'builder', 'restaurant']],
+            ],
+        ],
     ],
 
     // Безплатна проверка на сайт (/proverka-na-sait). audit_price_note е текстът за цената на подробния одит в имейла

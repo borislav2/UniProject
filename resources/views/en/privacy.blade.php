@@ -25,7 +25,7 @@
                 @endif
                 <li>How you got to the site (for example from Google or from an ad), if the site receives it from your browser or from the link you followed. We store it with your inquiry so we know which channels work.</li>
                 <li>Technical data needed to run and secure the site. That is the IP address and request data in the server logs.</li>
-                <li>If we have written to you as a business, we keep the business name, its publicly listed email address, website and city, taken from public sources (your website, Google Maps or OpenStreetMap), and whether you clicked a link in our email (which link and when). We do not track whether you open the email.</li>
+                <li>If we have written to you as a business, we keep the business name, its publicly listed email address, website and city, taken from public sources (your website, Google Maps or OpenStreetMap), and whether you clicked a link in our email (which link and when). We do not track whether you open the email. We also look for businesses in the United Kingdom, Ireland and the Netherlands, found in the same way on Google Maps and on their public websites, and we keep the same data. If the website shows that the business is a registered company, we also keep the text that shows it (for example "Ltd" or a company number).</li>
                 <li>If we have looked you up on LinkedIn, we keep your name, job title, company and the contact details visible on your public profile. We process them under our legitimate interest (Art. 6(1)(f) GDPR) to offer you our services; you can object and ask us to delete your data by writing to {{ $contact['email'] }}.</li>
                 @if(config('creatium.gtm_id'))
                     <li>Data about your visit from analytics and advertising tools, only if you have allowed them (see section 6).</li>
@@ -39,6 +39,7 @@
                 <li>To reply to your inquiry and send you an offer. This is based on your consent and on taking steps at your request before entering into a contract (Art. 6(1)(a) and (b) GDPR).</li>
                 <li>For security and to prevent misuse of the site. This is based on our legitimate interest (Art. 6(1)(f) GDPR).</li>
                 <li>For a single business email to a company whose website we think could be improved, and to know whether it was useful (clicks on its links). This is based on our legitimate interest (Art. 6(1)(f) GDPR). Every such email has an unsubscribe link; after you unsubscribe we do not write again and keep only the address so that we never write to it again.</li>
+                <li>For businesses in the United Kingdom, Ireland and the Netherlands the legal basis is the same legitimate interest. In the United Kingdom we email only registered companies (Ltd, LLP, PLC), in Ireland only business addresses, and in the Netherlands we do not email without prior consent and call or write on LinkedIn instead. We find and shortlist businesses partly automatically, but every email is approved and sent by a person on our team.</li>
             </ul>
         </div>
 
@@ -67,10 +68,11 @@
 
         <div>
             <h2 class="text-xl font-bold text-gray-900 mb-2 dark:text-white">7. Your rights</h2>
-            <p>You have the right to access, rectify and erase your data, to restrict processing, to data portability and to object, and to withdraw your consent at any time. Write to us at the email above. You also have the right to lodge a complaint with the Bulgarian Commission for Personal Data Protection (<a href="https://www.cpdp.bg" class="text-brand-600 underline dark:text-brand-300" target="_blank" rel="noopener">www.cpdp.bg</a>).</p>
+            <p>You have the right to access, rectify and erase your data, to restrict processing, to data portability and to object, and to withdraw your consent at any time. Write to us at the email above. You also have the right to lodge a complaint with the Bulgarian Commission for Personal Data Protection (<a href="https://www.cpdp.bg" class="text-brand-600 underline dark:text-brand-300" target="_blank" rel="noopener">www.cpdp.bg</a>); if you are in the United Kingdom, Ireland or the Netherlands, you can also contact your local authority (the ICO, the Data Protection Commission or the Autoriteit Persoonsgegevens).</p>
+            <p class="mt-3">If we have contacted you as a business, you can object at any time with the unsubscribe link in our email or by writing to {{ $contact['email'] }}. We will stop at once and not write again, and if you ask, we will delete your data too.</p>
         </div>
 
-        <p class="text-sm text-gray-500 dark:text-gray-400">Last updated 8 November 2026</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Last updated 15 November 2026</p>
     </div>
 </section>
 @endsection

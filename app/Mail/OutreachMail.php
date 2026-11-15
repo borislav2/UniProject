@@ -70,10 +70,24 @@ class OutreachMail extends Mailable
         return $parts;
     }
 
-    /** Адресите, към които водят линковете в писмото (с utm), без проследяването. */
-    public static function targets(): array
+    /** Езикът на писмото: bg или en (по пазара на бизнеса). */
+    public function language(): string
+    {
+        return $this->prospect->mailLanguage();
+    }
+
+    /** Адресите, към които водят линковете в писмото (с utm), без проследяването. Английското писмо води към английския сайт. */
+    public static function targets(string $language = 'bg'): array
     {
         $utm = '?' . http_build_query(['utm_source' => 'outreach', 'utm_medium' => 'email', 'utm_campaign' => 'first-email']);
+
+        if ($language === 'en') {
+            return [
+                'site' => route('en.home') . $utm,
+                'check' => route('en.site-check') . $utm,
+                'booking' => route('en.contact') . $utm . '#konsultatsiya',
+            ];
+        }
 
         return [
             'site' => route('home') . $utm,
@@ -88,7 +102,7 @@ class OutreachMail extends Mailable
      */
     public function links(): array
     {
-        $check = route('site-check');
+        $check = route($this->language() === 'en' ? 'en.site-check' : 'site-check');
         $links = [];
         foreach (array_keys(self::targets()) as $key) {
             $links[$key] = URL::signedRoute('outreach.click', ['prospect' => $this->prospect->id, 'link' => $key]);
@@ -102,11 +116,13 @@ class OutreachMail extends Mailable
 
     public function content(): Content
     {
-        return new Content(view: 'emails.outreach', text: 'emails.outreach-text', with: [
+        $english = $this->language() === 'en';
+
+        return new Content(view: $english ? 'emails.outreach-en' : 'emails.outreach', text: $english ? 'emails.outreach-en-text' : 'emails.outreach-text', with: [
             'data' => $this->data,
             'parts' => self::observationParts($this->data['observation']),
             'links' => $this->links(),
-            'plain' => self::targets(),
+            'plain' => self::targets($this->language()),
             'prospect' => $this->prospect,
             'unsubscribeUrl' => $this->unsubscribeUrl(),
         ]);

@@ -7,10 +7,18 @@
 @endphp
 
 @section('content')
-<nav class="mb-6 flex flex-wrap gap-2 text-sm">
+<nav class="mb-6 flex flex-wrap items-center gap-2 text-sm">
     @foreach(\App\Http\Controllers\Admin\StatsController::PERIODS as $value => $label)
-        <a href="{{ route('admin.stats', ['days' => $value]) }}" class="rounded-full px-4 py-1.5 font-semibold {{ $days === $value ? 'bg-gray-800 text-white' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50' }}">Последните {{ $label }}</a>
+        <a href="{{ route('admin.stats', array_filter(['days' => $value, 'country' => $country])) }}" class="rounded-full px-4 py-1.5 font-semibold {{ $days === $value ? 'bg-gray-800 text-white' : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50' }}">Последните {{ $label }}</a>
     @endforeach
+    <form method="GET" action="{{ route('admin.stats') }}" class="ml-auto inline-flex items-center gap-2 text-gray-700">
+        <input type="hidden" name="days" value="{{ $days }}">
+        <label for="stats-country" class="font-semibold">Държава</label>
+        <select id="stats-country" name="country" class="rounded border border-gray-300 px-2 py-1.5" onchange="this.form.submit()" title="Филтрира писмата и обажданията">
+            <option value="">Всички</option>
+            @foreach(\App\Support\Outreach\Markets::codes() as $code)<option value="{{ $code }}" @selected($country === $code)>{{ \App\Support\Outreach\Markets::label($code) }}</option>@endforeach
+        </select>
+    </form>
 </nav>
 
 {{-- Две фунии една до друга: всяка стъпка с броя и процента от предишната. --}}
@@ -30,6 +38,9 @@
                     </div>
                 @endforeach
             </div>
+            @if($country && $title !== 'LinkedIn')
+                <p class="mt-3 text-xs font-semibold text-brand-700">Само {{ \App\Support\Outreach\Markets::label($country) }}</p>
+            @endif
             @if($title === 'Писма до бизнеси')
                 <p class="mt-4 text-xs text-gray-500">Напомняния в периода: {{ $followups }}. Процентът е спрямо предишния ред.</p>
             @elseif($title === 'LinkedIn')
@@ -66,6 +77,20 @@
                 @empty
                     <tr><td colspan="5" class="px-5 py-6 text-center text-gray-500">Няма запитвания в периода.</td></tr>
                 @endforelse
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="mb-6 rounded-lg bg-white p-5 shadow">
+    <h2 class="mb-3 font-semibold text-gray-800">Писма и обаждания по държава</h2>
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+            <thead class="text-left text-gray-600"><tr><th class="py-1 pr-4 font-semibold">Държава</th><th class="py-1 pr-4 font-semibold">Писма</th><th class="py-1 pr-4 font-semibold">Кликнали</th><th class="py-1 pr-4 font-semibold">Отговорили</th><th class="py-1 pr-4 font-semibold">Обаждания</th><th class="py-1 font-semibold">Интерес</th></tr></thead>
+            <tbody class="divide-y divide-gray-100">
+                @foreach($byCountry as $row)
+                    <tr><td class="py-1.5 pr-4 text-gray-800">{{ \App\Support\Outreach\Markets::label($row['code']) }}</td><td class="pr-4">{{ $row['emails'] }}</td><td class="pr-4">{{ $row['clicked'] }}</td><td class="pr-4">{{ $row['replied'] }}</td><td class="pr-4">{{ $row['calls'] }}</td><td>{{ $row['interested'] }}</td></tr>
+                @endforeach
             </tbody>
         </table>
     </div>

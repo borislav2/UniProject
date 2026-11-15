@@ -12,10 +12,12 @@ class OutreachFollowUpMail extends OutreachMail
 {
     public function content(): Content
     {
-        return new Content(view: 'emails.outreach-followup', text: 'emails.outreach-followup-text', with: [
+        $english = $this->language() === 'en';
+
+        return new Content(view: $english ? 'emails.outreach-en-followup' : 'emails.outreach-followup', text: $english ? 'emails.outreach-en-followup-text' : 'emails.outreach-followup-text', with: [
             'data' => $this->data,
             'links' => $this->links(),
-            'plain' => self::targets(),
+            'plain' => self::targets($this->language()),
             'prospect' => $this->prospect,
             'unsubscribeUrl' => $this->unsubscribeUrl(),
         ]);

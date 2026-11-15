@@ -14,13 +14,23 @@
         @else
             <p class="rounded-lg bg-yellow-50 px-3 py-2 text-sm text-yellow-900">Търси в OpenStreetMap, където малко бизнеси имат записан сайт, затова имейлите са малко. За Google Maps добавете <code class="rounded bg-yellow-100 px-1">SERPER_API_KEY</code> в <code class="rounded bg-yellow-100 px-1">.env</code> (serper.dev, 2 500 безплатни търсения).</p>
         @endif
-        <p class="text-sm text-gray-600">Търси бизнеси от избрания вид в града, само такива със сайт. За всеки намира публикувания имейл и проверява сайта; от проверката се пише личното писмо. Бизнесите без имейл се пропускат.@if(config('creatium.outreach.search_call_list')) Тези с телефон отиват в „Без сайт (за обаждане)“.@endif</p>
-        <div class="grid gap-4 sm:grid-cols-2">
+        <p class="text-sm text-gray-600">Търси бизнеси от избрания вид в града (във Великобритания, Ирландия и Нидерландия търсенето е на езика на държавата), само такива със сайт. За всеки намира публикувания имейл и проверява сайта; от проверката се пише личното писмо. Бизнесите без имейл се пропускат.@if(config('creatium.outreach.search_call_list')) Тези с телефон отиват в „Без сайт (за обаждане)“.@endif</p>
+        @php($oldCountry = \App\Support\Outreach\Markets::normalize(old('country')))
+        <div class="grid gap-4 sm:grid-cols-[1.4fr_1fr_1fr]" data-search-form>
+            <label class="block text-sm">
+                <span class="font-semibold text-gray-800">Държава</span>
+                <select name="country" class="mt-1 w-full rounded border border-gray-300 px-3 py-2" data-country>
+                    @foreach(\App\Support\Outreach\Markets::codes() as $code)<option value="{{ $code }}" @selected($oldCountry === $code)>{{ \App\Support\Outreach\Markets::label($code) }}</option>@endforeach
+                </select>
+            </label>
             <label class="block text-sm">
                 <span class="font-semibold text-gray-800">Град</span>
-                <select name="city" class="mt-1 w-full rounded border border-gray-300 px-3 py-2">
-                    @foreach(array_keys(\App\Support\Outreach\BusinessSearch::CITIES) as $city)<option value="{{ $city }}" @selected(old('city') === $city)>{{ $city }}</option>@endforeach
-                </select>
+                {{-- По един списък на държава (сървърно изрисувани); малкият скрипт показва само този на избраната държава. --}}
+                @foreach(\App\Support\Outreach\Markets::codes() as $code)
+                    <select name="city" data-cities="{{ $code }}" class="mt-1 w-full rounded border border-gray-300 px-3 py-2" @if($oldCountry !== $code) hidden disabled @endif>
+                        @foreach(array_keys(\App\Support\Outreach\Markets::cities($code)) as $city)<option value="{{ $city }}" @selected(old('city') === $city)>{{ $city }}</option>@endforeach
+                    </select>
+                @endforeach
             </label>
             <label class="block text-sm">
                 <span class="font-semibold text-gray-800">Вид бизнес</span>
@@ -30,12 +40,18 @@
             </label>
         </div>
         @error('city')<p class="text-sm text-red-600">{{ $message }}</p>@enderror
+        <ul class="space-y-1 rounded-lg bg-gray-50 p-3 text-xs text-gray-700" aria-label="Правила по държави">
+            @foreach(\App\Support\Outreach\Markets::codes() as $code)
+                <li data-rule="{{ $code }}" @if($oldCountry !== $code) hidden @endif><strong>{{ \App\Support\Outreach\Markets::label($code) }}.</strong> {{ \App\Support\Outreach\Markets::rule($code) }} Писмото е на {{ \App\Support\Outreach\Markets::language($code) === 'en' ? 'английски' : 'български' }}.</li>
+            @endforeach
+        </ul>
         <button class="inline-flex items-center gap-2 rounded-lg bg-brand-950 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-800"><x-icon name="magnifying-glass" /> Търси</button>
     </form>
     <div class="rounded-lg bg-white p-5 text-sm text-gray-700 shadow lg:col-span-2 space-y-2">
         <h3 class="font-bold text-gray-900">Как работи</h3>
         <p>Търсенето върви, докато тази страница е отворена (обикновено няколко минути). Може да го спрете и да продължите по-късно.</p>
         <p>Бизнес, намерен веднъж, не се проверява наново при следващо търсене.</p>
+        <p>Всеки намерен бизнес получава оценка. Тези с готова чернова чакат в <a href="{{ route('admin.outreach.queue') }}" class="text-blue-600 hover:underline">За одобрение</a>. <a href="{{ route('admin.outreach.autopilot') }}" class="text-blue-600 hover:underline">Автопилотът</a> може да търси сам, но никога не праща писма.</p>
         <p class="text-gray-500">Данните са от OpenStreetMap: не всеки бизнес е там и не всеки има сайт. Опитайте няколко вида бизнес в един град.</p>
     </div>
 </div>
@@ -52,7 +68,7 @@
     @forelse($searches as $search)
         <li class="flex flex-wrap items-center justify-between gap-3 p-4" @if($search->isActive()) data-search-work="{{ route('admin.outreach.search.work', $search) }}" @endif>
             <div>
-                <span class="font-semibold text-gray-900">{{ $search->label() }}</span>
+                <span class="font-semibold text-gray-900">{{ $search->label() }}</span>@if($search->byAutopilot())<span class="ml-2 rounded bg-indigo-50 px-1.5 py-0.5 text-xs font-semibold text-indigo-700">автопилот</span>@endif
                 <span class="block text-sm text-gray-500" data-progress>
                     {{ \App\Models\OutreachSearch::STATUSES[$search->status] ?? $search->status }} · намерени {{ $search->found }} · с имейл {{ $search->emails }}@if($search->calls) · за обаждане {{ $search->calls }}@endif
                     @if($search->error)<span class="block text-red-600">{{ $search->error }}</span>@endif
@@ -66,6 +82,22 @@
 </ul>
 
 <script>
+(function () {
+    // Избор на държава: показва списъка с градове и правилото само за нея.
+    document.querySelectorAll('[data-search-form]').forEach(function (form) {
+        var country = form.querySelector('[data-country]');
+        function swap() {
+            form.querySelectorAll('[data-cities]').forEach(function (list) {
+                var on = list.dataset.cities === country.value;
+                list.hidden = !on;
+                list.disabled = !on;
+            });
+            document.querySelectorAll('[data-rule]').forEach(function (note) { note.hidden = note.dataset.rule !== country.value; });
+        }
+        country.addEventListener('change', swap);
+        swap();
+    });
+})();
 (function () {
     var token = document.querySelector('input[name=_token]').value;
     document.querySelectorAll('[data-search-work]').forEach(function (row) {

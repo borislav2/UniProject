@@ -71,7 +71,8 @@ class ProspectFinder
     private function findBusinesses(OutreachSearch $search): void
     {
         try {
-            $found = $this->search->find($search->city, $search->category);
+            $found = $this->search->find($search->city, $search->category, $search->market());
+            $search->update(['serper_pages' => $this->search->lastPages]);
         } catch (Throwable $e) {
             $search->update(['status' => 'failed', 'error' => mb_substr($e->getMessage(), 0, 250)]);
 
@@ -84,6 +85,8 @@ class ProspectFinder
                 'outreach_search_id' => $search->id,
                 'name' => $item['name'],
                 'category' => $search->category,
+                'country' => $search->market(),
+                'language' => Markets::language($search->market()),
                 'city' => $item['city'],
                 'website' => $item['website'],
                 'phone' => $item['phone'],
@@ -102,10 +105,11 @@ class ProspectFinder
                 $found = $this->emails->find($business->website);
             }
             if (! $found && $business->map_email && filter_var($business->map_email, FILTER_VALIDATE_EMAIL)) {
-                $found = ['email' => mb_strtolower($business->map_email), 'page' => $business->website ?? ''];
+                $found = ['email' => mb_strtolower($business->map_email), 'page' => $business->website ?? '',
+                    'company_evidence' => $business->country === 'gb' && $business->website ? $this->emails->companyEvidence($business->website) : null];
             }
 
-            if ($found && $this->addProspect($business, $found)) {
+            if ($found && $this->addProspect($search, $business, $found)) {
                 $search->increment('emails');
             } elseif (config('creatium.outreach.search_call_list') && $this->addCall($business)) {
                 $search->increment('calls');
@@ -117,7 +121,7 @@ class ProspectFinder
         $business->update(['processed_at' => now(), 'email' => $found['email'] ?? null, 'email_page' => $found['page'] ?? null]);
     }
 
-    private function addProspect(OutreachBusiness $business, array $found): bool
+    private function addProspect(OutreachSearch $search, OutreachBusiness $business, array $found): bool
     {
         $email = $found['email'];
         if (OutreachSuppression::where('email', $email)->exists()) {
@@ -143,22 +147,26 @@ class ProspectFinder
             'findings' => ($domain = SiteChecker::normalizeDomain($business->website)) ? ProspectChecker::findings($this->checker, $domain) : [],
             'site_checked_at' => now(),
             'check_note' => null,
+            'country' => $business->country ?: $search->market(),
+            'language' => $business->language ?: Markets::language($search->market()),
+            'company_evidence' => $found['company_evidence'] ?? null,
             'personalization' => $found['page'] ? 'Имейлът е публикуван на ' . $found['page'] : 'Имейлът е публикуван в картата (OpenStreetMap).',
         ];
 
         if ($existing) {
             $existing->update($values);
+            LeadScore::apply($existing);
 
             return false;
         }
-        OutreachProspect::create(['email' => $email, 'status' => 'new', 'score' => $status === 'verified' ? 60 : 50] + $values);
+        LeadScore::apply(OutreachProspect::create(['email' => $email, 'status' => 'new', 'outreach_search_id' => $search->id] + $values));
 
         return true;
     }
 
     private function addCall(OutreachBusiness $business): bool
     {
-        if (! $business->phone || OutreachCall::isForeign($business->phone, $business->city)) {
+        if (! $business->phone || OutreachCall::isForeign($business->phone, $business->city, $business->country)) {
             return false;
         }
 
@@ -171,7 +179,9 @@ class ProspectFinder
             'phone' => $business->phone,
             'industry' => $business->category,
             'city' => $business->city,
-            'source_url' => 'https://www.openstreetmap.org/' . substr($business->external_id, 4),
+            'country' => $business->country ?: 'bg',
+            'language' => $business->language ?: 'bg',
+            'source_url' => str_starts_with($business->external_id, 'osm:') ? 'https://www.openstreetmap.org/' . substr($business->external_id, 4) : null,
         ])->save();
 
         return true;
