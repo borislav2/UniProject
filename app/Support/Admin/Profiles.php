@@ -50,6 +50,8 @@ class Profiles
             'client-emails' => $item('admin.client-emails.index', 'admin.client-emails.*', 'paper-plane', 'Имейли до клиенти'),
             'chats' => $item('admin.chats.index', 'admin.chats.*', 'quote-left', 'Чат разговори'),
             'outreach' => $item('admin.outreach.index', ['admin.outreach.index', 'admin.outreach.compose', 'admin.outreach.import*', 'admin.outreach.check', 'admin.outreach.follow-up*', 'admin.outreach.send*', 'admin.outreach.lead'], 'magnifying-glass', 'Потенциални клиенти'),
+            'outreach-queue' => $item('admin.outreach.queue', 'admin.outreach.queue*', 'check-circle', 'За одобрение', 'queue'),
+            'outreach-autopilot' => $item('admin.outreach.autopilot', 'admin.outreach.autopilot*', 'robot', 'Автопилот'),
             'outreach-search' => $item('admin.outreach.search.index', 'admin.outreach.search.*', 'search', 'Търсене на бизнеси'),
             'outreach-calls' => $item('admin.outreach.calls.index', ['admin.outreach.calls.index', 'admin.outreach.calls.import', 'admin.outreach.calls.update', 'admin.outreach.calls.lead'], 'phone', 'Без сайт, за обаждане'),
             'calls-next' => $item('admin.outreach.calls.next', ['admin.outreach.calls.next', 'admin.outreach.calls.back', 'admin.outreach.calls.skip'], 'phone-volume', 'Следващо обаждане', 'callbacks'),
@@ -74,7 +76,7 @@ class Profiles
         return [
             '' => ['today', 'dashboard'],
             'Клиенти' => ['inquiries', 'site-checks', 'projects', 'clients', 'client-emails', 'chats'],
-            'Продажби' => ['outreach', 'outreach-search', 'outreach-calls', 'calls-next', 'linkedin', 'stats', 'reviews'],
+            'Продажби' => ['outreach', 'outreach-queue', 'outreach-search', 'outreach-autopilot', 'outreach-calls', 'calls-next', 'linkedin', 'stats', 'reviews'],
             'Сайт' => ['posts', 'post-categories', 'content', 'seo'],
             'Настройки' => ['categories', 'technologies', 'users', 'health', 'profile'],
         ];
@@ -90,7 +92,7 @@ class Profiles
             ],
             'sales' => [
                 '' => ['today'],
-                'Продажби' => ['inquiries', 'outreach', 'outreach-search', 'outreach-calls', 'calls-next', 'chats'],
+                'Продажби' => ['inquiries', 'outreach', 'outreach-queue', 'outreach-search', 'outreach-calls', 'calls-next', 'chats'],
                 'Анализ' => ['stats', 'dashboard', 'seo'],
             ],
             'brand' => [
@@ -191,7 +193,7 @@ class Profiles
      */
     public static function todaySections(?string $key): array
     {
-        $sales = ['sales-consultations', 'sales-unread', 'sales-due', 'sales-calls', 'sales-hot', 'sales-followups', 'sales-nostep'];
+        $sales = ['sales-queue', 'sales-consultations', 'sales-unread', 'sales-due', 'sales-calls', 'sales-hot', 'sales-followups', 'sales-nostep'];
         $dev = ['dev-projects', 'dev-clients', 'dev-site-checks', 'dev-leads', 'dev-health'];
         $brand = ['brand-posts', 'brand-autopost', 'brand-linkedin', 'brand-reviews', 'brand-reports', 'brand-emails'];
 

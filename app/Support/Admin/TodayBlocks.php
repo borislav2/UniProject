@@ -81,6 +81,32 @@ class TodayBlocks
 
     // ---- Продажби ----
 
+    /** Бизнесите, намерени от автопилота и „Търсене“, с готова чернова: чакат само човек да одобри (или пропусне). */
+    private function blockSalesQueue(): array
+    {
+        $waiting = OutreachProspect::awaitingApproval();
+        $count = (clone $waiting)->count();
+        $rows = (clone $waiting)->orderByDesc('score')->orderBy('id')->limit($this->limit)->get()->map(function ($p) {
+            $emailable = $p->canBeEmailed();
+
+            return [
+                'title' => $p->displayName(),
+                'url' => route('admin.outreach.queue') . '#p' . $p->id,
+                'chips' => [[$p->score . '/100', $p->score >= 70 ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800']],
+                'sub' => collect([$p->marketLabel(), $p->city, $emailable ? 'чернова на ' . ($p->mailLanguage() === 'en' ? 'английски' : 'български') : 'без имейл, за обаждане'])->filter()->join(' · '),
+                'tone' => $emailable ? null : 'warn',
+                'actions' => [['Прегледай', route('admin.outreach.queue') . '#p' . $p->id, 'get', $emailable]],
+            ];
+        });
+
+        return $this->block('За одобрение', $rows, [
+            'count' => $count,
+            'hint' => 'намерени и подготвени от автопилота, нищо не се праща без вас',
+            'url' => route('admin.outreach.queue'),
+            'empty' => 'Няма чернови за одобрение.',
+        ]);
+    }
+
     private function blockSalesConsultations(): array
     {
         $rows = $this->only(Today::consultations())->map(function ($p) {
@@ -517,6 +543,7 @@ class TodayBlocks
         $calls = $blocks['sales-calls'] ?? null;
 
         $sales = fn () => [
+            ['label' => 'За одобрение', 'value' => $count('sales-queue'), 'hot' => $count('sales-queue') > 0, 'url' => route('admin.outreach.queue')],
             ['label' => 'Непрочетени', 'value' => $count('sales-unread'), 'hot' => $count('sales-unread') > 0, 'url' => route('admin.inquiries.index', ['filter' => 'unread'])],
             ['label' => 'Стъпки за днес', 'value' => $count('sales-due'), 'hot' => collect($blocks['sales-due']['rows'] ?? [])->contains(fn ($r) => ($r['tone'] ?? null) === 'danger')],
             ['label' => 'Обаждания', 'value' => $calls['calls']['total'] ?? 0, 'of' => $calls['calls']['goal'] ?? null, 'note' => ($calls['callbacks'] ?? 0) ? $calls['callbacks'] . ' отново днес' : null, 'url' => route('admin.outreach.calls.next'), 'meter' => [$calls['calls']['total'] ?? 0, $calls['calls']['goal'] ?? 1]],

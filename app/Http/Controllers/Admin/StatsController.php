@@ -8,6 +8,7 @@ use App\Models\LinkedinProspect;
 use App\Models\OutreachCall;
 use App\Models\OutreachProspect;
 use App\Models\Project;
+use App\Support\Outreach\Markets;
 use Illuminate\Http\Request;
 
 /** Фунията по канали за избран период: писма, обаждания и запитвания до спечелени клиенти. */
@@ -19,19 +20,22 @@ class StatsController extends Controller
     {
         $days = array_key_exists((int) $request->query('days'), self::PERIODS) ? (int) $request->query('days') : 30;
         $from = now()->subDays($days);
+        // Фунията на писмата и обажданията може да се види за една държава (LinkedIn и запитванията не са по държава).
+        $country = Markets::exists($request->query('country')) ? $request->query('country') : null;
 
         // Писма: от бизнесите, на които първото писмо е тръгнало в периода.
-        $sent = OutreachProspect::whereNotNull('sent_at')->where('sent_at', '>=', $from);
+        $sent = OutreachProspect::whereNotNull('sent_at')->where('sent_at', '>=', $from)->when($country, fn ($q) => $q->where('country', $country));
         $emails = [
             ['Изпратени първи писма', (clone $sent)->count()],
             ['Кликнали', (clone $sent)->whereNotNull('clicked_at')->count()],
             ['Отговорили или запитване', (clone $sent)->where(fn ($q) => $q->where('status', 'replied')->orWhereNotNull('project_id'))->count()],
             ['Спечелени', (clone $sent)->whereHas('project', fn ($q) => $q->where('stage', 'won'))->count()],
         ];
-        $followups = ClientEmail::where('template', 'outreach-followup')->whereNotNull('sent_at')->where('sent_at', '>=', $from)->count();
+        $followups = ClientEmail::where('template', 'outreach-followup')->whereNotNull('sent_at')->where('sent_at', '>=', $from)
+            ->when($country, fn ($q) => $q->whereIn('outreach_prospect_id', OutreachProspect::where('country', $country)->select('id')))->count();
 
         // Обаждания: последният резултат на бизнесите, обадени в периода.
-        $called = OutreachCall::whereNotNull('called_at')->where('called_at', '>=', $from);
+        $called = OutreachCall::whereNotNull('called_at')->where('called_at', '>=', $from)->when($country, fn ($q) => $q->where('country', $country));
         $calls = [
             ['Обадени бизнеси', (clone $called)->count()],
             ['Вдигнаха', (clone $called)->where('status', '!=', 'no_answer')->count()],
@@ -63,6 +67,16 @@ class StatsController extends Controller
         $pipeline = collect(Project::STAGES)->map(fn ($stage, $key) => [$stage[0], $leads->where('stage', $key)->count()])->values();
         $lostReasons = $leads->where('stage', 'lost')->map(fn ($lead) => trim((string) $lead->lost_reason) ?: 'Без причина')->countBy()->sortDesc();
 
-        return view('admin.stats', compact('days', 'emails', 'followups', 'calls', 'linkedin', 'channels', 'pipeline', 'lostReasons'));
+        // По държава: колко писма и обаждания са тръгнали в периода (без филтър).
+        $byCountry = collect(Markets::codes())->map(fn ($code) => [
+            'code' => $code,
+            'emails' => OutreachProspect::whereNotNull('sent_at')->where('sent_at', '>=', $from)->where('country', $code)->count(),
+            'clicked' => OutreachProspect::whereNotNull('sent_at')->where('sent_at', '>=', $from)->where('country', $code)->whereNotNull('clicked_at')->count(),
+            'replied' => OutreachProspect::whereNotNull('sent_at')->where('sent_at', '>=', $from)->where('country', $code)->where(fn ($q) => $q->where('status', 'replied')->orWhereNotNull('project_id'))->count(),
+            'calls' => OutreachCall::whereNotNull('called_at')->where('called_at', '>=', $from)->where('country', $code)->count(),
+            'interested' => OutreachCall::whereNotNull('called_at')->where('called_at', '>=', $from)->where('country', $code)->whereIn('status', ['interested', 'client'])->count(),
+        ]);
+
+        return view('admin.stats', compact('days', 'country', 'byCountry', 'emails', 'followups', 'calls', 'linkedin', 'channels', 'pipeline', 'lostReasons'));
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Support\Admin;
 
 use App\Models\LinkedinProspect;
+use App\Models\OutreachProspect;
 use App\Models\Project;
 
 /**
@@ -39,6 +40,7 @@ class Badges
             'site_checks' => Project::siteChecks()->whereNull('read_at')->count(),
             'late_payments' => Project::subscribers()->with('payments')->get()->filter(fn ($client) => $client->paymentState()['state'] === 'late')->count(),
             'callbacks' => $callbacks,
+            'queue' => OutreachProspect::awaitingApproval()->count(),
             'linkedin_due' => $linkedin,
             // „Днес“ брои спешното за целия екип (непрочетени, стъпки за днес, обаждания отново, LinkedIn).
             'today' => Today::urgentCount(),

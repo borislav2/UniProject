@@ -17,7 +17,7 @@ class OutreachClickController extends Controller
 
     public function __invoke(Request $request, OutreachProspect $prospect, string $link)
     {
-        $targets = OutreachMail::targets();
+        $targets = OutreachMail::targets($prospect->mailLanguage());
         abort_unless(isset($targets[$link]), 404);
 
         if ($this->counts($request, $prospect)) {

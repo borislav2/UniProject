@@ -64,6 +64,13 @@ class ProspectChecker
 
     public function check(OutreachProspect $prospect): void
     {
+        $this->run($prospect);
+        // Оценката се смята наново с новите находки и статуса на имейла.
+        LeadScore::apply($prospect);
+    }
+
+    private function run(OutreachProspect $prospect): void
+    {
         $values = ['site_checked_at' => now(), 'check_note' => null];
 
         try {
@@ -88,6 +95,10 @@ class ProspectChecker
             if (empty($prospect->findings)) {
                 $values['findings'] = self::findings($this->checker, $domain);
             }
+            // Великобритания: пишем по имейл само на регистрирани фирми, затова търсим знак за това на сайта им.
+            if (($prospect->country ?: 'bg') === 'gb' && blank($prospect->company_evidence)) {
+                $values['company_evidence'] = $this->emails->companyEvidence($prospect->website);
+            }
 
             if (! EmailFinder::ownDomain($host, $domain) && ! in_array($host, EmailFinder::FREE_MAIL, true)) {
                 $values = ['email_status' => 'guess', 'check_note' => "Имейлът е на чужд домейн ({$host}), не на {$site}."] + $values;
@@ -110,16 +121,25 @@ class ProspectChecker
         $prospect->forceFill($values)->save();
     }
 
-    /** До три конкретни неща от проверката на сайта: първо грешките, после предупрежденията. */
+    /**
+     * До три конкретни неща от проверката на сайта: първо грешките, после предупрежденията.
+     * Проверката винаги е на български (находките се превеждат по заглавието им), дори когато се пуска от посещение на /en.
+     */
     public static function findings(SiteChecker $checker, string $domain): array
     {
-        $report = $checker->check($domain);
+        $previous = app()->getLocale();
+        app()->setLocale('bg');
+        try {
+            $report = $checker->check($domain);
+        } finally {
+            app()->setLocale($previous);
+        }
 
         return collect($report['checks'])
             ->filter(fn ($check) => $check['status'] !== 'ok')
             ->sortBy(fn ($check) => $check['status'] === 'fail' ? 0 : 1)
             ->take(3)
-            ->map(fn ($check) => ['title' => $check['title'], 'detail' => $check['detail']])
+            ->map(fn ($check) => ['title' => $check['title'], 'detail' => $check['detail'], 'status' => $check['status']])
             ->values()
             ->all();
     }

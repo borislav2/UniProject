@@ -55,6 +55,9 @@ class BusinessSearch
     /** Страници от Google Maps на едно търсене (по около 20 бизнеса, всяка струва кредит в Serper). */
     private const SERPER_PAGES = 3;
 
+    /** Колко страници от Google Maps (кредити в Serper) взе последното търсене от този обект. */
+    public int $lastPages = 0;
+
     public static function usesGoogle(): bool
     {
         return filled(config('services.serper.key'));
@@ -63,13 +66,14 @@ class BusinessSearch
     /**
      * @return list<array{external_id: string, name: string, website: ?string, phone: ?string, email: ?string, city: ?string}>
      */
-    public function find(string $city, string $category): array
+    public function find(string $city, string $category, string $market = Markets::DEFAULT): array
     {
+        $this->lastPages = 0;
         if (self::usesGoogle()) {
-            return $this->findOnGoogle($city, $category);
+            return $this->findOnGoogle($city, $category, $market);
         }
 
-        [$lat, $lng, $km] = self::CITIES[$city] ?? throw new RuntimeException("Непознат град: $city");
+        [$lat, $lng, $km] = Markets::cities($market)[$city] ?? throw new RuntimeException("Непознат град: $city");
         $tags = self::CATEGORIES[$category]['tags'] ?? throw new RuntimeException("Непознат вид бизнес: $category");
 
         $around = 'around:' . ($km * 1000) . ",$lat,$lng";
@@ -86,7 +90,7 @@ class BusinessSearch
         $businesses = [];
         foreach ($elements as $element) {
             $t = $element['tags'] ?? [];
-            $name = trim((string) ($t['name'] ?? $t['name:bg'] ?? ''));
+            $name = trim((string) ($t['name'] ?? $t['name:bg'] ?? $t['name:en'] ?? ''));
             $website = self::website($t['website'] ?? $t['contact:website'] ?? $t['url'] ?? null);
             if ($name === '' || ! $website || ! isset($element['type'], $element['id'])) {
                 continue;
@@ -104,20 +108,25 @@ class BusinessSearch
         return $businesses;
     }
 
-    /** Google Maps през serper.dev: „ресторант Пловдив“, до три страници резултати. */
-    private function findOnGoogle(string $city, string $category): array
+    /**
+     * Google Maps през serper.dev: „ресторант Пловдив“ (за други пазари на езика им: „dentist Manchester“, „tandarts Utrecht“),
+     * с gl и hl на пазара, до три страници резултати.
+     */
+    private function findOnGoogle(string $city, string $category, string $market): array
     {
-        $query = (self::CATEGORIES[$category]['query'] ?? throw new RuntimeException("Непознат вид бизнес: $category")) . ' ' . $city;
-        isset(self::CITIES[$city]) || throw new RuntimeException("Непознат град: $city");
+        $query = (Markets::query($market, $category) ?? throw new RuntimeException("Непознат вид бизнес: $category")) . ' ' . $city;
+        isset(Markets::cities($market)[$city]) || throw new RuntimeException("Непознат град: $city");
+        $locale = Markets::serper($market);
 
         $businesses = [];
         for ($page = 1; $page <= self::SERPER_PAGES; $page++) {
             try {
+                $this->lastPages++;
                 $response = Http::withHeaders(['X-API-KEY' => config('services.serper.key')])
                     ->acceptJson()
                     ->connectTimeout(10)
                     ->timeout(30)
-                    ->post('https://google.serper.dev/places', ['q' => $query, 'gl' => 'bg', 'hl' => 'bg', 'page' => $page]);
+                    ->post('https://google.serper.dev/places', ['q' => $query, 'gl' => $locale['gl'], 'hl' => $locale['hl'], 'page' => $page]);
             } catch (ConnectionException) {
                 throw new RuntimeException('Google Maps (Serper) не отговаря в момента. Опитайте пак след малко.');
             }

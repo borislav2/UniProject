@@ -14,7 +14,7 @@
         <a href="{{ route('admin.outreach.calls.index', $query) }}" class="text-blue-600 hover:underline">Към списъка</a>
     </span>
     <span class="text-gray-600">
-        @if($query){{ collect([$filters['city'], $filters['industry'] ? \App\Models\OutreachCall::INDUSTRIES[mb_strtolower($filters['industry'])] ?? $filters['industry'] : null, ['mobile' => 'само мобилни', 'landline' => 'само стационарни'][$filters['mobile']] ?? null])->filter()->join(' · ') }} · @endif
+        @if($query){{ collect([$filters['country'] ? \App\Support\Outreach\Markets::label($filters['country']) : null, $filters['city'], $filters['industry'] ? \App\Models\OutreachCall::INDUSTRIES[mb_strtolower($filters['industry'])] ?? $filters['industry'] : null, ['mobile' => 'само мобилни', 'landline' => 'само стационарни'][$filters['mobile']] ?? null])->filter()->join(' · ') }} · @endif
         остават {{ $left }}
     </span>
 </div>
@@ -35,7 +35,7 @@
                 <span class="mb-3 inline-block rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">Не вдигна {{ $call->attempts }} път</span>
             @endif
             <h2 class="text-2xl font-bold text-gray-900">{{ $call->name }}</h2>
-            <p class="mt-1 text-sm text-gray-600">{{ collect([$call->industryLabel(), $call->city])->filter()->join(' · ') }}</p>
+            <p class="mt-1 text-sm text-gray-600">{{ collect([$call->industryLabel(), $call->city, ($call->country ?: 'bg') !== 'bg' ? \App\Support\Outreach\Markets::label($call->country) : null])->filter()->join(' · ') }}</p>
             @if($call->source_url)<a href="{{ $call->source_url }}" target="_blank" rel="noopener" class="mt-1 inline-block text-sm text-blue-600 hover:underline">На картата</a>@endif
 
             <div class="mt-5 flex flex-col gap-2">
@@ -47,8 +47,8 @@
                         </a>
                         @if($phone['mobile'])
                             <div class="flex justify-center gap-2 text-xs">
-                                <a href="{{ \App\Support\Phone::viber($phone['label']) }}" class="rounded-md bg-purple-100 px-2 py-1 font-semibold text-purple-800 hover:bg-purple-200">Viber</a>
-                                <a href="{{ \App\Support\Phone::whatsapp($phone['label']) }}" target="_blank" rel="noopener" class="rounded-md bg-emerald-100 px-2 py-1 font-semibold text-emerald-800 hover:bg-emerald-200">WhatsApp</a>
+                                <a href="{{ \App\Support\Phone::viber($phone['label'], $call->country) }}" class="rounded-md bg-purple-100 px-2 py-1 font-semibold text-purple-800 hover:bg-purple-200">Viber</a>
+                                <a href="{{ \App\Support\Phone::whatsapp($phone['label'], $call->country) }}" target="_blank" rel="noopener" class="rounded-md bg-emerald-100 px-2 py-1 font-semibold text-emerald-800 hover:bg-emerald-200">WhatsApp</a>
                             </div>
                         @endif
                     @else
@@ -100,7 +100,7 @@
             </form>
         </div>
 
-        @include('admin.outreach._call-script', ['call' => $call])
+        @include(($call->country ?: 'bg') === 'bg' ? 'admin.outreach._call-script' : 'admin.outreach._call-script-en', ['call' => $call])
     </div>
     <p class="mt-3 hidden text-center text-xs text-gray-400 md:block">Клавиши: <kbd>1</kbd>–<kbd>4</kbd> резултат · <kbd>Enter</kbd> запази и следващ · <kbd>S</kbd> пропусни · <kbd>B</kbd> назад</p>
     <script>

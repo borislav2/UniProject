@@ -31,7 +31,12 @@ class EmailFinder
     {
     }
 
-    /** @return array{email: string, page: string}|null */
+    /**
+     * company_evidence е текстът от същите страници, който показва, че бизнесът е регистрирана фирма
+     * (Ltd, LLP, PLC, регистрационен номер); нужен е за Великобритания (Markets::emailRule).
+     *
+     * @return array{email: string, page: string, company_evidence: ?string}|null
+     */
     public function find(string $website): ?array
     {
         $domain = SiteChecker::normalizeDomain($website);
@@ -39,11 +44,29 @@ class EmailFinder
             return null;
         }
 
+        $pages = $this->pages($website);
+        $evidence = null;
+        foreach ($pages as [, $html]) {
+            $evidence ??= CompanyEvidence::find($html);
+        }
+
         // Първо страниците за контакт, после началната.
-        foreach (array_reverse($this->pages($website)) as [$url, $html]) {
+        foreach (array_reverse($pages) as [$url, $html]) {
             $email = self::best(array_filter(self::extract($html), fn ($e) => self::acceptable($e, $domain)), $domain);
             if ($email) {
-                return ['email' => $email, 'page' => $url];
+                return ['email' => $email, 'page' => $url, 'company_evidence' => $evidence];
+            }
+        }
+
+        return null;
+    }
+
+    /** Знак за регистрирана фирма на началната страница и страниците „Контакти“ / „За нас“ (или null). */
+    public function companyEvidence(string $website): ?string
+    {
+        foreach ($this->pages($website) as [, $html]) {
+            if ($evidence = CompanyEvidence::find($html)) {
+                return $evidence;
             }
         }
 
@@ -116,7 +139,8 @@ class EmailFinder
         if (preg_match_all('/data-cfemail\s*=\s*["\']([0-9a-fA-F]+)["\']/', $html, $m)) {
             $found = array_merge($found, array_map([self::class, 'decodeCloudflare'], $m[1]));
         }
-        $text = html_entity_decode(strip_tags(preg_replace('/<(script|style)\b.*?<\/\1>/is', ' ', $html)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        // Интервал преди всеки таг, за да не залепва текста на съседни елементи за адреса („Контактиinfo@…“).
+        $text = html_entity_decode(strip_tags(str_replace('<', ' <', preg_replace('/<(script|style)\b.*?<\/\1>/is', ' ', $html))), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         if (preg_match_all('/' . self::EMAIL . '/', $text, $m)) {
             $found = array_merge($found, $m[0]);
         }

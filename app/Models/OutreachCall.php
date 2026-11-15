@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\Outreach\Markets;
+use App\Support\Phone;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -57,7 +59,7 @@ class OutreachCall extends Model
     /** След толкова обаждания без отговор бизнесът излиза от опашката. */
     public const MAX_NO_ANSWER = 2;
 
-    protected $fillable = ['external_id', 'name', 'phone', 'industry', 'city', 'source_url', 'status', 'note', 'called_at', 'callback_on', 'project_id'];
+    protected $fillable = ['external_id', 'name', 'phone', 'industry', 'city', 'source_url', 'status', 'note', 'called_at', 'callback_on', 'project_id', 'country', 'language'];
 
     protected $casts = ['called_by' => 'integer', 'called_at' => 'datetime', 'callback_on' => 'date', 'is_mobile' => 'boolean', 'attempts' => 'integer'];
 
@@ -89,7 +91,7 @@ class OutreachCall extends Model
     {
         static::saving(function (OutreachCall $call) {
             if ($call->isDirty('phone')) {
-                $call->is_mobile = self::hasMobile($call->phone);
+                $call->is_mobile = self::hasMobile($call->phone, $call->country);
             }
         });
     }
@@ -142,25 +144,45 @@ class OutreachCall extends Model
         return collect(preg_split('/[;,\/]/', (string) $this->phone))
             ->map(fn ($p) => trim($p))
             ->filter()
-            ->map(fn ($p) => ['label' => $p, 'href' => self::href($p), 'mobile' => self::isMobileNumber($p)])
+            ->map(fn ($p) => ['label' => $p, 'href' => self::href($p, $this->country), 'mobile' => self::isMobileNumber($p, $this->country)])
             ->sortByDesc('mobile')
             ->values()
             ->all();
     }
 
-    /** Български мобилен номер: 087, 088, 089, 098, 099 (и същите с +359 / 00359). */
-    public static function isMobileNumber(?string $phone): bool
+    /**
+     * Мобилен номер. За България: 087, 088, 089, 098, 099 (и същите с +359 / 00359). За другите пазари по техните
+     * правила (Великобритания 07…, Ирландия 08x, Нидерландия 06…), с или без кода на държавата.
+     */
+    public static function isMobileNumber(?string $phone, ?string $market = null): bool
     {
-        $digits = preg_replace('/\D/', '', (string) $phone);
-        $digits = preg_replace('/^(00359|359)/', '0', $digits);
+        $market = Markets::normalize($market);
+        $raw = trim((string) $phone);
+        $digits = preg_replace('/\D/', '', $raw);
 
-        return (bool) preg_match('/^0(8[789]|9[89])\d{7}$/', $digits);
+        if ($market === Markets::DEFAULT) {
+            $digits = preg_replace('/^(00359|359)/', '0', $digits);
+
+            return (bool) preg_match('/^0(8[789]|9[89])\d{7}$/', $digits);
+        }
+
+        $code = ltrim(Markets::phonePrefix($market), '+');
+        if (str_starts_with($raw, '+') || str_starts_with($digits, '00')) {
+            $digits = preg_replace('/^(00)?' . $code . '/', '0', $digits);
+        }
+
+        return (bool) match ($market) {
+            'gb' => preg_match('/^07[1-9]\d{8}$/', $digits),
+            'ie' => preg_match('/^08[35-9]\d{7}$/', $digits),
+            'nl' => preg_match('/^06\d{8}$/', $digits),
+            default => false,
+        };
     }
 
-    public static function hasMobile(?string $phone): bool
+    public static function hasMobile(?string $phone, ?string $market = null): bool
     {
         foreach (preg_split('/[;,\/]/', (string) $phone) as $part) {
-            if (self::isMobileNumber($part)) {
+            if (self::isMobileNumber($part, $market)) {
                 return true;
             }
         }
@@ -168,11 +190,14 @@ class OutreachCall extends Model
         return false;
     }
 
-    private static function href(string $phone): ?string
+    private static function href(string $phone, ?string $market = null): ?string
     {
         $digits = preg_replace('/(?!^\+)[^\d]/', '', trim($phone));
+        if (strlen(ltrim($digits, '+')) < 6) {
+            return null;
+        }
 
-        return strlen(ltrim($digits, '+')) >= 6 ? 'tel:' . $digits : null;
+        return Markets::normalize($market) === Markets::DEFAULT ? 'tel:' . $digits : Phone::tel($phone, $market);
     }
 
     public function industryLabel(): ?string
@@ -182,16 +207,19 @@ class OutreachCall extends Model
 
     /**
      * Търсенето по радиус хваща и бизнеси отвъд границата (около Русе: Гюргево, Румъния).
-     * Чужд е номер с код, различен от +359, или град на латиница, който не е от нашите.
+     * Чужд е номер с код, различен от този на пазара на търсенето ($market, по подразбиране България),
+     * или (само за България) град на латиница, който не е от нашите. Бизнес във Великобритания не е чужд, защото не е с +359.
      */
-    public static function isForeign(?string $phone, ?string $city): bool
+    public static function isForeign(?string $phone, ?string $city, ?string $market = null): bool
     {
+        $market = Markets::normalize($market);
         $phone = preg_replace('/[^\d+]/', '', (string) $phone);
-        if (preg_match('/^(\+|00)(?!359)\d/', $phone)) {
+        $code = ltrim(Markets::phonePrefix($market), '+');
+        if (preg_match('/^(\+|00)(?!' . $code . ')\d/', $phone)) {
             return true;
         }
 
-        return filled($city) && ! preg_match('/\p{Cyrillic}/u', $city) && ! in_array($city, self::CITIES, true);
+        return $market === Markets::DEFAULT && filled($city) && ! preg_match('/\p{Cyrillic}/u', $city) && ! in_array($city, self::CITIES, true);
     }
 
     public static function cityName(?string $location): ?string

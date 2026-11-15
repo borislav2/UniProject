@@ -7,7 +7,9 @@ use App\Mail\OutreachMail;
 use App\Models\ClientEmail;
 use App\Models\OutreachProspect;
 use App\Models\OutreachSuppression;
+use App\Support\Outreach\Markets;
 use App\Support\Outreach\Outreach;
+use App\Support\Outreach\Sender;
 use App\Support\Outreach\ProspectChecker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -23,14 +25,19 @@ class OutreachController extends Controller
         $status = $request->query('status');
         $clicked = $request->boolean('clicked');
         $followup = $request->boolean('followup');
+        $country = Markets::exists($request->query('country')) ? $request->query('country') : null;
+        $sort = $request->query('sort') === 'date' ? 'date' : 'score';
 
         return view('admin.outreach.index', [
             'prospects' => OutreachProspect::query()
                 ->when($status && array_key_exists($status, OutreachProspect::STATUSES), fn ($q) => $q->where('status', $status))
                 ->when($clicked, fn ($q) => $q->whereNotNull('clicked_at')->orderByDesc('last_clicked_at'))
                 ->when($followup, fn ($q) => $q->dueForFollowUp()->orderBy('sent_at'))
-                ->orderByRaw("status = 'new' desc")->orderByDesc('score')->latest()
+                ->when($country, fn ($q) => $q->where('country', $country))
+                ->orderByRaw("status = 'new' desc")->when($sort === 'score', fn ($q) => $q->orderByDesc('score'))->latest()
                 ->paginate(30)->withQueryString(),
+            'country' => $country,
+            'sort' => $sort,
             'clicked' => $clicked,
             'followup' => $followup,
             'followupIds' => OutreachProspect::dueForFollowUp()->pluck('id')->all(),
@@ -172,12 +179,9 @@ class OutreachController extends Controller
 
     public static function defaultSubject(OutreachProspect $prospect): string
     {
-        return $prospect->findings
-            ? 'Резултати от проверка на сайта на ' . $prospect->displayName()
-            : 'Видимост на ' . $prospect->displayName() . ' в Google и Google Maps';
+        return $prospect->defaultSubject();
     }
 
-    /** Изпраща едно писмо през отделната поща и го записва. Връща текста на грешката или null. */
     /** Едно напомняне до бизнес, който не е отговорил (бутон „Напомни“). */
     public function followUp(Request $request, OutreachProspect $prospect)
     {
@@ -214,77 +218,13 @@ class OutreachController extends Controller
 
     private function deliverFollowUp(OutreachProspect $prospect, $user): ?string
     {
-        if (! Outreach::configured()) {
-            return 'Пощата за потенциални клиенти не е настроена (OUTREACH_MAIL_*).';
-        }
-        if (! $prospect->canFollowUp()) {
-            return 'Не е време за напомняне: още не са минали ' . config('creatium.outreach.followup_after_days') . ' дни, вече е напомнено, отговорили са или са отписани.';
-        }
-        if (Outreach::remainingToday() < 1) {
-            return 'Дневният лимит от ' . config('creatium.outreach.daily_limit') . ' писма е достигнат. Продължете утре.';
-        }
-
-        $first = ClientEmail::where('outreach_prospect_id', $prospect->id)->where('template', 'outreach')->whereNotNull('sent_at')->latest('sent_at')->first();
-        $subject = 'Re: ' . ($first?->subject ?? self::defaultSubject($prospect));
-        $data = [
-            'first_name' => $prospect->first_name,
-            'sender' => $user->name,
-            'first_date' => $prospect->sent_at->timezone('Europe/Sofia')->format('d.m.Y'),
-            'finding' => $prospect->findings[0]['title'] ?? null,
-        ];
-
-        $log = ClientEmail::create([
-            'outreach_prospect_id' => $prospect->id, 'user_id' => $user->id, 'template' => 'outreach-followup',
-            'to_email' => $prospect->email, 'subject' => $subject, 'data' => $data,
-        ]);
-        try {
-            Mail::mailer('outreach')->to($prospect->email)->send(new \App\Mail\OutreachFollowUpMail($prospect, $data, $subject));
-        } catch (Throwable $e) {
-            Log::error('Outreach follow-up failed', ['prospect_id' => $prospect->id, 'error' => $e->getMessage()]);
-            $log->forceFill(['error' => mb_substr($e->getMessage(), 0, 1000)])->save();
-
-            return 'Напомнянето не беше изпратено: ' . $e->getMessage();
-        }
-        $log->forceFill(['sent_at' => now()])->save();
-        $prospect->forceFill(['followup_sent_at' => now()])->save();
-
-        return null;
+        return Sender::deliverFollowUp($prospect, $user);
     }
 
+    /** Единственият път за изпращане е Support\Outreach\Sender: канал, лимит, отделна поща, запис и approved_by. */
     private function deliver(OutreachProspect $prospect, string $subject, array $data, int $userId): ?string
     {
-        if (! Outreach::configured()) {
-            return 'Пощата за потенциални клиенти не е настроена (OUTREACH_MAIL_*). Пуснете на сървъра bash deploy/configure-outreach-mail.sh.';
-        }
-        if (! $prospect->canBeEmailed()) {
-            return 'На този адрес не може да се пише: вече е изпратено, адресът не е потвърден или е отписан.';
-        }
-        if (Outreach::remainingToday() < 1) {
-            return 'Дневният лимит от ' . config('creatium.outreach.daily_limit') . ' писма е достигнат. Продължете утре, за да не попаднем в спам.';
-        }
-
-        $log = ClientEmail::create([
-            'outreach_prospect_id' => $prospect->id,
-            'user_id' => $userId,
-            'template' => 'outreach',
-            'to_email' => $prospect->email,
-            'subject' => $subject,
-            'data' => $data,
-        ]);
-
-        try {
-            Mail::mailer('outreach')->to($prospect->email)->send(new OutreachMail($prospect, $data, $subject));
-        } catch (Throwable $e) {
-            Log::error('Outreach email failed', ['prospect_id' => $prospect->id, 'error' => $e->getMessage()]);
-            $log->forceFill(['error' => mb_substr($e->getMessage(), 0, 1000)])->save();
-
-            return 'Писмото не беше изпратено: ' . $e->getMessage();
-        }
-
-        $log->forceFill(['sent_at' => now()])->save();
-        $prospect->forceFill(['status' => 'sent', 'sent_at' => now()])->save();
-
-        return null;
+        return Sender::deliver($prospect, $subject, $data, $userId);
     }
 
     public function update(Request $request, OutreachProspect $prospect)

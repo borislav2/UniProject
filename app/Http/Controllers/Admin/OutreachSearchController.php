@@ -8,6 +8,7 @@ use App\Models\OutreachCall;
 use App\Models\OutreachProspect;
 use App\Models\OutreachSearch;
 use App\Support\Outreach\BusinessSearch;
+use App\Support\Outreach\Markets;
 use App\Support\Outreach\ProspectFinder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -40,18 +41,20 @@ class OutreachSearchController extends Controller
 
     private static function resettableProspects()
     {
-        return OutreachProspect::whereIn('status', ['new', 'skipped'])->whereNull('sent_at');
+        return OutreachProspect::whereIn('status', ['new', 'skipped', 'routed'])->whereNull('sent_at');
     }
 
     public function store(Request $request)
     {
+        $country = Markets::normalize($request->input('country'));
         $validated = $request->validate([
-            'city' => ['required', Rule::in(array_keys(BusinessSearch::CITIES))],
+            'city' => ['required', Rule::in(array_keys(Markets::cities($country)))],
             'category' => ['required', Rule::in(array_keys(BusinessSearch::CATEGORIES))],
         ]);
+        $validated['country'] = $country;
 
         $search = OutreachSearch::where($validated)->whereIn('status', ['queued', 'processing'])->first()
-            ?? OutreachSearch::create($validated + ['user_id' => $request->user()->id]);
+            ?? OutreachSearch::create($validated + ['language' => Markets::language($country), 'user_id' => $request->user()->id]);
 
         return redirect()->route('admin.outreach.search.index')->with('success', 'Търсенето започна: ' . $search->label() . '. Оставете страницата отворена, докато приключи.');
     }

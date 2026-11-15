@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\OutreachCall;
+use App\Support\Outreach\Markets;
 use App\Support\Outreach\Outreach;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -24,7 +25,7 @@ class OutreachCallController extends Controller
         if ($request->query() === [] && $remembered) {
             return redirect()->route('admin.outreach.calls.index', $remembered);
         }
-        $request->session()->put('outreach_calls_list_query', array_filter($request->only(['status', 'city', 'industry', 'phone', 'mobile', 'due', 'page'])) ?: null);
+        $request->session()->put('outreach_calls_list_query', array_filter($request->only(['status', 'country', 'city', 'industry', 'phone', 'mobile', 'due', 'page'])) ?: null);
 
         $filters = $this->filters($request);
         $path = config('creatium.outreach.harvey_no_website_csv');
@@ -43,7 +44,8 @@ class OutreachCallController extends Controller
             'dueCount' => OutreachCall::whereDate('callback_on', '<=', $today)->whereNotIn('status', OutreachCall::FINAL_STATUSES)->count(),
             'queueCount' => $this->filtered($filters)->queue()->count(),
             'today' => OutreachCall::todayStats(),
-            'cities' => OutreachCall::whereNotNull('city')->distinct()->orderBy('city')->pluck('city'),
+            'cities' => OutreachCall::whereNotNull('city')->when($filters['country'], fn ($q, $v) => $q->where('country', $v))->distinct()->orderBy('city')->pluck('city'),
+            'countries' => OutreachCall::selectRaw('country, count(*) as total')->groupBy('country')->pluck('total', 'country'),
             'industries' => OutreachCall::whereNotNull('industry')->distinct()->orderBy('industry')->pluck('industry'),
             'filters' => $filters,
             'serverCsv' => is_readable($path) ? Carbon::createFromTimestamp(filemtime($path)) : null,
@@ -174,11 +176,12 @@ class OutreachCallController extends Controller
         return back()->with('success', $message);
     }
 
-    /** @return array{status: ?string, city: ?string, industry: ?string, phone: bool, mobile: ?string, due: bool} */
+    /** @return array{status: ?string, country: ?string, city: ?string, industry: ?string, phone: bool, mobile: ?string, due: bool} */
     private function filters(Request $request): array
     {
         return [
             'status' => array_key_exists((string) $request->input('status'), OutreachCall::STATUSES) ? $request->input('status') : null,
+            'country' => Markets::exists($request->input('country')) ? $request->input('country') : null,
             'city' => $request->input('city') ?: null,
             'industry' => $request->input('industry') ?: null,
             'phone' => $request->boolean('phone'),
@@ -191,6 +194,7 @@ class OutreachCallController extends Controller
     private function filtered(array $filters)
     {
         return OutreachCall::query()
+            ->when($filters['country'], fn ($q, $v) => $q->where('country', $v))
             ->when($filters['city'], fn ($q, $v) => $q->where('city', $v))
             ->when($filters['industry'], fn ($q, $v) => $q->where('industry', $v))
             ->when($filters['phone'], fn ($q) => $q->whereNotNull('phone'))
@@ -200,7 +204,7 @@ class OutreachCallController extends Controller
 
     private function filterQuery(array $filters): array
     {
-        return array_filter(['city' => $filters['city'], 'industry' => $filters['industry'], 'mobile' => $filters['mobile']]);
+        return array_filter(['country' => $filters['country'], 'city' => $filters['city'], 'industry' => $filters['industry'], 'mobile' => $filters['mobile']]);
     }
 
     /** Проявен интерес: прави запитване с данните на бизнеса и отваря го (повторно натискане отваря същото). */

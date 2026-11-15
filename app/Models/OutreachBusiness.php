@@ -10,7 +10,7 @@ class OutreachBusiness extends Model
 {
     protected $fillable = [
         'outreach_search_id', 'external_id', 'name', 'category', 'city', 'website', 'phone',
-        'map_email', 'email', 'email_page', 'processed_at',
+        'map_email', 'email', 'email_page', 'processed_at', 'country', 'language',
     ];
 
     protected $casts = ['processed_at' => 'datetime'];

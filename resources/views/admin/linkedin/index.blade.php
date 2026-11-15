@@ -39,7 +39,7 @@
         <div class="mt-3 grid gap-3 sm:grid-cols-2">
             @foreach(['name' => 'Име', 'title' => 'Длъжност', 'company' => 'Фирма', 'city' => 'Град', 'industry' => 'Сфера', 'website' => 'Сайт', 'email' => 'Имейл', 'phone' => 'Телефон'] as $field => $label)
                 <label class="text-xs font-semibold text-gray-600">{{ $label }}
-                    <input type="{{ $field === 'email' ? 'email' : 'text' }}" name="{{ $field }}" value="{{ old($field) }}" maxlength="255" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1.5 text-sm font-normal text-gray-900">
+                    <input type="{{ $field === 'email' ? 'email' : 'text' }}" name="{{ $field }}" value="{{ old($field, request()->query($field)) }}" maxlength="255" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1.5 text-sm font-normal text-gray-900">
                 </label>
                 @error($field)<p class="text-xs text-red-700 sm:col-span-2" role="alert">{{ $message }}</p>@enderror
             @endforeach

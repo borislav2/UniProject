@@ -42,15 +42,32 @@
 </div>
 
 <nav class="mb-4 flex flex-wrap gap-2 text-sm">
-    <a href="{{ route('admin.outreach.index') }}" class="rounded-full px-3 py-1 {{ $status || $clicked || $followup ? 'bg-white text-gray-700 shadow' : 'bg-brand-950 text-white' }}">Всички ({{ $counts->sum() }})</a>
+    <a href="{{ route('admin.outreach.index', array_filter(['country' => $country, 'sort' => $sort === 'date' ? 'date' : null])) }}" class="rounded-full px-3 py-1 {{ $status || $clicked || $followup ? 'bg-white text-gray-700 shadow' : 'bg-brand-950 text-white' }}">Всички ({{ $counts->sum() }})</a>
     @foreach(\App\Models\OutreachProspect::STATUSES as $key => $label)
-        <a href="{{ route('admin.outreach.index', ['status' => $key]) }}" class="rounded-full px-3 py-1 {{ $status === $key ? 'bg-brand-950 text-white' : 'bg-white text-gray-700 shadow' }}">{{ $label }} ({{ $counts[$key] ?? 0 }})</a>
+        <a href="{{ route('admin.outreach.index', array_filter(['status' => $key, 'country' => $country, 'sort' => $sort === 'date' ? 'date' : null])) }}" class="rounded-full px-3 py-1 {{ $status === $key ? 'bg-brand-950 text-white' : 'bg-white text-gray-700 shadow' }}">{{ $label }} ({{ $counts[$key] ?? 0 }})</a>
         @if($key === 'sent')
             <a href="{{ route('admin.outreach.index', ['followup' => 1]) }}" class="rounded-full px-3 py-1 {{ $followup ? 'bg-brand-950 text-white' : 'bg-white text-gray-700 shadow' }}" title="Изпратено преди {{ config('creatium.outreach.followup_after_days') }}+ дни, без отговор и без напомняне">За напомняне ({{ count($followupIds) }})</a>
             <a href="{{ route('admin.outreach.index', ['clicked' => 1]) }}" class="rounded-full px-3 py-1 {{ $clicked ? 'bg-brand-950 text-white' : 'bg-white text-gray-700 shadow' }}" title="Кликнали по линк в писмото: обадете им се първо">Кликнали ({{ $clickedCount }})</a>
         @endif
     @endforeach
 </nav>
+
+<form method="GET" action="{{ route('admin.outreach.index') }}" class="mb-4 flex flex-wrap items-center gap-3 text-sm">
+    @foreach(['status' => $status, 'clicked' => $clicked ? 1 : null, 'followup' => $followup ? 1 : null] as $name => $value)@if($value)<input type="hidden" name="{{ $name }}" value="{{ $value }}">@endif @endforeach
+    <label class="inline-flex items-center gap-2 text-gray-700">Държава
+        <select name="country" class="rounded border border-gray-300 px-2 py-1.5" onchange="this.form.submit()">
+            <option value="">Всички</option>
+            @foreach(\App\Support\Outreach\Markets::codes() as $code)<option value="{{ $code }}" @selected($country === $code)>{{ \App\Support\Outreach\Markets::label($code) }}</option>@endforeach
+        </select>
+    </label>
+    <label class="inline-flex items-center gap-2 text-gray-700">Подредба
+        <select name="sort" class="rounded border border-gray-300 px-2 py-1.5" onchange="this.form.submit()">
+            <option value="score" @selected($sort === 'score')>По оценка</option>
+            <option value="date" @selected($sort === 'date')>По дата</option>
+        </select>
+    </label>
+    <noscript><button class="rounded-lg border border-gray-300 px-3 py-1.5 font-semibold">Филтрирай</button></noscript>
+</form>
 
 @if($unchecked > 0)
     <div class="mb-3 flex flex-wrap items-center gap-3 rounded-lg border border-blue-200 bg-white p-3 text-sm shadow" data-check-work="{{ route('admin.outreach.check') }}">
@@ -82,7 +99,7 @@
                 <th class="px-4 py-3 font-semibold">Бизнес</th>
                 <th class="px-4 py-3 font-semibold">Имейл</th>
                 <th class="px-4 py-3 font-semibold">Какво забелязахме на сайта</th>
-                <th class="px-4 py-3 font-semibold">Оценка</th>
+                <th class="px-4 py-3 font-semibold"><a href="{{ route('admin.outreach.index', array_filter(['status' => $status, 'country' => $country, 'sort' => 'score'])) }}" class="hover:underline" title="Подреди по оценка">Оценка ↓</a></th>
                 <th class="px-4 py-3 font-semibold">Статус</th>
                 <th class="px-4 py-3"></th>
             </tr>
@@ -93,9 +110,10 @@
                     <td class="px-4 py-3">@if($prospect->canBeEmailed())<input type="checkbox" name="ids[]" value="{{ $prospect->id }}" form="bulk-send" data-bulk aria-label="Избери {{ $prospect->displayName() }}">@endif</td>
                     <td class="px-4 py-3">
                         <span class="font-semibold text-gray-900">{{ $prospect->displayName() }}</span>
-                        <span class="block text-xs text-gray-500">{{ collect([\App\Models\OutreachCall::INDUSTRIES[mb_strtolower((string) $prospect->industry)] ?? $prospect->industry, $prospect->city])->filter()->join(' · ') }}</span>
+                        <span class="block text-xs text-gray-500">{{ collect([\App\Models\OutreachCall::INDUSTRIES[mb_strtolower((string) $prospect->industry)] ?? $prospect->industry, $prospect->city, ($prospect->country ?: 'bg') !== 'bg' ? $prospect->marketLabel() : null])->filter()->join(' · ') }}</span>
+                        @if($prospect->status === 'new' && ! \App\Support\Outreach\Markets::emailAllowed($prospect))<span class="mt-0.5 inline-block rounded bg-amber-50 px-1.5 py-0.5 text-xs font-semibold text-amber-800" title="{{ \App\Support\Outreach\Markets::emailReason($prospect) }}">Без имейл: обаждане или LinkedIn</span>@endif
                         @if($prospect->website)<a href="{{ $prospect->website }}" target="_blank" rel="noopener" class="block text-xs text-blue-600 hover:underline">{{ parse_url($prospect->website, PHP_URL_HOST) ?: $prospect->website }}</a>@endif
-                        @if($prospect->phone)<x-phone :number="$prospect->phone" class="mt-1 text-xs" />@endif
+                        @if($prospect->phone)<x-phone :number="$prospect->phone" :market="$prospect->country" class="mt-1 text-xs" />@endif
                     </td>
                     <td class="px-4 py-3">{{ $prospect->email }}<span class="block text-xs {{ in_array($prospect->email_status, \App\Models\OutreachProspect::SENDABLE_EMAIL_STATUSES, true) ? 'text-green-700' : 'text-red-600' }}">{{ \App\Models\OutreachProspect::EMAIL_STATUSES[$prospect->email_status] ?? ($prospect->email_status ?: 'непроверен') }}</span>@if($prospect->check_note)<span class="block text-xs text-gray-500">{{ $prospect->check_note }}</span>@endif</td>
                     <td class="px-4 py-3 max-w-md text-gray-600">
@@ -107,7 +125,7 @@
                             {{ \Illuminate\Support\Str::limit($prospect->personalization, 160) }}
                         @endif
                     </td>
-                    <td class="px-4 py-3">{{ $prospect->score }}</td>
+                    <td class="px-4 py-3">@include('admin.outreach._score', ['prospect' => $prospect])</td>
                     <td class="px-4 py-3">{{ \App\Models\OutreachProspect::STATUSES[$prospect->status] ?? $prospect->status }}@if($prospect->sent_at)<span class="block text-xs text-gray-500">{{ $prospect->sent_at->format('d.m.Y') }}</span>@endif @if($prospect->followup_sent_at)<span class="block text-xs text-gray-500">Напомнено {{ $prospect->followup_sent_at->format('d.m.Y') }}</span>@endif
                         @if($prospect->clicked_at)<span class="mt-1 block rounded bg-green-50 px-1.5 py-0.5 text-xs font-semibold text-green-800" title="Първи клик: {{ $prospect->clicked_at->timezone('Europe/Sofia')->format('d.m.Y H:i') }}">Кликна: {{ \App\Models\OutreachProspect::CLICK_LINKS[$prospect->last_click_link] ?? $prospect->last_click_link }} · {{ $prospect->last_clicked_at->timezone('Europe/Sofia')->format('d.m H:i') }}@if($prospect->click_count > 1) ({{ $prospect->click_count }}×)@endif</span>@endif</td>
                     <td class="px-4 py-3 whitespace-nowrap text-right">
