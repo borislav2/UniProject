@@ -1,0 +1,399 @@
+{
+ "uri": "fixture",
+ "version": "1.1",
+ "publishedDate": "2026-11-13T18:08:05Z",
+ "releases": [
+  {
+   "ocid": "ocds-b5fd17-9d0444a4-185f-4c8c-a58f-fa02003d0439",
+   "id": "42c80b0b-fbe7-49d7-8ac2-07a1a30e6e1a-921337",
+   "language": "en",
+   "date": "2026-11-13T18:08:04Z",
+   "tag": [
+    "tenderAmendment"
+   ],
+   "initiationType": "tender",
+   "tender": {
+    "id": "RNT-LTC_TEC-01",
+    "title": "Balfour Beatty - Roads North of the Thames-LTC - Technology Disconnections and Street Lighting Diversions",
+    "description": "We are inviting expressions of interest from experienced suppliers for Technology Disconnections and Street Lighting Diversions on the Lower Thames Crossing Roads North programme. The works support the Roads North Temporary Diversions (RNoT), including the A13 and M25 temporary diversion routes.\r\n\r\nPackage Scope\r\n The package includes, but is not limited to:\r\nTechnology disconnections, diversions and alteration works on the M25.\r\nStreet lighting diversions and alterations on the M25, A13, A1089 and associated side roads.\r\nDisconnection, relocation, modification and reconnection of street lighting and technology assets.\r\nAlterations to lighting feeder pillars, electrical supplies, cabling and associated infrastructure.\r\nAlterations and diversions to technology electrical infrastructure (EI).\r\nInstallation, relocation or replacement of lighting columns, luminaires, cabling and equipment.\r\nTesting, inspection, commissioning and certification of completed works.\r\nManaging temporary and permanent arrangements to maintain safe operation of affected systems.\r\nProducing test certification, commissioning records and as-built information.\r\nCoordinating with the Contractor, Design Team and st",
+    "datePublished": "2026-08-03T16:34:28+01:00",
+    "status": "active",
+    "classification": {
+     "scheme": "CPV",
+     "id": "34928500",
+     "description": "Street-lighting equipment"
+    },
+    "additionalClassifications": [
+     {
+      "scheme": "CPV",
+      "id": "34928530",
+      "description": "Street lamps"
+     },
+     {
+      "scheme": "CPV",
+      "id": "34929000",
+      "description": "Highway materials"
+     },
+     {
+      "scheme": "CPV",
+      "id": "34993000",
+      "description": "Road lights"
+     },
+     {
+      "scheme": "CPV",
+      "id": "50232000",
+      "description": "Maintenance services of public-lighting installations and traffic lights"
+     },
+     {
+      "scheme": "CPV",
+      "id": "71334000",
+      "description": "Mechanical and electrical engineering services"
+     },
+     {
+      "scheme": "CPV",
+      "id": "71356100",
+      "description": "Technical control services"
+     },
+     {
+      "scheme": "CPV",
+      "id": "71356200",
+      "description": "Technical assistance services"
+     },
+     {
+      "scheme": "CPV",
+      "id": "71356300",
+      "description": "Technical support services"
+     },
+     {
+      "scheme": "CPV",
+      "id": "71356400",
+      "description": "Technical planning services"
+     },
+     {
+      "scheme": "CPV",
+      "id": "71631000",
+      "description": "Technical inspection services"
+     }
+    ],
+    "items": [
+     {
+      "id": "1",
+      "deliveryAddresses": [
+       {
+        "region": "East of England",
+        "countryName": "United Kingdom"
+       },
+       {
+        "region": "South East",
+        "countryName": "United Kingdom"
+       }
+      ]
+     }
+    ],
+    "value": {
+     "amount": 50000,
+     "currency": "GBP"
+    },
+    "procurementMethod": "open",
+    "procurementMethodDetails": "Open procedure (above threshold)",
+    "tenderPeriod": {
+     "endDate": "2026-11-23T17:00:00Z"
+    },
+    "contractPeriod": {
+     "startDate": "2027-02-01T00:00:00Z",
+     "endDate": "2027-11-01T23:59:59Z"
+    },
+    "suitability": {
+     "sme": true,
+     "vcse": true
+    },
+    "mainProcurementCategory": "works",
+    "documents": [
+     {
+      "id": "1",
+      "documentType": "tenderNotice",
+      "description": "Opportunity notice on Contracts Finder",
+      "url": "https://www.contractsfinder.service.gov.uk/Notice/42c80b0b-fbe7-49d7-8ac2-07a1a30e6e1a",
+      "datePublished": "2026-08-03T16:34:28+01:00",
+      "dateModified": "2026-11-13T18:08:04Z",
+      "format": "text/html",
+      "language": "en"
+     },
+     {
+      "id": "5",
+      "documentType": "eligibilityCriteria",
+      "description": "To express an interest in the Technology Disconnections and Street Lighting Diversions package, please complete the attached Technology Disconnections & Street Lighting Diversions Eligibility Criteria and return it by 23.11.26 to procurement@example.org.\r\n\r\nPlease complete a",
+      "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/f4de2954-ac88-4cbd-bba9-4f8db56c9477",
+      "format": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+     }
+    ]
+   },
+   "parties": [
+    {
+     "id": "GB-SRS-supplierregistration.cabinetoffice.gov.uk/UfZq8heB",
+     "name": "BALFOUR BEATTY CIVIL ENGINEERING LIMITED",
+     "identifier": {
+      "legalName": "BALFOUR BEATTY CIVIL ENGINEERING LIMITED",
+      "scheme": "GB-SRS",
+      "id": "supplierregistration.cabinetoffice.gov.uk/UfZq8heB"
+     },
+     "address": {
+      "streetAddress": "5 Churchill Pl",
+      "locality": "London",
+      "postalCode": "E145HU",
+      "countryName": "England"
+     },
+     "contactPoint": {
+      "name": "BB LTC Procurement and Supply Chain Team",
+      "email": "procurement@example.org"
+     },
+     "roles": [
+      "buyer"
+     ]
+    }
+   ],
+   "buyer": {
+    "id": "GB-SRS-supplierregistration.cabinetoffice.gov.uk/UfZq8heB",
+    "name": "BALFOUR BEATTY CIVIL ENGINEERING LIMITED"
+   }
+  },
+  {
+   "ocid": "ocds-b5fd17-3ce0720b-73aa-4e52-836c-8927f718fa9f",
+   "id": "98652581-804b-458b-9a02-384cd1bf0afa-918491",
+   "language": "en",
+   "date": "2026-10-20T17:45:08+01:00",
+   "tag": [
+    "tender"
+   ],
+   "initiationType": "tender",
+   "tender": {
+    "id": "MT238374",
+    "title": "Tourism Campaign - Digital Marketing",
+    "description": "This contract is to provide North York Moors National Park with Media Marketing for our Tourism Campaign running through 2027.\r\nThe contract will commence in November 2026 and complete in February 2028.",
+    "datePublished": "2026-10-20T17:45:08+01:00",
+    "status": "active",
+    "classification": {
+     "scheme": "CPV",
+     "id": "79342100",
+     "description": "Direct marketing services"
+    },
+    "items": [
+     {
+      "id": "1",
+      "deliveryAddresses": [
+       {
+        "region": "Scotland",
+        "countryName": "United Kingdom"
+       },
+       {
+        "region": "North East",
+        "countryName": "United Kingdom"
+       },
+       {
+        "region": "Yorkshire and the Humber",
+        "countryName": "United Kingdom"
+       },
+       {
+        "region": "North West",
+        "countryName": "United Kingdom"
+       },
+       {
+        "region": "East Midlands",
+        "countryName": "United Kingdom"
+       },
+       {
+        "region": "East of England",
+        "countryName": "United Kingdom"
+       },
+       {
+        "region": "South West",
+        "countryName": "United Kingdom"
+       },
+       {
+        "region": "London",
+        "countryName": "United Kingdom"
+       }
+      ]
+     }
+    ],
+    "procurementMethod": "open",
+    "procurementMethodDetails": "Open procedure (below threshold)",
+    "tenderPeriod": {
+     "endDate": "2026-11-13T17:00:00Z"
+    },
+    "contractPeriod": {
+     "startDate": "2026-11-23T00:00:00Z",
+     "endDate": "2027-12-20T23:59:59Z"
+    },
+    "suitability": {
+     "sme": true,
+     "vcse": false
+    },
+    "mainProcurementCategory": "services",
+    "documents": [
+     {
+      "id": "1",
+      "documentType": "tenderNotice",
+      "description": "Opportunity notice on Contracts Finder",
+      "url": "https://www.contractsfinder.service.gov.uk/Notice/98652581-804b-458b-9a02-384cd1bf0afa",
+      "datePublished": "2026-10-20T17:45:08+01:00",
+      "format": "text/html",
+      "language": "en"
+     },
+     {
+      "id": "2",
+      "documentType": "tenderNotice",
+      "description": "NOTE: To register your interest in this notice and obtain any additional information please visit the myTenders Web Site at the link provided.",
+      "url": "https://www.mytenders.co.uk/search/show/search_view.aspx?ID=OCT171997"
+     }
+    ]
+   },
+   "parties": [
+    {
+     "id": "GB-CFS-234546",
+     "name": "North York Moors National Park",
+     "identifier": {
+      "legalName": "North York Moors National Park"
+     },
+     "address": {
+      "streetAddress": "The Old Vicarage, Bondgate, Helmsley, York, North Yorkshir, Bondgate",
+      "locality": "York",
+      "postalCode": "YO62 5BP",
+      "countryName": "England"
+     },
+     "contactPoint": {
+      "name": "Test Person",
+      "email": "procurement@example.org",
+      "telephone": "+44 20 7946 0000"
+     },
+     "details": {
+      "url": "https://www.northyorkmoors.org.uk"
+     },
+     "roles": [
+      "buyer"
+     ]
+    }
+   ],
+   "buyer": {
+    "id": "GB-CFS-234546",
+    "name": "North York Moors National Park"
+   }
+  },
+  {
+   "ocid": "ocds-b5fd17-8d2a137a-83e3-4ae7-92e7-c7f91dd2461e",
+   "id": "467796bd-1e9f-49f6-8c0c-9a25ef9dc344-914146",
+   "language": "en",
+   "date": "2026-09-15T12:06:18+01:00",
+   "tag": [
+    "tender"
+   ],
+   "initiationType": "tender",
+   "tender": {
+    "id": "25f943a1-26c4-4323-901c-c21ba1d5420c",
+    "title": "CA18461 - DN Colleges Group - ITT for the Provision of Website Development Services",
+    "description": "DN Colleges Group is seeking to appoint an experienced website development supplier to support the consolidation and redevelopment of its public-facing website estate.\r\n\r\nThe commission includes discovery and audit, website consolidation planning, information architecture and user journeys, content rationalisation, UX and prototyping, application of the separately commissioned brand, WordPress multisite development, migration, SEO and redirect management, accessibility, testing, launch and handover.\r\n\r\nThe successful supplier will work alongside DN Colleges Group's internal marketing and technical teams and coordinate with the parallel brand and Salesforce CRM programmes. Full requirements, mandatory criteria, evaluation methodology and pricing instructions are set out within the tender documentation.\r\n\r\nTo access this competition: \r\n\r\nRegistered:\r\nLogin to https://suppliers.multiquote.com and view the opportunity CA18461.\r\n\r\nNot registered:\r\nVisit https://suppliers.multiquote.com then register and quote CA18461 as the reason for registration. \r\n\r\n Any queries please contact MultiQuote on 020 3920 8054.",
+    "datePublished": "2026-09-15T12:06:18+01:00",
+    "status": "active",
+    "classification": {
+     "scheme": "CPV",
+     "id": "72413000",
+     "description": "World wide web (www) site design services"
+    },
+    "additionalClassifications": [
+     {
+      "scheme": "CPV",
+      "id": "72212224",
+      "description": "Web page editing software development services"
+     }
+    ],
+    "items": [
+     {
+      "id": "1",
+      "deliveryAddresses": [
+       {
+        "postalCode": "DN1 2RF"
+       },
+       {
+        "countryName": "British Oversea Territories"
+       },
+       {
+        "countryName": "Channel Islands"
+       },
+       {
+        "countryName": "Europe"
+       },
+       {
+        "countryName": "Isle of Man"
+       },
+       {
+        "countryName": "Rest of the World"
+       },
+       {
+        "countryName": "United Kingdom"
+       }
+      ]
+     }
+    ],
+    "value": {
+     "amount": 25000,
+     "currency": "GBP"
+    },
+    "procurementMethod": "open",
+    "procurementMethodDetails": "Open procedure",
+    "tenderPeriod": {
+     "endDate": "2026-09-29T12:00:00+01:00"
+    },
+    "contractPeriod": {
+     "startDate": "2026-10-26T00:00:00Z",
+     "endDate": "2027-06-30T23:59:59+01:00"
+    },
+    "suitability": {
+     "sme": true,
+     "vcse": false
+    },
+    "mainProcurementCategory": "services",
+    "documents": [
+     {
+      "id": "1",
+      "documentType": "tenderNotice",
+      "description": "Opportunity notice on Contracts Finder",
+      "url": "https://www.contractsfinder.service.gov.uk/Notice/467796bd-1e9f-49f6-8c0c-9a25ef9dc344",
+      "datePublished": "2026-09-15T12:06:18+01:00",
+      "format": "text/html",
+      "language": "en"
+     }
+    ]
+   },
+   "parties": [
+    {
+     "id": "GB-CFS-313688",
+     "name": "DN Colleges Group",
+     "identifier": {
+      "legalName": "DN Colleges Group"
+     },
+     "address": {
+      "streetAddress": "The Hub, Chappell Drive",
+      "locality": "Doncaster",
+      "postalCode": "DN1 2RF",
+      "countryName": "England"
+     },
+     "contactPoint": {
+      "email": "procurement@example.org",
+      "telephone": "+44 20 7946 0000"
+     },
+     "details": {
+      "url": "https://suppliers.multiquote.com"
+     },
+     "roles": [
+      "buyer"
+     ]
+    }
+   ],
+   "buyer": {
+    "id": "GB-CFS-313688",
+    "name": "DN Colleges Group"
+   }
+  }
+ ],
+ "links": {}
+}

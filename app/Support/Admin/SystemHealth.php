@@ -50,6 +50,26 @@ class SystemHealth
                 $apLast ? ", последна стъпка {$apLast}" : '', $apError ? ' Последна грешка ' . $apError : ''
             ),
             ! $apOn ? 'OUTREACH_AUTOPILOT=true в .env, после php artisan config:cache' : ($apError ? 'Проверете ключа на Serper (SERPER_API_KEY) и „Автопилот“ в админа' : null));
+        $oppOn = \App\Support\Opportunities\Collector::enabled();
+        $oppState = \App\Support\Opportunities\Collector::state();
+        $oppRows = [];
+        $oppErrors = [];
+        foreach (\App\Support\Opportunities\Collector::feeds() as $key => $feed) {
+            $st = $oppState[$key] ?? [];
+            if (empty($st['last_run_at'])) {
+                $oppRows[] = $feed->label() . ': още не е пускан';
+
+                continue;
+            }
+            $at = Carbon::parse($st['last_run_at'])->timezone('Europe/Sofia')->format('d.m H:i');
+            $oppRows[] = $feed->label() . ': ' . $at . ', върнати ' . ($st['returned'] ?? 0) . ', съвпаднали ' . ($st['matched'] ?? 0) . ', нови ' . ($st['new'] ?? 0);
+            if (! empty($st['last_error'])) {
+                $oppErrors[] = $feed->label() . ': ' . $st['last_error'];
+            }
+        }
+        $add('Продажби', 'Възможности', ! $oppOn ? 'off' : ($oppErrors ? 'warn' : 'ok'),
+            ! $oppOn ? 'Изключено: поръчките не се събират сами (ръчното добавяне работи). Нищо не се подава и праща само.' : implode('. ', $oppRows) . '.' . ($oppErrors ? ' Грешка: ' . implode('; ', $oppErrors) : ''),
+            ! $oppOn ? 'OPPORTUNITIES_ENABLED=true в .env, после php artisan config:cache' : ($oppErrors ? 'php artisan creatium:opportunities (виж грешката горе; повторният опит е автоматично след час)' : null));
         $add('Сайт', 'Скорост на телефон в проверката на сайт', filled(config('services.pagespeed.key')) ? 'ok' : 'off',
             filled(config('services.pagespeed.key')) ? 'Отчетът от безплатната проверка включва оценка, LCP, CLS и INP от Google PageSpeed.' : 'По желание. Без ключ отчетът няма оценка за скорост на телефон.',
             filled(config('services.pagespeed.key')) ? null : 'PAGESPEED_API_KEY=... в .env (безплатен ключ от Google Cloud, PageSpeed Insights API)');

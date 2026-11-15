@@ -42,7 +42,16 @@ class BusinessSearch
         'builder' => ['label' => 'Строители и ремонти', 'tags' => ['craft=builder', 'office=construction_company', 'craft=roofer'], 'query' => 'строителна фирма'],
         'lawyer' => ['label' => 'Адвокати', 'tags' => ['office=lawyer'], 'query' => 'адвокат'],
         'accountant' => ['label' => 'Счетоводители', 'tags' => ['office=accountant'], 'query' => 'счетоводна кантора'],
+        // Партньори, не клиенти: агенции, на които можем да работим под тяхното име (бял етикет). Стават възможности от вид „партньор“.
+        'agency' => ['label' => 'Дигитални и маркетинг агенции', 'tags' => ['office=advertising_agency', 'office=marketing'], 'query' => 'дигитална маркетинг агенция', 'partner' => true],
+        'web_agency' => ['label' => 'Уеб агенции', 'tags' => ['office=web_design'], 'query' => 'уеб агенция', 'partner' => true],
     ];
+
+    /** Видовете, които са агенции партньори (не клиенти). @return list<string> */
+    public static function partnerCategories(): array
+    {
+        return array_keys(array_filter(self::CATEGORIES, fn ($c) => ! empty($c['partner'])));
+    }
 
     public const ENDPOINTS = [
         'https://overpass-api.de/api/interpreter',

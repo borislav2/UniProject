@@ -87,11 +87,13 @@ class Markets
             'restaurant' => 'restaurant', 'cafe' => 'cafe', 'hotel' => 'hotel', 'beauty' => 'beauty salon', 'hairdresser' => 'hairdresser',
             'dentist' => 'dentist', 'physiotherapy' => 'physiotherapist', 'veterinary' => 'vet clinic', 'car_repair' => 'car garage',
             'fitness' => 'gym', 'builder' => 'builder', 'lawyer' => 'solicitor', 'accountant' => 'accountant',
+            'agency' => 'digital marketing agency', 'web_agency' => 'web design agency',
         ],
         'nl' => [
             'restaurant' => 'restaurant', 'cafe' => 'café', 'hotel' => 'hotel', 'beauty' => 'schoonheidssalon', 'hairdresser' => 'kapper',
             'dentist' => 'tandarts', 'physiotherapy' => 'fysiotherapeut', 'veterinary' => 'dierenarts', 'car_repair' => 'autogarage',
             'fitness' => 'sportschool', 'builder' => 'aannemer', 'lawyer' => 'advocaat', 'accountant' => 'boekhouder',
+            'agency' => 'online marketing bureau', 'web_agency' => 'webdesign bureau',
         ],
     ];
 

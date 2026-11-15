@@ -92,6 +92,12 @@ class OutreachProspect extends Model
      * Единственото място, което решава дали на бизнеса може да се пише: статусът, имейлът, отписването И правилата
      * на пазара му (Markets::emailRule). Всяко изпращане минава оттук, така че никой екран не го заобикаля.
      */
+    /** Агенция, намерена от търсенето: партньор за бял етикет, не клиент (виж Opportunities\PartnerOpportunities). */
+    public function isPartner(): bool
+    {
+        return \App\Support\Opportunities\PartnerOpportunities::isPartner($this);
+    }
+
     public function canBeEmailed(): bool
     {
         return $this->status === 'new'

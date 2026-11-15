@@ -4,6 +4,7 @@ namespace App\Support\Admin;
 
 use App\Models\ClientEmail;
 use App\Models\LinkedinProspect;
+use App\Models\Opportunity;
 use App\Models\OutreachCall;
 use App\Models\OutreachProspect;
 use App\Models\Post;
@@ -104,6 +105,52 @@ class TodayBlocks
             'hint' => 'намерени и подготвени от автопилота, нищо не се праща без вас',
             'url' => route('admin.outreach.queue'),
             'empty' => 'Няма чернови за одобрение.',
+        ]);
+    }
+
+    /** Нови възможности с висока оценка (поръчки, партньори): най-добрите отгоре, нищо не се подава и праща само. */
+    private function blockSalesOpportunities(): array
+    {
+        $query = Opportunity::worthLooking()->where(fn ($q) => $this->userId() ? $q->whereNull('assigned_to')->orWhere('assigned_to', $this->userId()) : $q);
+        $count = (clone $query)->count();
+        $rows = (clone $query)->orderByDesc('score')->orderBy('deadline_at')->limit($this->limit)->get()->map(fn (Opportunity $o) => [
+            'title' => $o->title,
+            'url' => route('admin.opportunities.show', $o),
+            'chips' => [[$o->score . '/100', $o->score >= 75 ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'], [$o->kindLabel(), 'bg-gray-100 text-gray-700']],
+            'sub' => collect([$o->countryName(), $o->buyer, $o->deadlineText() ? 'срок ' . $o->deadlineText() . ' (' . $o->daysLeftText() . ')' : null, $o->valueText()])->filter()->join(' · '),
+            'actions' => [
+                ['Интересна', route('admin.opportunities.interesting', $o), 'post', true],
+                ['Пропусни', route('admin.opportunities.skip', $o), 'post', false],
+            ],
+        ]);
+
+        return $this->block('Нови възможности', $rows, [
+            'count' => $count,
+            'hint' => 'поръчки и партньори с оценка от ' . config('creatium.opportunities.badge_score') . ' нагоре, нищо не се подава само',
+            'url' => route('admin.opportunities.index', ['status' => 'new', 'sort' => 'score']),
+            'empty' => 'Няма нови възможности с висока оценка.',
+        ]);
+    }
+
+    /** Интересни и подготвяни възможности със срок до 7 дни. */
+    private function blockSalesDeadlines(): array
+    {
+        $query = Opportunity::dueSoon(7)->where(fn ($q) => $this->userId() ? $q->whereNull('assigned_to')->orWhere('assigned_to', $this->userId()) : $q);
+        $count = (clone $query)->count();
+        $rows = (clone $query)->orderBy('deadline_at')->limit($this->limit)->get()->map(fn (Opportunity $o) => [
+            'title' => $o->title,
+            'url' => route('admin.opportunities.show', $o),
+            'chips' => [[$o->statusLabel(), $o->statusClass()]],
+            'wait' => ['срок ' . $o->deadlineText() . ' (' . $o->daysLeftText() . ')', $o->daysLeft() < 3],
+            'sub' => collect([$o->countryName(), $o->buyer, $o->assignee?->name])->filter()->join(' · '),
+            'tone' => $o->daysLeft() < 3 ? 'danger' : 'warn',
+        ]);
+
+        return $this->block('Срокове тази седмица', $rows, [
+            'count' => $count,
+            'hint' => 'интересни и подготвяни, срок до 7 дни',
+            'url' => route('admin.opportunities.index', ['status' => 'preparing', 'sort' => 'deadline']),
+            'empty' => 'Няма близки срокове.',
         ]);
     }
 
@@ -544,6 +591,7 @@ class TodayBlocks
 
         $sales = fn () => [
             ['label' => 'За одобрение', 'value' => $count('sales-queue'), 'hot' => $count('sales-queue') > 0, 'url' => route('admin.outreach.queue')],
+            ['label' => 'Нови възможности', 'value' => $count('sales-opportunities'), 'hot' => $count('sales-opportunities') > 0, 'url' => route('admin.opportunities.index', ['status' => 'new', 'sort' => 'score'])],
             ['label' => 'Непрочетени', 'value' => $count('sales-unread'), 'hot' => $count('sales-unread') > 0, 'url' => route('admin.inquiries.index', ['filter' => 'unread'])],
             ['label' => 'Стъпки за днес', 'value' => $count('sales-due'), 'hot' => collect($blocks['sales-due']['rows'] ?? [])->contains(fn ($r) => ($r['tone'] ?? null) === 'danger')],
             ['label' => 'Обаждания', 'value' => $calls['calls']['total'] ?? 0, 'of' => $calls['calls']['goal'] ?? null, 'note' => ($calls['callbacks'] ?? 0) ? $calls['callbacks'] . ' отново днес' : null, 'url' => route('admin.outreach.calls.next'), 'meter' => [$calls['calls']['total'] ?? 0, $calls['calls']['goal'] ?? 1]],

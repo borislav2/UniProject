@@ -21,6 +21,8 @@ class OutreachCall extends Model
     /** Видовете бизнес, както ги записва Harvey (OSM таг или търсената дума), на български. */
     public const INDUSTRIES = [
         'restaurant' => 'Ресторант',
+        'agency' => 'Дигитална или маркетинг агенция',
+        'web_agency' => 'Уеб агенция',
         'beauty' => 'Козметичен салон',
         'beauty salon' => 'Козметичен салон',
         'hairdresser' => 'Фризьор',

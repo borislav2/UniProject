@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ClientEmailController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\InquiryController;
 use App\Http\Controllers\Admin\LinkedinController;
+use App\Http\Controllers\Admin\OpportunityController;
 use App\Http\Controllers\Admin\OutreachAutopilotController;
 use App\Http\Controllers\Admin\OutreachCallController;
 use App\Http\Controllers\Admin\OutreachQueueController;
@@ -169,6 +170,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('linkedin/{prospect}', [LinkedinController::class, 'update'])->name('linkedin.update');
     Route::delete('linkedin/{prospect}', [LinkedinController::class, 'destroy'])->name('linkedin.destroy');
     Route::post('linkedin/{prospect}/lead', [LinkedinController::class, 'toLead'])->name('linkedin.lead');
+    // Възможности: обществени поръчки, партньори, свободна практика (нищо не се подава и праща автоматично)
+    Route::get('opportunities', [OpportunityController::class, 'index'])->name('opportunities.index');
+    Route::post('opportunities', [OpportunityController::class, 'store'])->middleware('throttle:60,1')->name('opportunities.store');
+    Route::post('opportunities/refresh', [OpportunityController::class, 'refresh'])->middleware('throttle:3,1')->name('opportunities.refresh');
+    Route::put('opportunities/links', [OpportunityController::class, 'links'])->name('opportunities.links');
+    Route::get('opportunities/{opportunity}', [OpportunityController::class, 'show'])->name('opportunities.show');
+    Route::patch('opportunities/{opportunity}', [OpportunityController::class, 'update'])->name('opportunities.update');
+    Route::post('opportunities/{opportunity}/interesting', [OpportunityController::class, 'interesting'])->name('opportunities.interesting');
+    Route::post('opportunities/{opportunity}/skip', [OpportunityController::class, 'skip'])->name('opportunities.skip');
+    Route::post('opportunities/{opportunity}/take', [OpportunityController::class, 'take'])->name('opportunities.take');
+    Route::post('opportunities/{opportunity}/note', [OpportunityController::class, 'note'])->name('opportunities.note');
+    Route::post('opportunities/{opportunity}/project', [OpportunityController::class, 'toProject'])->name('opportunities.project');
     Route::get('outreach', [OutreachController::class, 'index'])->name('outreach.index');
     Route::post('outreach/import', [OutreachController::class, 'import'])->name('outreach.import');
     Route::post('outreach/import-server', [OutreachController::class, 'importServer'])->name('outreach.import-server');

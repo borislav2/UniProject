@@ -3,6 +3,7 @@
 namespace App\Support\Admin;
 
 use App\Models\LinkedinProspect;
+use App\Models\Opportunity;
 use App\Models\OutreachProspect;
 use App\Models\Project;
 
@@ -42,6 +43,8 @@ class Badges
             'callbacks' => $callbacks,
             'queue' => OutreachProspect::awaitingApproval()->count(),
             'linkedin_due' => $linkedin,
+            // Нови възможности с висока оценка (creatium.opportunities.badge_score).
+            'opportunities' => Opportunity::worthLooking()->count(),
             // „Днес“ брои спешното за целия екип (непрочетени, стъпки за днес, обаждания отново, LinkedIn).
             'today' => Today::urgentCount(),
         ];

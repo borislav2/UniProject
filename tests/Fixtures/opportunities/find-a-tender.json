@@ -1,0 +1,1050 @@
+{
+ "uri": "fixture",
+ "version": "1.1",
+ "publishedDate": "2026-11-13T16:52:40Z",
+ "releases": [
+  {
+   "ocid": "ocds-h6vhtk-07bc24",
+   "id": "108199-2026",
+   "date": "2026-11-13T16:52:40Z",
+   "tag": [
+    "tender"
+   ],
+   "description": "The Council are seeking to appoint suitable suppliers per Lot. All Lots will be unranked.\nBidders may be excluded from this competition if they are in any situations referred to in regulation 58 of the Public Contracts\n(Scotland) Regulations 2015.Bidders must hold certificates for Quality Assurance & Environmental Management Standards or comply with all questions noted in the SPD Section 4D. Bidders are also required to provide detail of all relevant industry standards, accreditation, affiliations or memberships that they may hold.\nFreedom of Information Act\nInformation on the FOI Act is contained in Appendix A of the ITT. Applicants must note the implications of this legislation and ensure that any information they wish the council to consider withholding is specifically indicated on the FOI certificate (NB the council does not bind itself to withhold this information).\nTenderers Amendments\nBidders must enter any clause, condition, amendment to specification or any other qualification",
+   "initiationType": "tender",
+   "tender": {
+    "id": "GCC006583CPU",
+    "legalBasis": {
+     "id": "32014L0024",
+     "scheme": "CELEX"
+    },
+    "title": "Glasgow Business Growth Framework - Phase 4",
+    "status": "active",
+    "classification": {
+     "scheme": "CPV",
+     "id": "79400000",
+     "description": "Business and management consultancy and related services"
+    },
+    "mainProcurementCategory": "services",
+    "description": "Glasgow City Council (the Council) requires a framework of suppliers to deliver a range of business growth consultancy services to eligible organisations across the city to aide a sustainable growth agenda and improve business start-up and survival rates.\nAs the organisations accessing support via this Framework have different needs, the services provided must be offered flexibly. This includes, but is not limited to, face to face, digitally, by phone and one to one at suitable times and locations.\nThe Framework is made up of 10 Lots as detailed below and aligned to the specialist area of business support to be provided.\nPlease note funding is currently confirmed for the first two years of the Framework. This therefore represents the estimated minimum total Framework value.\nShould funding equal to this initial value be subsequently secured this will be used to deliver years three and four respectively and aligns with the higher maximum value noted in II.1.5\nLot 1- Business Structuring,",
+    "value": {
+     "amount": 3800000,
+     "currency": "GBP"
+    },
+    "lotDetails": {
+     "maximumLotsBidPerSupplier": Infinity
+    },
+    "lots": [
+     {
+      "id": "2",
+      "title": "Business Growth, Sustainable Growth and Productivity",
+      "description": "The Lot will provide specialist consultancy support to identify areas of improvement processes which help to improve some measure of an organisations success.\nSpecific sub-categories services to be delivered under this Lot include but are not limited to-\nStrategic Planning\nChange Management\nPitching",
+      "contractPeriod": {
+       "durationInDays": 1440
+      },
+      "hasRenewal": true,
+      "renewal": {
+       "description": "If funding arrangements are extended, the Framework term will be extended accordingly.\nThe Framework is therefore expected to run for an an initial period of 2 years with the council retaining the option to extend for 2 further periods of 12 months each"
+      },
+      "hasOptions": false,
+      "status": "active"
+     },
+     {
+      "id": "3",
+      "title": "Upskilling, Leadership and Resources",
+      "description": "This Lot will provide specialist consultancy support that may involve reviewing existing leadership development processes and preparing a report on their future suitability and/or making recommendations for future actions. This also includes capacity building and comprehensive HR support.\nSpecific s",
+      "contractPeriod": {
+       "durationInDays": 1440
+      },
+      "hasRenewal": true,
+      "renewal": {
+       "description": "If funding arrangements are extended, the Framework term will be extended accordingly.\nThe Framework is therefore expected to run for an an initial period of 2 years with the council retaining the option to extend for 2 further periods of 12 months each"
+      },
+      "hasOptions": false,
+      "status": "active"
+     },
+     {
+      "id": "5",
+      "title": "Design and System processing",
+      "description": "This Lot will provide specialist consultancy services to help integrate design thinking principles into a range of organisations across different industry sectors and will support the development of organisational processes for introducing new ideas, workflows, methodologies, services and/or product",
+      "contractPeriod": {
+       "durationInDays": 1440
+      },
+      "hasRenewal": true,
+      "renewal": {
+       "description": "If funding arrangements are extended, the Framework term will be extended accordingly.\nThe Framework is therefore expected to run for an an initial period of 2 years with the council retaining the option to extend for 2 further periods of 12 months each"
+      },
+      "hasOptions": false,
+      "status": "active"
+     }
+    ],
+    "items": [
+     {
+      "id": "2",
+      "additionalClassifications": [
+       {
+        "scheme": "CPV",
+        "id": "72221000",
+        "description": "Business analysis consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "72224000",
+        "description": "Project management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411100",
+        "description": "Business development consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411000",
+        "description": "General management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79418000",
+        "description": "Procurement consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79410000",
+        "description": "Business and management consultancy services"
+       }
+      ],
+      "deliveryAddresses": [
+       {
+        "region": "UKM82"
+       }
+      ],
+      "relatedLot": "2"
+     },
+     {
+      "id": "3",
+      "additionalClassifications": [
+       {
+        "scheme": "CPV",
+        "id": "79411000",
+        "description": "General management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79414000",
+        "description": "Human resources management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411100",
+        "description": "Business development consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79410000",
+        "description": "Business and management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79400000",
+        "description": "Business and management consultancy and related services"
+       }
+      ],
+      "deliveryAddresses": [
+       {
+        "region": "UKM82"
+       }
+      ],
+      "relatedLot": "3"
+     },
+     {
+      "id": "5",
+      "additionalClassifications": [
+       {
+        "scheme": "CPV",
+        "id": "79415200",
+        "description": "Design consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79400000",
+        "description": "Business and management consultancy and related services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79410000",
+        "description": "Business and management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411000",
+        "description": "General management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "72242000",
+        "description": "Design-modelling services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "72413000",
+        "description": "World wide web (www) site design services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79421200",
+        "description": "Project-design services other than for construction work"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79822500",
+        "description": "Graphic design services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79930000",
+        "description": "Specialty design services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79933000",
+        "description": "Design support services"
+       }
+      ],
+      "deliveryAddresses": [
+       {
+        "region": "UKM82"
+       }
+      ],
+      "relatedLot": "5"
+     },
+     {
+      "id": "6",
+      "additionalClassifications": [
+       {
+        "scheme": "CPV",
+        "id": "79413000",
+        "description": "Marketing management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "72212481",
+        "description": "Sales or marketing software development services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79340000",
+        "description": "Advertising and marketing services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79342000",
+        "description": "Marketing services"
+       }
+      ],
+      "deliveryAddresses": [
+       {
+        "region": "UKM82"
+       }
+      ],
+      "relatedLot": "6"
+     },
+     {
+      "id": "7",
+      "additionalClassifications": [
+       {
+        "scheme": "CPV",
+        "id": "72221000",
+        "description": "Business analysis consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79412000",
+        "description": "Financial management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411100",
+        "description": "Business development consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411000",
+        "description": "General management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79410000",
+        "description": "Business and management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79400000",
+        "description": "Business and management consultancy and related services"
+       }
+      ],
+      "deliveryAddresses": [
+       {
+        "region": "UKM82"
+       }
+      ],
+      "relatedLot": "7"
+     },
+     {
+      "id": "8",
+      "additionalClassifications": [
+       {
+        "scheme": "CPV",
+        "id": "79400000",
+        "description": "Business and management consultancy and related services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411100",
+        "description": "Business development consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79410000",
+        "description": "Business and management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "73220000",
+        "description": "Development consultancy services"
+       }
+      ],
+      "deliveryAddresses": [
+       {
+        "region": "UKM82"
+       }
+      ],
+      "relatedLot": "8"
+     },
+     {
+      "id": "9",
+      "additionalClassifications": [
+       {
+        "scheme": "CPV",
+        "id": "71314300",
+        "description": "Energy-efficiency consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "66171000",
+        "description": "Financial consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "72221000",
+        "description": "Business analysis consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "72220000",
+        "description": "Systems and technical consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "73000000",
+        "description": "Research and development services and related consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79400000",
+        "description": "Business and management consultancy and related services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411100",
+        "description": "Business development consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411000",
+        "description": "General management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "90713000",
+        "description": "Environmental issues consultancy services"
+       }
+      ],
+      "deliveryAddresses": [
+       {
+        "region": "UKM82"
+       }
+      ],
+      "relatedLot": "9"
+     },
+     {
+      "id": "10",
+      "additionalClassifications": [
+       {
+        "scheme": "CPV",
+        "id": "79400000",
+        "description": "Business and management consultancy and related services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411100",
+        "description": "Business development consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411000",
+        "description": "General management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79410000",
+        "description": "Business and management consultancy services"
+       }
+      ],
+      "deliveryAddresses": [
+       {
+        "region": "UKM82"
+       }
+      ],
+      "relatedLot": "10"
+     },
+     {
+      "id": "1",
+      "additionalClassifications": [
+       {
+        "scheme": "CPV",
+        "id": "79410000",
+        "description": "Business and management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "72221000",
+        "description": "Business analysis consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "72224000",
+        "description": "Project management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411100",
+        "description": "Business development consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411000",
+        "description": "General management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79400000",
+        "description": "Business and management consultancy and related services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "66519310",
+        "description": "Insurance consultancy services"
+       }
+      ],
+      "deliveryAddresses": [
+       {
+        "region": "UKM82"
+       }
+      ],
+      "relatedLot": "1"
+     },
+     {
+      "id": "4",
+      "additionalClassifications": [
+       {
+        "scheme": "CPV",
+        "id": "66171000",
+        "description": "Financial consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "66170000",
+        "description": "Financial consultancy, financial transaction processing and clearing-house services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79412000",
+        "description": "Financial management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79411000",
+        "description": "General management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79410000",
+        "description": "Business and management consultancy services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "79400000",
+        "description": "Business and management consultancy and related services"
+       }
+      ],
+      "deliveryAddresses": [
+       {
+        "region": "UKM82"
+       }
+      ],
+      "relatedLot": "4"
+     }
+    ],
+    "submissionMethod": [
+     "electronicSubmission"
+    ],
+    "submissionMethodDetails": "http://www.publictendersscotland.publiccontractsscotland.gov.uk",
+    "procurementMethod": "open",
+    "procurementMethodDetails": "Open procedure",
+    "techniques": {
+     "hasFrameworkAgreement": true,
+     "frameworkAgreement": {
+      "maximumParticipants": 70
+     }
+    },
+    "coveredBy": [
+     "GPA"
+    ],
+    "tenderPeriod": {
+     "endDate": "2026-12-15T12:00:00Z"
+    },
+    "submissionTerms": {
+     "languages": [
+      "en"
+     ],
+     "bidValidityPeriod": {
+      "durationInDays": 150
+     }
+    },
+    "awardPeriod": {
+     "startDate": "2026-12-15T12:00:00Z"
+    },
+    "bidOpening": {
+     "date": "2026-12-15T12:00:00Z"
+    },
+    "hasRecurrence": true
+   },
+   "parties": [
+    {
+     "name": "Glasgow City Council",
+     "id": "GB-FTS-203",
+     "identifier": {
+      "legalName": "Glasgow City Council"
+     },
+     "address": {
+      "streetAddress": "Chief Executives Department, City Chambers",
+      "locality": "Glasgow",
+      "region": "UKM82",
+      "postalCode": "G2 1DU",
+      "countryName": "United Kingdom"
+     },
+     "contactPoint": {
+      "telephone": "+44 20 7946 0000",
+      "email": "procurement@example.org",
+      "url": "http://www.publictendersscotland.publiccontractsscotland.gov.uk"
+     },
+     "roles": [
+      "buyer"
+     ],
+     "details": {
+      "url": "http://www.glasgow.gov.uk",
+      "buyerProfile": "https://www.publiccontractsscotland.gov.uk/search/Search_AuthProfile.aspx?ID=AA00196",
+      "classifications": [
+       {
+        "scheme": "TED_CA_TYPE",
+        "id": "REGIONAL_AUTHORITY",
+        "description": "Regional or local authority"
+       },
+       {
+        "scheme": "COFOG",
+        "id": "01",
+        "description": "General public services"
+       }
+      ]
+     }
+    },
+    {
+     "name": "Glasgow Sheriff Court and Justice of the Peace Court",
+     "id": "GB-FTS-9474",
+     "identifier": {
+      "legalName": "Glasgow Sheriff Court and Justice of the Peace Court"
+     },
+     "address": {
+      "streetAddress": "PO Box 23 1 Carlton Place",
+      "locality": "Glasgow",
+      "postalCode": "G2 9DA",
+      "countryName": "United Kingdom"
+     },
+     "contactPoint": {
+      "email": "procurement@example.org"
+     },
+     "roles": [
+      "reviewBody"
+     ],
+     "details": {
+      "url": "http://www.glasgow.gov.uk"
+     }
+    }
+   ],
+   "buyer": {
+    "id": "GB-FTS-203",
+    "name": "Glasgow City Council"
+   },
+   "links": [
+    {
+     "rel": "canonical",
+     "href": "https://api.publiccontractsscotland.gov.uk/v1/Notice?id=ocds-r6ebe6-0000847553"
+    }
+   ],
+   "language": "en"
+  },
+  {
+   "ocid": "ocds-h6vhtk-0795d5",
+   "id": "103846-2026",
+   "date": "2026-11-02T15:27:25Z",
+   "tag": [
+    "tender"
+   ],
+   "initiationType": "tender",
+   "tender": {
+    "id": "ocds-h6vhtk-0795d5",
+    "legalBasis": {
+     "id": "32014L0024",
+     "scheme": "CELEX"
+    },
+    "title": "Town Marketing, Promotions and Business Support Consultant",
+    "status": "active",
+    "classification": {
+     "scheme": "CPV",
+     "id": "79000000",
+     "description": "Business services: law, marketing, consulting, recruitment, printing and security"
+    },
+    "mainProcurementCategory": "services",
+    "description": "The Town Council invites suitably qualified and experienced consultants or organisations to submit a tender for the provision of Town Marketing, Promotions and Business Support Services.\nThe successful contractor will work closely with the Town Council to promote the town, support local businesses, increase visitor numbers, and deliver a small programme of community events and marketing activities.\nThe contract is intended to provide a proactive, creative and community-focused service that enhances the town's profile, increases visitor numbers and supports economic growth.\n________________________________________\nThe appointed consultant will:\n•\tPromote the town as a destination for shopping, leisure and tourism. \n•\tSupport and engage local businesses. \n•\tDeliver community events that increase footfall. \n•\tDevelop engaging marketing content across digital platforms. \n•\tMaintain an up-to-date programme of town news and events on the Make it Market Drayton Website, supported by Town Coun",
+    "lots": [
+     {
+      "id": "1",
+      "description": "The Town Council invites suitably qualified and experienced consultants or organisations to submit a tender for the provision of Town Marketing, Promotions and Business Support Services.\nThe successful contractor will work closely with the Town Council to promote the town, support local businesses, ",
+      "contractPeriod": {
+       "startDate": "2027-04-01T00:00:00+01:00"
+      },
+      "hasRenewal": true,
+      "renewal": {
+       "description": "an initial contract for two years and 2 x 1 year extensions subject to funding, business need and satisfactory performance."
+      },
+      "hasOptions": false,
+      "status": "active"
+     }
+    ],
+    "items": [
+     {
+      "id": "1",
+      "deliveryAddresses": [
+       {
+        "region": "UKG22"
+       }
+      ],
+      "relatedLot": "1"
+     }
+    ],
+    "submissionMethod": [
+     "electronicSubmission",
+     "written"
+    ],
+    "submissionMethodDetails": "https://marketdrayton.gov.uk/",
+    "procurementMethod": "open",
+    "procurementMethodDetails": "Open procedure",
+    "tenderPeriod": {
+     "endDate": "2026-11-27T12:00:00Z"
+    },
+    "submissionTerms": {
+     "languages": [
+      "en"
+     ]
+    },
+    "awardPeriod": {
+     "startDate": "2026-12-02T10:00:00Z"
+    },
+    "bidOpening": {
+     "date": "2026-12-02T10:00:00Z"
+    },
+    "hasRecurrence": false
+   },
+   "parties": [
+    {
+     "name": "Market Drayton Town Council",
+     "id": "GB-FTS-139421",
+     "identifier": {
+      "legalName": "Market Drayton Town Council",
+      "noIdentifierRationale": "notOnAnyRegister"
+     },
+     "address": {
+      "streetAddress": "The Town Hall, 18 Frogmore Road",
+      "locality": "Market Drayton",
+      "region": "UKG22",
+      "postalCode": "TF93AX",
+      "countryName": "United Kingdom"
+     },
+     "contactPoint": {
+      "name": "Test Person",
+      "email": "procurement@example.org",
+      "url": "https://marketdrayton.gov.uk/"
+     },
+     "roles": [
+      "buyer"
+     ],
+     "details": {
+      "url": "https://marketdrayton.gov.uk/",
+      "classifications": [
+       {
+        "scheme": "TED_CA_TYPE",
+        "id": "REGIONAL_AUTHORITY",
+        "description": "Regional or local authority"
+       },
+       {
+        "scheme": "COFOG",
+        "id": "01",
+        "description": "General public services"
+       }
+      ]
+     }
+    },
+    {
+     "name": "Market Drayton Town Council",
+     "id": "GB-FTS-139422",
+     "identifier": {
+      "legalName": "Market Drayton Town Council"
+     },
+     "address": {
+      "locality": "Market Drayton",
+      "countryName": "United Kingdom"
+     },
+     "roles": [
+      "reviewBody"
+     ]
+    }
+   ],
+   "buyer": {
+    "id": "GB-FTS-139421",
+    "name": "Market Drayton Town Council"
+   },
+   "language": "en"
+  },
+  {
+   "ocid": "ocds-h6vhtk-0794b0",
+   "id": "103226-2026",
+   "date": "2026-10-30T13:34:36Z",
+   "tag": [
+    "tender"
+   ],
+   "initiationType": "tender",
+   "tender": {
+    "id": "ocds-h6vhtk-0794b0",
+    "legalBasis": {
+     "id": "32014L0025",
+     "scheme": "CELEX"
+    },
+    "title": "L26044-T-YHBC- ​Web development, maintenance and hosting",
+    "status": "active",
+    "classification": {
+     "scheme": "CPV",
+     "id": "48517000",
+     "description": "IT software package"
+    },
+    "mainProcurementCategory": "goods",
+    "description": "The London Luton Airport (LLA) requires a suitably skilled and experienced digital partner to provide ongoing website hosting, maintenance, support, development and optimisation services for its public website and associated digital services. \nThe successful supplier will be responsible for ensuring the ongoing availability, performance, security, resilience and continuous improvement of the platform, whilst supporting LLA's wider digital, customer experience and commercial objectives.",
+    "lots": [
+     {
+      "id": "1",
+      "description": "The London Luton Airport (LLA) requires a suitably skilled and experienced digital partner to provide ongoing website hosting, maintenance, support, development and optimisation services for its public website and associated digital services. \nThe successful supplier will be responsible for ensuring",
+      "contractPeriod": {
+       "durationInDays": 1440
+      },
+      "hasRenewal": false,
+      "hasOptions": false,
+      "status": "active"
+     }
+    ],
+    "items": [
+     {
+      "id": "1",
+      "additionalClassifications": [
+       {
+        "scheme": "CPV",
+        "id": "48222000",
+        "description": "Web server software package"
+       },
+       {
+        "scheme": "CPV",
+        "id": "48224000",
+        "description": "Web page editing software package"
+       },
+       {
+        "scheme": "CPV",
+        "id": "48710000",
+        "description": "Backup or recovery software package"
+       },
+       {
+        "scheme": "CPV",
+        "id": "72212000",
+        "description": "Programming services of application software"
+       },
+       {
+        "scheme": "CPV",
+        "id": "72261000",
+        "description": "Software support services"
+       },
+       {
+        "scheme": "CPV",
+        "id": "72267200",
+        "description": "Repair of information technology software"
+       },
+       {
+        "scheme": "CPV",
+        "id": "72415000",
+        "description": "World wide web (www) site operation host services"
+       }
+      ],
+      "deliveryAddresses": [
+       {
+        "region": "UKH21"
+       }
+      ],
+      "relatedLot": "1"
+     }
+    ],
+    "submissionMethod": [
+     "electronicSubmission",
+     "written"
+    ],
+    "submissionMethodDetails": "https://london-luton.ukp.app.jaggaer.com/go/9511162401A18CCDCC8A",
+    "procurementMethod": "open",
+    "procurementMethodDetails": "Open procedure",
+    "tenderPeriod": {
+     "endDate": "2026-11-13T12:00:00Z"
+    },
+    "submissionTerms": {
+     "languages": [
+      "en"
+     ]
+    },
+    "awardPeriod": {
+     "startDate": "2026-11-13T12:00:00Z"
+    },
+    "bidOpening": {
+     "date": "2026-11-13T12:00:00Z"
+    },
+    "hasRecurrence": false
+   },
+   "parties": [
+    {
+     "name": "London Luton Airport Operations Limited",
+     "id": "GB-FTS-18824",
+     "identifier": {
+      "legalName": "London Luton Airport Operations Limited"
+     },
+     "address": {
+      "streetAddress": "Percival House, Percival Way",
+      "locality": "Luton",
+      "region": "UKH21",
+      "postalCode": "LU2 9NU",
+      "countryName": "United Kingdom"
+     },
+     "contactPoint": {
+      "telephone": "+44 20 7946 0000",
+      "email": "procurement@example.org",
+      "faxNumber": "+44 20 7946 0000",
+      "url": "https://london-luton.ukp.app.jaggaer.com/go/9511162401A18CCDCC8A"
+     },
+     "roles": [
+      "buyer"
+     ],
+     "details": {
+      "url": "https://www.london-luton.co.uk/",
+      "classifications": [
+       {
+        "scheme": "TED_CE_ACTIVITY",
+        "id": "AIRPORT_RELATED_ACTIVITIES",
+        "description": "Airport-related activities"
+       }
+      ]
+     }
+    },
+    {
+     "name": "London Luton Airport",
+     "id": "GB-FTS-18825",
+     "identifier": {
+      "legalName": "London Luton Airport"
+     },
+     "address": {
+      "locality": "Luton",
+      "countryName": "United Kingdom"
+     },
+     "roles": [
+      "reviewBody"
+     ]
+    }
+   ],
+   "buyer": {
+    "id": "GB-FTS-18824",
+    "name": "London Luton Airport Operations Limited"
+   },
+   "language": "en"
+  },
+  {
+   "ocid": "ocds-h6vhtk-079434",
+   "id": "102961-2026",
+   "date": "2026-10-30T09:15:20Z",
+   "tag": [
+    "tender"
+   ],
+   "description": "NOTE: To register your interest in this notice and obtain any additional information please visit the Public Contracts Scotland Web Site at https://www.publiccontractsscotland.gov.uk/Search/Search_Switch.aspx?ID=846967.\nThe buyer has indicated that it will accept electronic responses to this notice via the Postbox facility. A user guide is available at https://www.publiccontractsscotland.gov.uk/sitehelp/help_guides.aspx.\nSuppliers are advised to allow adequate time for uploading documents and to dispatch the electronic response well in advance of the closing time to avoid any last minute problems.\n(SC Ref:846967)\nDownload the ESPD document here: https://www.publiccontractsscotland.gov.uk/ESPD/ESPD_Download.aspx?id=846967",
+   "initiationType": "tender",
+   "tender": {
+    "id": "VSEH26024",
+    "legalBasis": {
+     "id": "32014L0024",
+     "scheme": "CELEX"
+    },
+    "title": "Scottish Thistle Awards National Media Partnership 2027–2030",
+    "status": "active",
+    "classification": {
+     "scheme": "CPV",
+     "id": "79341000",
+     "description": "Advertising services"
+    },
+    "mainProcurementCategory": "services",
+    "description": "VisitScotland is seeking a national media partner to raise awareness of the Scottish Thistle Awards on a national level, through a mutually beneficial partnership. The media partnership will focus on the national awards, rather than the regional programme. The opportunity will cover the awards programme for 2027-2030 and the expected value target is up to 50,000 GBP per year.",
+    "value": {
+     "amount": 200000,
+     "currency": "GBP"
+    },
+    "lots": [
+     {
+      "id": "1",
+      "description": "Please refer to attached documents for description of procurement",
+      "contractPeriod": {
+       "durationInDays": 720
+      },
+      "hasRenewal": true,
+      "renewal": {
+       "description": "12+12"
+      },
+      "hasOptions": false,
+      "status": "active"
+     }
+    ],
+    "items": [
+     {
+      "id": "1",
+      "deliveryAddresses": [
+       {
+        "region": "UKM"
+       }
+      ],
+      "relatedLot": "1"
+     }
+    ],
+    "submissionMethod": [
+     "electronicSubmission"
+    ],
+    "submissionMethodDetails": "https://www.publiccontractsscotland.gov.uk",
+    "procurementMethod": "open",
+    "procurementMethodDetails": "Open procedure",
+    "coveredBy": [
+     "GPA"
+    ],
+    "tenderPeriod": {
+     "endDate": "2026-12-01T12:00:00Z"
+    },
+    "submissionTerms": {
+     "languages": [
+      "en"
+     ],
+     "bidValidityPeriod": {
+      "durationInDays": 180
+     }
+    },
+    "awardPeriod": {
+     "startDate": "2026-12-01T12:00:00Z"
+    },
+    "bidOpening": {
+     "date": "2026-12-01T12:00:00Z"
+    },
+    "hasRecurrence": true
+   },
+   "parties": [
+    {
+     "name": "VisitScotland",
+     "id": "GB-FTS-101342",
+     "identifier": {
+      "legalName": "VisitScotland"
+     },
+     "address": {
+      "streetAddress": "Waverley Court, 4 East Market Street",
+      "locality": "Edinburgh",
+      "region": "UKM",
+      "postalCode": "EH8 8BG",
+      "countryName": "United Kingdom"
+     },
+     "contactPoint": {
+      "name": "Another Person",
+      "telephone": "+44 20 7946 0000",
+      "email": "procurement@example.org",
+      "url": "https://www.publiccontractsscotland.gov.uk"
+     },
+     "roles": [
+      "buyer",
+      "centralPurchasingBody"
+     ],
+     "details": {
+      "url": "http://www.visitscotland.org",
+      "buyerProfile": "https://www.publiccontractsscotland.gov.uk/search/Search_AuthProfile.aspx?ID=AA00118",
+      "classifications": [
+       {
+        "scheme": "TED_CA_TYPE",
+        "id": "BODY_PUBLIC",
+        "description": "Body governed by public law"
+       },
+       {
+        "scheme": "COFOG",
+        "description": "Tourism/Marketing"
+       }
+      ]
+     }
+    },
+    {
+     "name": "Edinburgh Sheriff Court",
+     "id": "GB-FTS-1033",
+     "identifier": {
+      "legalName": "Edinburgh Sheriff Court"
+     },
+     "address": {
+      "locality": "Edinburgh",
+      "countryName": "United Kingdom"
+     },
+     "roles": [
+      "reviewBody"
+     ]
+    }
+   ],
+   "buyer": {
+    "id": "GB-FTS-101342",
+    "name": "VisitScotland"
+   },
+   "links": [
+    {
+     "rel": "canonical",
+     "href": "https://api.publiccontractsscotland.gov.uk/v1/Notice?id=ocds-r6ebe6-0000846967"
+    }
+   ],
+   "language": "en"
+  }
+ ],
+ "links": {}
+}

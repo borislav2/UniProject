@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ClientEmail;
 use App\Models\LinkedinProspect;
+use App\Models\Opportunity;
 use App\Models\OutreachCall;
 use App\Models\OutreachProspect;
 use App\Models\Project;
@@ -77,6 +78,10 @@ class StatsController extends Controller
             'interested' => OutreachCall::whereNotNull('called_at')->where('called_at', '>=', $from)->where('country', $code)->whereIn('status', ['interested', 'client'])->count(),
         ]);
 
-        return view('admin.stats', compact('days', 'country', 'byCountry', 'emails', 'followups', 'calls', 'linkedin', 'channels', 'pipeline', 'lostReasons'));
+        // Възможности (всички във времето): по вид и статус.
+        $opportunityCounts = Opportunity::selectRaw('kind, status, count(*) as total')->groupBy('kind', 'status')->get()
+            ->groupBy('kind')->map(fn ($rows) => $rows->pluck('total', 'status'));
+
+        return view('admin.stats', compact('opportunityCounts', 'days', 'country', 'byCountry', 'emails', 'followups', 'calls', 'linkedin', 'channels', 'pipeline', 'lostReasons'));
     }
 }
