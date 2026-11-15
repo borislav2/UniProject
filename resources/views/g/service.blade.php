@@ -23,7 +23,7 @@
             </ul>
         </div>
         <div>
-            <h2 class="g-h g-sub-h g-rows-label"><x-icon :name="$page['icon']" class="g-ico" />{{ __('Какво правим') }}</h2>
+            <h2 class="g-h g-sub-h g-rows-label">{{ __('Какво правим') }}</h2>
             <ol class="g-rows g-rows-tight">
                 @foreach($page['includes'] as $item)
                     <li><h3>{{ $item }}</h3></li>
@@ -91,9 +91,9 @@
         </div>
         <div class="g-links">
             @foreach($others as $otherKey => $other)
-                <a href="{{ \App\Http\Controllers\PageController::serviceUrl($otherKey) }}"><x-icon :name="$other['icon']" class="g-ico" /><span>{{ $other['menu'] }}</span></a>
+                <a href="{{ \App\Http\Controllers\PageController::serviceUrl($otherKey) }}"><span>{{ $other['menu'] }}</span></a>
             @endforeach
-            <a href="{{ lroute('site-check') }}"><x-icon name="gauge-high" class="g-ico" /><span>{{ __('Безплатна проверка на сайт') }}</span></a>
+            <a href="{{ lroute('site-check') }}"><span>{{ __('Безплатна проверка на сайт') }}</span></a>
         </div>
     </div>
 </section>

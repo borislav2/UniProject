@@ -27,7 +27,6 @@
 <article>
     <header class="g-ph g-post-head">
         <div class="g-wrap g-narrow">
-            <p class="g-mono g-eyebrow"><a href="{{ lroute('blog.index') }}">{{ __('Новини') }}</a></p>
             <h1 class="g-h">{{ $post->tr('title') }}</h1>
             <p class="g-post-meta g-mono">
                 <time datetime="{{ $post->published_at->toDateString() }}">{{ $post->published_at->locale(app()->getLocale())->translatedFormat('j F Y') }}</time>

@@ -6,7 +6,7 @@
 @section('content')
 <section class="g-ph g-404">
     <div class="g-wrap">
-        <p class="g-mono g-eyebrow">404</p>
+        <p class="g-mono g-code">404</p>
         <h1 class="g-h">{{ __('Страницата не е намерена') }}</h1>
         <p class="g-lead">{{ __('Възможно е адресът да е променен или страницата да не съществува.') }}</p>
         <div class="g-cta">

@@ -21,7 +21,7 @@
 @endphp
 
 @section('content')
-@include('partials.g.page-head', ['eyebrow' => __('Безплатно'), 'heading' => __('Проверка на сайт'), 'sub' => __('Въведете адреса на сайта и имейл. Обхождаме до :n страници и до няколко минути получавате отчет на имейла какво работи и какво да оправите.', ['n' => config('creatium.site_check.crawl_limit')])])
+@include('partials.g.page-head', ['note' => __('Безплатно'), 'heading' => __('Проверка на сайт'), 'sub' => __('Въведете адреса на сайта и имейл. Обхождаме до :n страници и до няколко минути получавате отчет на имейла какво работи и какво да оправите.', ['n' => config('creatium.site_check.crawl_limit')])])
 
 <section class="g-s">
     <div class="g-wrap g-sys">

@@ -7,7 +7,7 @@
 @section('g_lean', 'inner')
 
 @section('content')
-@include('partials.g.page-head', ['eyebrow' => $category ? __('Новини') : null, 'heading' => $category ? $category->trOrBg('name') : __('Новини'), 'sub' => __('Практични съвети как клиентите да ви намират в Google и ChatGPT и да ви пишат.')])
+@include('partials.g.page-head', ['heading' => $category ? $category->trOrBg('name') : __('Новини'), 'sub' => __('Практични съвети как клиентите да ви намират в Google и ChatGPT и да ви пишат.')])
 
 <section class="g-s g-last">
     <div class="g-wrap">

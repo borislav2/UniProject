@@ -21,7 +21,6 @@
             @foreach($services as $key => $service)
                 @php($gPlan = $gPlans->get($service['package'] ?? -1))
                 <article id="{{ $service['slug'] }}" class="g-svc" data-g-service="{{ $key }}">
-                    <div class="g-svc-no"><x-icon :name="$service['icon']" class="g-ico" /></div>
                     <div class="g-svc-main">
                         <h2 class="g-h">{{ $service['menu'] }}</h2>
                         <p class="g-svc-tag">{{ filled($service['g_what'] ?? null) ? $service['g_what'] : $service['lead'] }}</p>
