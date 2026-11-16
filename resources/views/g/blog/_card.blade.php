@@ -2,7 +2,8 @@
     <a href="{{ $post->url() }}" class="g-post-img" tabindex="-1" aria-hidden="true">
         <div class="g-frame">
             @if($post->cover_image)
-                <img src="{{ asset($post->cover_image) }}" alt="" width="640" height="360" loading="lazy" decoding="async">
+                @php($srcset = g_cover_srcset($post))
+                <img src="{{ asset(g_cover($post, true)) }}"@if($srcset) srcset="{{ $srcset }}" sizes="(min-width: 1040px) 380px, (min-width: 700px) 46vw, 92vw"@endif alt="" width="640" height="360" loading="lazy" decoding="async">
             @else
                 <div class="g-noimg g-mono">Creatium Lab</div>
             @endif

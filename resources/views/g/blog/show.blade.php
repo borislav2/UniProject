@@ -40,7 +40,7 @@
     <div class="g-s g-last">
         <div class="g-wrap g-narrow">
             @if($post->cover_image)
-                <div class="g-frame g-cover"><img src="{{ asset($post->cover_image) }}" alt="{{ $post->tr('title') }}" width="1200" height="675" fetchpriority="high"></div>
+                <div class="g-frame g-cover"><img src="{{ asset(g_cover($post)) }}" alt="{{ $post->tr('title') }}" width="1200" height="675" fetchpriority="high"></div>
             @endif
             @if($post->tr('excerpt'))<p class="g-post-lead">{{ $post->tr('excerpt') }}</p>@endif
             <div class="g-prose g-article">
