@@ -114,6 +114,7 @@ Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('dnes', TodayController::class)->name('today');
+    Route::get('pomosht', \App\Http\Controllers\Admin\HelpController::class)->name('help');
     Route::get('tarsene', \App\Http\Controllers\Admin\SearchController::class)->name('search');
     Route::get('zdrave', \App\Http\Controllers\Admin\HealthController::class)->name('health');
     Route::get('statistika', \App\Http\Controllers\Admin\StatsController::class)->name('stats');

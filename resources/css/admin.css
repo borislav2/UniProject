@@ -655,3 +655,42 @@ a.op-title:hover { color: var(--accent-text); }
 
 /* Geologica's Bulgarian letter forms (г as z, т as m) are hard to read in dense headings and numbers: use the plain forms. */
 h1, h2, h3, h4, .font-display, .td-kpi b, .adm-avatar, .adm-who b, .td-block h3 { font-feature-settings: "locl" 0; }
+
+/* ==== Помощ: „Какво е това?“ под заглавието на всеки раздел и страницата „Как работи админът“ ==== */
+.adm-help { margin-bottom: 20px; border: 1px solid var(--line); border-left: 3px solid var(--ink); background: #fff; border-radius: 2px; }
+.adm-help summary { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; cursor: pointer; list-style: none; }
+.adm-help summary::-webkit-details-marker { display: none; }
+.adm-help summary:hover { background: rgba(12, 14, 18, .025); }
+.adm-help-mark { flex: none; display: grid; place-items: center; width: 22px; height: 22px; margin-top: 1px; border-radius: 50%; background: var(--ink); color: #fff; font: 600 13px/1 var(--head); }
+.adm-help-line { flex: 1; min-width: 0; font-size: 14.5px; line-height: 1.5; color: var(--mute); }
+.adm-help-q { font-weight: 600; color: var(--ink); }
+.adm-help-toggle { flex: none; display: inline-flex; align-items: center; gap: 6px; margin-top: 2px; font: 500 11px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+.adm-help-toggle svg { width: .9em; height: .9em; transition: transform .15s; }
+.adm-help[open] .adm-help-toggle svg { transform: rotate(180deg); }
+.adm-help-close, .adm-help[open] .adm-help-open { display: none; }
+.adm-help[open] .adm-help-close { display: inline; }
+.adm-help-body { padding: 2px 14px 14px 50px; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); max-width: 78ch; }
+.adm-help-body p { margin: 0 0 10px; }
+.adm-help-sub { font: 500 11px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); margin-bottom: 6px !important; }
+.adm-help-body ol { margin: 0 0 12px; padding-left: 20px; list-style: decimal; }
+.adm-help-body li { margin-bottom: 4px; padding-left: 2px; }
+.adm-help-more { margin: 0 !important; font-size: 13.5px; }
+.adm-help-more a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-decoration-color: rgba(232, 67, 27, .55); }
+@media (max-width: 640px) {
+    .adm-help summary { padding: 11px 12px; gap: 10px; }
+    .adm-help-open, .adm-help-close { display: none !important; }
+    .adm-help-body { padding: 0 12px 12px 12px; }
+}
+.adm-help-intro { max-width: 78ch; margin-bottom: 24px; color: var(--mute); }
+.adm-help-group { margin-bottom: 32px; }
+.adm-help-group > h3 { margin: 0 0 12px; font: 500 11.5px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+.adm-help-grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 900px) { .adm-help-grid { grid-template-columns: repeat(2, 1fr); } }
+.adm-help-card { border: 1px solid var(--line); background: #fff; border-radius: 2px; padding: 16px; font-size: 14.5px; line-height: 1.5; }
+.adm-help-card h4 { margin: 0 0 6px; font-size: 17px; }
+.adm-help-card h4 a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-decoration-color: rgba(232, 67, 27, .55); }
+.adm-help-card p { margin: 0 0 8px; color: var(--ink-2); }
+.adm-help-card .what { color: var(--mute); }
+.adm-help-card ol { margin: 0; padding-left: 20px; list-style: decimal; color: var(--ink-2); }
+.adm-help-card li { margin-bottom: 3px; }
+@media print { .adm-help { display: none; } }

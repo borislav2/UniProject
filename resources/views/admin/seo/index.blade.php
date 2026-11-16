@@ -69,9 +69,9 @@
                         </td>
                         <td>
                             <div class="sx-facts">
-                                <span class="sx-tag {{ $r['noindex'] ? 'hot' : 'quiet' }}">{{ $r['noindex'] ? 'noindex' : 'индексира се' }}</span>
-                                <span class="sx-tag {{ $r['in_sitemap'] ? 'quiet' : ($r['noindex'] ? 'quiet' : 'hot') }}">{{ $r['in_sitemap'] ? 'в sitemap' : 'не е в sitemap' }}</span>
-                                <span class="sx-tag {{ $r['canonical_state'] === 'self' ? 'quiet' : 'hot' }}" @if($r['canonical'] && $r['canonical_state'] === 'other') title="{{ $r['canonical'] }}" @endif>canonical {{ ['self' => 'към себе си', 'other' => 'към друга', 'missing' => 'липсва'][$r['canonical_state']] }}</span>
+                                <span class="sx-tag {{ $r['noindex'] ? 'hot' : 'quiet' }}" title="{{ $r['noindex'] ? 'noindex значи, че страницата е скрита от Google и няма да се показва в търсенето' : 'Страницата може да се показва в Google' }}">{{ $r['noindex'] ? 'noindex' : 'индексира се' }}</span>
+                                <span class="sx-tag {{ $r['in_sitemap'] ? 'quiet' : ($r['noindex'] ? 'quiet' : 'hot') }}" title="Sitemap е списъкът със страниците на сайта, който даваме на Google, за да ги намира по-лесно">{{ $r['in_sitemap'] ? 'в sitemap' : 'не е в sitemap' }}</span>
+                                <span class="sx-tag {{ $r['canonical_state'] === 'self' ? 'quiet' : 'hot' }}" title="Canonical е главният адрес на страницата, който Google трябва да брои. Добре е да сочи към самата нея.@if($r['canonical'] && $r['canonical_state'] === 'other') Сега сочи към {{ $r['canonical'] }}@endif">canonical {{ ['self' => 'към себе си', 'other' => 'към друга', 'missing' => 'липсва'][$r['canonical_state']] }}</span>
                             </div>
                         </td>
                         <td><div class="sx-text">{{ $r['h1'] ?: '—' }}</div>@if($r['h1_count'] > 1)<span class="sx-tag hot">{{ $r['h1_count'] }} × h1</span>@endif</td>

@@ -75,7 +75,7 @@
                         <td class="px-5 py-2 text-right text-gray-600">{{ $row['lost'] }}</td>
                     </tr>
                 @empty
-                    <tr><td colspan="5" class="px-5 py-6 text-center text-gray-500">Няма запитвания в периода.</td></tr>
+                    <tr><td colspan="5" class="px-5 py-6 text-center text-gray-500">Няма запитвания в този период. Изберете по-дълъг период или изчакайте първите от сайта.</td></tr>
                 @endforelse
             </tbody>
         </table>

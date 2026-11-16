@@ -27,7 +27,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="4" class="px-6 py-10 text-center text-gray-500">Още няма категории.</td></tr>
+                    <tr><td colspan="4" class="px-6 py-10 text-center text-gray-500">Още няма категории. Добавете първата във формата, за да групирате статиите по теми.</td></tr>
                 @endforelse
             </tbody>
         </table>

@@ -97,7 +97,7 @@
                                 <td class="num"><span class="sx-len {{ $row['s'] === 200 ? 'ok' : ($row['s'] >= 400 || $row['s'] === 0 ? 'bad' : 'warn') }}">{{ $row['s'] }}</span></td>
                                 <td class="num">{{ $row['d'] ?? '·' }}</td>
                                 <td class="num">{{ $row['t'] }}</td><td class="num">{{ $row['m'] }}</td><td class="num">{{ $row['h'] }}</td><td class="num">{{ $row['w'] }}</td><td class="num">{{ $row['i'] }}</td><td class="num">{{ $row['o'] }}</td>
-                                <td>@if($row['n'])<span class="sx-tag hot">noindex</span> @endif @if($row['sm'])<span class="sx-tag quiet">sitemap</span>@endif</td>
+                                <td>@if($row['n'])<span class="sx-tag hot" title="Скрита от Google">noindex</span> @endif @if($row['sm'])<span class="sx-tag quiet" title="Е в списъка със страници, който даваме на Google">sitemap</span>@endif</td>
                             </tr>
                         @endforeach
                     </tbody>

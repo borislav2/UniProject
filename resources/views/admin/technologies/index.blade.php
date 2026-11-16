@@ -53,7 +53,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">Няма технологии.</td>
+                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">Още няма технологии. Добавете първата, за да я избирате в проектите.</td>
                     </tr>
                 @endforelse
             </tbody>
