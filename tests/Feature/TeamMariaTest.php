@@ -46,10 +46,32 @@ class TeamMariaTest extends TestCase
             ->assertSee('Borislav Kostadinov')->assertSee('Vladimir Tsonchev')->assertSee('Maria Florova');
     }
 
-    public function test_an_empty_linkedin_link_is_hidden(): void
+    public function test_every_member_links_to_linkedin_and_an_empty_link_is_hidden(): void
     {
         $html = $this->get('/za-nas')->getContent();
-        $this->assertSame(2, substr_count($html, 'Профил в LinkedIn'));
+        $this->assertSame(3, substr_count($html, 'Профил в LinkedIn'));
+        $this->assertStringContainsString('https://www.linkedin.com/in/maria-florova/', $html);
+
+        config(['creatium.team.2.linkedin' => '']);
+        app(\App\Support\Content::class)->flush();
+        $this->assertSame(2, substr_count($this->get('/za-nas')->getContent(), 'Профил в LinkedIn'));
+    }
+
+    public function test_maria_linkedin_fills_only_an_empty_saved_link(): void
+    {
+        ContentBlock::create(['key' => 'team', 'locale' => 'bg', 'value' => [
+            ['name' => 'Борислав Костадинов', 'linkedin' => 'https://www.linkedin.com/in/b/'],
+            ['name' => 'Мария Флорова', 'linkedin' => ''],
+        ]]);
+        ContentBlock::create(['key' => 'team', 'locale' => 'en', 'value' => [['name' => 'Maria Florova', 'linkedin' => 'https://example.com/own']]]);
+
+        $this->assertSame(['team/bg'], \App\Support\TeamMariaLinkedin2026::apply());
+        $bg = ContentBlock::where(['key' => 'team', 'locale' => 'bg'])->first()->value;
+        $this->assertSame('https://www.linkedin.com/in/b/', $bg[0]['linkedin']);
+        $this->assertSame(\App\Support\TeamMariaLinkedin2026::URL, $bg[1]['linkedin']);
+        $this->assertSame('https://example.com/own', ContentBlock::where(['key' => 'team', 'locale' => 'en'])->first()->value[0]['linkedin']);
+        $this->assertSame('', ContentBlock::where(['key' => 'team:backup-2026-11-17', 'locale' => 'bg'])->first()->value[1]['linkedin']);
+        $this->assertSame([], \App\Support\TeamMariaLinkedin2026::apply());
     }
 
     public function test_apply_appends_maria_once_backs_up_and_keeps_the_others(): void
