@@ -22,6 +22,9 @@ class SiteChecker
 
     private const MAX_REDIRECTS = 5;
 
+    /** Ключът на проверката, която се изгражда в момента (за област в отчета). */
+    private ?string $key = null;
+
     public function __construct(private HostResolver $resolver)
     {
     }
@@ -91,6 +94,7 @@ class SiteChecker
         $origin = $this->origin($page['url']);
 
         // 1. HTTPS
+        $this->key = 'https';
         if ($this->isOk($https)) {
             $report['checks'][] = $this->item('ok', __('Защитена връзка (HTTPS)'), __('Сайтът се отваря през HTTPS и браузърът показва катинарче.'));
         } else {
@@ -100,6 +104,7 @@ class SiteChecker
         }
 
         // 2. http:// -> https://
+        $this->key = 'http_redirect';
         if ($this->isOk($https)) {
             $location = $http['response']?->header('Location') ?? '';
             $report['checks'][] = $http['response'] && $http['response']->redirect() && str_starts_with(strtolower($location), 'https://')
@@ -108,6 +113,7 @@ class SiteChecker
         }
 
         // 3. Скорост на отговора
+        $this->key = 'speed';
         $seconds = number_format($page['ms'] / 1000, 1, ',', '');
         $report['checks'][] = match (true) {
             $page['ms'] < 800 => $this->item('ok', __('Сървърът отговаря бързо (:s s)', ['s' => $seconds]), __('Първият отговор идва бързо. Цялата скорост на телефон проверете в pagespeed.web.dev.')),
@@ -116,6 +122,7 @@ class SiteChecker
         };
 
         // 4. Мета заглавие
+        $this->key = 'title';
         $title = trim(preg_replace('/\s+/u', ' ', (string) $xpath->evaluate('string(//title)')));
         $titleLength = mb_strlen($title);
         $report['checks'][] = match (true) {
@@ -125,6 +132,7 @@ class SiteChecker
         };
 
         // 5. Мета описание
+        $this->key = 'description';
         $description = trim(preg_replace('/\s+/u', ' ', (string) $xpath->evaluate('string(//meta[translate(@name,"DESCRIPTION","description")="description"]/@content)')));
         $descriptionLength = mb_strlen($description);
         $report['checks'][] = match (true) {
@@ -134,6 +142,7 @@ class SiteChecker
         };
 
         // 6. Заглавие H1
+        $this->key = 'h1';
         $h1 = $xpath->query('//h1')->length;
         $report['checks'][] = match (true) {
             $h1 === 0 => $this->item('warn', __('Няма основно заглавие (H1)'), __('Страницата няма главно заглавие. То казва на Google и на хората за какво е страницата.')),
@@ -142,11 +151,13 @@ class SiteChecker
         };
 
         // 7. Телефон
+        $this->key = 'viewport';
         $report['checks'][] = $xpath->query('//meta[@name="viewport"]')->length
             ? $this->item('ok', __('Настроен за телефон'), __('Сайтът казва на телефона как да го покаже (viewport).'))
             : $this->item('fail', __('Не е настроен за телефон'), __('Липсва настройката viewport, така че на телефон сайтът вероятно се показва смален и се чете трудно.'));
 
         // 8. Индексиране
+        $this->key = 'indexing';
         $robotsMeta = strtolower((string) $xpath->evaluate('string(//meta[translate(@name,"ROBOTS","robots")="robots"]/@content)') . ' ' . $page['response']->header('X-Robots-Tag'));
         $robotsTxt = $this->fetch($origin . '/robots.txt');
         $robotsBody = $this->isOk($robotsTxt) ? $robotsTxt['response']->body() : '';
@@ -155,34 +166,40 @@ class SiteChecker
             : $this->item('ok', __('Google може да показва сайта'), __('Няма забрана за показване в търсачките.'));
 
         // 8б. AI асистентите (ChatGPT, Perplexity, Claude): дали robots.txt не ги спира изрично
+        $this->key = 'ai';
         $aiBlocked = $this->blockedAgents($robotsBody, self::AI_SEARCH_BOTS);
         $report['checks'][] = $aiBlocked
-            ? $this->item('fail', __('AI асистентите са спрени'), __('robots.txt не пуска :bots. Така ChatGPT и подобните не могат да препоръчат бизнеса, когато някой ги пита.', ['bots' => implode(', ', $aiBlocked)]))
+            ? $this->item('fail', __('AI асистентите са спрени'), __('robots.txt не пуска :bots. Така :assistants не могат да четат сайта и да препоръчат бизнеса, когато някой ги пита.', ['bots' => implode(', ', $aiBlocked), 'assistants' => $this->assistantNames($aiBlocked)]))
             : $this->item('ok', __('AI асистентите имат достъп'), __('ChatGPT, Perplexity и Claude могат да четат сайта и да го препоръчват.'));
 
         // 9. Карта на сайта
+        $this->key = 'sitemap';
         $hasSitemap = (bool) preg_match('/^\s*sitemap\s*:/im', $robotsBody) || $this->isOk($this->fetch($origin . '/sitemap.xml'));
         $report['checks'][] = $hasSitemap
             ? $this->item('ok', __('Карта на сайта (sitemap)'), __('Google има списък с всички страници.'))
             : $this->item('warn', __('Няма карта на сайта (sitemap)'), __('Картата помага на Google да намери всички страници по-бързо.'));
 
         // 10. Данни за бизнеса
+        $this->key = 'schema';
         $report['checks'][] = $xpath->query('//script[@type="application/ld+json"]')->length
             ? $this->item('ok', __('Данни за бизнеса за Google и AI (schema)'), __('Сайтът описва бизнеса по начин, който търсачките и AI асистентите разбират.'))
             : $this->item('warn', __('Няма данни за бизнеса за Google и AI (schema)'), __('Специален код казва на машините какво сте, къде сте и кога работите. Помага в Google и в отговорите на AI асистентите.'));
 
         // 11. Споделяне
+        $this->key = 'og';
         $hasOg = $xpath->query('//meta[@property="og:title"]')->length && $xpath->query('//meta[@property="og:image"]')->length;
         $report['checks'][] = $hasOg
             ? $this->item('ok', __('Изглежда добре при споделяне'), __('Когато някой изпрати линка, се показват заглавие и снимка.'))
             : $this->item('warn', __('Не е настроено как изглежда при споделяне'), __('Когато някой изпрати линка в чат или съобщение, няма снимка и подбрано заглавие.'));
 
         // 12. Телефон за обаждане
+        $this->key = 'tel';
         $report['checks'][] = $xpath->query('//a[starts-with(translate(@href,"TEL","tel"),"tel:")]')->length
             ? $this->item('ok', __('Телефонът се набира с едно докосване'), __('На началната страница има телефон като връзка за обаждане.'))
             : $this->item('warn', __('Няма телефон за обаждане с едно докосване'), __('На телефон хората не преписват номера. Сложете го като връзка горе на страницата.'));
 
         // 13. Описания на снимките
+        $this->key = 'alt';
         $images = $xpath->query('//img')->length;
         if ($images > 0) {
             $missing = $xpath->query('//img[not(@alt)]')->length;
@@ -199,7 +216,7 @@ class SiteChecker
 
     private function item(string $status, string $title, string $detail): array
     {
-        return compact('status', 'title', 'detail');
+        return ['key' => $this->key] + compact('status', 'title', 'detail');
     }
 
     private function isOk(array $result): bool
@@ -221,6 +238,16 @@ class SiteChecker
 
     /** Ботовете, които търсят и четат за AI асистентите (не тези за обучение на модели). */
     public const AI_SEARCH_BOTS = ['OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot', 'Perplexity-User', 'Claude-SearchBot', 'Claude-User'];
+
+    /** Кой асистент губи сайта, когато даден бот е спрян. */
+    private const ASSISTANTS = ['OAI-SearchBot' => 'ChatGPT Search', 'ChatGPT-User' => 'ChatGPT', 'PerplexityBot' => 'Perplexity', 'Perplexity-User' => 'Perplexity', 'Claude-SearchBot' => 'Claude', 'Claude-User' => 'Claude'];
+
+    private function assistantNames(array $bots): string
+    {
+        $names = array_values(array_unique(array_map(fn ($b) => self::ASSISTANTS[$b] ?? $b, $bots)));
+
+        return count($names) > 1 ? implode(', ', array_slice($names, 0, -1)) . ' ' . __('и') . ' ' . end($names) : ($names[0] ?? '');
+    }
 
     /** robots.txt със „Disallow: /“ за всички ботове. */
     private function disallowsEverything(string $robots): bool

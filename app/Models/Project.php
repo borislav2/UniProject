@@ -212,10 +212,13 @@ class Project extends Model
                 'crawl' => $report['crawl'] ?? null,
                 'pagespeed' => $report['pagespeed'] ?? null,
                 'shopping' => \App\Support\SiteCheck\ShoppingReadiness::summary($report['shopping'] ?? null),
+                // Области и най-важните неща (смятат се от записания отчет, затова работят и за стари отчети без тях).
+                'areas' => \App\Support\SiteCheck\Areas::scores($report),
+                'top' => array_map(fn ($i) => ['severity' => $i['severity'], 'title' => $i['title'], 'area' => $i['area']], \App\Support\SiteCheck\Areas::top(\App\Support\SiteCheck\SiteAudit::items($report), 3)),
                 'issues' => collect($report['issues'] ?? [])->map(function ($issue) {
                     $d = \App\Support\SiteCheck\SiteCrawler::describe($issue['key'], $issue['count']);
 
-                    return ['severity' => $issue['severity'], 'title' => $d['title'], 'count' => $issue['count'], 'examples' => $issue['examples'] ?? []];
+                    return ['key' => $issue['key'], 'area' => \App\Support\SiteCheck\IssueCatalog::area($issue['key']), 'severity' => $issue['severity'], 'title' => $d['title'], 'count' => $issue['count'], 'examples' => $issue['examples'] ?? []];
                 })->all(),
             ];
         }

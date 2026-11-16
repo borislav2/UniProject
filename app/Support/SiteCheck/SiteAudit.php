@@ -52,16 +52,24 @@ class SiteAudit
         return $report;
     }
 
-    /** Оценката на началната страница минус наказание за проблемите по сайта: errors тежат повече от warnings. */
+    /**
+     * Оценката на началната страница минус наказание за проблемите по сайта: errors тежат най-много, после warnings;
+     * бележките (notice) са съвети и струват малко, най-много 5 точки общо. Скалата е същата, 0 до 100.
+     */
     public static function score(int $homeScore, array $issues, int $pages): int
     {
         $penalty = 0;
+        $notices = 0;
         foreach ($issues as $issue) {
             $share = min(1, $issue['count'] / max(1, $pages));
-            $penalty += $issue['severity'] === 'error' ? 3 + 5 * $share : 1 + 2 * $share;
+            match ($issue['severity']) {
+                'error' => $penalty += 3 + 5 * $share,
+                'notice' => $notices += 0.3 + 0.4 * $share,
+                default => $penalty += 1 + 2 * $share,
+            };
         }
 
-        return max(0, (int) round($homeScore - min(60, $penalty)));
+        return max(0, (int) round($homeScore - min(60, $penalty + min(5, $notices))));
     }
 
     private static function speedCheck(array $speed): array
@@ -74,6 +82,7 @@ class SiteAudit
         $status = $speed['score'] >= 90 ? 'ok' : ($speed['score'] >= 50 ? 'warn' : 'fail');
 
         return [
+            'key' => 'speedpsi',
             'status' => $status,
             'title' => __('Скорост на телефон :score от 100', ['score' => $speed['score']]),
             'detail' => implode(' · ', $parts) . ($parts ? '. ' : '') . ($status === 'ok'
@@ -84,23 +93,38 @@ class SiteAudit
 
     /**
      * Всичко за оправяне в един списък: провалени и предупредителни проверки на началната страница плюс проблемите по сайта.
+     * Подредени по тежест (error, warning, notice), после по брой засегнати страници.
      *
-     * @return list<array{severity: string, title: string, detail: string, examples: array, count: ?int}>
+     * @return list<array{key: ?string, area: string, severity: string, title: string, detail: string, examples: array, count: ?int}>
      */
     public static function items(array $report): array
     {
         $items = [];
         foreach ($report['checks'] ?? [] as $check) {
             if (($check['status'] ?? 'ok') !== 'ok') {
-                $items[] = ['severity' => $check['status'] === 'fail' ? 'error' : 'warning', 'title' => $check['title'], 'detail' => $check['detail'] ?? '', 'examples' => [], 'count' => null];
+                $key = $check['key'] ?? null;
+                $items[] = ['key' => $key, 'area' => Areas::checkArea($key), 'severity' => $check['status'] === 'fail' ? 'error' : 'warning', 'title' => $check['title'], 'detail' => $check['detail'] ?? '', 'examples' => [], 'count' => null];
             }
         }
         foreach ($report['issues'] ?? [] as $issue) {
             $d = SiteCrawler::describe($issue['key'], $issue['count']);
-            $items[] = ['severity' => $issue['severity'], 'title' => $d['title'], 'detail' => $d['why'], 'examples' => $issue['examples'] ?? [], 'count' => $issue['count']];
+            $items[] = ['key' => $issue['key'], 'area' => IssueCatalog::area($issue['key']), 'severity' => $issue['severity'], 'title' => $d['title'], 'detail' => $d['why'], 'examples' => $issue['examples'] ?? [], 'count' => $issue['count']];
         }
-        usort($items, fn ($a, $b) => ($a['severity'] === 'error' ? 0 : 1) <=> ($b['severity'] === 'error' ? 0 : 1));
+        $rank = ['error' => 0, 'warning' => 1, 'notice' => 2];
+        $weight = fn ($i) => [$rank[$i['severity']] ?? 1, -($i['count'] ?? 1)];
+        usort($items, fn ($a, $b) => $weight($a) <=> $weight($b));
 
         return $items;
+    }
+
+    /** Проблемите по области, в реда на отчета: [област => списък]. */
+    public static function itemsByArea(array $report): array
+    {
+        $grouped = array_fill_keys(IssueCatalog::AREAS, []);
+        foreach (self::items($report) as $item) {
+            $grouped[$item['area']][] = $item;
+        }
+
+        return $grouped;
     }
 }

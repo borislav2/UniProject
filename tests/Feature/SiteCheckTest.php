@@ -16,11 +16,11 @@ class SiteCheckTest extends TestCase
 {
     use RefreshDatabase;
 
-    private const GOOD_PAGE = '<!doctype html><html><head><meta name="viewport" content="width=device-width"><title>Ремонт на покриви в Пловдив | Здрав покрив</title>'
+    private const GOOD_PAGE = '<!doctype html><html lang="bg"><head><meta name="viewport" content="width=device-width"><title>Ремонт на покриви в Пловдив | Здрав покрив</title>'
         . '<meta name="description" content="Оглед и оферта до 48 часа. Работим в Пловдив и областта. Обадете се или изпратете снимка на покрива и ще ви кажем какво трябва.">'
-        . '<meta property="og:title" content="Здрав покрив"><meta property="og:image" content="https://firma.bg/og.png"><script type="application/ld+json">{}</script></head>'
+        . '<meta property="og:title" content="Здрав покрив"><meta property="og:image" content="https://firma.bg/og.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"Здрав покрив","url":"https://firma.bg/","telephone":"+359888000000","address":"Пловдив"}</script></head>'
         . '<link rel="canonical" href="https://firma.bg/">'
-        . '<body><h1>Ремонт на покриви</h1><a href="tel:+359888000000">0888 000 000</a><img src="a.webp" alt="Покрив"><p>%WORDS%</p></body></html>';
+        . '<body><h1>Ремонт на покриви</h1><a href="tel:+359888000000">0888 000 000</a><img src="a.webp" alt="Покрив" width="400" height="300"><a href="#poveritelnost">Поверителност</a><a href="#kontakti">Контакти</a><p>%WORDS%</p></body></html>';
 
     protected function setUp(): void
     {
@@ -109,7 +109,10 @@ class SiteCheckTest extends TestCase
 
         Mail::assertSent(SiteCheckReportMail::class, function ($mail) {
             $this->assertSame('firma.bg', $mail->report['domain']);
-            $this->assertSame(100, $mail->report['score'], json_encode($mail->report['checks'], JSON_UNESCAPED_UNICODE));
+            // Малко бележки (llms.txt, защитни заглавки, местни данни) струват най-много 5 точки.
+            $this->assertGreaterThanOrEqual(95, $mail->report['score'], json_encode($mail->report['issues'], JSON_UNESCAPED_UNICODE));
+            $this->assertSame(100, $mail->report['home_score']);
+            $this->assertSame([], array_values(array_filter($mail->report['issues'], fn ($i) => $i['severity'] !== 'notice')));
             $html = $mail->render();
             $this->assertStringContainsString('Искам подробен одит', $html);
             $this->assertStringContainsString('Заглавие за Google', $html);
@@ -122,12 +125,12 @@ class SiteCheckTest extends TestCase
         $this->assertSame('website', $lead->source);
         $this->assertSame('ivan@firma.bg', $lead->client_email);
         $this->assertSame('https://firma.bg', $lead->website_url);
-        $this->assertStringContainsString('оценка 100 от 100', $lead->description);
+        $this->assertStringContainsString('оценка ' . $lead->site_check_report['score'] . ' от 100', $lead->description);
         $this->assertNotNull($lead->email_sent_at);
         // Резултатът се пази цял за страницата „Проверки на сайт“.
-        $this->assertSame(100, $lead->site_check_report['score']);
+        $this->assertGreaterThanOrEqual(95, $lead->site_check_report['score']);
         $this->assertTrue($lead->site_check_report['sent']);
-        $this->assertSame(100, $lead->siteCheckSummary()['score']);
+        $this->assertGreaterThanOrEqual(95, $lead->siteCheckSummary()['score']);
         $this->get('/proverka-na-sait')->assertSee('Проверката започна');
     }
 
@@ -216,7 +219,7 @@ class SiteCheckTest extends TestCase
 
         Mail::assertSent(SiteCheckReportMail::class, function ($mail) {
             $this->assertStringContainsString('I want a detailed audit', $mail->render());
-            $this->assertSame('Check of firma.bg, score 100 out of 100', $mail->envelope()->subject);
+            $this->assertMatchesRegularExpression('/^Check of firma\.bg, score (9\d|100) out of 100$/', $mail->envelope()->subject);
 
             return true;
         });

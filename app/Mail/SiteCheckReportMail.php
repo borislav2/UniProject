@@ -31,7 +31,7 @@ class SiteCheckReportMail extends Mailable
     {
         return new Content(view: 'emails.site-check', with: [
             'report' => $this->report,
-            'data' => [],
+            'data' => ['pad' => 28],
             'subject' => $this->envelope()->subject,
         ]);
     }

@@ -16,6 +16,8 @@ use GuzzleHttp\Psr7\UriResolver;
  */
 class SiteCrawler
 {
+    use DeepChecks;
+
     public const MAX_EXAMPLES = 5;
 
     public const MAX_RESOURCES = 40;
@@ -108,6 +110,8 @@ class SiteCrawler
 
             $robots = $this->fetchInternal($origin . '/robots.txt');
             $robotsBody = $this->ok($robots) ? $robots['response']->body() : '';
+            $this->robotsInfo = ['status' => $robots['response']?->status() ?? 0, 'body' => $robotsBody, 'url' => $origin . '/robots.txt'];
+            $this->startUrl = $start;
             $this->rules = $this->checker->robotsRules($robotsBody, 'CreatiumLabSiteCheck');
 
             $this->enqueue($start, 0, null);
@@ -124,6 +128,12 @@ class SiteCrawler
                 }
                 $item = array_shift($this->queue) ?? array_shift($this->seedQueue);
                 $this->visit($item);
+            }
+
+            $this->complete = $limited === null;
+            try {
+                $this->probe($origin, $start);
+            } catch (\Throwable) {
             }
 
             $resourcesChecked = $this->checkResources();
@@ -152,6 +162,8 @@ class SiteCrawler
                 'resources_checked' => $resourcesChecked,
                 'external_checked' => $externalChecked,
                 'sitemap_urls' => count($this->sitemapKeys),
+                'extra_requests' => $this->extraRequests,
+                'signals' => $this->signalSummary(),
                 'error' => $error,
             ],
             'issues' => $this->issueList(),
@@ -165,6 +177,7 @@ class SiteCrawler
         $this->known = $this->queue = $this->seedQueue = $this->pages = $this->queryVariants = [];
         $this->sitemapKeys = $this->resources = $this->externals = $this->issues = [];
         $this->fetched = 0;
+        $this->resetDeep();
     }
 
     private function elapsed(): float
@@ -335,6 +348,9 @@ class SiteCrawler
         if ($r['redirects'] >= 1 && $item['sitemap']) {
             $this->add('sitemap_bad', $item['url'], null, '→ ' . $final);
         }
+        if ($finalKey !== $key) {
+            $this->redirects[$key] = $finalKey;
+        }
         if ($finalKey !== $key && isset($this->pages[$finalKey])) {
             return;
         }
@@ -415,12 +431,22 @@ class SiteCrawler
             }
             if ($this->isInternal($abs)) {
                 $this->enqueue($abs, $depth === null ? null : $depth + 1, $url);
+                if ($this->key($abs) !== $this->key($url)) {
+                    $this->inlinks[$this->key($abs)][$this->key($url)] = true;
+                }
             } elseif (count($this->externals) < self::MAX_EXTERNAL) {
                 $this->externals[$this->key($abs)] ??= ['url' => $abs, 'from' => $url];
             }
         }
 
-        return [
+        if ($canonical !== '' && ($cAbs = $this->normalize($canonical, $url)) && $this->isInternal($cAbs) && $this->key($cAbs) !== $this->key($url)) {
+            $this->enqueue($cAbs, null, $url);
+        }
+
+        $extra = PageSignals::collect($xpath, $html, $text, $url, fn ($h) => $this->normalize($h, $url), $response, $depth === 0);
+        $this->absorb($extra, $url, $depth);
+
+        return $extra + [
             'depth' => $depth,
             'title' => $title,
             'description' => $description,
@@ -484,8 +510,14 @@ class SiteCrawler
             return;
         }
         $isIndex = stripos($body, '<sitemapindex') !== false;
+        if (! $isIndex) {
+            $this->readSitemapMeta($body, $url, count($m[1]));
+        }
         foreach (array_slice($m[1], 0, $isIndex ? 10 : self::MAX_SITEMAP_URLS) as $loc) {
             $abs = $this->normalize($loc, $url);
+            if ($abs && ! $this->isInternal($abs) && ! $isIndex) {
+                $this->sitemapInfo['foreign'][] = $abs;
+            }
             if (! $abs || ! $this->isInternal($abs)) {
                 continue;
             }
@@ -631,7 +663,7 @@ class SiteCrawler
                 $this->add('no_title', $url);
             } else {
                 $titles[mb_strtolower($p['title'])][] = $url;
-                if ($len < 15 || $len > 60) {
+                if ($len < 30 || $len > 60) {
                     $this->add('title_length', $url, null, (string) $len);
                 }
             }
@@ -640,8 +672,10 @@ class SiteCrawler
                 $this->add('no_description', $url);
             } else {
                 $descriptions[mb_strtolower($p['description'])][] = $url;
-                if ($len > 160) {
+                if ($len > 155) {
                     $this->add('description_length', $url, null, (string) $len);
+                } elseif ($len < 70) {
+                    $this->add('description_short', $url, null, (string) $len);
                 }
             }
 
@@ -659,12 +693,7 @@ class SiteCrawler
             if ($p['canonical'] === null) {
                 $this->add('canonical_missing', $url);
             } elseif ($this->key($p['canonical']) !== $key) {
-                $target = $this->pages[$this->key($p['canonical'])] ?? null;
-                if ($target && ($target['status'] === 0 || $target['status'] >= 300)) {
-                    $this->add('canonical_broken', $url, null, $p['canonical']);
-                } else {
-                    $this->add('canonical_other', $url, null, $p['canonical']);
-                }
+                $this->canonicalIssue($p);
             }
 
             if ($p['images_no_alt'] > 0) {
@@ -698,6 +727,8 @@ class SiteCrawler
                 }
             }
         }
+
+        $this->analyzeDeep($pages);
     }
 
     private function issueList(): array
@@ -707,12 +738,13 @@ class SiteCrawler
             $items = array_values($data['items']);
             $list[] = [
                 'key' => $key,
-                'severity' => self::SEVERITY[$key] ?? 'warning',
-                'count' => count($items),
+                'severity' => self::SEVERITY[$key] ?? IssueCatalog::severity($key),
+                'count' => $data['count'] ?? count($items),
                 'examples' => array_slice($items, 0, self::MAX_EXAMPLES),
             ];
         }
-        usort($list, fn ($a, $b) => [$a['severity'] === 'error' ? 0 : 1, -$a['count']] <=> [$b['severity'] === 'error' ? 0 : 1, -$b['count']]);
+        $rank = ['error' => 0, 'warning' => 1, 'notice' => 2];
+        usort($list, fn ($a, $b) => [$rank[$a['severity']] ?? 1, -$a['count']] <=> [$rank[$b['severity']] ?? 1, -$b['count']]);
 
         return $list;
     }
@@ -740,9 +772,9 @@ class SiteCrawler
             'redirect_chains' => [__('Вериги от пренасочвания (:n)', compact('n')), __('Адресът пренасочва през няколко стъпки, преди да стигне до страницата. Това забавя зареждането и губи част от силата на връзката за Google.')],
             'links_to_redirects' => [__('Вътрешни връзки към пренасочени адреси (:n)', compact('n')), __('Връзките в сайта сочат към стар адрес, който после пренасочва. Всяка такава връзка е излишна стъпка за посетителя и за Google.')],
             'title_duplicate' => [__('Страници с еднакво заглавие (:n)', compact('n')), __('Когато много страници имат едно и също заглавие, Google трудно разбира коя за какво е и клиентите не виждат разлика в резултатите.')],
-            'title_length' => [__('Заглавия с неподходяща дължина (:n)', compact('n')), __('Добрата дължина е от 15 до 60 знака. По-дългото се отрязва в Google, а по-късото не казва достатъчно.')],
+            'title_length' => [__('Заглавия с неподходяща дължина (:n)', compact('n')), __('Добрата дължина е от 30 до 60 знака. По-дългото се отрязва в Google, а по-късото не казва достатъчно.')],
             'description_duplicate' => [__('Страници с еднакво описание (:n)', compact('n')), __('Еднаквите описания не казват какво е различното на всяка страница и намаляват кликовете от Google.')],
-            'description_length' => [__('Описания, по-дълги от 160 знака (:n)', compact('n')), __('Google отрязва дългите описания, често точно където е важното.')],
+            'description_length' => [__('Описания, по-дълги от 155 знака (:n)', compact('n')), __('Google отрязва дългите описания, често точно където е важното.')],
             'no_h1' => [__('Страници без основно заглавие H1 (:n)', compact('n')), __('Основното заглавие казва на хората и на Google за какво е страницата.')],
             'multiple_h1' => [__('Страници с няколко основни заглавия H1 (:n)', compact('n')), __('Препоръчва се едно главно заглавие на страница, а останалите да са подзаглавия.')],
             'duplicate_h1' => [__('Страници с еднакво основно заглавие H1 (:n)', compact('n')), __('Всяка страница трябва да има свое заглавие, иначе не личи с какво се различава.')],
@@ -757,7 +789,7 @@ class SiteCrawler
             'missing_from_sitemap' => [__('Страници, които липсват в картата на сайта (:n)', compact('n')), __('Картата на сайта е списък на страниците за Google. Което не е в нея, се намира по-бавно.')],
             'no_schema' => [__('Страници без данни за Google и AI, schema (:n)', compact('n')), __('Специален код казва на търсачките и на AI асистентите какво е страницата. Помага в Google и в отговорите на AI.')],
             'no_og' => [__('Страници без настроено споделяне, Open Graph (:n)', compact('n')), __('Когато някой изпрати линка в чат или във Facebook, няма подбрана снимка и заглавие.')],
-            default => [$key, ''],
+            default => array_values(IssueCatalog::describe($key, $count)),
         };
 
         return ['title' => $t[0], 'why' => $t[1]];
