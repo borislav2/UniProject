@@ -209,7 +209,7 @@
                 <div class="relative edge glass rounded-2xl overflow-hidden">
                     <div class="relative h-44 overflow-hidden bg-white/5">
                         @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
-                            <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" alt="" class="w-full h-full object-cover object-top">
+                            <img src="{{ demo_img($demo['slug']) }}" alt="" class="w-full h-full object-cover object-top">
                         @endif
                     </div>
                     <div class="p-5"><span class="block text-xs font-bold uppercase tracking-[0.2em] text-brand-300">{{ $demo['industry'] }}</span><span class="mt-1 block text-xl font-extrabold">{{ $demo['name'] }}</span></div>

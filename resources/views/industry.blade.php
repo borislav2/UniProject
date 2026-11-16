@@ -12,7 +12,7 @@
         <div class="reveal">
             <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="group block overflow-hidden rounded-3xl border border-gray-200 bg-gray-100 shadow-xl shadow-brand-900/10 dark:border-white/10 dark:bg-white/5">
                 @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
-                    <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 1024px) 540px, 100vw" alt="Сайт: {{ $demo['name'] }}" width="960" height="600" class="aspect-[8/5] w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
+                    <img src="{{ demo_img($demo['slug']) }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 1024px) 540px, 100vw" alt="Сайт: {{ $demo['name'] }}" width="960" height="600" class="aspect-[8/5] w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
                 @endif
             </a>
             <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
