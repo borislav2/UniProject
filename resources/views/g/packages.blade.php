@@ -2,7 +2,7 @@
 
 {{-- /paketi in design G (fourth round): three plans with groups of what is included, the five steps in a row and the quote form. --}}
 @section('title', __('Пакети и цени за сайт и дигитален маркетинг от €500'))
-@section('meta_description', __('Дигитален старт от €500, Активен маркетинг от €800 и Стратегически маркетинг от €1 200 на месец. Ясна структура за изграждане, поддръжка и устойчив растеж.'))
+@section('meta_description', __('Изграждане от €500, Ускорение от €800 и Партньорство от €1 200 на месец. Ясна структура за изграждане, поддръжка и устойчив растеж.'))
 @section('g_lean', 'inner')
 
 @php
@@ -27,12 +27,12 @@
         </div>
         <ol class="g-steps">
             @foreach($gSteps as $step)
-                <li><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><h3>{{ $step['title'] }}</h3><p>{{ $step['text'] ?? '' }}</p></li>
+                <li tabindex="0"><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><h3>{{ $step['title'] }}</h3><p>{{ $step['text'] ?? '' }}</p></li>
             @endforeach
         </ol>
     </div>
 </section>
 @endif
 
-@include('partials.g.quote-form', ['plans' => $plans, 'selectedPlan' => $selectedPlan])
+@include('partials.g.contact-section', ['anchor' => 'oferta'])
 @endsection

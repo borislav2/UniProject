@@ -1,14 +1,19 @@
 {{--
-    The contact form in design G (same fields and route as partials/contact-form): visible labels with hints, interests as square chips,
-    the booking in a collapsed block, the promise right above a big button and a clear thank-you state after sending.
+    THE contact form of design G (third round, 16.11.2026: one form everywhere, on the home page, /kontakti and /paketi). It posts to the contact route with a hidden form=g.
+    Two steps: 1. the basic data, 2. a package or separate directions plus an optional budget; the booking stays in a collapsed block.
+    Preselected by ?paket=N (a package, the index in plans.g_items) and ?napravleniya=google,seo (directions); #service-<key> ticks a direction too.
 --}}
 @php
-    $interests = site('contact_interests') ?? [];
-    $oldInterests = (array) old('interests', in_array(request('interest'), array_keys($interests), true) ? [request('interest')] : []);
+    $gPlans = \App\Support\GPlans::cards(app(\App\Support\Content::class)->withDefaults('plans'));
+    $directions = (array) site('contact_directions_g');
+    $budgets = (array) site('contact_budgets_g');
+    $fromUrlPlans = request()->filled('paket') && collect($gPlans)->contains(fn ($card) => (string) $card['index'] === (string) request('paket')) ? [(string) request('paket')] : [];
+    $fromUrlDirections = array_values(array_intersect(array_keys($directions), array_filter(explode(',', (string) request('napravleniya')))));
+    $oldPlans = array_map('strval', (array) old('g_plans', $fromUrlPlans));
+    $oldDirections = (array) old('g_directions', $fromUrlDirections);
+    $oldBudget = old('budget', array_key_first($budgets));
     $bookingOpen = filled(old('consultation')) || $errors->has('consultation');
     $firstPhone = g_phones()[0] ?? null;
-    $budgets = site('contact_budgets') ?? [];
-    $oldBudget = old('budget');
 @endphp
 <span id="contact-form"></span>
 <div id="g-contact-form" class="g-fbox">
@@ -29,68 +34,82 @@
     @else
         <form action="{{ lroute('contact.submit') }}" method="POST" novalidate class="g-f" data-contact-form>
             @csrf
+            <input type="hidden" name="form" value="g">
             <div class="g-trap" aria-hidden="true">
                 <label for="website">{{ __('Не попълвайте това поле') }}</label>
                 <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
             </div>
             <p class="g-hint g-req">{{ __('Полетата със звезда са задължителни.') }}</p>
 
-            <div class="g-fgrid">
-                <div class="g-fld">
-                    <label for="name">{{ __('Име и фамилия') }} <b aria-hidden="true">*</b></label>
-                    <input class="g-in" type="text" id="name" name="name" value="{{ old('name') }}" required maxlength="255" autocomplete="name">
-                    @error('name')<p class="g-err">{{ $message }}</p>@enderror
-                </div>
-                <div class="g-fld">
-                    <label for="site_url">{{ __('Уебсайт') }}</label>
-                    <input class="g-in" type="text" id="site_url" name="site_url" value="{{ old('site_url') }}" maxlength="255" inputmode="url" autocomplete="url" placeholder="{{ __('вашсайт.bg') }}">
-                    <p class="g-hint">{{ __('Ако имате сайт, ще го прегледаме преди разговора.') }}</p>
-                    @error('site_url')<p class="g-err">{{ $message }}</p>@enderror
-                </div>
-                <div class="g-fld">
-                    <label for="email">{{ __('Имейл') }} <b aria-hidden="true">*</b></label>
-                    <input class="g-in" type="email" id="email" name="email" value="{{ old('email') }}" required maxlength="255" autocomplete="email" placeholder="{{ __('ime@firma.bg') }}">
-                    @error('email')<p class="g-err">{{ $message }}</p>@enderror
-                </div>
-                <div class="g-fld">
-                    <label for="phone">{{ __('Телефон') }} <b aria-hidden="true">*</b></label>
-                    <input class="g-in" type="tel" id="phone" name="phone" value="{{ old('phone') }}" required autocomplete="tel" inputmode="tel" placeholder="{{ __('08X XXX XXXX') }}">
-                    @error('phone')<p class="g-err">{{ $message }}</p>@enderror
-                </div>
-            </div>
-
-            @if($interests)
-                <fieldset class="g-fld g-interests">
-                    <legend>{{ __('От какво се интересувате') }}</legend>
-                    <p class="g-hint">{{ __('Отметнете каквото искате, може няколко.') }}</p>
-                    <div class="g-chips">
-                        @foreach($interests as $key => $interest)
-                            <label class="g-chip-opt"><input type="checkbox" name="interests[]" value="{{ $key }}" @checked(in_array($key, $oldInterests, true))><span>{{ $interest }}</span></label>
-                        @endforeach
+            <section class="g-fstep" aria-labelledby="gf-step-1">
+                <h3 class="g-fstep-h" id="gf-step-1"><span class="g-mono">1.</span> {{ __('Основни данни') }}</h3>
+                <div class="g-fgrid">
+                    <div class="g-fld">
+                        <label for="name">{{ __('Име и фамилия') }} <b aria-hidden="true">*</b></label>
+                        <input class="g-in" type="text" id="name" name="name" value="{{ old('name') }}" required maxlength="255" autocomplete="name">
+                        @error('name')<p class="g-err">{{ $message }}</p>@enderror
                     </div>
-                    @error('interests.*')<p class="g-err">{{ $message }}</p>@enderror
-                </fieldset>
-            @endif
-
-            @if($budgets)
-                <div class="g-fld">
-                    <label for="budget">{{ __('Месечен маркетингов бюджет') }}</label>
-                    <select class="g-in" id="budget" name="budget">
-                        <option value="">{{ __('Не съм сигурен') }}</option>
-                        @foreach($budgets as $key => $label)
-                            <option value="{{ $key }}"{{ $oldBudget === (string) $key ? ' selected' : '' }}>{{ $label }}</option>
-                        @endforeach
-                    </select>
-                    <p class="g-hint">{{ __('По желание. Помага ни да предложим подходящ план.') }}</p>
-                    @error('budget')<p class="g-err">{{ $message }}</p>@enderror
+                    <div class="g-fld">
+                        <label for="business_site">{{ __('Име на бизнеса или уебсайт') }}</label>
+                        <input class="g-in" type="text" id="business_site" name="business_site" value="{{ old('business_site') }}" maxlength="255" autocomplete="organization">
+                        <p class="g-hint">{{ __('Ако имате сайт, ще го прегледаме предварително, за да сме максимално полезни в разговора.') }}</p>
+                        @error('business_site')<p class="g-err">{{ $message }}</p>@enderror
+                    </div>
+                    <div class="g-fld">
+                        <label for="email">{{ __('Имейл') }} <b aria-hidden="true">*</b></label>
+                        <input class="g-in" type="email" id="email" name="email" value="{{ old('email') }}" required maxlength="255" autocomplete="email" placeholder="{{ __('ime@firma.bg') }}">
+                        @error('email')<p class="g-err">{{ $message }}</p>@enderror
+                    </div>
+                    <div class="g-fld">
+                        <label for="phone">{{ __('Телефон') }}</label>
+                        <input class="g-in" type="tel" id="phone" name="phone" value="{{ old('phone') }}" autocomplete="tel" inputmode="tel" placeholder="{{ __('08X XXX XXXX') }}">
+                        <p class="g-hint">{{ __('Оставете номер, ако предпочитате да ви се обадим или да се свържем с вас по Viber или WhatsApp.') }}</p>
+                        @error('phone')<p class="g-err">{{ $message }}</p>@enderror
+                    </div>
                 </div>
-            @endif
+            </section>
 
-            <div class="g-fld">
-                <label for="message">{{ __('Разкажете ни накратко за бизнеса си и какво търсите') }}</label>
-                <textarea class="g-in" id="message" name="message" rows="4" maxlength="5000">{{ old('message') }}</textarea>
-                @error('message')<p class="g-err">{{ $message }}</p>@enderror
-            </div>
+            <section class="g-fstep" aria-labelledby="gf-step-2">
+                <h3 class="g-fstep-h" id="gf-step-2"><span class="g-mono">2.</span> {{ __('Избор на посока или пакет') }}</h3>
+                <p class="g-fq">{{ __('Кой вариант е най-близо до нуждите ви?') }}</p>
+                <p class="g-hint g-fq-hint">{{ __('Можете да изберете пакет или отделни направления.') }}</p>
+
+                @if($gPlans)
+                    <fieldset class="g-fld g-opts">
+                        <legend>{{ __('Готови пакети') }}</legend>
+                        <div class="g-chips">
+                            @foreach($gPlans as $card)
+                                <label class="g-chip-opt"><input type="checkbox" name="g_plans[]" value="{{ $card['index'] }}" @checked(in_array((string) $card['index'], $oldPlans, true))><span>@if($card['tag'] !== '')<b class="g-ptag g-mono">{{ $card['tag'] }}</b> @endif{{ $card['name'] }}@if(\App\Support\GPlans::priceLine($card) !== '') <small>({{ \App\Support\GPlans::priceLine($card) }})</small>@endif</span></label>
+                            @endforeach
+                        </div>
+                        @error('g_plans.*')<p class="g-err">{{ $message }}</p>@enderror
+                    </fieldset>
+                @endif
+
+                @if($directions)
+                    <fieldset class="g-fld g-opts">
+                        <legend>{{ __('Или конкретни направления') }}</legend>
+                        <div class="g-chips">
+                            @foreach($directions as $key => $direction)
+                                <label class="g-chip-opt"><input type="checkbox" name="g_directions[]" value="{{ $key }}" @checked(in_array($key, $oldDirections, true))><span>{{ $direction }}</span></label>
+                            @endforeach
+                        </div>
+                        @error('g_directions.*')<p class="g-err">{{ $message }}</p>@enderror
+                    </fieldset>
+                @endif
+
+                @if($budgets)
+                    <div class="g-fld">
+                        <label for="budget">{{ __('Ориентировъчен месечен бюджет') }}</label>
+                        <select class="g-in" id="budget" name="budget">
+                            @foreach($budgets as $key => $label)
+                                <option value="{{ $key }}"{{ (string) $oldBudget === (string) $key ? ' selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        @error('budget')<p class="g-err">{{ $message }}</p>@enderror
+                    </div>
+                @endif
+            </section>
 
             <details class="g-more-fields" data-booking-details{{ $bookingOpen ? ' open' : '' }}>
                 <summary><span>{{ __('Искате ли да запазите час за разговор? (по желание)') }}</span><i aria-hidden="true"></i></summary>
@@ -116,11 +135,11 @@
         if (!form) return;
         var details = form.querySelector('[data-booking-details]');
 
-        // #konsultatsiya opens the booking; #service-<key> ticks that interest. The form is shown from its top.
+        // #konsultatsiya opens the booking; #service-<key> ticks that direction. The form is shown from its top.
         function fromHash() {
             var m = location.hash.match(/^#service-([a-z-]+)$/);
             if (m) {
-                var c = form.querySelector('input[name="interests[]"][value="' + m[1] + '"]');
+                var c = form.querySelector('input[name="g_directions[]"][value="' + m[1] + '"]');
                 if (c) c.checked = true;
                 box.scrollIntoView({ block: 'start' });
                 return;

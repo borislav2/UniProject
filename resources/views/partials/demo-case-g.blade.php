@@ -62,7 +62,7 @@
             <div class="grid items-start gap-10 md:grid-cols-12">
                 <div class="md:col-span-7">
                     <p class="{{ $gMono }} text-[#9AA0A9]">04 <span class="mx-1">/</span> Пакет</p>
-                    <h2 class="mt-3 text-3xl font-light tracking-tight md:text-4xl">{{ $gCard ? $gCard['name'] : 'Индивидуална оферта' }}</h2>
+                    <h2 class="mt-3 text-3xl font-light tracking-tight md:text-4xl">{{ $gCard ? \App\Support\GPlans::label($gCard) : 'Индивидуална оферта' }}</h2>
                     @if($gCard && $gCard['monthly'])
                         <p class="mt-3 text-2xl font-light">{{ trim($gCard['from'] . ' ' . $gCard['monthly']) }}<span class="ml-1 text-base font-normal italic text-[#9AA0A9]">/месец</span></p>
                     @endif
@@ -78,7 +78,7 @@
                         </ul>
                     @endif
                     <div class="mt-7 flex flex-wrap gap-3">
-                        <a href="{{ $gIndex !== null ? route('packages') . '?paket=' . $gIndex . '#oferta' : route('contact') }}" class="inline-flex h-12 items-center gap-3 bg-[#FF5A33] px-6 font-medium text-[#0C0E12] hover:bg-[#ECEEF0]">Изпратете запитване <span aria-hidden="true">&rarr;</span></a>
+                        <a href="{{ $gIndex !== null ? route('packages') . '?paket=' . $gIndex . '#oferta' : route('contact') . '#kontakt' }}" class="inline-flex h-12 items-center gap-3 bg-[#FF5A33] px-6 font-medium text-[#0C0E12] hover:bg-[#ECEEF0]">Изпратете запитване <span aria-hidden="true">&rarr;</span></a>
                         @if($gIndex !== null)<a href="{{ route('packages') }}#paket-{{ $gIndex }}" class="inline-flex h-12 items-center border border-[#ECEEF0]/40 px-6 font-medium hover:bg-[#ECEEF0] hover:text-[#0C0E12]">Вижте пакета</a>@endif
                     </div>
                 </div>

@@ -52,7 +52,7 @@
             <p class="g-lead" data-g-clear>{{ $heroLead }}</p>
         @endif
         <div class="g-cta">
-            <a class="g-btn" data-g-clear href="{{ lroute('packages') }}#oferta">{{ __('Изпратете запитване') }}<i></i></a>
+            <a class="g-btn" data-g-clear href="{{ g_offer_url() }}">{{ __('Изпратете запитване') }}<i></i></a>
             <a class="g-btn g-ghost" data-g-clear href="{{ lroute('packages') }}">{{ __('Вижте пакетите') }}</a>
         </div>
         @if($heroTrust)
@@ -107,7 +107,6 @@
                             <figcaption><strong>{{ $demo['industry'] }}</strong></figcaption>
                         </figure>
                         <p class="g-micro">{{ filled($demo['g_micro'] ?? null) ? $demo['g_micro'] : ($demo['description'] ?? '') }}</p>
-                        @include('partials.g.facts', ['facts' => $demo['g_facts'] ?? []])
                     </a>
                 </article>
             @endforeach
@@ -122,9 +121,9 @@
 {{-- Packages: three equal cards, monthly or yearly, with the groups of what is included --}}
 <section class="g-s" id="paketi">
     <div class="g-wrap">
-        <div class="g-sh g-sh-split">
+        <div class="g-sh">
             <h2 class="g-h">{{ $plans['g_title'] ?? __('План за всеки етап от вашия бизнес') }}</h2>
-            @if(filled($plans['g_subtitle'] ?? null))<p class="g-sh-text g-wide">{{ $plans['g_subtitle'] }}</p>@endif
+            @if(filled($plans['g_subtitle'] ?? null))<p class="g-sh-text g-under">{{ $plans['g_subtitle'] }}</p>@endif
         </div>
         @include('partials.g.plan-cards')
     </div>
@@ -179,22 +178,6 @@
     </div>
 </section>
 
-{{-- Contact: the form on the left, the text with the phone and the email on the right (text first on phones) --}}
-<section class="g-s g-last" id="kontakt">
-    <div class="g-wrap g-ct">
-        <div class="g-ct-info">
-            <h2 class="g-h g-ct-h">{{ $trust['g_contact_title'] ?? __('Запазете час за разговор') }}</h2>
-            @if(filled($trust['g_contact_text'] ?? null))<p class="g-ct-text">{{ $trust['g_contact_text'] }}</p>@endif
-            <div class="g-info">
-                @foreach(g_phones() as $phone)
-                    <div><span class="g-lbl">{{ __('Телефон') }}</span><a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}">{{ $phone }}</a></div>
-                @endforeach
-                <div><span class="g-lbl">{{ __('Имейл') }}</span><a href="mailto:{{ $contact['email'] }}">{{ $contact['email'] }}</a></div>
-            </div>
-        </div>
-        <div class="g-ct-form">
-            @include('partials.g.contact-form')
-        </div>
-    </div>
-</section>
+{{-- Contact: the one form of design G (third round), with the heading, the text, the phone and the email beside it --}}
+@include('partials.g.contact-section', ['anchor' => 'kontakt'])
 @endsection

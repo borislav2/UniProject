@@ -38,6 +38,9 @@ class ServicePagesTest extends TestCase
 
         $overview = $this->get('/uslugi')->assertOk();
         foreach (config('creatium.service_pages') as $page) {
+            if (! empty($page['g_only'])) {
+                continue; // software development is listed in design G only; the current /uslugi stays as it was
+            }
             $overview->assertSee('href="' . url('/uslugi/' . $page['slug']) . '"', false);
         }
     }

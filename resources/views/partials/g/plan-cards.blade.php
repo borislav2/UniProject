@@ -19,7 +19,10 @@
             @php($isRec = $card['index'] === $gRec)
             <article id="paket-{{ $card['index'] }}" class="g-plan {{ $isRec ? 'g-rec' : '' }}" data-plan="{{ $card['index'] }}">
                 <div class="g-top">@if($isRec)<span class="g-tag g-mono">{{ $gBadge }}</span>@endif</div>
-                <h3>{{ $card['name'] }}</h3>
+                <div class="g-plan-name">
+                    @if($card['tag'] !== '')<p class="g-tier g-mono">{{ $card['tag'] }}</p>@endif
+                    <h3>{{ $card['name'] }}</h3>
+                </div>
                 <div class="g-pricebox">
                     @if($card['monthly'] !== null)
                         <div class="g-price">
@@ -30,7 +33,7 @@
                     @endif
                 </div>
                 <p class="g-aud">{{ $card['audience'] }}</p>
-                <a class="g-btn" href="{{ lroute('packages') }}?paket={{ $card['index'] }}#oferta">{{ __('Изпратете запитване') }}</a>
+                <a class="g-btn" href="{{ g_offer_url($card['index']) }}">{{ __('Изпратете запитване') }}</a>
                 <div class="g-incl">
                     <p class="g-incl-h">{{ $plans['g_includes_label'] ?? __('Какво включва') }}</p>
                     @foreach($card['groups'] as $group)

@@ -64,3 +64,23 @@ if (! function_exists('g_phones')) {
         return $one !== '' ? [$one] : array_values((array) config('creatium.contact.phones'));
     }
 }
+
+if (! function_exists('g_offer_url')) {
+    /**
+     * Where every „Изпратете запитване“ of design G leads (third round, 16.11.2026: one form everywhere): the form of the page itself
+     * when it has one (home `#kontakt`, packages `#oferta`), else the form on the contact page. `$package` preselects a package (`?paket=N`).
+     */
+    function g_offer_url(?int $package = null): string
+    {
+        $query = $package !== null ? '?paket=' . $package : '';
+
+        if (request()->routeIs('home', 'en.home')) {
+            return $query . '#kontakt';
+        }
+        if (request()->routeIs('packages', 'en.packages')) {
+            return $query . '#oferta';
+        }
+
+        return lroute('contact') . $query . '#kontakt';
+    }
+}

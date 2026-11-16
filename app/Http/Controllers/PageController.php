@@ -33,7 +33,8 @@ class PageController extends Controller
         return gview('service', [
             'key' => $key,
             'page' => $pages[$key],
-            'others' => collect($pages)->except($key),
+            // A service marked g_only (software development) is part of design G; the current design lists the same services as before.
+            'others' => collect($pages)->except($key)->reject(fn ($other) => ! empty($other['g_only']) && ! \App\Support\Design::is('g')),
             'plan' => site('plans')['items'][$pages[$key]['package'] ?? -1] ?? null,
             'pageAlternates' => $alternates,
             'hreflangAlternates' => $alternates,

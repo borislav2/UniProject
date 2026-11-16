@@ -52,6 +52,11 @@ class HomeController extends Controller
 
     public function submitContact(Request $request)
     {
+        // The one contact form of design G (third round, 16.11.2026) sends a hidden form=g and has its own fields.
+        if ($request->input('form') === 'g') {
+            return $this->submitGContact($request);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => ['required', 'string', 'max:25', 'regex:/^[0-9+()\-\s]{6,25}$/'],
@@ -83,12 +88,75 @@ class HomeController extends Controller
             'consent.accepted' => __('Моля, потвърдете, че сте запознати с Политиката за поверителност.'),
         ]);
 
+        // Admin and the notification email are in Bulgarian, so the lead always stores the Bulgarian label.
+        $service = self::serviceLabel($validated);
+
+        return $this->storeLead($request, $validated, $service, self::leadDescription($validated, $service));
+    }
+
+    /**
+     * The one contact form of design G: name and email are required, everything else is optional (phone only when a call is booked).
+     * Packages, directions and the budget are written in Bulgarian in the lead description for the admin and the team email.
+     */
+    private function submitGContact(Request $request)
+    {
+        $plans = \App\Support\GPlans::cards(app(\App\Support\Content::class)->withDefaults('plans', 'bg'));
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'business_site' => 'nullable|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => ['nullable', 'required_with:consultation', 'string', 'max:25', 'regex:/^[0-9+()\-\s]{6,25}$/'],
+            'g_plans' => 'nullable|array',
+            'g_plans.*' => ['string', Rule::in(array_map(fn ($card) => (string) $card['index'], $plans))],
+            'g_directions' => 'nullable|array',
+            'g_directions.*' => ['string', Rule::in(array_keys((array) config('creatium.contact_directions_g')))],
+            'budget' => ['nullable', 'string', Rule::in(array_keys((array) config('creatium.contact_budgets_g')))],
+            'consultation' => ['nullable', 'string', function ($attribute, $value, $fail) {
+                if (! Booking::resolve($value)) {
+                    $fail(__('Този час вече е зает. Моля, изберете друг.'));
+                }
+            }],
+            'consent' => 'accepted',
+            \App\Support\Turnstile::FIELD => \App\Support\Turnstile::rules(),
+        ], \App\Support\Turnstile::messages() + [
+            'name.required' => __('Моля, въведете вашето име.'),
+            'phone.required_with' => __('Моля, въведете телефон, на който да ви се обадим в избрания час.'),
+            'phone.regex' => __('Моля, въведете валиден телефонен номер.'),
+            'email.required' => __('Моля, въведете имейл.'),
+            'email.email' => __('Моля, въведете валиден имейл.'),
+            'g_plans.*.in' => __('Моля, изберете пакет от списъка.'),
+            'g_directions.*.in' => __('Моля, изберете направление от списъка.'),
+            'budget.in' => __('Моля, изберете бюджет от списъка.'),
+            'consent.accepted' => __('Моля, потвърдете, че сте запознати с Политиката за поверителност.'),
+        ]);
+
+        $chosenPlans = array_values(array_map(fn ($card) => \App\Support\GPlans::label($card), array_filter($plans, fn ($card) => in_array((string) $card['index'], $validated['g_plans'] ?? [], true))));
+        $directionLabels = config('creatium.contact_directions_g');
+        $directions = array_values(array_map(fn ($key) => $directionLabels[$key], array_intersect(array_keys($directionLabels), $validated['g_directions'] ?? [])));
+
+        // A chosen package makes it an offer request like the quote form did, else the service is the chosen directions.
+        $service = $chosenPlans ? 'Оферта за ' . implode(', ', $chosenPlans) : ($directions ? implode(', ', $directions) : 'Запитване от сайта');
+        $business = trim((string) ($validated['business_site'] ?? ''));
+        $lines = array_filter([
+            $chosenPlans ? 'Интересува се от пакет ' . implode(', ', $chosenPlans) . '.' : '',
+            $directions ? 'Интересува се от ' . implode(', ', $directions) . '.' : '',
+            $business !== '' ? 'Бизнес или сайт ' . $business : '',
+            ! empty($validated['budget']) ? 'Ориентировъчен месечен бюджет ' . config('creatium.contact_budgets_g')[$validated['budget']] : '',
+        ], 'strlen');
+        $description = $lines ? implode("\n", $lines) : 'Без съобщение. ' . $service . '.';
+
+        return $this->storeLead($request, $validated + ['site_url' => $business], mb_substr($service, 0, 255), $description);
+    }
+
+    /** The lead from a validated contact form: honeypot, the Project, the team email, Telegram and the booking confirmation. */
+    private function storeLead(Request $request, array $validated, string $service, string $description)
+    {
         $consultationAt = Booking::resolve($validated['consultation'] ?? null);
         $success = $consultationAt
             ? __('Получихме запитването ви. Ще ви се обадим на :time за разговора.', ['time' => Booking::label($consultationAt)])
-            : __('Получихме запитването ви. Ще ви се обадим до един работен ден.');
-        // Admin and the notification email are in Bulgarian, so the lead always stores the Bulgarian label.
-        $service = self::serviceLabel($validated);
+            : (filled($validated['phone'] ?? null)
+                ? __('Получихме запитването ви. Ще ви се обадим до един работен ден.')
+                : __('Получихме запитването ви. Ще ви отговорим до един работен ден.'));
 
         // Honeypot: real visitors never fill this hidden field.
         if ($request->filled('website')) {
@@ -104,13 +172,13 @@ class HomeController extends Controller
 
         $lead = Project::create([
             'name' => 'Запитване от ' . $validated['name'],
-            'description' => self::leadDescription($validated, $service),
+            'description' => $description,
             'website_url' => self::siteUrl($validated['site_url'] ?? null),
             'start_date' => now()->toDateString(),
             'status' => 'Planning',
             'manager' => 'Неразпределен',
             'category_id' => $leadCategory->id,
-            'client_phone' => $validated['phone'],
+            'client_phone' => filled($validated['phone'] ?? null) ? $validated['phone'] : null,
             'client_email' => mb_strtolower($validated['email']),
             'service' => $service,
             'consultation_at' => $consultationAt,
