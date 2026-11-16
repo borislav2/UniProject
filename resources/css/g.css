@@ -571,11 +571,6 @@ html.design-g.dark .g-plan:not(.g-rec) > .g-btn { box-shadow: 0 1px 2px rgba(0, 
     .design-g #chat { bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 }
 
-/* B14: hero lines never run through the headline and text. Wide screens show them on the right only; smaller screens only in the empty strips above and below the text. */
-.design-g .g-hero canvas { -webkit-mask-image: linear-gradient(100deg, transparent 0, transparent 60%, rgba(0,0,0,.55) 72%, #000 86%); mask-image: linear-gradient(100deg, transparent 0, transparent 60%, rgba(0,0,0,.55) 72%, #000 86%); }
-@media (max-width: 1099px) {
-    .design-g .g-hero canvas { -webkit-mask-image: linear-gradient(180deg, #000 0, #000 28px, transparent 60px, transparent calc(100% - 60px), #000 calc(100% - 28px)); mask-image: linear-gradient(180deg, #000 0, #000 28px, transparent 60px, transparent calc(100% - 60px), #000 calc(100% - 28px)); }
-}
 /* ===== end of fix round B (g.css) ===== */
 
 /* === Form errors (a11y fix A): the first invalid field lands below the sticky header, errors are announced, an invalid field is outlined === */
