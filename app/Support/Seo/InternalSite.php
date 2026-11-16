@@ -68,6 +68,9 @@ class InternalSite
         try {
             $app = require base_path('bootstrap/app.php');
             $this->kernel = $app->make(Kernel::class);
+            // В production AppServiceProvider::boot() вика URL::forceRootUrl(), а генераторът на адреси иска заявка.
+            // Второто приложение още няма такава (handle() не е викан), затова му даваме една с адреса на сайта.
+            $app->instance('request', Request::create((string) ($this->origin['config']->get('app.url') ?: 'http://localhost')));
             $this->kernel->bootstrap();
             $this->sandbox = $app;
 

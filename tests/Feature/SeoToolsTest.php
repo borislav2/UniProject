@@ -739,4 +739,27 @@ class SeoToolsTest extends TestCase
         $this->assertTrue(\Illuminate\Support\Facades\Schema::hasColumn('posts', 'focus_keyword'));
         $this->assertTrue(\Illuminate\Support\Facades\Schema::hasTable('seo_reports'));
     }
+
+    /** На сървъра (APP_ENV=production) AppServiceProvider вика URL::forceRootUrl() при старта на второто приложение, което още няма заявка. */
+    public function test_the_internal_site_boots_in_production(): void
+    {
+        $old = [getenv('APP_ENV'), $_ENV['APP_ENV'] ?? null, $_SERVER['APP_ENV'] ?? null];
+        putenv('APP_ENV=production');
+        $_ENV['APP_ENV'] = $_SERVER['APP_ENV'] = 'production';
+
+        try {
+            $page = \App\Support\Seo\InternalSite::with(fn ($site) => $site->get('/'));
+        } finally {
+            $old[0] === false ? putenv('APP_ENV') : putenv('APP_ENV=' . $old[0]);
+            foreach (['_ENV' => 1, '_SERVER' => 2] as $var => $k) {
+                if ($old[$k] === null) {
+                    unset($GLOBALS[$var]['APP_ENV']);
+                } else {
+                    $GLOBALS[$var]['APP_ENV'] = $old[$k];
+                }
+            }
+        }
+
+        $this->assertSame(200, $page['status'], $page['error'] ?? '');
+    }
 }
