@@ -26,7 +26,7 @@ class GAudit3Test extends TestCase
         $this->g();
         $html = $this->get('/paketi')->assertOk()->getContent();
         foreach ([['CORE', 'Изграждане'], ['PRO', 'Ускорение'], ['ENTERPRISE', 'Партньорство']] as [$tag, $name]) {
-            $this->assertMatchesRegularExpression('~<p class="g-tier g-mono">' . $tag . '</p>\s*<h3>' . $name . '</h3>~u', $html);
+            $this->assertMatchesRegularExpression('~<p class="g-tier g-mono">' . $tag . '</p>\s*<h2>' . $name . '</h2>~u', $html);
         }
         $this->assertStringNotContainsString('Дигитален старт', $html);
         $this->assertStringContainsString('<b class="g-ptag g-mono">CORE</b> Изграждане <small>(от €500/месец)</small>', $html);
@@ -202,10 +202,15 @@ class GAudit3Test extends TestCase
 
         $this->get('/uslugi/razrabotka-na-softuer')->assertOk()->assertSee('Софтуер по поръчка за вашия бизнес');
         $this->get('/en/services/software-development')->assertOk()->assertSee('Custom software for your business');
+        // Until G is the public design the page stays out of the sitemap and llms.txt (and is noindex, see SeoAuditTest).
+        $this->assertStringNotContainsString('razrabotka-na-softuer', $this->get('/sitemap.xml')->getContent());
+        $this->assertStringNotContainsString('razrabotka-na-softuer', $this->get('/llms.txt')->getContent());
+        $this->assertStringContainsString('Софтуер по поръчка за вашия бизнес', \App\Support\Chat\SiteKnowledge::text());
+        config(['creatium.design' => 'g']);
         $this->assertStringContainsString('/uslugi/razrabotka-na-softuer', $this->get('/sitemap.xml')->getContent());
         $this->assertStringContainsString('/en/services/software-development', $this->get('/sitemap.xml')->getContent());
         $this->assertStringContainsString('razrabotka-na-softuer', $this->get('/llms.txt')->getContent());
-        $this->assertStringContainsString('Софтуер по поръчка за вашия бизнес', \App\Support\Chat\SiteKnowledge::text());
+        config(['creatium.design' => 'current']);
 
         // The current design: no menu entry, no „other services“ link, the same /uslugi.
         foreach (['/', '/uslugi', '/uslugi/izrabotka-na-sait'] as $path) {

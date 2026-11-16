@@ -14,10 +14,14 @@ class ServicePagesTest extends TestCase
         foreach (config('creatium.service_pages') as $key => $page) {
             $en = config("creatium_en.service_pages.$key");
 
-            $this->get('/uslugi/' . $page['slug'])->assertOk()
+            $response = $this->get('/uslugi/' . $page['slug'])->assertOk()
                 ->assertSee($page['title'])
-                ->assertSee('<title>' . e($page['seo_title']) . '</title>', false)
-                ->assertSee('hreflang="en" href="' . url('/en/services/' . $en['slug']) . '"', false)
+                ->assertSee('<title>' . e($page['seo_title']) . '</title>', false);
+            // A g_only service is noindex without hreflang until design G is public (SeoAuditTest); every other service has both.
+            if (empty($page['g_only'])) {
+                $response->assertSee('hreflang="en" href="' . url('/en/services/' . $en['slug']) . '"', false);
+            }
+            $response
                 ->assertSee('"@type":"FAQPage"', false)
                 ->assertSee($page['faq'][0][0])
                 ->assertSee('Запазете час за разговор')->assertDontSee('Безплатна консултация');

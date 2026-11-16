@@ -1,0 +1,180 @@
+<?php
+
+namespace App\Support;
+
+use App\Models\Post;
+use Illuminate\Support\Str;
+
+/**
+ * Structured data (schema.org JSON-LD) shared by the public pages, so every page describes the same business and the same people.
+ * One entity per thing, linked by @id: the Organization (ProfessionalService) on the home page, the WebSite, a Person for each team member
+ * on /za-nas, and the Service, BlogPosting and BreadcrumbList nodes that point back to them.
+ *
+ * The phone, the price range and the contact details are the ones the visitor sees: design G shows one phone (`g_phones()`),
+ * the current design lists all of them. Nothing here claims reviews, ratings, awards or clients.
+ */
+class Schema
+{
+    /** The language-neutral address of the business entity (the Bulgarian home page). */
+    public static function organizationId(): string
+    {
+        return rtrim(lroute('home', [], 'bg'), '/') . '/#organization';
+    }
+
+    public static function websiteId(): string
+    {
+        return rtrim(lroute('home', [], 'bg'), '/') . '/#website';
+    }
+
+    /** The phones shown on the site: one in design G (owners, 13.11.2026), every phone of `contact.phones` in the current design. */
+    public static function phones(): array
+    {
+        return \App\Support\Design::is('g') ? g_phones() : array_values((array) config('creatium.contact.phones'));
+    }
+
+    /** „€500 – €1200+“ for design G (monthly figures), „€400 – €1200+“ for the current packages (start prices), taken from the package figures themselves. */
+    public static function priceRange(): string
+    {
+        $plans = app(Content::class)->withDefaults('plans');
+        if (\App\Support\Design::is('g')) {
+            $from = collect((array) ($plans['g_items'] ?? []))->map(fn ($p) => self::number($p['monthly'] ?? null))->filter()->values();
+        } else {
+            $from = collect(array_values((array) ($plans['items'] ?? [])))->map(fn ($p) => PlanBilling::startPrice((array) $p) ?? PlanBilling::monthlyPrice((array) $p))->filter()->values();
+        }
+        if ($from->isEmpty()) {
+            return '';
+        }
+
+        return '€' . $from->min() . ' – €' . $from->max() . '+';
+    }
+
+    public static function organization(): array
+    {
+        $contact = (array) config('creatium.contact');
+        $legal = (array) config('creatium.legal');
+        $phones = self::phones();
+        $address = array_filter([
+            '@type' => 'PostalAddress',
+            'streetAddress' => $legal['address'] ?? null,
+            'addressLocality' => __($contact['city']),
+            'addressCountry' => 'BG',
+        ]);
+
+        return array_filter([
+            '@' . 'context' => 'https://schema.org',
+            '@type' => 'ProfessionalService',
+            '@id' => self::organizationId(),
+            'name' => 'Creatium Lab',
+            'url' => lroute('home'),
+            'logo' => asset('images/logo.webp'),
+            'image' => asset('images/og-image.png'),
+            'description' => __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.'),
+            'email' => $contact['email'] ?? null,
+            'telephone' => $phones[0] ?? null,
+            'address' => $address,
+            'areaServed' => ['@type' => 'Country', 'name' => __('България')],
+            'contactPoint' => array_filter([
+                '@type' => 'ContactPoint',
+                'contactType' => 'customer service',
+                'email' => $contact['email'] ?? null,
+                'telephone' => $phones[0] ?? null,
+                'areaServed' => 'BG',
+                'availableLanguage' => ['bg', 'en'],
+            ]),
+            'sameAs' => array_values(array_filter([$contact['facebook'] ?? null, $contact['linkedin'] ?? null])),
+            'priceRange' => self::priceRange(),
+            'knowsAbout' => [__('Изработка на сайт'), 'SEO', __('Google Business профил'), __('Имейл маркетинг'), __('Видимост в AI асистенти')],
+        ]);
+    }
+
+    public static function website(): array
+    {
+        return [
+            '@' . 'context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            '@id' => self::websiteId(),
+            'name' => 'Creatium Lab',
+            'url' => lroute('home'),
+            'inLanguage' => app()->getLocale() === 'en' ? 'en' : 'bg',
+            'publisher' => ['@id' => self::organizationId()],
+        ];
+    }
+
+    /** The provider of a Service: the same entity as on the home page, with name and address so it stands alone for a reader of this page only. */
+    public static function provider(): array
+    {
+        return ['@type' => 'Organization', '@id' => self::organizationId(), 'name' => 'Creatium Lab', 'url' => lroute('home')];
+    }
+
+    public static function personId(array $member): string
+    {
+        // The photo file name is already a stable Latin slug (borislav-kostadinov); a member without one falls back to the transliterated name.
+        $slug = filled($member['image'] ?? null) ? pathinfo((string) $member['image'], PATHINFO_FILENAME) : Str::slug((string) ($member['name'] ?? ''), '-', 'bg');
+
+        return rtrim(lroute('about', [], 'bg'), '/') . '#' . $slug;
+    }
+
+    /** A team member as a Person: real name, role, photo and LinkedIn profile (when the team entry has one). */
+    public static function person(array $member): ?array
+    {
+        $name = trim((string) ($member['name'] ?? ''));
+        if ($name === '') {
+            return null;
+        }
+        $role = trim((string) (\App\Support\Design::is('g') && filled($member['g_role'] ?? null) ? $member['g_role'] : ($member['role'] ?? '')));
+
+        return array_filter([
+            '@type' => 'Person',
+            '@id' => self::personId($member),
+            'name' => $name,
+            'jobTitle' => $role,
+            'image' => filled($member['image'] ?? null) && is_file(public_path($member['image'])) ? asset($member['image']) : null,
+            'url' => lroute('about'),
+            'worksFor' => ['@type' => 'Organization', '@id' => self::organizationId(), 'name' => 'Creatium Lab'],
+            'sameAs' => array_values(array_filter([$member['linkedin'] ?? null])),
+        ]);
+    }
+
+    /** All team members for the About page (one @graph). */
+    public static function team(array $team): array
+    {
+        return [
+            '@' . 'context' => 'https://schema.org',
+            '@graph' => array_values(array_filter(array_map(fn ($member) => self::person((array) $member), $team))),
+        ];
+    }
+
+    /**
+     * The author of a blog post: the team member whose name matches the user who wrote it. A post written from a shared account
+     * (such as „Админ“) has no real person behind it, so it is credited to the company instead of an invented author.
+     */
+    public static function postAuthor(Post $post): array
+    {
+        $name = trim((string) $post->author?->name);
+        if ($name !== '') {
+            foreach ((array) site('team') as $member) {
+                $first = Str::lower(Str::before((string) ($member['name'] ?? ''), ' '));
+                if ($first !== '' && Str::lower(Str::before($name, ' ')) === $first) {
+                    $person = self::person((array) $member);
+                    if ($person) {
+                        return $person;
+                    }
+                }
+            }
+        }
+
+        return ['@type' => 'Organization', '@id' => self::organizationId(), 'name' => 'Creatium Lab', 'url' => lroute('home')];
+    }
+
+    private static function number(mixed $value): ?int
+    {
+        if (is_numeric($value)) {
+            return (int) $value;
+        }
+        if (is_string($value) && preg_match('/\d[\d\s\x{00A0}\x{202F}]*/u', $value, $m)) {
+            return (int) preg_replace('/\D/', '', $m[0]);
+        }
+
+        return null;
+    }
+}

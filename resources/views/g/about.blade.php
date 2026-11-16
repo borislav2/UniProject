@@ -5,6 +5,11 @@
 @section('meta_description', __('Creatium Lab прави сайтове и маркетинг за бизнеси в България, от първата страница до клиентите, които я намират в Google.'))
 @section('g_lean', 'inner')
 
+@push('head')
+    {{-- Хората зад Creatium Lab като Person: име, роля, снимка и LinkedIn (App\Support\Schema). --}}
+    <script type="application/ld+json">{!! json_encode(\App\Support\Schema::team((array) $team), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
+@endpush
+
 @php
     $pad = fn ($n) => str_pad((string) $n, 2, '0', STR_PAD_LEFT);
     $intro = array_values(array_filter((array) ($about['g_intro'] ?? []), 'filled'));

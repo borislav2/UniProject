@@ -42,7 +42,7 @@
             <p class="g-hint g-req">{{ __('Полетата със звезда са задължителни.') }}</p>
 
             <section class="g-fstep" aria-labelledby="gf-step-1">
-                <h3 class="g-fstep-h" id="gf-step-1"><span class="g-mono">1.</span> {{ __('Основни данни') }}</h3>
+                <{{ $stepTag ?? 'h3' }} class="g-fstep-h" id="gf-step-1"><span class="g-mono">1.</span> {{ __('Основни данни') }}</{{ $stepTag ?? 'h3' }}>
                 <div class="g-fgrid">
                     <div class="g-fld">
                         <label for="name">{{ __('Име и фамилия') }} <b aria-hidden="true">*</b></label>
@@ -70,7 +70,7 @@
             </section>
 
             <section class="g-fstep" aria-labelledby="gf-step-2">
-                <h3 class="g-fstep-h" id="gf-step-2"><span class="g-mono">2.</span> {{ __('Избор на посока или пакет') }}</h3>
+                <{{ $stepTag ?? 'h3' }} class="g-fstep-h" id="gf-step-2"><span class="g-mono">2.</span> {{ __('Избор на посока или пакет') }}</{{ $stepTag ?? 'h3' }}>
                 <p class="g-fq">{{ __('Кой вариант е най-близо до нуждите ви?') }}</p>
                 <p class="g-hint g-fq-hint">{{ __('Можете да изберете пакет или отделни направления.') }}</p>
 

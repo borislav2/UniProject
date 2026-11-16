@@ -33,6 +33,6 @@
                 @endif
             </div>
         </div>
-        <div class="g-ct-form">@include('partials.g.contact-form')</div>
+        <div class="g-ct-form">@include('partials.g.contact-form', ['stepTag' => ! empty($asH1) ? 'h2' : 'h3'])</div>
     </div>
 </section>

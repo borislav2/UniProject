@@ -260,7 +260,7 @@ html.js.design-g .g-tog { display: inline-flex; }
 .design-g .g-tag { display: inline-block; border: 1px solid var(--g-ink); padding: 3px 8px; color: var(--g-ink); }
 .design-g .g-plan-name { display: grid; gap: 8px; align-content: start; }
 .design-g .g-tier { color: var(--g-mute); letter-spacing: .14em; }
-.design-g .g-plan h3 { font: 400 1.55rem/1.15 var(--g-head); letter-spacing: -.025em; }
+.design-g .g-plan h3, .design-g .g-plan h2 { font: 400 1.55rem/1.15 var(--g-head); letter-spacing: -.025em; }
 .design-g .g-pricebox { display: grid; align-content: start; gap: 6px; }
 .design-g .g-price { font: 300 clamp(2.3rem, 3.2vw, 3.1rem)/1.05 var(--g-head); letter-spacing: -.04em; white-space: nowrap; }
 .design-g .g-price .g-from { font: 400 1rem var(--g-body); letter-spacing: 0; color: var(--g-mute); margin-right: 2px; }

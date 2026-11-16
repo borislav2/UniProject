@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', __('Безплатна проверка на сайт за SEO, скорост и Google'))
-@section('meta_description', __('Въведете адреса на сайта си и получете безплатен отчет на имейла. Обхождаме до :n страници за счупени връзки, заглавия за Google, скорост, HTTPS, sitemap и още.', ['n' => config('creatium.site_check.crawl_limit')]))
+@section('meta_description', __('Въведете адреса на сайта си и получете безплатен отчет на имейла. Обхождаме до :n страници за счупени връзки, заглавия, скорост, HTTPS, sitemap и още.', ['n' => config('creatium.site_check.crawl_limit')]))
 
 @php
     $checks = [

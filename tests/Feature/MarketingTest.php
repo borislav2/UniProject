@@ -148,7 +148,7 @@ class MarketingTest extends TestCase
 
     public function test_pages_have_breadcrumbs_and_the_home_page_names_the_site(): void
     {
-        $this->get('/')->assertSee('"@type":"WebSite","name":"Creatium Lab"', false)->assertDontSee('BreadcrumbList');
+        $this->get('/')->assertSee('"@type":"WebSite"', false)->assertSee('"name":"Creatium Lab"', false)->assertDontSee('BreadcrumbList');
         $this->get('/paketi')->assertSee('"@type":"BreadcrumbList"', false)
             ->assertSee('{"@type":"ListItem","position":1,"name":"Начало","item":"' . url('/') . '"}', false)
             ->assertSee('"name":"Пакети и цени","item":"' . url('/paketi') . '"', false);

@@ -15,7 +15,7 @@
     <div class="g-wrap">
         <h1 class="g-h">{{ $plans['g_title'] ?? __('План за всеки етап от вашия бизнес') }}</h1>
         @if(filled($plans['g_subtitle'] ?? null))<p class="g-lead">{{ $plans['g_subtitle'] }}</p>@endif
-        @include('partials.g.plan-cards')
+        @include('partials.g.plan-cards', ['planTag' => 'h2'])
     </div>
 </section>
 

@@ -63,6 +63,9 @@ class BlogController extends Controller
             ->latest('published_at')
             ->paginate(9);
 
+        // A page after the last one (?page=99) is not a page: 404 instead of an empty list under a self-canonical address.
+        abort_if($posts->currentPage() > 1 && $posts->isEmpty(), 404);
+
         $categories = PostCategory::whereHas('posts', fn ($q) => $q->visible())->get()
             ->filter(fn ($c) => $c->tr('slug'))
             ->sortBy(fn ($c) => $c->trOrBg('name'));
@@ -78,6 +81,13 @@ class BlogController extends Controller
                     $alternates[$l] = $hreflang[$l] = lroute('blog.category', ['slug' => $category->tr('slug', $l)], $l);
                 }
             }
+            // A language counts only when the category really has posts in it (the sitemap uses the same rule), otherwise the English
+            // page is an empty noindex page and hreflang must not point to it.
+            foreach (array_keys($hreflang) as $l) {
+                if (! $category->posts()->visible($l)->exists()) {
+                    unset($hreflang[$l]);
+                }
+            }
             $hreflang = count($hreflang) > 1 ? $hreflang : [];
         }
 
@@ -85,10 +95,13 @@ class BlogController extends Controller
             'posts' => $posts,
             'categories' => $categories,
             'category' => $category,
+            'pageNumber' => $posts->currentPage(),
             'pageAlternates' => $alternates,
             'hreflangAlternates' => $posts->currentPage() > 1 ? [] : $hreflang,
-            'canonical' => $posts->currentPage() > 1 ? $posts->url($posts->currentPage()) : null,
-            'noindex' => app()->getLocale() === 'en' && ! $hasEnglish,
+            // Page 2 and later are indexable pages of their own: the canonical points to themselves, on the public host (the paginator
+            // builds its links from the request, which behind a proxy may not be the public address).
+            'canonical' => $posts->currentPage() > 1 ? url()->current() . '?page=' . $posts->currentPage() : null,
+            'noindex' => app()->getLocale() === 'en' && ($category ? ! $category->posts()->visible('en')->exists() : ! $hasEnglish),
         ]);
     }
 
