@@ -75,7 +75,7 @@ class GAudit3Test extends TestCase
         }
         $contact = $this->get('/kontakti')->assertOk()->getContent();
         $this->assertSame(1, preg_match_all('/<form [^>]*data-contact-form/', $contact));
-        $this->assertStringContainsString('<h1 class="g-h g-ct-h">Обсъдете проекта си с нас</h1>', $contact);
+        $this->assertStringContainsString('<h1 class="g-h g-ct-h">Обсъдете проекта си с нас!</h1>', $contact);
         $this->assertStringNotContainsString('quote-form', $contact);
         $this->assertStringNotContainsString('action="' . url('/paketi/oferta') . '"', $packs);
     }

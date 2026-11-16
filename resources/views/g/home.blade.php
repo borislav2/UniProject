@@ -95,30 +95,41 @@
         @endphp
         <div class="g-work" data-g-projects>
             @foreach($gProjects as $project)
-                @php
-                    $host = $project->website_url;
-                @endphp
                 <article class="g-card{{ $loop->index >= 2 ? ' g-m-hide' : '' }}{{ $loop->index === 8 ? ' g-t-hide' : '' }}">
-                    @if($host)<a href="{{ $project->website_url }}" target="_blank" rel="noopener">@endif
+                    @if($project->website_url)<a href="{{ $project->website_url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">@endif
                         <figure>
                             <div class="g-frame">
                                 @if($project->screenshot)<img src="{{ asset($project->screenshot) }}" alt="{{ $project->name }}" width="960" height="600" loading="lazy" decoding="async">@else<div class="g-noimg g-mono">{{ $project->name }}</div>@endif
                             </div>
                             <figcaption><strong>{{ $project->name }}</strong><span class="g-cat">{{ $project->category->name }}</span></figcaption>
                         </figure>
-                        <p class="g-micro">{{ \Illuminate\Support\Str::limit((string) $project->description, 130) }}</p>
-                    @if($host)</a>@endif
+                    @if($project->website_url)</a>@endif
+                    <p class="g-micro">{{ \Illuminate\Support\Str::limit((string) $project->description, 130) }}</p>
+                    @php
+$industryLink = g_industry_link();
+@endphp
+                    <div class="g-case-links">
+                        @if($project->website_url)<a class="g-link" href="{{ $project->website_url }}" target="_blank" rel="noopener">{{ __('Вижте сайта') }}</a>@endif
+                        <a class="g-link g-sub" href="{{ $industryLink['href'] }}">{{ $industryLink['label'] }}</a>
+                    </div>
                 </article>
             @endforeach
             @foreach($gDemos as $demo)
+                @php
+$industryLink = g_industry_link($demo);
+@endphp
                 <article class="g-card{{ $loop->index >= $phoneDemos ? ' g-m-hide' : '' }}{{ $gProjects->count() + $loop->index === 8 ? ' g-t-hide' : '' }}">
-                    <a href="{{ route('demo.show', $demo['slug']) }}">
+                    <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
                         <figure>
                             <div class="g-frame"><img src="{{ demo_img($demo['slug']) }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 760px) 33vw, 100vw" alt="{{ $demo['name'] }}, {{ $demo['industry'] }}" width="960" height="600" loading="lazy" decoding="async"></div>
                             <figcaption><strong>{{ $demo['industry'] }}</strong></figcaption>
                         </figure>
-                        <p class="g-micro">{{ filled($demo['g_micro'] ?? null) ? $demo['g_micro'] : ($demo['description'] ?? '') }}</p>
                     </a>
+                    <p class="g-micro">{{ filled($demo['g_micro'] ?? null) ? $demo['g_micro'] : ($demo['description'] ?? '') }}</p>
+                    <div class="g-case-links">
+                        <a class="g-link" href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener">{{ __('Вижте сайта') }}</a>
+                        <a class="g-link g-sub" href="{{ $industryLink['href'] }}">{{ $industryLink['label'] }}</a>
+                    </div>
                 </article>
             @endforeach
         </div>
