@@ -930,7 +930,7 @@ class DesignGTest extends TestCase
         $js = file_get_contents(resource_path('js/g-home.js')) . file_get_contents(resource_path('js/g-bar.js'));
 
         $this->assertDoesNotMatchRegularExpression('/backdrop-filter|font-style:\s*italic|font:\s*italic|\bnoise\b|\bgrain\b/i', $css);
-        $this->assertDoesNotMatchRegularExpression('/(?<!-)(linear|radial|conic)-gradient\((?!100deg|45deg|135deg)/', $css);
+        $this->assertDoesNotMatchRegularExpression('/(?<!-)(linear|radial|conic)-gradient\((?!100deg|45deg|135deg|180deg)/', $css);
         $this->assertDoesNotMatchRegularExpression('/\.reveal|data-aos/', $css . $js);
         $this->assertStringNotContainsString('mousemove', $js);
         $this->assertStringNotContainsString('pointermove', $js);

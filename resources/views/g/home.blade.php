@@ -109,7 +109,7 @@
 $industryLink = g_industry_link();
 @endphp
                     <div class="g-case-links">
-                        @if($project->website_url)<a class="g-link" href="{{ $project->website_url }}" target="_blank" rel="noopener">{{ __('Вижте сайта') }}</a>@endif
+                        @if($project->website_url)<a class="g-link" href="{{ $project->website_url }}" target="_blank" rel="noopener">{{ __('Вижте сайта') }}<x-icon name="arrow-right" class="g-ar" /></a>@endif
                         <a class="g-link g-sub" href="{{ $industryLink['href'] }}">{{ $industryLink['label'] }}</a>
                     </div>
                 </article>
@@ -127,7 +127,7 @@ $industryLink = g_industry_link($demo);
                     </a>
                     <p class="g-micro">{{ filled($demo['g_micro'] ?? null) ? $demo['g_micro'] : ($demo['description'] ?? '') }}</p>
                     <div class="g-case-links">
-                        <a class="g-link" href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener">{{ __('Вижте сайта') }}</a>
+                        <a class="g-link" href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener">{{ __('Вижте сайта') }}<x-icon name="arrow-right" class="g-ar" /></a>
                         <a class="g-link g-sub" href="{{ $industryLink['href'] }}">{{ $industryLink['label'] }}</a>
                     </div>
                 </article>

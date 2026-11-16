@@ -362,3 +362,58 @@ html.design-g.dark .g-sv { --sv-card: #1A1D25; --sv-card2: #20242D; --sv-t: colo
 
 /* /za-nas head: the mechanism drawing sits beside the intro on desktop only; on a phone the team follows right after. */
 @media (max-width: 959px) { .design-g .g-ph-vis:has(.g-sv-about) { display: none; } }
+
+/* ===== Fix round B (expert audit, owners approved): look only, no text. Grouped here to ease merging. ===== */
+
+/* B7: /paketi steps fade to 72% only (text stays above 4.5:1), numbers larger */
+.design-g .g-steps[data-active] li > * { opacity: .72; }
+.design-g .g-steps[data-active] li > p { opacity: .86; }
+.design-g .g-steps[data-active] li.is-active > * { opacity: 1; }
+.design-g .g-steps .g-n { font-size: 24px; line-height: 1.2; }
+
+/* B9: link lists are tiles with a hairline border and an arrow */
+.design-g .g-links { grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 12px; column-gap: 12px; }
+@media (min-width: 800px) { .design-g .g-links { grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); column-gap: 12px; } }
+.design-g .g-links a { justify-content: space-between; min-height: 64px; padding: 14px 18px; border: 1px solid var(--g-line); background: var(--g-surface); line-height: 1.3; transition: border-color .2s, background .2s; }
+.design-g .g-links a:hover, .design-g .g-links a:focus-visible { border-color: var(--g-ink); }
+.design-g .g-links a span:last-child { text-decoration: none; }
+.design-g .g-links a:hover span:last-child { text-decoration: none; }
+.design-g .g-links .g-ar { flex: none; font-size: 14px; color: var(--g-mute); transition: transform .2s, color .2s; }
+.design-g .g-links a:hover .g-ar, .design-g .g-links a:focus-visible .g-ar { color: var(--g-ink); transform: translateX(3px); }
+
+/* B9: service and industry pages, sections about 96px apart on desktop instead of up to 192px; the industry picture gets half the width */
+.design-g section.g-s.g-tight { padding-block: calc(var(--g-pad) * .5); }
+.design-g section.g-s.g-tight.g-last { padding-bottom: calc(var(--g-pad) * .7); }
+@media (min-width: 900px) { .design-g .g-sys.g-ind { grid-template-columns: 6fr 6fr; gap: 64px; } }
+.design-g .g-ind .g-frame-link, .design-g .g-ind .g-frame { width: 100%; }
+.design-g .g-ind .g-frame img { aspect-ratio: 960 / 600; }
+
+/* B10: project links on the industry page as in the cards */
+.design-g .g-ind .g-case-links .g-link { font-weight: 500; }
+
+/* B12: legal page without the white box (the old view's section brought its own white background and no padding) */
+.design-g .g-legal > section { background: transparent; }
+.design-g .g-legal > section > div { max-width: none; padding-left: 0; padding-right: 0; }
+.design-g .g-legal p.text-sm { margin-top: 24px; }
+
+/* B13: blog, the newest post spans two columns on the first page when that helps the grid (data-span says which widths: two = 2 columns and an odd count, three = 3 columns and a count that does not divide by 3) */
+@media (min-width: 700px) {
+    .design-g .g-posts[data-span~="two"] > .g-post:first-child { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto auto auto 1fr; column-gap: 24px; align-content: start; }
+    .design-g .g-posts[data-span~="two"] > .g-post:first-child .g-post-img { grid-column: 1; grid-row: 1 / span 4; }
+    .design-g .g-posts[data-span~="two"] > .g-post:first-child > :not(.g-post-img) { grid-column: 2; }
+    .design-g .g-posts[data-span~="two"] > .g-post:first-child .g-post-meta { margin-top: 0; }
+    .design-g .g-posts[data-span~="two"] > .g-post:first-child .g-post-title { font-size: 1.6rem; }
+}
+@media (min-width: 1040px) {
+    .design-g .g-posts[data-span~="two"]:not([data-span~="three"]) > .g-post:first-child { grid-column: auto; grid-template-columns: none; grid-template-rows: none; }
+    .design-g .g-posts[data-span~="two"]:not([data-span~="three"]) > .g-post:first-child .g-post-img { grid-column: auto; grid-row: auto; }
+    .design-g .g-posts[data-span~="two"]:not([data-span~="three"]) > .g-post:first-child > :not(.g-post-img) { grid-column: auto; }
+    .design-g .g-posts[data-span~="two"]:not([data-span~="three"]) > .g-post:first-child .g-post-meta { margin-top: 16px; }
+    .design-g .g-posts[data-span~="two"]:not([data-span~="three"]) > .g-post:first-child .g-post-title { font-size: 1.3rem; }
+    .design-g .g-posts[data-span~="three"] > .g-post:first-child { grid-column: span 2; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto auto auto 1fr; column-gap: 24px; align-content: start; }
+    .design-g .g-posts[data-span~="three"] > .g-post:first-child .g-post-img { grid-column: 1; grid-row: 1 / span 4; }
+    .design-g .g-posts[data-span~="three"] > .g-post:first-child > :not(.g-post-img) { grid-column: 2; }
+    .design-g .g-posts[data-span~="three"] > .g-post:first-child .g-post-meta { margin-top: 0; }
+    .design-g .g-posts[data-span~="three"] > .g-post:first-child .g-post-title { font-size: 1.6rem; }
+}
+/* ===== end of fix round B (g-pages.css) ===== */

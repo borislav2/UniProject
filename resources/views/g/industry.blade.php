@@ -8,7 +8,7 @@
 @section('content')
 @include('partials.g.page-head', ['heading' => $page['title'], 'sub' => $page['lead']])
 
-<section class="g-s">
+<section class="g-s g-tight">
     <div class="g-wrap g-sys g-ind">
         <div class="g-sh">
             <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="g-frame-link">
@@ -18,7 +18,7 @@
                     @endif
                 </div>
             </a>
-            <p class="g-case-links"><a class="g-link" href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener">Вижте сайта</a></p>
+            <p class="g-case-links"><a class="g-link" href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener">Вижте сайта<x-icon name="arrow-right" class="g-ar" /></a></p>
         </div>
         <div>
             <h2 class="g-h g-rows-h">{{ $page['must_have_title'] }}</h2>
@@ -31,7 +31,7 @@
     </div>
 </section>
 
-<section class="g-s">
+<section class="g-s g-tight">
     <div class="g-wrap">
         <div class="g-sh">
             <h2 class="g-h">Къде губите клиенти и как го оправяме</h2>
@@ -53,7 +53,7 @@
     </div>
 </section>
 
-<section class="g-s">
+<section class="g-s g-tight">
     <div class="g-wrap">
         <div class="g-pkgcard">
             <div>
@@ -72,7 +72,7 @@
     </div>
 </section>
 
-<section class="g-s">
+<section class="g-s g-tight">
     <div class="g-wrap g-sys">
         <div class="g-sh">
             <h2 class="g-h">Често задавани въпроси</h2>
@@ -81,14 +81,14 @@
     </div>
 </section>
 
-<section class="g-s g-last">
+<section class="g-s g-tight g-last">
     <div class="g-wrap">
         <div class="g-sh"><h2 class="g-h g-sub-h">Сайт за друг бранш</h2></div>
         <div class="g-links">
             @foreach($others as $otherSlug => $other)
-                <a href="{{ route('industry', $otherSlug) }}"><span>{{ $other['title'] }}</span></a>
+                <a href="{{ route('industry', $otherSlug) }}"><span>{{ $other['title'] }}</span><x-icon name="arrow-right" class="g-ar" /></a>
             @endforeach
-            <a href="{{ \App\Http\Controllers\PageController::serviceUrl('website') }}"><span>Изработка на сайт за всеки бизнес</span></a>
+            <a href="{{ \App\Http\Controllers\PageController::serviceUrl('website') }}"><span>Изработка на сайт за всеки бизнес</span><x-icon name="arrow-right" class="g-ar" /></a>
         </div>
     </div>
 </section>
