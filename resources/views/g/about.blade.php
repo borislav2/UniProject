@@ -45,7 +45,7 @@
 <section class="g-s">
     <div class="g-wrap g-sys">
         <div class="g-sh">
-            <h2 class="g-h">{{ $about['g_standards_title'] ?? __('Нашите стандарти') }}</h2>
+            <h2 class="g-h">{{ $about['g_standards_title'] ?? __('Защо го правим по този начин') }}</h2>
         </div>
         <dl class="g-defs">
             @foreach($standards as $item)<div><dt>{{ $item['title'] }}</dt><dd>{{ $item['text'] ?? '' }}</dd></div>@endforeach
@@ -68,25 +68,30 @@
                     $initials = collect(preg_split('/\s+/u', $name, -1, PREG_SPLIT_NO_EMPTY))->take(2)->map(fn ($w) => mb_strtoupper(mb_substr($w, 0, 1)))->implode('');
                     $hasPhoto = ! empty($member['image']) && is_file(public_path($member['image']));
                     $linkedin = str_starts_with((string) ($member['linkedin'] ?? ''), 'https://') ? $member['linkedin'] : null;
+                    // Third round (16.11.2026): the owners' own texts for design G (g_role, g_description, g_bio, g_skills); a member without them keeps the normal fields, which the current design uses.
+                    $role = filled($member['g_role'] ?? null) ? $member['g_role'] : ($member['role'] ?? '');
+                    $lead = filled($member['g_description'] ?? null) ? $member['g_description'] : ($member['description'] ?? '');
+                    $bio = array_values(array_filter((array) (! empty($member['g_bio']) ? $member['g_bio'] : ($member['bio'] ?? [])), 'filled'));
+                    $skills = array_values(array_filter((array) (! empty($member['g_skills']) ? $member['g_skills'] : ($member['skills'] ?? [])), 'filled'));
                 @endphp
                 <article class="g-member">
                     @if($hasPhoto)
-                        <img src="{{ asset($member['image']) }}" alt="{{ $name !== '' ? $name : ($member['role'] ?? '') }}" width="260" height="260" loading="lazy" decoding="async">
+                        <img src="{{ asset($member['image']) }}" alt="{{ $name !== '' ? $name : $role }}" width="260" height="260" loading="lazy" decoding="async">
                     @else
                         <span class="g-initials" aria-hidden="true">{{ $initials !== '' ? $initials : '·' }}</span>
                     @endif
                     <div class="g-member-body">
                         @if($name !== '')<h3>{{ $name }}</h3>@endif
-                        <p class="g-role">{{ $member['role'] ?? '' }}</p>
-                        @if(filled($member['description'] ?? null))<p class="g-member-lead">{{ $member['description'] }}</p>@endif
-                        @if(! empty($member['bio']))
+                        <p class="g-role">{{ $role }}</p>
+                        @if(filled($lead))<p class="g-member-lead">{{ $lead }}</p>@endif
+                        @if($bio)
                             <div class="g-member-bio">
-                                @foreach((array) $member['bio'] as $paragraph)<p>{{ $paragraph }}</p>@endforeach
+                                @foreach($bio as $paragraph)<p>{{ $paragraph }}</p>@endforeach
                             </div>
                         @endif
-                        @if(! empty($member['skills']))
+                        @if($skills)
                             <ul class="g-skills">
-                                @foreach((array) $member['skills'] as $skill)<li>{{ $skill }}</li>@endforeach
+                                @foreach($skills as $skill)<li>{{ $skill }}</li>@endforeach
                             </ul>
                         @endif
                         @if($linkedin)<a class="g-link g-member-link" href="{{ $linkedin }}" target="_blank" rel="noopener">{{ __('Профил в LinkedIn') }}</a>@endif

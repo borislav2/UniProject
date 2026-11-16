@@ -26,6 +26,7 @@ class GPlans
             $cards[] = [
                 'index' => $i,
                 'name' => $plan['name'],
+                'tag' => (string) ($plan['tag'] ?? ''),
                 'from' => (string) ($plan['from'] ?? ''),
                 'monthly' => $monthly !== null ? self::money($monthly) : null,
                 'yearly' => $yearly !== null ? self::money($yearly) : null,
@@ -38,6 +39,20 @@ class GPlans
         }
 
         return $cards;
+    }
+
+    /** „Core Изграждане“: the tier tag in title case and the name, as plain text (the lead, the select, the service pages). */
+    public static function label(array $card): string
+    {
+        $tag = (string) ($card['tag'] ?? '');
+
+        return trim(($tag !== '' ? mb_convert_case($tag, MB_CASE_TITLE, 'UTF-8') . ' ' : '') . $card['name']);
+    }
+
+    /** „от €500/месец“ as text; empty when the plan has no monthly figure. */
+    public static function priceLine(array $card): string
+    {
+        return filled($card['monthly'] ?? null) ? trim(($card['from'] ?? '') . ' ' . $card['monthly']) . __('/месец') : '';
     }
 
     /** The index of the plan (in `g_items`, same order as `items`) that fits a concept site's `package.name`; no name = the last, individual plan. */

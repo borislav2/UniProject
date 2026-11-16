@@ -7,7 +7,7 @@
 
 @php
     $pad = fn ($n) => str_pad((string) $n, 2, '0', STR_PAD_LEFT);
-    // The package in the names of design G (Дигитален старт ...), the same order as plans.items.
+    // The package in the names of design G (Core Изграждане ...), the same order as plans.items.
     $gPlan = collect(\App\Support\GPlans::cards(app(\App\Support\Content::class)->withDefaults('plans')))->keyBy('index')->get($page['package'] ?? -1);
 @endphp
 
@@ -43,7 +43,7 @@
             <div>
                 @if($gPlan)
                     <p class="g-mono g-mute">{{ __('Включено в пакет') }}</p>
-                    <h2 class="g-h">{{ $gPlan['name'] }}</h2>
+                    <h2 class="g-h">{{ \App\Support\GPlans::label($gPlan) }}</h2>
                     @if(filled($gPlan['monthly']))<p class="g-pkg-price">{{ trim($gPlan['from'] . ' ' . $gPlan['monthly']) }}{{ __('/месец') }}</p>@endif
                 @else
                     <p class="g-mono g-mute">{{ __('Цена') }}</p>

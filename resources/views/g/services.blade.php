@@ -1,19 +1,19 @@
 @extends('layouts.public')
 
-{{-- /uslugi in design G: numbered editorial rows for the components, the funnel and the calculator in the g palette, then the next step. --}}
+{{-- /uslugi in design G: numbered editorial rows for the seven services (software development included), then the interactive panel and the next step. The funnel is gone (third round, 16.11.2026). --}}
 @section('title', __('Изработка на сайт, SEO, Google профил и имейл маркетинг'))
 @section('meta_description', __('Сайт, който продава, SEO и видимост в ChatGPT, Google профил и отзиви, имейл кампании и поддръжка. Всичко за онлайн клиенти, от един екип.'))
 @section('g_lean', 'inner')
 
 @php
-    // Fifth round (13.11.2026): the six services in plain words, each from service_pages (what it is, what we do, what you get, the package).
-    $servicePages = (array) site('service_pages');
-    $services = collect(['website', 'seo', 'google', 'email', 'support', 'shopping'])->filter(fn ($key) => isset($servicePages[$key]))->mapWithKeys(fn ($key) => [$key => $servicePages[$key]]);
+    // The services in plain words, each from service_pages (what it is, what we do, what you get, the package). Every service of the list, in its order.
+    $services = collect((array) site('service_pages'));
+    $gPage = app(\App\Support\Content::class)->withDefaults('services_page');
     $gPlans = collect(\App\Support\GPlans::cards(app(\App\Support\Content::class)->withDefaults('plans')))->keyBy('index');
 @endphp
 
 @section('content')
-@include('partials.g.page-head', ['heading' => $page['title'], 'sub' => $page['intro']])
+@include('partials.g.page-head', ['heading' => filled($gPage['g_title'] ?? null) ? $gPage['g_title'] : $page['title'], 'sub' => filled($gPage['g_text'] ?? null) ? $gPage['g_text'] : $page['intro']])
 
 <section class="g-s">
     <div class="g-wrap">
@@ -29,7 +29,7 @@
                             <p>{{ $service['result'] }}</p>
                         </div>
                         <p class="g-svc-pkg">
-                            @if($gPlan)<span class="g-mono g-mute">{{ __('Включено в пакет') }}</span> <b>{{ $gPlan['name'] }}</b>@if(filled($gPlan['monthly'])), {{ trim($gPlan['from'] . ' ' . $gPlan['monthly']) }}{{ __('/месец') }}@endif
+                            @if($gPlan)<span class="g-mono g-mute">{{ __('Включено в пакет') }}</span> <b>{{ \App\Support\GPlans::label($gPlan) }}</b>@if(filled($gPlan['monthly'])), {{ trim($gPlan['from'] . ' ' . $gPlan['monthly']) }}{{ __('/месец') }}@endif
                             @else<span class="g-mono g-mute">{{ __('Цена') }}</span> <b>{{ __('Цена по оферта') }}</b>@endif
                         </p>
                         <a class="g-link" href="{{ \App\Http\Controllers\PageController::serviceUrl($key) }}">{{ __('Научете повече') }}</a>
@@ -46,22 +46,13 @@
     </div>
 </section>
 
-<section class="g-band g-engine">
-    <div class="g-wrap">
-        <p class="g-mono">{{ $trust['engine_eyebrow'] }}</p>
-        <h2 class="g-h">{{ $trust['principles_title'] }}</h2>
-        <p class="g-band-text">{{ $trust['principles_text'] }}</p>
-        @include('partials.g.funnel')
-    </div>
-</section>
-
-@include('partials.g.calculator')
+@include('partials.g.panel')
 
 <section class="g-closer">
     <div class="g-wrap">
         <div class="g-closer-in">
             <p class="g-closer-t g-h">{{ $page['cta_title'] }}</p>
-            <div class="g-closer-a"><a class="g-btn" href="{{ lroute('contact') }}#konsultatsiya">{{ $page['cta_button'] }}<i></i></a></div>
+            <div class="g-closer-a"><a class="g-btn" href="{{ lroute('contact') }}#kontakt">{{ $page['cta_button'] }}<i></i></a></div>
         </div>
         <div class="g-closer-sub">
             <p><b>{{ __('Проверете сайта си за минута') }}</b> {{ __('Въведете адреса и имейл и ще получите отчет за HTTPS, скоростта на сървъра, заглавията за Google, телефона и още.') }}</p>

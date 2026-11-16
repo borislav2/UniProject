@@ -142,6 +142,9 @@
         $is = fn (...$patterns) => collect($patterns)->contains(fn ($p) => request()->routeIs($p, 'en.' . $p));
         $serviceLinks = [[__('Всички услуги'), lroute('services'), $is('services'), 'list-ul']];
         foreach (site('service_pages') as $key => $servicePage) {
+            if (! empty($servicePage['g_only']) && ! $g) {
+                continue;
+            }
             $serviceLinks[] = [$servicePage['menu'], \App\Http\Controllers\PageController::serviceUrl($key), request()->routeIs('services.show', 'en.services.show') && request()->route('slug') === $servicePage['slug'], $servicePage['icon']];
         }
         $serviceLinks[] = [__('Безплатна проверка на сайт'), lroute('site-check'), $is('site-check'), 'gauge-high'];

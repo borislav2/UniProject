@@ -23,3 +23,101 @@ document.querySelectorAll('[data-g-billing-root]').forEach((root) => {
         });
     });
 });
+
+// "Услуги" dropdown: hover and focus open it in CSS; the small button toggles it, Esc closes it and Escape from a link returns to the button.
+document.querySelectorAll('[data-g-dd]').forEach((dd) => {
+    const button = dd.querySelector('.g-dd-btn');
+    const sync = () => button.setAttribute('aria-expanded', dd.matches(':hover, :focus-within, .is-open') && !dd.hasAttribute('data-closed') ? 'true' : 'false');
+    button.addEventListener('click', () => {
+        const open = button.getAttribute('aria-expanded') === 'true';
+        dd.classList.toggle('is-open', !open);
+        if (open) dd.setAttribute('data-closed', '');
+        else dd.removeAttribute('data-closed');
+        sync();
+    });
+    dd.addEventListener('mouseenter', () => { dd.removeAttribute('data-closed'); sync(); });
+    dd.addEventListener('mouseleave', () => { dd.classList.remove('is-open'); dd.removeAttribute('data-closed'); sync(); });
+    dd.addEventListener('focusin', sync);
+    dd.addEventListener('focusout', () => setTimeout(() => { if (!dd.contains(document.activeElement)) dd.classList.remove('is-open'); sync(); }, 0));
+    document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape' || button.getAttribute('aria-expanded') !== 'true') return;
+        dd.classList.remove('is-open');
+        dd.setAttribute('data-closed', '');
+        if (dd.contains(document.activeElement) && document.activeElement !== button) button.focus();
+        sync();
+    });
+    document.addEventListener('click', (event) => {
+        if (!dd.contains(event.target)) { dd.classList.remove('is-open'); sync(); }
+    });
+});
+
+// The five steps (/paketi): the pointer, focus or a tap lights one step, the line fills up to it and the others dim. Without JavaScript all five stay as they are.
+document.querySelectorAll('.g-steps').forEach((list) => {
+    const items = Array.from(list.children);
+    const light = (index) => {
+        list.setAttribute('data-active', String(index + 1));
+        items.forEach((item, i) => {
+            item.classList.toggle('is-reached', i <= index);
+            item.classList.toggle('is-active', i === index);
+        });
+    };
+    const clear = () => {
+        list.removeAttribute('data-active');
+        items.forEach((item) => item.classList.remove('is-reached', 'is-active'));
+    };
+    items.forEach((item, index) => {
+        item.addEventListener('mouseenter', () => light(index));
+        item.addEventListener('focus', () => light(index));
+        item.addEventListener('click', () => light(index));
+        item.addEventListener('blur', () => { if (!list.matches(':hover')) clear(); });
+    });
+    list.addEventListener('mouseleave', () => { if (!list.contains(document.activeElement)) clear(); });
+    document.addEventListener('click', (event) => { if (!list.contains(event.target)) clear(); });
+});
+
+// The interactive panel (/uslugi): the same rules as App\Support\GPanel. Switches 1 to 7: 1 Google profile, 2 SEO, 3 ads, 4 brand, 5 fast site, 6 path to contact, 7 emails.
+document.querySelectorAll('[data-g-panel]').forEach((panel) => {
+    const total = Number(panel.dataset.total) || 7;
+    const switches = Array.from(panel.querySelectorAll('[role="switch"]'));
+    const presets = Array.from(panel.querySelectorAll('[data-preset]'));
+    const order = (panel.dataset.order || '').split(',');
+    const count = panel.querySelector('[data-count]');
+    const percent = panel.querySelector('[data-percent]');
+    const bar = panel.querySelector('[data-bar]');
+    const msg = panel.querySelector('[data-msg]');
+    const cta = panel.querySelector('[data-cta]');
+    // Rule order, first match wins: full (6 or 7), traffic without the base, the base without traffic, low (0 to 2), mixed.
+    const rule = (on) => {
+        const has = (n) => on.includes(n);
+        if (on.length >= 6) return 'full';
+        if ((has(2) || has(3)) && !(has(4) && has(5) && has(6))) return 'traffic';
+        if (has(4) && has(5) && has(6) && !has(1) && !has(2) && !has(3)) return 'base';
+        if (on.length <= 2) return 'low';
+        return 'mixed';
+    };
+    const render = () => {
+        const on = switches.filter((s) => s.getAttribute('aria-checked') === 'true').map((s) => Number(s.dataset.n));
+        const share = Math.floor((on.length * 100) / total);
+        const key = rule(on);
+        count.textContent = String(on.length);
+        percent.textContent = `(${share}%)`;
+        bar.style.width = `${share}%`;
+        msg.textContent = panel.dataset[`msg${key.charAt(0).toUpperCase()}${key.slice(1)}`] || '';
+        // The button leads to the contact form with the directions of the missing switches ticked.
+        const missing = new Set(switches.filter((s) => s.getAttribute('aria-checked') !== 'true').map((s) => s.dataset.dir).filter(Boolean));
+        const directions = order.filter((direction) => missing.has(direction));
+        cta.href = panel.dataset.contact + (directions.length ? `?napravleniya=${directions.join(',')}` : '') + '#kontakt';
+    };
+    switches.forEach((button) => button.addEventListener('click', () => {
+        button.setAttribute('aria-checked', button.getAttribute('aria-checked') === 'true' ? 'false' : 'true');
+        // A manual change means it is their own business now, so the quick button turns neutral.
+        presets.forEach((p) => p.setAttribute('aria-pressed', 'false'));
+        render();
+    }));
+    presets.forEach((button) => button.addEventListener('click', () => {
+        const numbers = button.dataset.preset.split(',').map(Number);
+        switches.forEach((s) => s.setAttribute('aria-checked', String(numbers.includes(Number(s.dataset.n)))));
+        presets.forEach((p) => p.setAttribute('aria-pressed', String(p === button)));
+        render();
+    }));
+});
