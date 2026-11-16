@@ -96,7 +96,7 @@
     @endunless
     @include('partials.breadcrumbs-ld')
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="theme-color" content="{{ $g ? '#0C0E12' : '#0f1a2b' }}">
+    {{-- G: two metas, the browser bar follows light and dark (JS keeps both in step with the site's theme toggle). --}}{!! $g ? '<meta name="theme-color" content="#ECEEF0" media="(prefers-color-scheme: light)">' . "\n    " . '<meta name="theme-color" content="#0B0C0F" media="(prefers-color-scheme: dark)">' : '<meta name="theme-color" content="#0f1a2b">' !!}
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <link rel="icon" type="image/png" href="{{ asset('favicon-64.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
@@ -402,7 +402,7 @@
             var root = document.documentElement;
             var buttons = document.querySelectorAll('[data-theme-toggle]');
             var labels = {dark: @json(__('Светла тема')), light: @json(__('Тъмна тема'))};
-            function sync() {
+            function sync() {{!! $g ? " document.querySelectorAll('meta[name=\"theme-color\"]').forEach(function (m) { m.setAttribute('content', root.classList.contains('dark') ? '#0B0C0F' : '#ECEEF0'); });" : '' !!}
                 var dark = root.classList.contains('dark');
                 buttons.forEach(function (b) {
                     b.setAttribute('aria-pressed', dark ? 'true' : 'false');

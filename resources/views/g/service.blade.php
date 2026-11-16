@@ -14,7 +14,7 @@
 @section('content')
 @include('partials.g.page-head', ['heading' => $page['title'], 'sub' => filled($page['g_what'] ?? null) ? $page['g_what'] : $page['lead'], 'visualKey' => $key])
 
-<section class="g-s">
+<section class="g-s g-tight">
     <div class="g-wrap g-sys">
         <div class="g-sh">
             <h2 class="g-h g-sub-h">{{ __('Познато ли ви е?') }}</h2>
@@ -37,7 +37,7 @@
     </div>
 </section>
 
-<section class="g-s">
+<section class="g-s g-tight">
     <div class="g-wrap">
         <div class="g-pkgcard">
             <div>
@@ -60,7 +60,7 @@
 </section>
 
 @if($key === 'website' && app()->getLocale() === 'bg')
-<section class="g-s">
+<section class="g-s g-tight">
     <div class="g-wrap">
         <div class="g-sh">
             <h2 class="g-h">Сайт за вашия бранш</h2>
@@ -68,14 +68,14 @@
         </div>
         <div class="g-links">
             @foreach(config('creatium.industry_pages') as $industrySlug => $industry)
-                <a href="{{ route('industry', $industrySlug) }}"><span>{{ $industry['title'] }}</span></a>
+                <a href="{{ route('industry', $industrySlug) }}"><span>{{ $industry['title'] }}</span><x-icon name="arrow-right" class="g-ar" /></a>
             @endforeach
         </div>
     </div>
 </section>
 @endif
 
-<section class="g-s">
+<section class="g-s g-tight">
     <div class="g-wrap g-sys">
         <div class="g-sh">
             <h2 class="g-h">{{ __('Често задавани въпроси') }}</h2>
@@ -84,16 +84,16 @@
     </div>
 </section>
 
-<section class="g-s g-last">
+<section class="g-s g-tight g-last">
     <div class="g-wrap">
         <div class="g-sh">
             <h2 class="g-h g-sub-h">{{ __('Другите ни услуги') }}</h2>
         </div>
         <div class="g-links">
             @foreach($others as $otherKey => $other)
-                <a href="{{ \App\Http\Controllers\PageController::serviceUrl($otherKey) }}"><span>{{ $other['menu'] }}</span></a>
+                <a href="{{ \App\Http\Controllers\PageController::serviceUrl($otherKey) }}"><span>{{ $other['menu'] }}</span><x-icon name="arrow-right" class="g-ar" /></a>
             @endforeach
-            <a href="{{ lroute('site-check') }}"><span>{{ __('Безплатна проверка на сайт') }}</span></a>
+            <a href="{{ lroute('site-check') }}"><span>{{ __('Безплатна проверка на сайт') }}</span><x-icon name="arrow-right" class="g-ar" /></a>
         </div>
     </div>
 </section>

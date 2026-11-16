@@ -3,7 +3,7 @@
         <div class="g-frame">
             @if($post->cover_image)
                 @php($srcset = g_cover_srcset($post))
-                <img src="{{ asset(g_cover($post, true)) }}"@if($srcset) srcset="{{ $srcset }}" sizes="(min-width: 1040px) 380px, (min-width: 700px) 46vw, 92vw"@endif alt="" width="640" height="360" loading="lazy" decoding="async">
+                <img src="{{ asset(g_cover($post, true)) }}"@if($srcset) srcset="{{ $srcset }}" sizes="{{ $coverSizes ?? '(min-width: 1040px) 380px, (min-width: 700px) 46vw, 92vw' }}"@endif alt="" width="640" height="360" loading="lazy" decoding="async">
             @else
                 <div class="g-noimg g-mono">Creatium Lab</div>
             @endif
