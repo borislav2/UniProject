@@ -13,7 +13,7 @@
     <span id="{{ $alias }}" class="g-alias" aria-hidden="true"></span>
     <div class="g-wrap g-ct">
         <div class="g-ct-info">
-            <{{ $headTag }} class="g-h g-ct-h">{{ __('Обсъдете проекта си с нас') }}</{{ $headTag }}>
+            <{{ $headTag }} class="g-h g-ct-h">{{ __('Обсъдете проекта си с нас!') }}</{{ $headTag }}>
             <p class="g-ct-text">{{ __('Разкажете ни накратко за бизнеса си. Ще прегледаме текущото ви присъствие и ще ви предложим конкретни стъпки за растеж.') }}</p>
             <p class="g-promise">{{ __('Отговаряме в рамките на един работен ден.') }}</p>
             <div class="g-info">

@@ -16,7 +16,9 @@
         @if($projects->isNotEmpty() || ! empty($demos))
             <div class="g-work" data-portfolio-grid>
                 @foreach($projects as $project)
-                    @php($host = preg_replace('/^www\./', '', (string) parse_url($project->website_url, PHP_URL_HOST)))
+                    @php
+$host = preg_replace('/^www\./', '', (string) parse_url($project->website_url, PHP_URL_HOST));
+@endphp
                     <article class="g-case">
                         <figure>
                             @if($project->website_url)<a href="{{ $project->website_url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">@endif
@@ -34,12 +36,20 @@
                         </figure>
                         <h2 class="g-case-name">{{ $project->name }}</h2>
                         <p class="g-case-text">{{ $project->description }}</p>
-                        @if($project->website_url)<a class="g-link" href="{{ $project->website_url }}" target="_blank" rel="noopener">{{ __('Посетете сайта') }} {{ $host }}</a>@endif
+                        @php
+$industryLink = g_industry_link();
+@endphp
+                        <div class="g-case-links">
+                            @if($project->website_url)<a class="g-link" href="{{ $project->website_url }}" target="_blank" rel="noopener">{{ __('Посетете сайта') }} {{ $host }}</a>@endif
+                            <a class="g-link g-sub" href="{{ $industryLink['href'] }}">{{ $industryLink['label'] }}</a>
+                        </div>
                     </article>
                 @endforeach
 
                 @foreach($demos as $demo)
-                    @php($industrySlug = app()->getLocale() === 'bg' ? collect(config('creatium.industry_pages'))->search(fn ($page) => $page['demo'] === $demo['slug']) : false)
+                    @php
+$industryLink = g_industry_link($demo);
+@endphp
                     <article class="g-case">
                         <figure>
                             <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
@@ -57,7 +67,7 @@
                         <p class="g-case-text">{{ filled($demo['g_micro'] ?? null) ? $demo['g_micro'] : $demo['description'] }}</p>
                         <div class="g-case-links">
                             <a class="g-link" href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener">{{ __('Вижте сайта') }}</a>
-                            @if($industrySlug !== false)<a class="g-link g-sub" href="{{ route('industry', $industrySlug) }}">{{ config("creatium.industry_pages.$industrySlug.title") }}</a>@endif
+                            <a class="g-link g-sub" href="{{ $industryLink['href'] }}">{{ $industryLink['label'] }}</a>
                         </div>
                     </article>
                 @endforeach

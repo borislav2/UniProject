@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-{{-- /za-nas in design G, in the voice of an agency: who we are, method, standards, founders (names and roles), the company line. --}}
+{{-- /za-nas in design G, in the voice of an agency: who we are, the team first (names and roles, the company line), then method and standards. --}}
 @section('title', __('За нас и екипа зад вашия сайт и маркетинг'))
 @section('meta_description', __('Creatium Lab прави сайтове и маркетинг за бизнеси в България, от първата страница до клиентите, които я намират в Google.'))
 @section('g_lean', 'inner')
@@ -30,34 +30,6 @@
 
 @section('content')
 @include('partials.g.page-head', ['heading' => $about['g_intro_title'] ?? __('Дигитална агенция за бизнеси'), 'sub' => $intro[0] ?? null, 'more' => array_slice($intro, 1)])
-
-@if($method)
-<section class="g-s">
-    <div class="g-wrap g-sys">
-        <div class="g-sh">
-            <h2 class="g-h">{{ $about['g_method_title'] ?? __('Как работим') }}</h2>
-        </div>
-        <ol class="g-rows g-numbered">
-            @foreach($method as $step)
-                <li><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><h3>{{ $step['title'] }}</h3><p>{{ $step['text'] ?? '' }}</p></li>
-            @endforeach
-        </ol>
-    </div>
-</section>
-@endif
-
-@if($standards)
-<section class="g-s">
-    <div class="g-wrap g-sys">
-        <div class="g-sh">
-            <h2 class="g-h">{{ $about['g_standards_title'] ?? __('Защо го правим по този начин') }}</h2>
-        </div>
-        <dl class="g-defs">
-            @foreach($standards as $item)<div><dt>{{ $item['title'] }}</dt><dd>{{ $item['text'] ?? '' }}</dd></div>@endforeach
-        </dl>
-    </div>
-</section>
-@endif
 
 @if($founders)
 <section class="g-s" id="ekip">
@@ -104,10 +76,43 @@
                 </article>
             @endforeach
         </div>
-        <p class="g-legal-line">{{ $legalLine }}</p>
     </div>
 </section>
 @endif
+
+@if($method)
+<section class="g-s">
+    <div class="g-wrap g-sys">
+        <div class="g-sh">
+            <h2 class="g-h">{{ $about['g_method_title'] ?? __('Как работим') }}</h2>
+        </div>
+        <ol class="g-rows g-numbered">
+            @foreach($method as $step)
+                <li><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><h3>{{ $step['title'] }}</h3><p>{{ $step['text'] ?? '' }}</p></li>
+            @endforeach
+        </ol>
+    </div>
+</section>
+@endif
+
+@if($standards)
+<section class="g-s">
+    <div class="g-wrap g-sys">
+        <div class="g-sh">
+            <h2 class="g-h">{{ $about['g_standards_title'] ?? __('Защо го правим по този начин') }}</h2>
+        </div>
+        <dl class="g-defs">
+            @foreach($standards as $item)<div><dt>{{ $item['title'] }}</dt><dd>{{ $item['text'] ?? '' }}</dd></div>@endforeach
+        </dl>
+    </div>
+</section>
+@endif
+
+<section class="g-s g-legal-s">
+    <div class="g-wrap">
+        <p class="g-legal-line">{{ $legalLine }}</p>
+    </div>
+</section>
 
 @include('partials.g.closer', ['kicker' => __('Имате въпроси?'), 'text' => __('Запазете час за разговор'), 'label' => __('Запазете час'), 'href' => lroute('contact') . '#konsultatsiya', 'link' => ['label' => __('Към въпросите'), 'href' => lroute('faq')]])
 @endsection

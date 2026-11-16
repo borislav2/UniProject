@@ -98,3 +98,33 @@ if (! function_exists('g_offer_url')) {
         return lroute('contact') . $query . '#kontakt';
     }
 }
+
+if (! function_exists('g_industry_link')) {
+    /**
+     * The second link of a project card in design G, next to „Вижте сайта“ (17.11.2026): a concept site goes to its industry page
+     * `/izrabotka-na-sait-za-...` when it has one (Bulgarian only), else to the website service page with „Изработка на сайт за <бранш>“
+     * (`demos[].g_industry_phrase`); a real client project (`$demo` null) says „Изработка на сайт“ and goes to the website service page.
+     *
+     * @return array{label: string, href: string}
+     */
+    function g_industry_link(?array $demo = null): array
+    {
+        $service = \App\Http\Controllers\PageController::serviceUrl('website');
+
+        if ($demo === null) {
+            return ['label' => __('Изработка на сайт'), 'href' => $service];
+        }
+
+        if (app()->getLocale() === 'bg') {
+            foreach ((array) config('creatium.industry_pages') as $slug => $page) {
+                if (($page['demo'] ?? null) === ($demo['slug'] ?? '')) {
+                    return ['label' => (string) $page['title'], 'href' => route('industry', $slug)];
+                }
+            }
+        }
+
+        $phrase = filled($demo['g_industry_phrase'] ?? null) ? $demo['g_industry_phrase'] : \Illuminate\Support\Str::lower((string) ($demo['industry'] ?? ''));
+
+        return ['label' => __('Изработка на сайт за :industry', ['industry' => $phrase]), 'href' => $service];
+    }
+}
