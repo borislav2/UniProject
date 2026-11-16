@@ -45,7 +45,7 @@ class GAudit4Test extends TestCase
     public function test_decorative_rules_are_gone_from_the_g_css(): void
     {
         $css = file_get_contents(resource_path('css/g.css')) . file_get_contents(resource_path('css/g-pages.css'));
-        foreach (['.g-hero { position: relative; border-bottom', 'section.g-s { padding-block: var(--g-pad); border-bottom', '.g-pr { display: flex; flex-wrap: wrap; gap: 8px 40px; margin-top: var(--g-gap); padding-top: 24px; border-top', '.g-fbox { border:'] as $old) {
+        foreach (['.g-hero { position: relative; border-bottom', 'section.g-s { padding-block: var(--g-pad); border-bottom', '.g-pr { display: flex; flex-wrap: wrap; gap: 8px 40px; margin-top: var(--g-gap); padding-top: 24px; border-top'] as $old) {
             $this->assertStringNotContainsString($old, $css);
         }
     }

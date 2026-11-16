@@ -528,3 +528,57 @@ html.design-g.dark .g-err { color: #FF8A7A; }
 .design-g .g-next li::before { content: counter(n); font: 500 13px var(--g-mono); color: var(--g-mute); grid-row: span 2; padding-top: 3px; }
 .design-g .g-next b { font-weight: 500; }
 .design-g .g-next span { color: var(--g-mute); font-size: 15px; }
+
+/* ===== Fix round B (expert audit, owners approved): look only, no text. Grouped here to ease merging. ===== */
+
+/* B6 + B11: field borders at 3:1 or more (light #80858D, dark #6F757F), the form card stands out from the page; dark cards a little lighter than the page */
+html.design-g { --g-field-line: #80858D; }
+html.design-g.dark { --g-surface: #161922; --g-field-line: #6F757F; }
+.design-g .g-fbox { border: 1px solid var(--g-line-strong); box-shadow: 0 1px 0 rgba(12, 14, 18, .04), 0 12px 32px rgba(12, 14, 18, .06); }
+html.design-g.dark .g-fbox { box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 12px 32px rgba(0, 0, 0, .35); }
+.design-g .g-in:hover, .design-g .g-chip-opt:hover, .design-g .g-slots span:hover { border-color: var(--g-ink); }
+html.design-g.dark .g-frame img { outline: 1px solid var(--g-line); outline-offset: -1px; }
+
+/* B8: the recommended package is dark (ink band, light text, a lighter signal colour); the other buttons look clickable */
+.design-g .g-plan.g-rec {
+    --g-bg: var(--g-band); --g-ink: var(--g-band-fg); --g-mute: var(--g-band-mute); --g-on-ink: var(--g-band);
+    --g-line: rgba(236, 238, 240, .2); --g-line-strong: rgba(236, 238, 240, .5);
+    --g-accent-text: #FF6A45;
+    background: var(--g-band); color: var(--g-band-fg);
+}
+html.design-g.dark .g-plan.g-rec { box-shadow: inset 0 0 0 1px var(--g-line-strong); }
+.design-g .g-plan:not(.g-rec) > .g-btn { border-color: var(--g-ink); box-shadow: 0 1px 2px rgba(12, 14, 18, .14); }
+html.design-g.dark .g-plan:not(.g-rec) > .g-btn { box-shadow: 0 1px 2px rgba(0, 0, 0, .5); }
+.design-g .g-plan:not(.g-rec) > .g-btn:hover { box-shadow: 0 2px 6px rgba(12, 14, 18, .2); }
+
+/* B10: project cards, links block at the bottom of every card, the first one stronger with an arrow, the second quieter */
+.design-g .g-work .g-case-links { margin-top: auto; padding-top: 12px; flex-direction: column; align-items: flex-start; gap: 0; }
+.design-g .g-link .g-ar { margin-left: 8px; font-size: 13px; transition: transform .2s; }
+.design-g .g-link:hover .g-ar { transform: translateX(3px); }
+.design-g .g-work .g-case-links .g-link:first-child { font-weight: 500; }
+.design-g .g-work .g-case-links .g-link.g-sub { font-weight: 400; font-size: 14.5px; color: var(--g-mute); text-decoration-color: transparent; }
+.design-g .g-work .g-case-links .g-link.g-sub:hover { color: var(--g-ink); text-decoration-color: var(--g-line-strong); text-decoration-thickness: 1px; }
+
+/* B14: header dropdown 8px under the header, a hairline between items (the ::before keeps hover over the gap) */
+.design-g .g-dd-panel { top: calc(100% + 8px); }
+.design-g .g-dd-panel::before { content: ""; position: absolute; left: -1px; right: -1px; top: -9px; height: 9px; }
+.design-g .g-nav .g-dd-panel a + a { border-top: 1px solid var(--g-line); }
+
+/* B14: footer row of industries, label on its own line on phones, links with room to tap */
+@media (max-width: 599px) {
+    .design-g .g-ft-sites { gap: 0 20px; }
+    .design-g .g-ft-sites .g-mono { flex: 0 0 100%; font-size: 11px; padding-bottom: 4px; }
+    .design-g .g-ft-sites a { padding: 11px 0; line-height: 1.4; }
+}
+
+/* B14: chat button at least 16px above the phone bar (the bar is 56px) */
+@media (max-width: 767px) {
+    .design-g #chat { bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* B14: hero lines never run through the headline and text. Wide screens show them on the right only; smaller screens only in the empty strips above and below the text. */
+.design-g .g-hero canvas { -webkit-mask-image: linear-gradient(100deg, transparent 0, transparent 60%, rgba(0,0,0,.55) 72%, #000 86%); mask-image: linear-gradient(100deg, transparent 0, transparent 60%, rgba(0,0,0,.55) 72%, #000 86%); }
+@media (max-width: 1099px) {
+    .design-g .g-hero canvas { -webkit-mask-image: linear-gradient(180deg, #000 0, #000 28px, transparent 60px, transparent calc(100% - 60px), #000 calc(100% - 28px)); mask-image: linear-gradient(180deg, #000 0, #000 28px, transparent 60px, transparent calc(100% - 60px), #000 calc(100% - 28px)); }
+}
+/* ===== end of fix round B (g.css) ===== */

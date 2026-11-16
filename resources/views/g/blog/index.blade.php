@@ -37,9 +37,14 @@
                 @endif
             </div>
         @else
-            <div class="g-posts">
+            @php
+                // The newest post is wider on page 1 when that leaves no lonely card in the last row (CSS reads data-span).
+                $gCount = $posts->count();
+                $gSpan = $posts->onFirstPage() ? trim(($gCount > 2 && $gCount % 2 === 1 ? 'two ' : '') . ($gCount > 3 && $gCount % 3 !== 0 ? 'three' : '')) : '';
+            @endphp
+            <div class="g-posts"@if($gSpan !== '') data-span="{{ $gSpan }}"@endif>
                 @foreach($posts as $post)
-                    @include('g.blog._card')
+                    @include('g.blog._card', ['coverSizes' => $loop->first && $gSpan !== '' ? '(min-width: 1040px) ' . (str_contains($gSpan, 'three') ? '760px' : '380px') . ', (min-width: 700px) ' . (str_contains($gSpan, 'two') ? '92vw' : '46vw') . ', 92vw' : null])
                 @endforeach
             </div>
 
