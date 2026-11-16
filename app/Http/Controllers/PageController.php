@@ -30,14 +30,19 @@ class PageController extends Controller
             $alternates[$lang] = self::serviceUrl($key, $lang);
         }
 
+        // A g_only service is not part of the current site yet: it renders (preview, direct link) but is kept out of search, the sitemap
+        // and hreflang until design G is the public design, when it becomes a normal indexable page by itself.
+        $notYetPublic = ! empty($pages[$key]['g_only']) && ! \App\Support\Design::is('g');
+
         return gview('service', [
+            'noindex' => $notYetPublic,
             'key' => $key,
             'page' => $pages[$key],
             // A service marked g_only (software development) is part of design G; the current design lists the same services as before.
             'others' => collect($pages)->except($key)->reject(fn ($other) => ! empty($other['g_only']) && ! \App\Support\Design::is('g')),
             'plan' => site('plans')['items'][$pages[$key]['package'] ?? -1] ?? null,
             'pageAlternates' => $alternates,
-            'hreflangAlternates' => $alternates,
+            'hreflangAlternates' => $notYetPublic ? [] : $alternates,
             'seo' => ['meta_title' => $pages[$key]['seo_title'], 'meta_description' => $pages[$key]['seo_description']],
         ]);
     }
@@ -174,7 +179,11 @@ class PageController extends Controller
             }
         }
 
-        foreach (array_keys(config('creatium.service_pages')) as $key) {
+        foreach (config('creatium.service_pages') as $key => $servicePage) {
+            // Software development belongs to design G: it is listed only when G is the public design (before that the page is noindex).
+            if (! empty($servicePage['g_only']) && \App\Support\Design::configured() !== 'g') {
+                continue;
+            }
             $alternates = ['bg' => self::serviceUrl($key, 'bg'), 'en' => self::serviceUrl($key, 'en')];
             foreach ($alternates as $url) {
                 $urls[] = ['loc' => $url, 'alternates' => $alternates];
@@ -220,6 +229,8 @@ class PageController extends Controller
     {
         app()->setLocale('bg');
         $contact = config('creatium.contact');
+        // What is public decides what is listed: software development, the G package names and the single G phone only once G is the public design.
+        $g = \App\Support\Design::configured() === 'g';
         $lines = [
             '# Creatium Lab',
             '',
@@ -231,6 +242,9 @@ class PageController extends Controller
             '',
         ];
         foreach (site('service_pages') as $key => $service) {
+            if (! empty($service['g_only']) && ! $g) {
+                continue;
+            }
             $lines[] = '- [' . $service['title'] . '](' . self::serviceUrl($key, 'bg') . '). ' . $service['lead'];
         }
         $lines[] = '- [Безплатна проверка на сайт](' . lroute('site-check', [], 'bg') . '). Въвеждате адреса и имейл и получавате отчет за минута.';
@@ -244,13 +258,42 @@ class PageController extends Controller
         $lines[] = '## Пакети и цени';
         $lines[] = '';
         $plansBg = app(\App\Support\Content::class)->withDefaults('plans', 'bg');
-        array_push($lines, ...\App\Support\PlanBilling::textLines($plansBg, true));
+        if ($g) {
+            // Design G: only the monthly figure, because the yearly figures are not confirmed by the owners yet.
+            foreach (\App\Support\GPlans::cards($plansBg) as $card) {
+                $lines[] = '- ' . \App\Support\GPlans::label($card) . '. ' . \App\Support\GPlans::priceLine($card) . (filled($card['audience']) ? '. ' . rtrim($card['audience'], '.') : '');
+            }
+        } else {
+            array_push($lines, ...\App\Support\PlanBilling::textLines($plansBg, true));
+        }
         $lines[] = '- Всички пакети на ' . lroute('packages', [], 'bg');
+        $lines[] = '';
+        $lines[] = '## Екипът';
+        $lines[] = '';
+        foreach ((array) site('team') as $member) {
+            if (! filled($member['name'] ?? null)) {
+                continue;
+            }
+            $role = $g && filled($member['g_role'] ?? null) ? $member['g_role'] : ($member['role'] ?? '');
+            $lines[] = '- ' . $member['name'] . ($role ? ', ' . $role : '') . (filled($member['linkedin'] ?? null) ? ' (' . $member['linkedin'] . ')' : '');
+        }
+        $lines[] = '- Повече за екипа на ' . lroute('about', [], 'bg') . ' и често задавани въпроси на ' . lroute('faq', [], 'bg');
+        if (config('creatium.blog_enabled')) {
+            $posts = Post::visible('bg')->latest('published_at')->take(8)->get();
+            if ($posts->isNotEmpty()) {
+                $lines[] = '';
+                $lines[] = '## Статии';
+                $lines[] = '';
+                foreach ($posts as $post) {
+                    $lines[] = '- [' . $post->tr('title') . '](' . $post->url('bg') . ')';
+                }
+            }
+        }
         $lines[] = '';
         $lines[] = '## Контакти';
         $lines[] = '';
         $lines[] = '- Имейл ' . $contact['email'];
-        foreach ($contact['phones'] as $phone) {
+        foreach ($g ? g_phones() : $contact['phones'] as $phone) {
             $lines[] = '- Телефон ' . $phone;
         }
         $lines[] = '- Запазете час за разговор на ' . lroute('contact', [], 'bg') . '#konsultatsiya';
@@ -259,12 +302,27 @@ class PageController extends Controller
         return response(implode("\n", $lines) . "\n")->header('Content-Type', 'text/markdown; charset=UTF-8');
     }
 
+    /**
+     * /robots.txt: the admin and the login stay out, and so do the technical endpoints that are not pages (chat, signed outreach links,
+     * the design preview link). Everything else is open, CSS and JS included, because Google needs them to render the pages.
+     * The search and answer bots of the AI assistants are named on purpose (they follow their own group, so the rules are repeated),
+     * so that a later blanket rule cannot shut them out by accident. Bots that only collect training data are not named: they follow „*“
+     * (allowed today), and blocking them is the owners' decision.
+     */
     public function robots(): Response
     {
-        $body = "User-agent: *\nDisallow: /admin\nDisallow: /login\n\nSitemap: " . route('sitemap') . "\n";
+        $rules = "Disallow: /admin\nDisallow: /login\nDisallow: /chat\nDisallow: /o/\nDisallow: /otpisvane/\nDisallow: /nov-dizain\n";
+        $body = "User-agent: *\n" . $rules . "\n";
+        foreach (self::AI_SEARCH_BOTS as $bot) {
+            $body .= "User-agent: $bot\nAllow: /\n" . $rules . "\n";
+        }
+        $body .= "Sitemap: " . route('sitemap') . "\n";
 
         return response($body)->header('Content-Type', 'text/plain');
     }
+
+    /** Search and user-triggered fetchers of the AI assistants (they cite and link to pages, so they are welcome). */
+    public const AI_SEARCH_BOTS = ['OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot', 'Perplexity-User', 'Claude-SearchBot', 'Claude-User', 'Applebot', 'DuckAssistBot'];
 
     /**
      * A legal page: the long text stays in one place (resources/views/privacy|terms|cookies and en/*). Design G renders that view's

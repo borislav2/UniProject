@@ -15,8 +15,8 @@
         'inLanguage' => app()->getLocale(),
         'mainEntityOfPage' => $post->url(),
         'image' => $post->cover_image ? asset($post->cover_image) : asset('images/og-image.png'),
-        'author' => ['@type' => 'Organization', 'name' => 'Creatium Lab', 'url' => lroute('home')],
-        'publisher' => ['@type' => 'Organization', 'name' => 'Creatium Lab', 'logo' => ['@type' => 'ImageObject', 'url' => asset('images/logo.png')]],
+        'author' => \App\Support\Schema::postAuthor($post),
+        'publisher' => ['@type' => 'Organization', '@id' => \App\Support\Schema::organizationId(), 'name' => 'Creatium Lab', 'logo' => ['@type' => 'ImageObject', 'url' => asset('images/logo.png')]],
     ])
     <script type="application/ld+json">{!! json_encode($ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
 @endpush
@@ -40,7 +40,7 @@
     <div class="bg-white dark:bg-ink-950">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
             @if($post->cover_image)
-                <img src="{{ asset($post->cover_image) }}" alt="" width="1200" height="675" fetchpriority="high" class="w-full aspect-[16/9] object-cover rounded-2xl mb-10 ring-1 ring-gray-200 dark:ring-white/10">
+                <img src="{{ asset($post->cover_image) }}" alt="{{ $post->tr('title') }}" width="1200" height="675" fetchpriority="high" class="w-full aspect-[16/9] object-cover rounded-2xl mb-10 ring-1 ring-gray-200 dark:ring-white/10">
             @endif
             @if($post->tr('excerpt'))
                 <p class="text-xl text-gray-700 leading-relaxed mb-8 dark:text-gray-200">{{ $post->tr('excerpt') }}</p>

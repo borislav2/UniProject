@@ -14,6 +14,8 @@ return [
         // Страницата във Facebook (CREATIUM_FACEBOOK_URL): връзка във футъра и блога и sameAs в данните за Google.
         // CREATIUM_FACEBOOK_URL= (празно) я скрива. Линкът за споделяне от приложението води към страницата.
         'facebook' => env('CREATIUM_FACEBOOK_URL', 'https://www.facebook.com/share/19QzCVJcmT/'),
+        // Страницата на фирмата в LinkedIn (CREATIUM_LINKEDIN_URL): само sameAs в данните за Google, докато собствениците не я създадат е празно.
+        'linkedin' => env('CREATIUM_LINKEDIN_URL') ?: null,
     ],
 
     // Чатът на сайта (AI асистент с Claude, без ANTHROPIC_API_KEY отговаря от честите въпроси).

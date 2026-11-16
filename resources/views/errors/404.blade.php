@@ -1,6 +1,6 @@
 @php
     // Design G has its own 404 page; the current design below is unchanged.
-    if (\App\Support\Design::is('g')) { echo view('g.errors.404')->render(); return; }
+    if (\App\Support\Design::is('g')) { echo view('g.errors.404', ['exception' => $exception ?? null])->render(); return; }
 @endphp
 @extends('layouts.public')
 

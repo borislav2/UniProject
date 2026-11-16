@@ -21,7 +21,7 @@
                 <div class="g-top">@if($isRec)<span class="g-tag g-mono">{{ $gBadge }}</span>@endif</div>
                 <div class="g-plan-name">
                     @if($card['tag'] !== '')<p class="g-tier g-mono">{{ $card['tag'] }}</p>@endif
-                    <h3>{{ $card['name'] }}</h3>
+                    <{{ $planTag ?? 'h3' }}>{{ $card['name'] }}</{{ $planTag ?? 'h3' }}>
                 </div>
                 <div class="g-pricebox">
                     @if($card['monthly'] !== null)

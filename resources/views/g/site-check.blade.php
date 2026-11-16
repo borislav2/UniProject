@@ -2,7 +2,7 @@
 
 {{-- /proverka-na-sait in design G: what we check as numbered rows, the form (domain, email, consent) and what happens after the report. --}}
 @section('title', __('Безплатна проверка на сайт за SEO, скорост и Google'))
-@section('meta_description', __('Въведете адреса на сайта си и получете безплатен отчет на имейла. Обхождаме до :n страници за счупени връзки, заглавия за Google, скорост, HTTPS, sitemap и още.', ['n' => config('creatium.site_check.crawl_limit')]))
+@section('meta_description', __('Въведете адреса на сайта си и получете безплатен отчет на имейла. Обхождаме до :n страници за счупени връзки, заглавия, скорост, HTTPS, sitemap и още.', ['n' => config('creatium.site_check.crawl_limit')]))
 @section('g_lean', 'inner')
 
 @php

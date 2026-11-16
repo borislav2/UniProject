@@ -17,8 +17,8 @@
         'inLanguage' => app()->getLocale(),
         'mainEntityOfPage' => $post->url(),
         'image' => $post->cover_image ? asset($post->cover_image) : asset('images/og-image.png'),
-        'author' => ['@type' => 'Organization', 'name' => 'Creatium Lab', 'url' => lroute('home')],
-        'publisher' => ['@type' => 'Organization', 'name' => 'Creatium Lab', 'logo' => ['@type' => 'ImageObject', 'url' => asset('images/logo.png')]],
+        'author' => \App\Support\Schema::postAuthor($post),
+        'publisher' => ['@type' => 'Organization', '@id' => \App\Support\Schema::organizationId(), 'name' => 'Creatium Lab', 'logo' => ['@type' => 'ImageObject', 'url' => asset('images/logo.png')]],
     ])
     <script type="application/ld+json">{!! json_encode($ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
 @endpush
@@ -40,7 +40,7 @@
     <div class="g-s g-last">
         <div class="g-wrap g-narrow">
             @if($post->cover_image)
-                <div class="g-frame g-cover"><img src="{{ asset($post->cover_image) }}" alt="" width="1200" height="675" fetchpriority="high"></div>
+                <div class="g-frame g-cover"><img src="{{ asset($post->cover_image) }}" alt="{{ $post->tr('title') }}" width="1200" height="675" fetchpriority="high"></div>
             @endif
             @if($post->tr('excerpt'))<p class="g-post-lead">{{ $post->tr('excerpt') }}</p>@endif
             <div class="g-prose g-article">

@@ -3,6 +3,11 @@
 @section('title', __('За нас и екипа зад вашия сайт и маркетинг'))
 @section('meta_description', __('Creatium Lab прави сайтове и маркетинг за бизнеси в България, от първата страница до клиентите, които я намират в Google.'))
 
+@push('head')
+    {{-- Хората зад Creatium Lab като Person: име, роля, снимка и LinkedIn (App\Support\Schema). --}}
+    <script type="application/ld+json">{!! json_encode(\App\Support\Schema::team((array) $team), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
+@endpush
+
 @section('content')
 @include('partials/page-header', ['eyebrow' => 'Creatium Lab', 'heading' => __('За нас'), 'sub' => filled($about['subtitle'] ?? null) ? $about['subtitle'] : __('Creatium Lab прави сайтове и маркетинг за бизнеси в България, от първата страница до клиентите, които я намират в Google.')])
 

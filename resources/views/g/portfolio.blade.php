@@ -2,7 +2,7 @@
 
 {{-- /proekti in design G: one grid of equal 16:10 previews, real projects first, then the industry sites, with no label. --}}
 @section('title', __('Проекти и сайтове за ресторант, хотел, салон и автосервиз'))
-@section('meta_description', __('Сайтове за ресторант, хотел, салон, фитнес, зъболекар, адвокат, автосервиз, покриви, имоти и онлайн магазин. Вижте как изглежда сайт, който носи запитвания.'))
+@section('meta_description', __('Сайтове за ресторант, хотел, салон, фитнес, зъболекар, адвокат, автосервиз, покриви, имоти и онлайн магазин. Вижте сайт, който носи запитвания.'))
 @section('g_lean', 'inner')
 
 @php
@@ -45,7 +45,7 @@
                             <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
                                 <div class="g-frame">
                                     @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
-                                        <img src="{{ demo_img($demo['slug']) }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 760px) 50vw, 100vw" alt="" width="960" height="600" loading="lazy" decoding="async">
+                                        <img src="{{ demo_img($demo['slug']) }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 760px) 50vw, 100vw" alt="{{ $demo['name'] }}, {{ $demo['industry'] }}" width="960" height="600" loading="lazy" decoding="async">
                                     @endif
                                 </div>
                             </a>

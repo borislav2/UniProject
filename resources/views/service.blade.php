@@ -121,7 +121,8 @@
             'description' => $page['seo_description'],
             'serviceType' => $page['menu'],
             'areaServed' => ['@type' => 'Country', 'name' => 'Bulgaria'],
-            'provider' => ['@type' => 'Organization', 'name' => 'Creatium Lab', 'url' => url('/')],
+            'url' => url()->current(),
+            'provider' => \App\Support\Schema::provider(),
         ],
         [
             '@type' => 'FAQPage',

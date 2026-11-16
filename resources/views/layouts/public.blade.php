@@ -39,9 +39,14 @@
         // SEO: values from the controller (blog posts) or the admin's per-page settings override the view's defaults.
         $seo = array_filter($seo ?? [], 'filled') ?: app(\App\Support\Content::class)->seo($routeName);
         // „ | Creatium Lab“ отпада, когато заглавието стане над 70 знака (Google иначе го реже по средата).
-        $baseTitle = trim($__env->yieldContent('title', __('Сайтове и дигитален маркетинг за бизнеси')));
+        // Страница 2 и следващите на списък (блог) получават свое заглавие и описание, за да не повтарят първата страница.
+        $pageNote = ($pageNumber ?? 1) > 1 ? ' ' . __('страница :n', ['n' => $pageNumber]) : '';
+        $baseTitle = trim($__env->yieldContent('title', __('Сайтове и дигитален маркетинг за бизнеси')) . $pageNote);
         $pageTitle = $seo['meta_title'] ?? (mb_strlen($baseTitle) + 15 > 60 ? $baseTitle : $baseTitle . ' | Creatium Lab');
         $pageDescription = $seo['meta_description'] ?? trim($__env->yieldContent('meta_description', __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.')));
+        if ($pageNote !== '' && ! isset($seo['meta_description'])) {
+            $pageDescription = rtrim($pageDescription, '.') . $pageNote . '.';
+        }
         $canonicalUrl = $seo['canonical_url'] ?? ($canonical ?? url()->current());
         $ogImage = isset($seo['og_image']) ? asset($seo['og_image']) : asset('images/og-image.png');
 
@@ -63,8 +68,10 @@
     @endphp
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDescription }}">
-    <link rel="canonical" href="{{ $canonicalUrl }}">
-    @if($gPreview)
+    @unless(isset($exception))
+        <link rel="canonical" href="{{ $canonicalUrl }}">
+    @endunless
+    @if($gPreview || isset($exception))
         <meta name="robots" content="noindex">
     @elseif(!empty($noindex))
         <meta name="robots" content="noindex, follow">

@@ -127,7 +127,8 @@
             'serviceType' => 'Изработка на сайт',
             'audience' => ['@type' => 'BusinessAudience', 'name' => $page['menu']],
             'areaServed' => ['@type' => 'Country', 'name' => 'Bulgaria'],
-            'provider' => ['@type' => 'Organization', 'name' => 'Creatium Lab', 'url' => url('/')],
+            'url' => url()->current(),
+            'provider' => \App\Support\Schema::provider(),
         ],
         [
             '@type' => 'FAQPage',
