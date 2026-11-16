@@ -42,7 +42,7 @@ class TeamMariaTextsTest extends TestCase
         $this->assertSame(['Брандинг', 'Имейл маркетинг и CRM', 'Платена реклама', 'Съдържание и видео'], $bg['skills']);
         $en = config('creatium_en.team')[2];
         $this->assertSame(['Branding', 'Email marketing and CRM', 'Paid advertising', 'Content and video'], $en['skills']);
-        $this->assertSame('', $bg['linkedin']);
+        $this->assertSame('https://www.linkedin.com/in/maria-florova/', $bg['linkedin']);
     }
 
     public function test_replaces_old_defaults_backs_up_and_is_idempotent(): void

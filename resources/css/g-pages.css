@@ -25,6 +25,7 @@
 .design-g .g-closer-k { font-size: 14px; color: var(--g-mute); margin-bottom: 4px; }
 .design-g .g-closer-t { font-size: clamp(1.4rem, 2.2vw, 1.9rem); max-width: 22em; }
 .design-g .g-closer-a { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; }
+.design-g .g-closer-note { margin-top: 28px; font-size: 14.5px; line-height: 1.5; color: var(--g-mute); max-width: 60em; }
 .design-g .g-closer-sub { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 32px; margin-top: 16px; color: var(--g-mute); font-size: 15.5px; }
 .design-g .g-closer-sub p { max-width: 44em; }
 .design-g .g-closer-sub b { color: var(--g-ink); font-weight: 500; }
@@ -269,3 +270,88 @@ html.js.design-g .g-presets { display: grid; }
 .design-g .g-skills { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
 .design-g .g-skills li { border: 1px solid var(--g-line-strong); padding: 4px 12px; font-size: 14px; color: var(--g-ink); }
 .design-g .g-member-link { margin-top: 0; align-self: flex-start; }
+
+/* About: method (four cards in a row) and standards (two columns). No sticky column, the heading sits on top. */
+.design-g .g-cards { list-style: none; display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .design-g .g-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .design-g .g-cards-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.design-g .g-cards li { display: flex; flex-direction: column; gap: 10px; padding: clamp(22px, 2.2vw, 32px); background: var(--g-surface); border: 1px solid var(--g-line); min-width: 0; }
+.design-g .g-cards .g-n { color: var(--g-accent-text); margin-bottom: 14px; }
+.design-g .g-cards h3 { font: 400 clamp(1.25rem, 1.7vw, 1.5rem)/1.2 var(--g-head); letter-spacing: -.02em; text-wrap: balance; }
+.design-g .g-cards p { color: var(--g-mute); font-size: 16px; line-height: 1.6; }
+.design-g .g-cards-2 li { padding: clamp(24px, 2.8vw, 40px); }
+
+/* Service illustrations (partials/g/service-visual.blade.php): inline SVG from UI shapes, coloured only by the g tokens, so both themes follow. */
+.design-g .g-sv { display: block; width: 100%; height: auto; max-width: 560px; --sv-edge: color-mix(in srgb, var(--g-ink) 24%, transparent); --sv-t: color-mix(in srgb, var(--g-ink) 11%, transparent); --sv-m: color-mix(in srgb, var(--g-ink) 30%, transparent); --sv-g: color-mix(in srgb, var(--g-ink) 7%, transparent); --sv-card: var(--g-field); --sv-card2: color-mix(in srgb, var(--g-field) 94%, var(--g-ink)); }
+html.design-g.dark .g-sv { --sv-card: #1A1D25; --sv-card2: #20242D; --sv-t: color-mix(in srgb, var(--g-ink) 14%, transparent); }
+.design-g .g-sv * { vector-effect: none; }
+.design-g .g-sv .sv-b { fill: var(--g-surface); stroke: var(--g-line); }
+.design-g .g-sv .sv-c { fill: var(--sv-card); stroke: var(--sv-edge); }
+.design-g .g-sv .sv-c2 { fill: var(--sv-card2); stroke: var(--sv-edge); }
+.design-g .g-sv .sv-e { fill: none; stroke: var(--sv-edge); }
+.design-g .g-sv .sv-g { fill: none; stroke: var(--sv-g); }
+.design-g .g-sv .sv-t { fill: var(--sv-t); }
+.design-g .g-sv .sv-m { fill: var(--sv-m); }
+.design-g .g-sv .sv-k { fill: var(--g-ink); }
+.design-g .g-sv .sv-w { fill: var(--g-on-ink); }
+.design-g .g-sv .sv-a { fill: var(--g-accent); }
+.design-g .g-sv .sv-aw { fill: #fff; }
+.design-g .g-sv .sv-as { fill: none; stroke: var(--g-accent); stroke-width: 1.5; }
+.design-g .g-sv .sv-s { fill: none; stroke: var(--g-ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.design-g .g-sv .sv-s2 { fill: none; stroke: var(--g-ink); stroke-width: 1.5; }
+.design-g .g-sv .sv-ws { fill: none; stroke: var(--g-on-ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.design-g .g-sv .sv-aws { fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.design-g .g-sv .sv-ack { fill: none; stroke: var(--g-accent); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.design-g .g-sv .sv-ck { fill: none; stroke: var(--g-on-ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.design-g .g-sv .sv-cn { fill: var(--sv-card); stroke: var(--g-ink); stroke-width: 2; }
+.design-g .g-sv .sv-cn.sv-dim { stroke: var(--sv-edge); }
+.design-g .g-sv .sv-cite { fill: var(--sv-card); stroke: var(--g-accent); }
+.design-g .g-sv .sv-hl { fill: var(--sv-card); stroke: var(--g-accent); stroke-width: 1.5; }
+.design-g .g-sv .sv-sh { fill: color-mix(in srgb, var(--g-ink) 9%, transparent); }
+.design-g .g-sv .sv-ph { fill: var(--sv-card); stroke: var(--g-ink); stroke-width: 2.5; }
+.design-g .g-sv .sv-tf { fill: var(--sv-t); stroke: var(--sv-edge); }
+.design-g .g-sv .sv-road { fill: none; stroke: var(--sv-card); stroke-width: 11; }
+.design-g .g-sv .sv-bars { fill: none; stroke: color-mix(in srgb, var(--g-ink) 55%, transparent); stroke-width: 20; stroke-dasharray: 6 3.6; }
+.design-g .g-sv .sv-flow { stroke-dasharray: 3 7; }
+.design-g .g-sv .sv-txt { font: 500 11px var(--g-mono); fill: var(--g-ink); letter-spacing: 0; }
+.design-g .g-sv .sv-txt.sv-faint { fill: var(--g-mute); }
+.design-g .g-svc-vis, .design-g .g-ph-vis { min-width: 0; }
+.design-g .g-svc-vis a { display: block; }
+
+@media (prefers-reduced-motion: no-preference) {
+    .design-g .g-sv .sv-cur { animation: sv-click 4.5s ease-in-out infinite; fill: var(--g-ink); stroke: var(--g-surface); stroke-width: 1.5; }
+    .design-g .g-sv .sv-ring, .design-g .g-sv .sv-ring2 { transform-box: fill-box; transform-origin: center; animation: sv-ring 2.8s ease-out infinite; }
+    .design-g .g-sv .sv-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: sv-draw 2.6s .3s ease-out forwards; }
+    .design-g .g-sv .sv-flow { animation: sv-flow 1.6s linear infinite; }
+    .design-g .g-sv .sv-d1, .design-g .g-sv .sv-d2, .design-g .g-sv .sv-d3 { animation: sv-dot 1.4s ease-in-out infinite; }
+    .design-g .g-sv .sv-d2 { animation-delay: .2s; }
+    .design-g .g-sv .sv-d3 { animation-delay: .4s; }
+    .design-g .g-sv .sv-trav { animation: sv-trav 4s ease-in-out infinite; }
+    .design-g .g-sv .sv-slide { animation: sv-slide 6s ease-in-out infinite; }
+    .design-g .g-sv .sv-nudge { animation: sv-nudge 2s ease-in-out infinite; }
+    .design-g .g-sv .sv-bar rect { transform-box: fill-box; transform-origin: bottom; animation: sv-bar 4s ease-in-out infinite; }
+    .design-g .g-sv .sv-bar rect:nth-child(2n) { animation-delay: .4s; }
+    .design-g .g-sv .sv-bar rect:nth-child(3n) { animation-delay: .9s; }
+}
+@keyframes sv-click { 0%, 55%, 100% { transform: translate(0, 0); } 25% { transform: translate(-10px, -8px); } 32% { transform: translate(-10px, -8px) scale(.85); } 40% { transform: translate(-10px, -8px); } }
+@keyframes sv-ring { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(1.8); opacity: 0; } }
+@keyframes sv-draw { to { stroke-dashoffset: 0; } }
+@keyframes sv-flow { to { stroke-dashoffset: -20; } }
+@keyframes sv-dot { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes sv-trav { 0% { transform: translateX(0); opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { transform: translateX(168px); opacity: 0; } }
+@keyframes sv-slide { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-8px); } }
+@keyframes sv-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
+@keyframes sv-bar { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.88); } }
+
+/* /uslugi: the visual beside each service, alternating; above the text on a phone */
+.design-g .g-svc { align-items: start; }
+.design-g .g-svc-vis { order: -1; }
+.design-g .g-svc-body { display: grid; gap: 24px; min-width: 0; align-content: start; }
+@media (min-width: 900px) {
+    .design-g .g-svc { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px clamp(48px, 6vw, 96px); }
+    .design-g .g-svc:nth-child(even) .g-svc-vis { order: 2; }
+}
+/* Head of a service page: text left, the visual right */
+.design-g .g-ph-vis-on .g-wrap { display: grid; gap: 32px; }
+@media (min-width: 960px) { .design-g .g-ph-vis-on .g-wrap { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(40px, 5vw, 80px); align-items: center; } }
+.design-g .g-sv .sv-cd { fill: var(--sv-card); }

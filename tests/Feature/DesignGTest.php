@@ -611,6 +611,28 @@ class DesignGTest extends TestCase
             ->assertDontSee('bg-white/[0.03]', false);
     }
 
+    public function test_every_service_has_its_visual_on_g_services_and_on_its_own_page(): void
+    {
+        config(['creatium.design' => 'g']);
+
+        $services = (array) config('creatium.service_pages');
+        $this->assertCount(7, $services);
+
+        $list = $this->get('/uslugi')->assertOk()->getContent();
+        $this->assertSame(7, substr_count($list, 'class="g-svc-vis"'));
+        $this->assertSame(7, substr_count($list, 'class="g-sv"'));
+
+        foreach ($services as $key => $service) {
+            $this->assertMatchesRegularExpression('/data-g-service="' . $key . '">\s*<div class="g-svc-vis"><svg class="g-sv"/', $list, "no visual for {$key} on /uslugi");
+
+            $page = $this->get(\App\Http\Controllers\PageController::serviceUrl($key))->assertOk()->getContent();
+            $this->assertSame(1, substr_count($page, 'class="g-sv"'), "no visual on the {$key} page");
+            $this->assertStringContainsString('g-ph-vis', $page);
+            $this->assertStringContainsString('aria-hidden="true"', $page);
+            $this->assertLessThan(6144, strlen(substr($page, strpos($page, '<svg class="g-sv"'), strpos($page, '</svg>', strpos($page, '<svg class="g-sv"')) - strpos($page, '<svg class="g-sv"'))), "{$key} visual is too big");
+        }
+    }
+
     public function test_g_service_and_industry_pages_keep_json_ld_faq_and_the_package(): void
     {
         config(['creatium.design' => 'g']);

@@ -275,7 +275,7 @@ class GAudit3Test extends TestCase
         $this->assertStringContainsString('на всеки етап от развитието на бизнеса ви.', $html);
         $this->assertStringContainsString('Защо го правим по този начин', $html);
         foreach (['Не губим време в излишни приказки', 'Играем по новите правила на интернет', 'Гледаме на вашия бизнес като на свой собствен', 'Всичко, което изградим, остава за вас'] as $title) {
-            $this->assertStringContainsString('<dt>' . $title . '</dt>', $html);
+            $this->assertStringContainsString('<h3>' . $title . '</h3>', $html);
         }
         $this->assertStringNotContainsString('Нашите стандарти', $html);
         foreach (['Full-Stack Developer и системна архитектура', 'Head of Growth и дигитален маркетинг', 'Бранд стратегия, съдържание и имейл маркетинг', 'Привличам точните клиенти от Google, Meta и AI търсачките', 'Изграждам разпознаваемия облик и гласа на бранда', '<li>Оптимизация на продажби и рекламни бюджети</li>', '<li>Бизнес комуникация и социални мрежи</li>'] as $text) {

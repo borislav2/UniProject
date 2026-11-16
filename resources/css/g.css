@@ -176,7 +176,7 @@ html.chat-open .g-preview { display: none; }
 
 /* The six services under the hero: two columns of hairline rows, a real title and a readable text each */
 .design-g .g-svc-home { padding-block: 0 !important; }
-.design-g .g-parts { display: grid; grid-template-columns: 1fr; column-gap: 64px; }
+.design-g .g-parts { display: grid; grid-template-columns: 1fr; column-gap: 64px; border-top: 1px solid var(--g-line); border-bottom: 1px solid var(--g-line); }
 @media (min-width: 800px) { .design-g .g-parts { grid-template-columns: 1fr 1fr; } }
 .design-g .g-parts a { display: grid; gap: 8px; align-content: start; padding: 20px 0 20px; color: var(--g-mute); text-decoration: none; }
 .design-g .g-parts a b { font: 400 clamp(1.2rem, 1.7vw, 1.45rem)/1.25 var(--g-head); letter-spacing: -.02em; color: var(--g-ink); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 6px; text-decoration-thickness: 1px; transition: text-decoration-color .2s; }

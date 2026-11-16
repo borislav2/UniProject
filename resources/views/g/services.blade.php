@@ -21,6 +21,8 @@
             @foreach($services as $key => $service)
                 @php($gPlan = $gPlans->get($service['package'] ?? -1))
                 <article id="{{ $service['slug'] }}" class="g-svc" data-g-service="{{ $key }}">
+                    <div class="g-svc-vis">@include('partials.g.service-visual', ['key' => $key])</div>
+                    <div class="g-svc-body">
                     <div class="g-svc-main">
                         <h2 class="g-h">{{ $service['menu'] }}</h2>
                         <p class="g-svc-tag">{{ filled($service['g_what'] ?? null) ? $service['g_what'] : $service['lead'] }}</p>
@@ -39,6 +41,7 @@
                         <ul class="g-list">
                             @foreach($service['includes'] as $item)<li><span>{{ $item }}</span></li>@endforeach
                         </ul>
+                    </div>
                     </div>
                 </article>
             @endforeach

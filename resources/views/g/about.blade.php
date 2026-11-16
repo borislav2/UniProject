@@ -82,11 +82,11 @@
 
 @if($method)
 <section class="g-s">
-    <div class="g-wrap g-sys">
+    <div class="g-wrap">
         <div class="g-sh">
             <h2 class="g-h">{{ $about['g_method_title'] ?? __('Как работим') }}</h2>
         </div>
-        <ol class="g-rows g-numbered">
+        <ol class="g-cards g-cards-4">
             @foreach($method as $step)
                 <li><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><h3>{{ $step['title'] }}</h3><p>{{ $step['text'] ?? '' }}</p></li>
             @endforeach
@@ -96,23 +96,17 @@
 @endif
 
 @if($standards)
-<section class="g-s">
-    <div class="g-wrap g-sys">
+<section class="g-s g-last">
+    <div class="g-wrap">
         <div class="g-sh">
             <h2 class="g-h">{{ $about['g_standards_title'] ?? __('Защо го правим по този начин') }}</h2>
         </div>
-        <dl class="g-defs">
-            @foreach($standards as $item)<div><dt>{{ $item['title'] }}</dt><dd>{{ $item['text'] ?? '' }}</dd></div>@endforeach
-        </dl>
+        <ul class="g-cards g-cards-2">
+            @foreach($standards as $item)<li><h3>{{ $item['title'] }}</h3><p>{{ $item['text'] ?? '' }}</p></li>@endforeach
+        </ul>
     </div>
 </section>
 @endif
 
-<section class="g-s g-legal-s">
-    <div class="g-wrap">
-        <p class="g-legal-line">{{ $legalLine }}</p>
-    </div>
-</section>
-
-@include('partials.g.closer', ['kicker' => __('Имате въпроси?'), 'text' => __('Запазете час за разговор'), 'label' => __('Запазете час'), 'href' => lroute('contact') . '#konsultatsiya', 'link' => ['label' => __('Към въпросите'), 'href' => lroute('faq')]])
+@include('partials.g.closer', ['kicker' => __('Имате въпроси?'), 'text' => __('Запазете час за разговор'), 'label' => __('Запазете час'), 'href' => lroute('contact') . '#konsultatsiya', 'link' => ['label' => __('Към въпросите'), 'href' => lroute('faq')], 'note' => $legalLine])
 @endsection
