@@ -29,7 +29,7 @@
 @endphp
 
 @section('content')
-@include('partials.g.page-head', ['heading' => $about['g_intro_title'] ?? __('Дигитална агенция за бизнеси'), 'sub' => $intro[0] ?? null, 'more' => array_slice($intro, 1)])
+@include('partials.g.page-head', ['heading' => $about['g_intro_title'] ?? __('Дигитална агенция за бизнеси'), 'sub' => $intro[0] ?? null, 'more' => array_slice($intro, 1), 'visualKey' => 'about'])
 
 @if($founders)
 <section class="g-s" id="ekip">
