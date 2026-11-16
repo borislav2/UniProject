@@ -72,6 +72,20 @@
                     </p>
                 </div>
             </div>
+            @if(! empty($summary['areas']) && ! $summary['failed'] && $summary['score'] !== null)
+                @php $areaTones = ['green' => 'bg-green-100 text-green-800', 'amber' => 'bg-amber-100 text-amber-800', 'red' => 'bg-red-100 text-red-800', 'gray' => 'bg-gray-100 text-gray-600']; @endphp
+                <p class="mt-3 text-xs font-bold uppercase tracking-wider text-gray-500">Оценка по области <span class="font-normal normal-case text-gray-400">(от нашите проверки, не е позиция в Google)</span></p>
+                <ul class="mt-2 grid grid-cols-2 gap-2 text-sm sm:grid-cols-5">
+                    @foreach($summary['areas'] as $area)
+                        <li class="rounded-md px-3 py-2 {{ $areaTones[\App\Support\SiteCheck\Areas::tone($area['score'])] }}"><span class="block text-xl font-extrabold leading-none">{{ $area['score'] }}</span><span class="block text-xs font-semibold">{{ $area['label'] }}</span></li>
+                    @endforeach
+                </ul>
+            @endif
+            @if(! empty($summary['top']))
+                <p class="mt-3 text-sm text-gray-700"><span class="font-semibold text-gray-900">Най-важното за разговора</span>
+                    @foreach($summary['top'] as $t)<span class="block">{{ $loop->iteration }}. {{ $t['title'] }}</span>@endforeach
+                </p>
+            @endif
             @if(! empty($summary['crawl']))
                 @php $crawl = $summary['crawl']; @endphp
                 <p class="mt-3 text-sm text-gray-600">
@@ -92,8 +106,8 @@
                 <p class="mt-3 text-xs font-bold uppercase tracking-wider text-gray-500">Проблеми по целия сайт</p>
                 <ul class="mt-2 grid gap-2 text-sm sm:grid-cols-2">
                     @foreach(array_slice($summary['issues'], 0, 6) as $issue)
-                        @php $isErr = $issue['severity'] === 'error'; @endphp
-                        <li class="flex gap-2 rounded-md px-3 py-2 {{ $isErr ? 'bg-red-50' : 'bg-amber-50' }}"><span class="mt-1.5 h-2 w-2 shrink-0 rounded-full {{ $isErr ? 'bg-red-500' : 'bg-amber-500' }}"></span><span class="min-w-0"><span class="font-semibold {{ $isErr ? 'text-red-900' : 'text-amber-900' }}">{{ $issue['title'] }}</span>@if(! empty($issue['examples'][0]))<span class="block truncate text-xs text-gray-600">напр. {{ $issue['examples'][0]['url'] }}</span>@endif</span></li>
+                        @php $isErr = $issue['severity'] === 'error'; $isNote = $issue['severity'] === 'notice'; @endphp
+                        <li class="flex gap-2 rounded-md px-3 py-2 {{ $isErr ? 'bg-red-50' : ($isNote ? 'bg-gray-50' : 'bg-amber-50') }}"><span class="mt-1.5 h-2 w-2 shrink-0 rounded-full {{ $isErr ? 'bg-red-500' : ($isNote ? 'bg-gray-400' : 'bg-amber-500') }}"></span><span class="min-w-0"><span class="font-semibold {{ $isErr ? 'text-red-900' : ($isNote ? 'text-gray-800' : 'text-amber-900') }}">{{ $issue['title'] }}</span>@if(! empty($issue['examples'][0]))<span class="block truncate text-xs text-gray-600">напр. {{ $issue['examples'][0]['url'] }}</span>@endif</span></li>
                     @endforeach
                 </ul>
                 @if(count($summary['issues']) > 6)<p class="mt-1 text-xs text-gray-500">и още {{ count($summary['issues']) - 6 }} вида проблеми (пълният списък е в отчета на клиента).</p>@endif

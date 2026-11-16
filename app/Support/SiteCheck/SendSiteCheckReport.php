@@ -36,8 +36,10 @@ class SendSiteCheckReport
         $notes = [];
         $sent = false;
         if ($report) {
-            $problems = collect(SiteAudit::items($report))->pluck('title');
+            $problems = collect(SiteAudit::items($report))->where('severity', '!=', 'notice')->pluck('title');
             $notes[] = "Проверка на сайт {$domain}: оценка {$report['score']} от 100.";
+            $areaLine = collect(Areas::scores($report))->map(fn ($a) => $a['label'] . ' ' . $a['score'])->implode(', ');
+            $notes[] = "По области (само от нашите проверки): {$areaLine}.";
             $notes[] = $problems->isEmpty() ? 'Без открити проблеми.' : "За оправяне:\n- " . $problems->implode("\n- ");
 
             try {
@@ -63,7 +65,7 @@ class SendSiteCheckReport
                 'issues' => $report['issues'] ?? [],
                 'pagespeed' => $report['pagespeed'] ?? null,
                 'shopping' => $report['shopping'] ?? null,
-                'checks' => collect($report['checks'])->map(fn ($c) => ['status' => $c['status'], 'title' => $c['title'], 'detail' => $c['detail'] ?? ''])->values()->all(),
+                'checks' => collect($report['checks'])->map(fn ($c) => ['key' => $c['key'] ?? null, 'status' => $c['status'], 'title' => $c['title'], 'detail' => $c['detail'] ?? ''])->values()->all(),
                 'sent' => $sent,
                 'checked_at' => now()->toIso8601String(),
             ] : ['domain' => $domain, 'failed' => true, 'checked_at' => now()->toIso8601String()],
