@@ -4,7 +4,7 @@
     $selectedSlot = old('consultation');
     $selectedDay = $selectedSlot ? substr($selectedSlot, 0, 10) : $bookingDays[0]['date']->format('Y-m-d');
 @endphp
-<fieldset id="konsultatsiya" class="g-book" data-booking>
+<fieldset id="konsultatsiya" class="g-book" data-booking @error('consultation') data-g-invalid tabindex="-1" aria-describedby="err-consultation"@enderror>
     <legend class="g-mono">{{ __('Ден и час за разговор') }} <span>{{ __('(по избор)') }}</span></legend>
     <p class="g-hint">{{ __('Изберете удобен час и ще ви се обадим тогава. Разговорът е около :minutes минути.', ['minutes' => config('creatium.booking.minutes')]) }}</p>
 
@@ -38,7 +38,7 @@
         <p data-booking-summary aria-live="polite"></p>
         <button type="button" class="g-textbtn" data-booking-clear hidden>{{ __('Без час') }}</button>
     </div>
-    @error('consultation')<p class="g-err">{{ $message }}</p>@enderror
+    @error('consultation')<p class="g-err" id="err-consultation">{{ $message }}</p>@enderror
 </fieldset>
 <script>
     (function () {

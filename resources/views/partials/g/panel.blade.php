@@ -43,7 +43,7 @@
                 </ul>
                 <div class="g-panel-out">
                     <p class="g-mono g-mute">{{ $texts['active_label'] }}</p>
-                    <p class="g-panel-count"><b data-count>{{ $state['count'] }}</b> <span>{{ $texts['of'] }} {{ \App\Support\GPanel::COUNT }}</span> <small data-percent>({{ $state['percent'] }}%)</small></p>
+                    <p class="g-panel-count"><b data-count>{{ $state['count'] }}</b> <span>{{ $texts['of'] }} {{ \App\Support\GPanel::COUNT }}</span></p>
                     <div class="g-meter" role="presentation"><div data-bar style="width: {{ $state['percent'] }}%"></div></div>
                     <p class="g-panel-msg" data-msg aria-live="polite">{{ $messages[$state['message']] }}</p>
                     <a class="g-btn" data-cta href="{{ \App\Support\GPanel::contactUrl($state['directions']) }}">{{ $texts['button'] }}<i></i></a>

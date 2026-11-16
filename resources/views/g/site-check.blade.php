@@ -30,12 +30,13 @@
             <p class="g-sh-text">{{ __('Автоматично обхождаме до :n страници на сайта ви. Отчетът е на разбираем език, с обяснение какво значи всеки резултат и къде е проблемът.', ['n' => config('creatium.site_check.crawl_limit')]) }}</p>
             <div id="site-check-form" class="g-fbox g-sticky-form">
                 @if(session('site_check_sent'))
-                    <div class="g-thanks" role="status">
+                    <div class="g-thanks" role="status" tabindex="-1" data-g-thanks>
                         <p class="g-mono">{{ __('Изпратено') }}</p>
                         <h2 class="g-h">{{ __('Проверката започна') }}</h2>
                         <p>{{ __('Ще изпратим отчета на :email до няколко минути, защото обхождането на целия сайт отнема малко повече време. Ако не го виждате, проверете папка „Спам“ или „Промоции“.', ['email' => session('site_check_sent')]) }}</p>
                         <a class="g-btn g-ghost" href="{{ lroute('site-check') }}">{{ __('Проверете друг сайт') }}</a>
                     </div>
+                    <script>(function () { var t = document.querySelector('#site-check-form [data-g-thanks]'); if (t) { t.scrollIntoView({ block: 'center' }); t.focus({ preventScroll: true }); } })();</script>
                 @else
                     <h2 class="g-h g-fh">{{ __('Получете отчета на имейла си') }}</h2>
                     <form action="{{ lroute('site-check.submit') }}" method="POST" class="g-f" novalidate>
@@ -46,25 +47,26 @@
                         </div>
                         <div class="g-fld">
                             <label for="domain">{{ __('Адрес на сайта') }}</label>
-                            <input class="g-in" type="text" id="domain" name="domain" value="{{ old('domain') }}" required inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="{{ __('vashiyatsait.bg') }}">
-                            @error('domain')<p class="g-err">{{ $message }}</p>@enderror
+                            <input class="g-in" type="text" id="domain" name="domain" value="{{ old('domain') }}" required inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="{{ __('vashiyatsait.bg') }}"@error('domain') aria-invalid="true" aria-describedby="err-domain"@enderror>
+                            @error('domain')<p class="g-err" id="err-domain">{{ $message }}</p>@enderror
                         </div>
                         <div class="g-fld">
                             <label for="email">{{ __('Имейл за отчета') }}</label>
-                            <input class="g-in" type="email" id="email" name="email" value="{{ old('email') }}" required autocomplete="email">
-                            @error('email')<p class="g-err">{{ $message }}</p>@enderror
+                            <input class="g-in" type="email" id="email" name="email" value="{{ old('email') }}" required autocomplete="email"@error('email') aria-invalid="true" aria-describedby="err-email"@enderror>
+                            @error('email')<p class="g-err" id="err-email">{{ $message }}</p>@enderror
                         </div>
                         <div class="g-fld">
                             <label class="g-chk">
-                                <input type="checkbox" name="consent" value="1" {{ old('consent') ? 'checked' : '' }}>
+                                <input type="checkbox" name="consent" value="1" {{ old('consent') ? 'checked' : '' }}@error('consent') aria-invalid="true" aria-describedby="err-consent"@enderror>
                                 <span>{!! __('Съгласен/на съм да използвате имейла ми, за да ми изпратите отчета и да се свържете с мен за него. Прочетох :link.', ['link' => '<a href="' . e(lroute('privacy')) . '" target="_blank">' . e(__('Политиката за поверителност')) . '</a>']) !!}</span>
                             </label>
-                            @error('consent')<p class="g-err">{{ $message }}</p>@enderror
+                            @error('consent')<p class="g-err" id="err-consent">{{ $message }}</p>@enderror
                         </div>
                         @include('partials.turnstile')
                         <p class="g-promise">{{ __('Безплатно и без ангажимент. Не изпращаме реклами.') }}</p>
                         <button type="submit" class="g-btn g-big">{{ __('Проверете сайта') }}</button>
                     </form>
+                    @include('partials.g.form-feedback', ['box' => '#site-check-form'])
                 @endif
             </div>
         </div>

@@ -82,17 +82,16 @@ document.querySelectorAll('[data-g-panel]').forEach((panel) => {
     const presets = Array.from(panel.querySelectorAll('[data-preset]'));
     const order = (panel.dataset.order || '').split(',');
     const count = panel.querySelector('[data-count]');
-    const percent = panel.querySelector('[data-percent]');
     const bar = panel.querySelector('[data-bar]');
     const msg = panel.querySelector('[data-msg]');
     const cta = panel.querySelector('[data-cta]');
-    // Rule order, first match wins: full (6 or 7), traffic without the base, the base without traffic, low (0 to 2), mixed.
+    // Rule order, first match wins (same as GPanel::message): full (all 7), traffic (ads or SEO while the fast site 5 is off), base (5 and 6 without 1, 2, 3), low (0 to 2 without 2 or 3), mixed.
     const rule = (on) => {
         const has = (n) => on.includes(n);
-        if (on.length >= 6) return 'full';
-        if ((has(2) || has(3)) && !(has(4) && has(5) && has(6))) return 'traffic';
-        if (has(4) && has(5) && has(6) && !has(1) && !has(2) && !has(3)) return 'base';
-        if (on.length <= 2) return 'low';
+        if (on.length >= total) return 'full';
+        if ((has(2) || has(3)) && !has(5)) return 'traffic';
+        if (has(5) && has(6) && !has(1) && !has(2) && !has(3)) return 'base';
+        if (on.length <= 2 && !has(2) && !has(3)) return 'low';
         return 'mixed';
     };
     const render = () => {
@@ -100,7 +99,6 @@ document.querySelectorAll('[data-g-panel]').forEach((panel) => {
         const share = Math.floor((on.length * 100) / total);
         const key = rule(on);
         count.textContent = String(on.length);
-        percent.textContent = `(${share}%)`;
         bar.style.width = `${share}%`;
         msg.textContent = panel.dataset[`msg${key.charAt(0).toUpperCase()}${key.slice(1)}`] || '';
         // The button leads to the contact form with the directions of the missing switches ticked.

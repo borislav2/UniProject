@@ -46,25 +46,25 @@
                 <div class="g-fgrid">
                     <div class="g-fld">
                         <label for="name">{{ __('Име и фамилия') }} <b aria-hidden="true">*</b></label>
-                        <input class="g-in" type="text" id="name" name="name" value="{{ old('name') }}" required maxlength="255" autocomplete="name">
-                        @error('name')<p class="g-err">{{ $message }}</p>@enderror
+                        <input class="g-in" type="text" id="name" name="name" value="{{ old('name') }}" required maxlength="255" autocomplete="name"@error('name') aria-invalid="true" aria-describedby="err-name"@enderror>
+                        @error('name')<p class="g-err" id="err-name">{{ $message }}</p>@enderror
                     </div>
                     <div class="g-fld">
                         <label for="business_site">{{ __('Име на бизнеса или уебсайт') }}</label>
-                        <input class="g-in" type="text" id="business_site" name="business_site" value="{{ old('business_site') }}" maxlength="255" autocomplete="organization">
+                        <input class="g-in" type="text" id="business_site" name="business_site" value="{{ old('business_site') }}" maxlength="255" autocomplete="organization"@error('business_site') aria-invalid="true" aria-describedby="err-business_site"@enderror>
                         <p class="g-hint">{{ __('Ако имате сайт, ще го прегледаме предварително, за да сме максимално полезни в разговора.') }}</p>
-                        @error('business_site')<p class="g-err">{{ $message }}</p>@enderror
+                        @error('business_site')<p class="g-err" id="err-business_site">{{ $message }}</p>@enderror
                     </div>
                     <div class="g-fld">
                         <label for="email">{{ __('Имейл') }} <b aria-hidden="true">*</b></label>
-                        <input class="g-in" type="email" id="email" name="email" value="{{ old('email') }}" required maxlength="255" autocomplete="email" placeholder="{{ __('ime@firma.bg') }}">
-                        @error('email')<p class="g-err">{{ $message }}</p>@enderror
+                        <input class="g-in" type="email" id="email" name="email" value="{{ old('email') }}" required maxlength="255" autocomplete="email" placeholder="{{ __('ime@firma.bg') }}"@error('email') aria-invalid="true" aria-describedby="err-email"@enderror>
+                        @error('email')<p class="g-err" id="err-email">{{ $message }}</p>@enderror
                     </div>
                     <div class="g-fld">
                         <label for="phone">{{ __('Телефон') }}</label>
-                        <input class="g-in" type="tel" id="phone" name="phone" value="{{ old('phone') }}" autocomplete="tel" inputmode="tel" placeholder="{{ __('08X XXX XXXX') }}">
+                        <input class="g-in" type="tel" id="phone" name="phone" value="{{ old('phone') }}" autocomplete="tel" inputmode="tel" placeholder="{{ __('08X XXX XXXX') }}"@error('phone') aria-invalid="true" aria-describedby="err-phone"@enderror>
                         <p class="g-hint">{{ __('Оставете номер, ако предпочитате да ви се обадим или да се свържем с вас по Viber или WhatsApp.') }}</p>
-                        @error('phone')<p class="g-err">{{ $message }}</p>@enderror
+                        @error('phone')<p class="g-err" id="err-phone">{{ $message }}</p>@enderror
                     </div>
                 </div>
             </section>
@@ -75,38 +75,38 @@
                 <p class="g-hint g-fq-hint">{{ __('Можете да изберете пакет или отделни направления.') }}</p>
 
                 @if($gPlans)
-                    <fieldset class="g-fld g-opts">
+                    <fieldset class="g-fld g-opts"@error('g_plans.*') data-g-invalid tabindex="-1" aria-describedby="err-g_plans"@enderror>
                         <legend>{{ __('Готови пакети') }}</legend>
                         <div class="g-chips">
                             @foreach($gPlans as $card)
                                 <label class="g-chip-opt"><input type="checkbox" name="g_plans[]" value="{{ $card['index'] }}" @checked(in_array((string) $card['index'], $oldPlans, true))><span>@if($card['tag'] !== '')<b class="g-ptag g-mono">{{ $card['tag'] }}</b> @endif{{ $card['name'] }}@if(\App\Support\GPlans::priceLine($card) !== '') <small>({{ \App\Support\GPlans::priceLine($card) }})</small>@endif</span></label>
                             @endforeach
                         </div>
-                        @error('g_plans.*')<p class="g-err">{{ $message }}</p>@enderror
+                        @error('g_plans.*')<p class="g-err" id="err-g_plans">{{ $message }}</p>@enderror
                     </fieldset>
                 @endif
 
                 @if($directions)
-                    <fieldset class="g-fld g-opts">
+                    <fieldset class="g-fld g-opts"@error('g_directions.*') data-g-invalid tabindex="-1" aria-describedby="err-g_directions"@enderror>
                         <legend>{{ __('Или конкретни направления') }}</legend>
                         <div class="g-chips">
                             @foreach($directions as $key => $direction)
                                 <label class="g-chip-opt"><input type="checkbox" name="g_directions[]" value="{{ $key }}" @checked(in_array($key, $oldDirections, true))><span>{{ $direction }}</span></label>
                             @endforeach
                         </div>
-                        @error('g_directions.*')<p class="g-err">{{ $message }}</p>@enderror
+                        @error('g_directions.*')<p class="g-err" id="err-g_directions">{{ $message }}</p>@enderror
                     </fieldset>
                 @endif
 
                 @if($budgets)
                     <div class="g-fld">
                         <label for="budget">{{ __('Ориентировъчен месечен бюджет') }}</label>
-                        <select class="g-in" id="budget" name="budget">
+                        <select class="g-in" id="budget" name="budget"@error('budget') aria-invalid="true" aria-describedby="err-budget"@enderror>
                             @foreach($budgets as $key => $label)
                                 <option value="{{ $key }}"{{ (string) $oldBudget === (string) $key ? ' selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
-                        @error('budget')<p class="g-err">{{ $message }}</p>@enderror
+                        @error('budget')<p class="g-err" id="err-budget">{{ $message }}</p>@enderror
                     </div>
                 @endif
             </section>
@@ -118,14 +118,15 @@
 
             <div class="g-fld">
                 <label class="g-chk">
-                    <input type="checkbox" name="consent" value="1" required {{ old('consent') ? 'checked' : '' }}>
+                    <input type="checkbox" name="consent" value="1" required {{ old('consent') ? 'checked' : '' }}@error('consent') aria-invalid="true" aria-describedby="err-consent"@enderror>
                     <span>{!! __('Запознат/а съм с :link.', ['link' => '<a href="' . e(lroute('privacy')) . '" target="_blank">' . e(__('Политиката за поверителност')) . '</a>']) !!}</span>
                 </label>
-                @error('consent')<p class="g-err">{{ $message }}</p>@enderror
+                @error('consent')<p class="g-err" id="err-consent">{{ $message }}</p>@enderror
             </div>
             @include('partials.turnstile')
             <button type="submit" class="g-btn g-big">{{ __('Изпратете') }}</button>
         </form>
+        @include('partials.g.form-feedback', ['box' => '#g-contact-form'])
     @endif
 </div>
 <script>
@@ -161,6 +162,13 @@
         });
     })();
 </script>
-@if(session('success') || $errors->any())
-    <script>document.getElementById('g-contact-form').scrollIntoView({ block: 'center' });</script>
+@if(session('success'))
+    <script>
+        (function () {
+            var box = document.getElementById('g-contact-form');
+            box.scrollIntoView({ block: 'center' });
+            var thanks = box.querySelector('.g-thanks');
+            if (thanks) thanks.focus({ preventScroll: true });
+        })();
+    </script>
 @endif

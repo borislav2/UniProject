@@ -6,6 +6,9 @@
 @section('g_lean', 'inner')
 
 @php
+    // Card images: the first one on screen is the LCP element (high priority, never lazy), the rest are lazy; sizes follow the grid (1, 2 and 3 columns).
+    $gSizes = '(min-width: 1100px) min(33vw, 400px), (min-width: 760px) 50vw, calc(100vw - 50px)';
+    $gFirstImage = true;
 @endphp
 
 @section('content')
@@ -24,7 +27,12 @@ $host = preg_replace('/^www\./', '', (string) parse_url($project->website_url, P
                             @if($project->website_url)<a href="{{ $project->website_url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">@endif
                             <div class="g-frame">
                                 @if($project->screenshot)
-                                    <img src="{{ asset($project->screenshot) }}" alt="{{ $project->name }}" width="960" height="600" loading="lazy" decoding="async">
+                                    @php
+                                        $gEager = $gFirstImage;
+                                        $gFirstImage = false;
+                                        $gSet = project_srcset($project->screenshot);
+                                    @endphp
+                                    <img src="{{ asset($project->screenshot) }}"@if($gSet) srcset="{{ $gSet }}" sizes="{{ $gSizes }}"@endif alt="{{ $project->name }}" width="960" height="600" @if($gEager)fetchpriority="high" @else loading="lazy" @endif decoding="async">
                                 @else
                                     <div class="g-noimg g-mono">{{ $project->name }}</div>
                                 @endif
@@ -55,7 +63,11 @@ $industryLink = g_industry_link($demo);
                             <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
                                 <div class="g-frame">
                                     @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
-                                        <img src="{{ demo_img($demo['slug']) }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 760px) 50vw, 100vw" alt="{{ $demo['name'] }}, {{ $demo['industry'] }}" width="960" height="600" loading="lazy" decoding="async">
+                                        @php
+                                            $gEager = $gFirstImage;
+                                            $gFirstImage = false;
+                                        @endphp
+                                        <img src="{{ demo_img($demo['slug']) }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="{{ $gSizes }}" alt="{{ $demo['name'] }}, {{ $demo['industry'] }}" width="960" height="600" @if($gEager)fetchpriority="high" @else loading="lazy" @endif decoding="async">
                                     @endif
                                 </div>
                             </a>

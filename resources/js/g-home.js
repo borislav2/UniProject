@@ -117,14 +117,33 @@ function initTopo() {
         }
     }
 
+    // Frame gate: about 30 fps on desktop, about 20 fps on phones (40 ms gate, frames come in 16.7 ms steps) (coarse pointer or a narrow canvas). The drift speed is per second, so the look does not change.
+    const coarse = window.matchMedia('(pointer: coarse)').matches;
+    const gap = () => (coarse || W < 600 ? 40 : 33);
+    const IDLE_MS = 8000;
+    let onScreen = true, running = false, lastActive = 0;
+
     function loop(ts) {
-        if (visible && ts - last > 33) {
+        running = false;
+        if (!visible) return; // off-screen or hidden tab: the loop stops and wakes up again in refresh()
+        if (!lastActive) lastActive = ts;
+        // Nothing moved for a while: keep the last frame still (saves battery) until the next pointer, touch, key or scroll.
+        if (ts - lastActive > IDLE_MS) return;
+        const step = ts - last;
+        if (step > gap()) {
             last = ts;
-            t += 0.012;
+            t += 0.012 * Math.min(step, 100) / 33.3;
             if (++frame % 40 === 0) { readColors(); readClear(); }
             draw();
         }
+        running = true;
         requestAnimationFrame(loop);
+    }
+
+    // Start (or restart) the loop when something makes it worth running again.
+    function wake() {
+        lastActive = performance.now();
+        if (!running && visible) { running = true; requestAnimationFrame(loop); }
     }
 
     resize();
@@ -137,15 +156,16 @@ function initTopo() {
 
     if (reduce) return;
 
-    // Pause off-screen and in hidden tabs.
+    // Pause off-screen and in hidden tabs, resume when the canvas is back in view.
+    const refresh = () => { visible = onScreen && !document.hidden; if (visible) wake(); };
     if ('IntersectionObserver' in window) {
-        let onScreen = true;
-        new IntersectionObserver((entries) => { onScreen = entries[0].isIntersecting; visible = onScreen && !document.hidden; }).observe(canvas);
-        document.addEventListener('visibilitychange', () => { visible = onScreen && !document.hidden; });
-    } else {
-        document.addEventListener('visibilitychange', () => { visible = !document.hidden; });
+        new IntersectionObserver((entries) => { onScreen = entries[0].isIntersecting; refresh(); }).observe(canvas);
     }
-    requestAnimationFrame(loop);
+    document.addEventListener('visibilitychange', refresh);
+    // After about 8 seconds without a pointer, touch, key or scroll the map stands still; any of them starts it again.
+    ['mouseover', 'pointerdown', 'touchstart', 'keydown', 'wheel'].forEach((name) => window.addEventListener(name, wake, { passive: true }));
+    window.addEventListener('scroll', wake, { passive: true });
+    wake();
 }
 
 // Start after the page has loaded so the map never competes with the first paint.

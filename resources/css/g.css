@@ -3,24 +3,19 @@
  * (?dizain=g) or to everyone with CREATIUM_DESIGN=g. Everything is scoped under `.design-g` (a class on <html>), so it
  * cannot reach the current design. It is loaded after app.css; being unlayered it wins over Tailwind's utilities on
  * pages whose body is still the old one.
- * Fonts are self-hosted (Cyrillic and Latin only): Geologica for headings, Onest for text, JetBrains Mono for labels.
  */
-@import '@fontsource/geologica/cyrillic-300.css';
-@import '@fontsource/geologica/latin-300.css';
-@import '@fontsource/geologica/cyrillic-400.css';
-@import '@fontsource/geologica/latin-400.css';
-@import '@fontsource/geologica/cyrillic-600.css';
-@import '@fontsource/geologica/latin-600.css';
-@import '@fontsource/onest/cyrillic-400.css';
-@import '@fontsource/onest/latin-400.css';
-@import '@fontsource/onest/cyrillic-500.css';
-@import '@fontsource/onest/latin-500.css';
-@import '@fontsource/onest/cyrillic-600.css';
-@import '@fontsource/onest/latin-600.css';
-@import '@fontsource/jetbrains-mono/cyrillic-400.css';
-@import '@fontsource/jetbrains-mono/latin-400.css';
-@import '@fontsource/jetbrains-mono/cyrillic-500.css';
-@import '@fontsource/jetbrains-mono/latin-500.css';
+
+/*
+ * Fonts, three faces of two files each (Cyrillic and Latin, about 55 KB in all; built by tools/g-fonts/build.sh): one file stands in for the neighbouring
+ * weights through the weight range, so the used 300/400/500 of Geologica, 400/500 of Onest and 400/500 of JetBrains Mono need no more files.
+ * Heavier requests (the chat widget bold) get the browser's synthetic bold. The first screen preloads only the two Cyrillic files (layouts/public).
+ */
+@font-face { font-family: 'Geologica'; font-style: normal; font-display: swap; font-weight: 300 500; src: url('../fonts/g/geologica-cyrillic-300.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'Geologica'; font-style: normal; font-display: swap; font-weight: 300 500; src: url('../fonts/g/geologica-latin-300.woff2') format('woff2'); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2212; }
+@font-face { font-family: 'Onest'; font-style: normal; font-display: swap; font-weight: 400 500; src: url('../fonts/g/onest-cyrillic-400.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'Onest'; font-style: normal; font-display: swap; font-weight: 400 500; src: url('../fonts/g/onest-latin-400.woff2') format('woff2'); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2212; }
+@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-display: swap; font-weight: 400 500; src: url('../fonts/g/jetbrains-mono-cyrillic-500.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-display: swap; font-weight: 400 500; src: url('../fonts/g/jetbrains-mono-latin-500.woff2') format('woff2'); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2212; }
 
 /* Tokens. The dark theme is the site's `.dark` class on <html> (set before paint by the script in layouts/public). */
 html.design-g {
@@ -528,3 +523,10 @@ html.design-g.dark .g-err { color: #FF8A7A; }
 .design-g .g-next li::before { content: counter(n); font: 500 13px var(--g-mono); color: var(--g-mute); grid-row: span 2; padding-top: 3px; }
 .design-g .g-next b { font-weight: 500; }
 .design-g .g-next span { color: var(--g-mute); font-size: 15px; }
+
+/* === Form errors (a11y fix A): the first invalid field lands below the sticky header, errors are announced, an invalid field is outlined === */
+.design-g .g-fld, .design-g .g-book, .design-g .g-opts { scroll-margin-top: 110px; }
+.design-g .g-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.design-g .g-in[aria-invalid="true"] { border-color: #B42318; }
+html.design-g.dark .g-in[aria-invalid="true"] { border-color: #FF8A7A; }
+/* === /Form errors === */
