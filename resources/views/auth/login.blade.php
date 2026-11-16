@@ -34,7 +34,12 @@
                 </div>
                 <div class="adm-field">
                     <label for="password">Парола</label>
-                    <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••">
+                    <div class="adm-pass">
+                        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••">
+                        <button type="button" class="adm-pass-toggle" data-pass-toggle aria-controls="password" aria-pressed="false" aria-label="Покажи паролата" title="Покажи паролата">
+                            <span data-show><x-icon name="eye" /></span><span data-hide hidden><x-icon name="eye-slash" /></span>
+                        </button>
+                    </div>
                 </div>
                 <label class="mb-6 flex items-center gap-2 text-sm text-gray-600"><input type="checkbox" id="remember" name="remember"> Запомни ме</label>
                 <button type="submit" class="adm-btn w-full justify-center" style="height:48px">Вход в системата <x-icon name="arrow-right" /></button>
@@ -43,5 +48,25 @@
         </div>
     </main>
 </div>
+<script>
+    // Показва или скрива паролата. Полето остава type=password при изпращане, за да не се запазва като обикновен текст.
+    (function () {
+        var btn = document.querySelector('[data-pass-toggle]');
+        if (!btn) return;
+        var input = document.getElementById('password');
+        btn.addEventListener('click', function () {
+            var show = input.type === 'password';
+            input.type = show ? 'text' : 'password';
+            btn.setAttribute('aria-pressed', show ? 'true' : 'false');
+            var label = show ? 'Скрий паролата' : 'Покажи паролата';
+            btn.setAttribute('aria-label', label);
+            btn.title = label;
+            btn.querySelector('[data-show]').hidden = show;
+            btn.querySelector('[data-hide]').hidden = !show;
+            input.focus();
+        });
+        input.form.addEventListener('submit', function () { input.type = 'password'; });
+    })();
+</script>
 </body>
 </html>

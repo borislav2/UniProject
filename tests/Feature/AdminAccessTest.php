@@ -126,4 +126,13 @@ class AdminAccessTest extends TestCase
         $this->assertSame(3, Role::count());
         $this->assertSame(1, Category::where('name', 'Ново запитване')->count());
     }
+
+    public function test_the_login_form_has_a_button_to_show_the_password(): void
+    {
+        $this->get('/login')->assertOk()
+            ->assertSee('data-pass-toggle', false)
+            ->assertSee('aria-controls="password"', false)
+            ->assertSee('Покажи паролата')
+            ->assertSee('type="password" id="password"', false);
+    }
 }

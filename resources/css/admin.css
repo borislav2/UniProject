@@ -642,6 +642,12 @@ a.op-title:hover { color: var(--accent-text); }
 .adm-field { margin-bottom: 16px; }
 .adm-field label { display: block; margin-bottom: 6px; font: 500 11.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
 .adm-field input:not([type=checkbox]) { width: 100%; height: 46px; padding: 0 14px; }
+.adm-pass { position: relative; }
+.adm-field .adm-pass input:not([type=checkbox]) { padding-right: 52px; }
+.adm-pass-toggle { position: absolute; top: 0; right: 0; width: 46px; height: 46px; display: grid; place-items: center; background: none; border: 0; color: var(--ink-2); cursor: pointer; }
+.adm-pass-toggle:hover { color: var(--ink); }
+.adm-pass-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: -4px; }
+.adm-pass-toggle svg { width: 18px; height: 18px; }
 .adm-err { margin-top: 6px; font-size: 13.5px; color: #B92E14; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
