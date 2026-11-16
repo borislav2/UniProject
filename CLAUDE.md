@@ -11,7 +11,7 @@ A Laravel 12 app that is two things at once:
 
 The two halves meet in one place: **every website form (contact, quote, website check, Kreo chat) becomes a `Project`** with `source = 'website'`, so leads sit next to client work. The admin is Bulgarian only (`lang/bg.json`, `lang/bg/pagination.php`).
 
-Visual and copy rules for the public site are in `DESIGN.md`; read it before touching public views or text. Production deployment is in `DEPLOY-WEBDOCK.md`.
+Visual and copy rules for the public site are in `DESIGN.md`; read it before touching public views or text. Production deployment is in `DEPLOY-WEBDOCK.md`. Positioning and offer strategy (Blue Ocean notes from Владимир's course, with a draft applied to us) is in `STRATEGY-BLUE-OCEAN.md`; it is internal, its section 2 is hypotheses for the owners, never site copy until they approve it.
 
 ## Commands
 
