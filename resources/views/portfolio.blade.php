@@ -44,7 +44,7 @@
                 <article class="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white card-hover reveal dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: {{ (($projects->count() + $loop->index) % 3) * 100 }}ms">
                     <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="relative block aspect-[8/5] overflow-hidden bg-gray-100 dark:bg-white/5" tabindex="-1" aria-hidden="true">
                         @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
-                            <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" alt="" width="960" height="600" loading="lazy" class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
+                            <img src="{{ demo_img($demo['slug']) }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" alt="" width="960" height="600" loading="lazy" class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]">
                         @endif
                     </a>
                     <div class="flex flex-1 flex-col p-6">

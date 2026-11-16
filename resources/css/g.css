@@ -218,6 +218,9 @@ html.chat-open .g-preview { display: none; }
 .design-g .g-work { display: grid; gap: clamp(36px, 3.6vw, 52px) 24px; grid-template-columns: 1fr; }
 @media (min-width: 760px) { .design-g .g-work { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1100px) { .design-g .g-work { grid-template-columns: repeat(3, 1fr); } }
+/* Projects on the home: 9 cards on desktop (3 x 3); phones show 3 and the 9th is dropped on two columns so the grid stays even */
+@media (max-width: 759px) { .design-g .g-work .g-card.g-m-hide { display: none; } }
+@media (min-width: 760px) and (max-width: 1099px) { .design-g .g-work .g-card.g-t-hide { display: none; } }
 .design-g .g-work .g-card, .design-g .g-work .g-case { min-width: 0; display: flex; flex-direction: column; }
 .design-g .g-work .g-card > a { flex: 1; display: flex; flex-direction: column; }
 .design-g .g-work a { text-decoration: none; color: inherit; }

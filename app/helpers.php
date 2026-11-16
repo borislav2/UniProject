@@ -23,20 +23,34 @@ if (! function_exists('site')) {
     }
 }
 
+if (! function_exists('demo_img')) {
+    /**
+     * URL of a demo screenshot in public/images/demos ({slug}.webp, or {slug}-480.webp with $suffix '-480'), with ?v=<filemtime>
+     * so browsers and the CDN fetch a re-shot image at once even though the file name stays the same.
+     */
+    function demo_img(string $slug, string $suffix = ''): string
+    {
+        $file = "images/demos/{$slug}{$suffix}.webp";
+        $mtime = @filemtime(public_path($file));
+
+        return asset($file) . ($mtime ? '?v=' . $mtime : '');
+    }
+}
+
 if (! function_exists('demo_srcset')) {
     /**
      * srcset of a demo screenshot in public/images/demos: the smaller copies ({slug}-480/-640.webp) that exist plus the 960 px original,
-     * so phones don't download the full-size image for a 300 px card.
+     * so phones don't download the full-size image for a 300 px card. Every URL carries ?v=<filemtime> (see demo_img()).
      */
     function demo_srcset(string $slug, array $widths = [480, 640], int $full = 960): string
     {
         $sources = [];
         foreach ($widths as $width) {
             if (is_file(public_path("images/demos/{$slug}-{$width}.webp"))) {
-                $sources[] = asset("images/demos/{$slug}-{$width}.webp") . " {$width}w";
+                $sources[] = demo_img($slug, "-{$width}") . " {$width}w";
             }
         }
-        $sources[] = asset("images/demos/{$slug}.webp") . " {$full}w";
+        $sources[] = demo_img($slug) . " {$full}w";
 
         return implode(', ', $sources);
     }

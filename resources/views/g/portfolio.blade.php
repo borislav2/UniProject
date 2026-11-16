@@ -45,7 +45,7 @@
                             <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
                                 <div class="g-frame">
                                     @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
-                                        <img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 760px) 50vw, 100vw" alt="" width="960" height="600" loading="lazy" decoding="async">
+                                        <img src="{{ demo_img($demo['slug']) }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 760px) 50vw, 100vw" alt="" width="960" height="600" loading="lazy" decoding="async">
                                     @endif
                                 </div>
                             </a>

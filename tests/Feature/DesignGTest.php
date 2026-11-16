@@ -104,8 +104,8 @@ class DesignGTest extends TestCase
         // All ten industry sites, each with its micro description and a link to its page; none carries a label.
         $this->assertStringNotContainsString('data-concept-chip', $html);
         $this->assertStringNotContainsString('Концепция', $html);
-        $this->assertSame(10, substr_count($html, 'class="g-micro"'));
-        foreach (collect(config('creatium.demos')) as $demo) {
+        $this->assertSame(9, substr_count($html, 'class="g-micro"'));
+        foreach (collect(config('creatium.demos'))->take(9) as $demo) {
             $this->assertStringContainsString('href="' . url('/demo/' . $demo['slug']) . '"', $html);
             $this->assertStringContainsString($demo['g_micro'], $html);
         }
@@ -147,7 +147,7 @@ class DesignGTest extends TestCase
             $this->assertStringContainsString("<b>{$part}</b>", $html);
         }
         $this->assertStringNotContainsString('data-concept-chip', $html);
-        $this->assertSame(10, substr_count($html, 'class="g-micro"'));
+        $this->assertSame(9, substr_count($html, 'class="g-micro"'));
         $this->assertStringContainsString('Projects built with growth in mind', $html);
         $this->assertStringContainsString('A plan for every stage of your business', $html);
         $this->assertStringContainsString('>from</span> €500', $html);
@@ -481,6 +481,38 @@ class DesignGTest extends TestCase
         $this->assertLessThan(strpos($html, config('creatium.demos.0.name')), strpos($html, 'Реален клиент ООД'));
         $this->assertSame(11, substr_count($html, 'class="g-case"'));
         $this->assertSame(substr_count($html, 'class="g-frame"'), substr_count($html, 'class="g-case"'));
+    }
+
+    public function test_demo_image_helper_adds_the_file_version(): void
+    {
+        $file = public_path('images/demos/restorant.webp');
+        $this->assertSame(asset('images/demos/restorant.webp') . '?v=' . filemtime($file), demo_img('restorant'));
+        $this->assertSame(asset('images/demos/restorant-480.webp') . '?v=' . filemtime(public_path('images/demos/restorant-480.webp')), demo_img('restorant', '-480'));
+        $this->assertStringContainsString('restorant-480.webp?v=', demo_srcset('restorant'));
+        $this->assertStringContainsString('restorant.webp?v=', demo_srcset('restorant'));
+        $this->assertSame(asset('images/demos/missing.webp'), demo_img('missing'));
+    }
+
+    public function test_g_home_shows_at_most_nine_projects_and_three_on_phones(): void
+    {
+        config(['creatium.design' => 'g']);
+        $category = \App\Models\Category::create(['name' => 'Уебсайт']);
+        foreach (['Първи', 'Втори', 'Трети'] as $i => $name) {
+            \App\Models\Project::create(['name' => $name . ' клиент', 'description' => 'Нов сайт', 'status' => 'Completed', 'is_public' => true, 'category_id' => $category->id, 'start_date' => now()->subMonth(), 'end_date' => now()->subDays($i), 'manager' => 'Борислав']);
+        }
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertSame(9, substr_count($html, '<article class="g-card'));
+        // 3 real projects + 6 concept sites; phones: first two real projects + one concept site
+        $this->assertSame(6, substr_count($html, 'g-m-hide'));
+        preg_match_all('/<article class="g-card([^"]*)">/', $html, $m);
+        $visible = collect($m[1])->map(fn ($c) => str_contains($c, 'g-m-hide'))->all();
+        $this->assertSame([false, false, true, false, true, true, true, true, true], $visible);
+        $this->assertSame(1, substr_count($html, 'g-t-hide'));
+        $this->assertStringContainsString('/proekti', $html);
+
+        $css = file_get_contents(resource_path('css/g.css'));
+        $this->assertMatchesRegularExpression('/@media \(max-width: 759px\)\s*\{[^}]*\.g-card\.g-m-hide\s*\{\s*display:\s*none/', $css);
     }
 
     public function test_g_contact_form_has_the_owners_structure_labels_hints_and_phone_links(): void

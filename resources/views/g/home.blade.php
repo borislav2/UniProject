@@ -47,7 +47,9 @@
     <canvas id="g-topo" aria-hidden="true"></canvas>
     <div class="g-wrap">
         <h1 class="g-h" data-g-clear>{!! $accent($hero['title'], $hero['accent'] ?? []) !!}</h1>
-        @php($heroLead = filled($hero['g_highlight'] ?? null) ? $hero['g_highlight'] : ($hero['highlight'] ?? null))
+        @php
+            $heroLead = filled($hero['g_highlight'] ?? null) ? $hero['g_highlight'] : ($hero['highlight'] ?? null);
+        @endphp
         @if(filled($heroLead))
             <p class="g-lead" data-g-clear>{{ $heroLead }}</p>
         @endif
@@ -84,10 +86,19 @@
             <h2 class="g-h">{{ $trust['g_projects_title'] ?? __('Проекти, създадени с мисъл за растеж') }}</h2>
             @if(filled($trust['g_projects_subtitle'] ?? null))<p class="g-sh-text g-wide">{{ $trust['g_projects_subtitle'] }}</p>@endif
         </div>
+        @php
+            // At most 9 cards (3 x 3): real projects first, concept sites fill the rest. Phones (below 760px) show 3: the first two real
+            // projects plus concept sites up to 3. All are rendered; g.css hides the rest (g-m-hide), no JS.
+            $gProjects = $projects->take(9)->values();
+            $gDemos = collect($demos)->take(max(0, 9 - $gProjects->count()))->values();
+            $phoneDemos = 3 - min(2, $gProjects->count());
+        @endphp
         <div class="g-work" data-g-projects>
-            @foreach($projects as $project)
-                @php($host = $project->website_url)
-                <article class="g-card">
+            @foreach($gProjects as $project)
+                @php
+                    $host = $project->website_url;
+                @endphp
+                <article class="g-card{{ $loop->index >= 2 ? ' g-m-hide' : '' }}{{ $loop->index === 8 ? ' g-t-hide' : '' }}">
                     @if($host)<a href="{{ $project->website_url }}" target="_blank" rel="noopener">@endif
                         <figure>
                             <div class="g-frame">
@@ -99,11 +110,11 @@
                     @if($host)</a>@endif
                 </article>
             @endforeach
-            @foreach($demos as $demo)
-                <article class="g-card">
+            @foreach($gDemos as $demo)
+                <article class="g-card{{ $loop->index >= $phoneDemos ? ' g-m-hide' : '' }}{{ $gProjects->count() + $loop->index === 8 ? ' g-t-hide' : '' }}">
                     <a href="{{ route('demo.show', $demo['slug']) }}">
                         <figure>
-                            <div class="g-frame"><img src="{{ asset('images/demos/' . $demo['slug'] . '.webp') }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 760px) 33vw, 100vw" alt="{{ $demo['name'] }}, {{ $demo['industry'] }}" width="960" height="600" loading="lazy" decoding="async"></div>
+                            <div class="g-frame"><img src="{{ demo_img($demo['slug']) }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 760px) 33vw, 100vw" alt="{{ $demo['name'] }}, {{ $demo['industry'] }}" width="960" height="600" loading="lazy" decoding="async"></div>
                             <figcaption><strong>{{ $demo['industry'] }}</strong></figcaption>
                         </figure>
                         <p class="g-micro">{{ filled($demo['g_micro'] ?? null) ? $demo['g_micro'] : ($demo['description'] ?? '') }}</p>
@@ -140,7 +151,9 @@
             @if($reviewCount > 0)
                 <div>
                     @if($rating > 0)<span class="g-big">{{ number_format($rating, 1, app()->getLocale() === 'en' ? '.' : ',', '') }} / 5</span>@endif
-                    @php($ratingText = __('Оценка в Google от :count отзива', ['count' => $reviewCount]))
+                    @php
+                        $ratingText = __('Оценка в Google от :count отзива', ['count' => $reviewCount]);
+                    @endphp
                     <p>@if(filled($reviews['url'] ?? null))<a href="{{ $reviews['url'] }}" target="_blank" rel="noopener">{{ $ratingText }}</a>@else{{ $ratingText }}@endif</p>
                 </div>
             @endif
