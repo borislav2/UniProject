@@ -174,6 +174,10 @@
 .design-g .g-post { display: grid; align-content: start; }
 .design-g .g-post-img { display: block; }
 .design-g .g-post:hover .g-frame { border-color: var(--g-ink); }
+/* Covers are 16:9 (1200x675, the G drawings in public/images/blog/g): show them whole, and give the empty placeholder the same shape, a hairline field with one accent square. */
+.design-g .g-post .g-frame img, .design-g .g-post .g-noimg { aspect-ratio: 16 / 9; object-position: center; }
+.design-g .g-post .g-noimg { position: relative; background: var(--g-bg); border: 1px solid var(--g-line); }
+.design-g .g-post .g-noimg::before { content: ''; position: absolute; left: 16px; top: 16px; width: 10px; height: 10px; background: var(--g-accent); }
 .design-g .g-post-meta { display: flex; flex-wrap: wrap; gap: 2px 12px; margin-top: 16px; color: var(--g-mute); font-size: 14px; }
 .design-g .g-post-meta a { color: inherit; text-decoration: underline; text-decoration-color: var(--g-line-strong); text-underline-offset: 3px; }
 .design-g .g-post-title { margin-top: 8px; font: 400 1.3rem/1.25 var(--g-head); letter-spacing: -.02em; text-wrap: balance; }

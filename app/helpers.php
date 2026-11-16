@@ -128,3 +128,49 @@ if (! function_exists('g_industry_link')) {
         return ['label' => __('Изработка на сайт за :industry', ['industry' => $phrase]), 'href' => $service];
     }
 }
+
+if (! function_exists('g_cover')) {
+    /**
+     * The blog cover design G shows. A starter cover (`images/blog/<name>.webp`) has a G drawing in `public/images/blog/g/<name>.webp`
+     * (and `<name>-640.webp` for cards); when that file exists it is used, otherwise the original cover. Uploaded covers (`uploads/blog/...`)
+     * and any other path stay as they are. `$small` asks for the 640 px copy (falls back to the full G file, then to the original).
+     * Returns a public path (with ?v=<filemtime> for a G file) to pass to asset(). The current design never calls this,
+     * so it keeps the old path byte for byte.
+     *
+     * @param  \App\Models\Post|string|null  $cover  a post or its `cover_image`
+     */
+    function g_cover(\App\Models\Post|string|null $cover, bool $small = false): ?string
+    {
+        $path = $cover instanceof \App\Models\Post ? $cover->cover_image : $cover;
+
+        if (! filled($path)) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'images/blog/') && ! str_contains(substr($path, 12), '/')) {
+            $name = basename($path, '.webp');
+            foreach ($small ? ["images/blog/g/{$name}-640.webp", "images/blog/g/{$name}.webp"] : ["images/blog/g/{$name}.webp"] as $file) {
+                if (is_file(public_path($file))) {
+                    return $file . '?v=' . filemtime(public_path($file));
+                }
+            }
+        }
+
+        return $path;
+    }
+}
+
+if (! function_exists('g_cover_srcset')) {
+    /** srcset (640w + 1200w) of a G starter cover for cards, or null when the post has no G drawing (an upload or an original). */
+    function g_cover_srcset(\App\Models\Post|string|null $cover): ?string
+    {
+        $small = g_cover($cover, true);
+        $full = g_cover($cover);
+
+        if ($small === null || $full === null || ! str_contains($small, 'images/blog/g/') || ! str_contains($small, '-640.webp')) {
+            return null;
+        }
+
+        return asset($small) . ' 640w, ' . asset($full) . ' 1200w';
+    }
+}
