@@ -86,7 +86,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="block md:table-cell px-6 py-8 text-center text-gray-500">Няма проекти тук.</td>
+                    <td colspan="5" class="block md:table-cell px-6 py-8 text-center text-gray-500">Още няма проекти тук. Добавете първия от „Ново“ най-горе или го направете от запитване.</td>
                 </tr>
             @endforelse
         </tbody>

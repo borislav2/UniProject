@@ -38,7 +38,7 @@
                     <td class="px-4 py-3 text-gray-600 whitespace-nowrap">{{ $chat->updated_at->timezone('Europe/Sofia')->format('d.m.Y H:i') }}</td>
                 </tr>
             @empty
-                <tr><td colspan="4" class="px-4 py-8 text-center text-gray-500">Още няма разговори.</td></tr>
+                <tr><td colspan="4" class="px-4 py-8 text-center text-gray-500">Още няма разговори. Те се появяват, когато посетител пише на Крео в чата на сайта.</td></tr>
             @endforelse
         </tbody>
     </table>

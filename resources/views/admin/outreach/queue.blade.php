@@ -127,13 +127,13 @@
 
                 <div class="mt-4 flex flex-wrap items-center gap-2 border-t border-gray-100 pt-3">
                     @if($emailable)
-                        <button type="submit" data-approve @disabled(! $configured || $remaining < 1) class="adm-btn"><x-icon name="paper-plane" /> Одобри и изпрати <kbd class="ml-1 hidden rounded border border-white/40 px-1 text-[10px] md:inline">A</kbd></button>
+                        <button type="submit" data-approve title="Писмото тръгва веднага към този бизнес" @disabled(! $configured || $remaining < 1) class="adm-btn"><x-icon name="paper-plane" /> Одобри и изпрати <kbd class="ml-1 hidden rounded border border-white/40 px-1 text-[10px] md:inline">A</kbd></button>
                         <button type="submit" formaction="{{ route('admin.outreach.queue.draft', $prospect) }}" class="adm-btn ghost sm" title="Запазва темата и писмото, без да ги праща">Запази черновата</button>
                         <button type="submit" formaction="{{ route('admin.outreach.preview', $prospect) }}" formtarget="_blank" formnovalidate class="adm-btn ghost sm"><x-icon name="eye" /> Преглед</button>
                         <button type="button" class="adm-btn ghost sm" data-edit-key>Редактирай <kbd class="ml-1 hidden rounded border border-gray-300 px-1 text-[10px] md:inline">E</kbd></button>
                     @else
-                        <button type="submit" formaction="{{ route('admin.outreach.queue.route', $prospect) }}" name="to" value="call" formnovalidate class="adm-btn"><x-icon name="phone" /> → Обаждане</button>
-                        <button type="submit" formaction="{{ route('admin.outreach.queue.route', $prospect) }}" name="to" value="linkedin" formnovalidate class="adm-btn ghost"><x-icon name="linkedin" /> → LinkedIn</button>
+                        <button type="submit" formaction="{{ route('admin.outreach.queue.route', $prospect) }}" name="to" value="call" formnovalidate class="adm-btn" title="Без писмо. Бизнесът отива в списъка за обаждане."><x-icon name="phone" /> → Обаждане</button>
+                        <button type="submit" formaction="{{ route('admin.outreach.queue.route', $prospect) }}" name="to" value="linkedin" formnovalidate class="adm-btn ghost" title="Без писмо. Бизнесът отива в списъка за LinkedIn."><x-icon name="linkedin" /> → LinkedIn</button>
                     @endif
                     <button type="submit" formaction="{{ route('admin.outreach.queue.skip', $prospect) }}" formnovalidate data-skip class="adm-btn ghost sm">Пропусни <kbd class="ml-1 hidden rounded border border-gray-300 px-1 text-[10px] md:inline">S</kbd></button>
                     @if($prospect->project_id)<a href="{{ route('admin.projects.show', $prospect->project_id) }}" class="text-xs text-blue-600 hover:underline">Запитване →</a>@endif

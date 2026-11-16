@@ -81,6 +81,7 @@
             </nav>
 
             <div class="adm-side-foot">
+                <a href="{{ route('admin.help') }}" class="adm-link" @if(request()->routeIs('admin.help')) aria-current="page" @endif title="Какво прави всеки раздел и защо"><x-icon name="clipboard-list" /><span class="adm-label">Как работи админът</span></a>
                 <a href="{{ route('home') }}" target="_blank" rel="noopener" class="adm-link"><x-icon name="home" /><span class="adm-label">Към сайта</span><x-icon name="arrow-up-right-from-square" /></a>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
@@ -164,6 +165,8 @@
                 @if(session('error'))
                     <div class="adm-flash err" role="alert">{{ session('error') }}</div>
                 @endif
+
+                @include('admin.partials.help')
 
                 @yield('content')
             </main>

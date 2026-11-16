@@ -51,7 +51,7 @@
         <p class="mt-1 text-xs text-gray-500">{{ $inHours ? 'Сега е работно време за стъпки.' : 'Сега е извън работното време (08:00 до 20:00).' }}</p>
         <form action="{{ route('admin.outreach.autopilot.run') }}" method="POST" class="mt-3">
             @csrf
-            <button class="adm-btn ghost sm" @disabled(! $switchedOn || $settings['paused'])>Направи една стъпка сега</button>
+            <button class="adm-btn ghost sm" title="Помощникът търси и подготвя чернови веднага, без да чака. Нищо не се изпраща." @disabled(! $switchedOn || $settings['paused'])>Направи една стъпка сега</button>
         </form>
     </section>
 </div>
