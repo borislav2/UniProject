@@ -569,6 +569,22 @@ class DesignGTest extends TestCase
         $this->withSession(['site_check_sent' => 'a@b.bg'])->get('/proverka-na-sait')->assertOk()->assertSee('Проверката започна')->assertSee('class="g-thanks"', false);
     }
 
+    public function test_g_about_head_shows_the_mechanism_drawing_and_no_faces(): void
+    {
+        config(['creatium.design' => 'g']);
+
+        $html = $this->get('/za-nas')->assertOk()->getContent();
+        $this->assertStringContainsString('g-sv-about', $html);
+        $this->assertStringContainsString('Автоматизации', $html);
+        $this->assertStringContainsString('g-ph-vis-on', $html);
+
+        $en = $this->get('/en/about')->assertOk()->getContent();
+        $this->assertStringContainsString('Your business', $en);
+
+        config(['creatium.design' => 'current']);
+        $this->assertStringNotContainsString('g-sv-about', $this->get('/za-nas')->getContent());
+    }
+
     public function test_g_about_speaks_as_an_agency_with_method_standards_and_founders(): void
     {
         config(['creatium.design' => 'g']);
