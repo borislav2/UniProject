@@ -189,7 +189,13 @@ class PlainCopyTest extends TestCase
         foreach (PlainCopy2026::REPLACE as $old => $new) {
             $this->assertNotSame($old, $new);
             $this->assertSame([], self::offences($new), $new);
-            $this->assertArrayHasKey($new, $defaults, "Not a config default: $new");
+            // Since 17.11.2026 the config uses the new package names (PackageNames2026); this class keeps the old ones as history.
+            $renamed = str_replace(
+                ['Стартов двигател', 'Активен маркетинг и растеж', 'Индивидуален маркетинг', 'Starter Engine', 'Active Marketing and Growth', 'Custom Marketing'],
+                ['Core Изграждане', 'Pro Ускорение', 'Enterprise Партньорство', 'Core Build', 'Pro Accelerate', 'Enterprise Partnership'],
+                $new
+            );
+            $this->assertArrayHasKey($renamed, $defaults, "Not a config default: $new");
             $this->assertArrayNotHasKey($old, $defaults, "Still a config default: $old");
         }
     }

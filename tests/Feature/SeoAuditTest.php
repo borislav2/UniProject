@@ -260,7 +260,7 @@ class SeoAuditTest extends TestCase
         $this->posts(1);
         $this->design('current');
         $body = $this->get('/llms.txt')->assertOk()->getContent();
-        $this->assertStringContainsString('Стартов двигател', $body);
+        $this->assertStringContainsString('Core Изграждане', $body);
         $this->assertStringNotContainsString('razrabotka-na-softuer', $body);
         foreach (config('creatium.contact.phones') as $phone) {
             $this->assertStringContainsString("Телефон $phone", $body);

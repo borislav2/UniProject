@@ -33,7 +33,7 @@ class GAudit3Test extends TestCase
         $this->assertStringContainsString('<b class="g-ptag g-mono">ENTERPRISE</b> Партньорство <small>(от €1', $html);
 
         config(['creatium.design' => 'current']);
-        $this->get('/paketi')->assertOk()->assertSee('Стартов двигател')->assertDontSee('g-tier');
+        $this->get('/paketi')->assertOk()->assertSee('Core Изграждане')->assertDontSee('g-tier');
     }
 
     public function test_packages_subtitle_sits_under_the_heading_on_home(): void
@@ -333,7 +333,7 @@ class GAudit3Test extends TestCase
         }
         $this->assertSame(['Изграждане', 'Ускорение', 'Партньорство'], array_column(config('creatium.plans.g_items'), 'name'));
         // The old design keeps its plan names.
-        $this->assertSame('Стартов двигател', config('creatium.plans.items.0.name'));
+        $this->assertSame('Core Изграждане', config('creatium.plans.items.0.name'));
         // Every direction key a panel switch points to exists in the form.
         foreach (array_filter(GPanel::DIRECTIONS) as $key) {
             $this->assertArrayHasKey($key, config('creatium.contact_directions_g'));

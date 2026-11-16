@@ -106,7 +106,7 @@
         <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
             <div>
                 <label for="package" class="block text-sm font-medium text-gray-700 mb-2">Пакет (абонамент)</label>
-                <input type="text" name="package" id="package" list="package-names" value="{{ old('package', $project->package ?? '') }}" maxlength="80" placeholder="напр. Стартов двигател"
+                <input type="text" name="package" id="package" list="package-names" value="{{ old('package', $project->package ?? '') }}" maxlength="80" placeholder="напр. Core Изграждане"
                        class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <datalist id="package-names">
                     @foreach(collect(site('plans')['items'] ?? [])->pluck('name')->filter() as $planName)<option value="{{ $planName }}">@endforeach

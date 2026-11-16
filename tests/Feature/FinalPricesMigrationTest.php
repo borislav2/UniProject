@@ -73,7 +73,7 @@ class FinalPricesMigrationTest extends TestCase
         // Цените, имената, списъците и годишните суми са новите; бележката, бадж-ът и бутонът на собствениците остават.
         $this->assertSame($new['items'][0]['prices'], $row['items'][0]['prices']);
         $this->assertSame([config('creatium.plans.items.1.prices.0'), 'след това €650 / месец'], $row['items'][1]['prices']);
-        $this->assertSame('Индивидуален маркетинг', $row['items'][2]['name']);
+        $this->assertSame('Enterprise Партньорство', $row['items'][2]['name']);
         $this->assertSame($new['items'][1]['build_items'], $row['items'][1]['build_items']);
         $this->assertSame($new['items'][0]['deposit'], $row['items'][0]['deposit']);
         $this->assertSame('€7 950 за първата година (€800 + 11 × €650)', $row['items'][1]['year_total']);
@@ -147,7 +147,7 @@ class FinalPricesMigrationTest extends TestCase
         $en = ContentBlock::where(['key' => 'plans', 'locale' => 'en'])->sole()->value;
         $this->assertSame(config('creatium_en.plans.items'), $en['items']);
         $this->assertSame(config('creatium_en.plans.intro'), $en['intro']);
-        $this->assertSame('Custom Marketing', $en['items'][2]['name']);
+        $this->assertSame('Enterprise Partnership', $en['items'][2]['name']);
     }
 
     public function test_questions_and_the_home_chip_change_only_when_they_are_the_old_default_text(): void
@@ -166,7 +166,7 @@ class FinalPricesMigrationTest extends TestCase
         $report = FinalPrices2026::apply();
 
         $questions = ContentBlock::where(['key' => 'questions', 'locale' => 'bg'])->sole()->value;
-        $this->assertStringContainsString('Стартов двигател е €400 еднократно', $questions[0]['a']);
+        $this->assertStringContainsString('Core Изграждане е €400 еднократно', $questions[0]['a']);
         $this->assertSame('Моят собствен отговор със стара цена €600.', $questions[1]['a']);
         $this->assertSame('Моят отговор.', $questions[2]['a']);
         $this->assertContains('questions:bg', $report['untouched_with_old_prices']); // €600 в отговор, който не е стандартният

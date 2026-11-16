@@ -84,11 +84,11 @@ class PlanBillingTest extends TestCase
     public function test_text_lines_state_start_deposit_subscription_and_yearly_option(): void
     {
         $lines = implode("\n", PlanBilling::textLines($this->plans(), true));
-        $this->assertStringContainsString('Стартов двигател. €400 еднократно', $lines);
+        $this->assertStringContainsString('Core Изграждане. €400 еднократно', $lines);
         $this->assertStringContainsString('€100 при заявка за оферта и демо (не се връщат), останалите €300 при съгласие.', $lines);
         $this->assertStringContainsString('€2' . self::TS . '000 вместо €2' . self::TS . '400', $lines);
         $this->assertStringContainsString('€6' . self::TS . '500 вместо €7' . self::TS . '800', $lines);
-        $this->assertStringContainsString('Индивидуален маркетинг. Индивидуална оферта, от €1 200 / месец', $lines);
+        $this->assertStringContainsString('Enterprise Партньорство. Индивидуална оферта, от €1 200 / месец', $lines);
         $this->assertStringContainsString('Всичко необходимо, за да присъства бизнесът ви професионално онлайн.', $lines);
     }
 
@@ -107,9 +107,9 @@ class PlanBillingTest extends TestCase
         $this->assertStringContainsString('/paketi', $answer);
 
         $this->get('/llms.txt')->assertOk()
-            ->assertSee('- Стартов двигател. €400 еднократно', false)
+            ->assertSee('- Core Изграждане. €400 еднократно', false)
             ->assertSee('€200 при заявка за оферта и демо (не се връщат), останалите €600 при съгласие.', false)
-            ->assertSee('Индивидуален маркетинг. Индивидуална оферта, от €1 200 / месец', false)
+            ->assertSee('Enterprise Партньорство. Индивидуална оферта, от €1 200 / месец', false)
             ->assertDontSee('плъзгач', false);
     }
 

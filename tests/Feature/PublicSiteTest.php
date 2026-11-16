@@ -132,9 +132,9 @@ class PublicSiteTest extends TestCase
     {
         $this->get('/paketi')->assertOk()
             ->assertSee('Три начина да работим заедно')
-            ->assertSeeInOrder(['Стартов двигател', 'от €400', 'еднократно за изграждането и първия месец', 'на година', 'Активен маркетинг и растеж', 'от €800', 'на година', 'Индивидуален маркетинг', 'от €1', 'Индивидуална оферта'], false)
+            ->assertSeeInOrder(['Core Изграждане', 'от €400', 'еднократно за изграждането и първия месец', 'на година', 'Pro Ускорение', 'от €800', 'на година', 'Enterprise Партньорство', 'от €1', 'Индивидуална оферта'], false)
             ->assertSee('Получете оферта');
-        $this->get('/en/packages')->assertOk()->assertSee('Starter Engine')->assertSee('Get a quote');
+        $this->get('/en/packages')->assertOk()->assertSee('Core Build')->assertSee('Get a quote');
     }
 
     public function test_contact_form_is_one_simple_form(): void
@@ -358,8 +358,8 @@ class PublicSiteTest extends TestCase
     public function test_presentation_page_and_pdf_download(): void
     {
         $this->get('/prezentatsiya')->assertOk()->assertSee('noindex', false)
-            ->assertSeeText('Работим за растежа на вашия бизнес.')->assertSeeText('Стартов двигател')->assertSeeText('creatiumlab.com');
-        $this->get('/en/presentation')->assertOk()->assertSeeText('Starter Engine');
+            ->assertSeeText('Работим за растежа на вашия бизнес.')->assertSeeText('Core Изграждане')->assertSeeText('creatiumlab.com');
+        $this->get('/en/presentation')->assertOk()->assertSeeText('Core Build');
 
         $this->assertFileExists(public_path('files/creatium-lab-prezentatsiya.pdf'));
         $this->assertFileExists(public_path('files/creatium-lab-presentation.pdf'));
