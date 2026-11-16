@@ -12,7 +12,7 @@
 @endphp
 
 @section('content')
-@include('partials.g.page-head', ['heading' => $page['title'], 'sub' => filled($page['g_what'] ?? null) ? $page['g_what'] : $page['lead']])
+@include('partials.g.page-head', ['heading' => $page['title'], 'sub' => filled($page['g_what'] ?? null) ? $page['g_what'] : $page['lead'], 'visualKey' => $key])
 
 <section class="g-s">
     <div class="g-wrap g-sys">

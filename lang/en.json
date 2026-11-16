@@ -837,5 +837,8 @@
     "Не открихме проблеми при проверените неща.": "We did not find problems among the things checked.",
     "И още :n по-дребни неща в тази област. Подробният одит ги разглежда един по един.": "And :n more smaller things in this area. The detailed audit goes through them one by one.",
     "Проверката е автоматична. Обхожда до :limit страници и гледа техническите основи. Не оценява качеството на текстовете, профила в Google Business и дали сайтът носи запитвания, и не знае как се подрежда в Google.": "The check is automatic. It crawls up to :limit pages and looks at the technical basics. It does not judge the quality of the texts, the Google Business profile or whether the site brings inquiries, and it does not know how the site ranks in Google.",
-    "без текст": "no text"
+    "без текст": "no text",
+    "Добре дошли": "Welcome",
+    "Плащания": "Payments",
+    "Оферта": "Offer"
 }
