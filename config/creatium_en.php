@@ -75,7 +75,7 @@ return [
                 'Business communication and social media',
             ],
             'image' => 'images/team/maria-florova.webp',
-            'linkedin' => '',
+            'linkedin' => 'https://www.linkedin.com/in/maria-florova/',
         ],
     ],
 

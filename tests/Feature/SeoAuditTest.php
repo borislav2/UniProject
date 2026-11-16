@@ -410,7 +410,7 @@ class SeoAuditTest extends TestCase
             $this->assertSame(['https://www.linkedin.com/in/borislav-kostadinov-7ba990285/'], $boris['sameAs']);
             $this->assertSame(Schema::organizationId(), $boris['worksFor']['@id']);
             $this->assertSame('http://localhost/za-nas#borislav-kostadinov', $boris['@id']);
-            $this->assertArrayNotHasKey('sameAs', $persons->firstWhere('name', 'Мария Флорова'), 'no LinkedIn means no sameAs');
+            $this->assertSame(['https://www.linkedin.com/in/maria-florova/'], $persons->firstWhere('name', 'Мария Флорова')['sameAs']);
             $this->assertCount($persons->count(), $persons->pluck('@id')->unique());
         }
     }
