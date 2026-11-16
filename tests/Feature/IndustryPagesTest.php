@@ -28,7 +28,7 @@ class IndustryPagesTest extends TestCase
                 ->assertSee('<link rel="canonical" href="' . url("/izrabotka-na-sait-za-$slug") . '">', false);
         }
 
-        $this->get('/izrabotka-na-sait-za-restorant')->assertSee('Стартов двигател')->assertSee('Изработка на сайт за автосервиз');
+        $this->get('/izrabotka-na-sait-za-restorant')->assertSee('Core Изграждане')->assertSee('Изработка на сайт за автосервиз');
         $this->get('/izrabotka-na-sait-za-onlain-magazin')->assertSee('Индивидуална оферта');
         $this->get('/izrabotka-na-sait-za-nyama-takav')->assertNotFound();
     }

@@ -81,9 +81,9 @@ return [
 
     // Страница „Често задавани въпроси“ (/vaprosi). „group“ подрежда въпросите в теми; празно = без тема.
     'questions' => [
-        ['q' => 'How is the project budget set?', 'a' => 'The price is fixed and you know it before we start. Starter Engine is €400 one-off (the build and the first month), then €200 a month. Active Marketing and Growth is €800 one-off, then €650 a month. Custom Marketing is from €1,200 a month under a custom quote. With yearly billing you get 2 months free. What exactly you get and by when is written in the quote.', 'group' => 'Prices and payment'],
+        ['q' => 'How is the project budget set?', 'a' => 'The price is fixed and you know it before we start. Core Build is €400 one-off (the build and the first month), then €200 a month. Pro Accelerate is €800 one-off, then €650 a month. Enterprise Partnership is from €1,200 a month under a custom quote. With yearly billing you get 2 months free. What exactly you get and by when is written in the quote.', 'group' => 'Prices and payment'],
         ['q' => 'What is the monthly subscription for?', 'a' => 'To bring real results, a website needs constant care and development, not just to sit there as a business card. The monthly subscription covers round-the-clock technical security, hosting, regular backups and updates, as well as the marketing work. That means tracking visits in Google Analytics, looking after your Google Maps profile and making sure AI assistants (ChatGPT, Gemini) understand you, email communication and ongoing changes to the site.', 'group' => 'Prices and payment'],
-        ['q' => 'How does payment work?', 'a' => 'The start price is paid in two parts. For Starter Engine you pay €100 when you request a quote and demo and the remaining €300 when you agree. For Active Marketing and Growth you pay €200 when you request a quote and demo and the remaining €600 when you agree. The first amount is paid before we prepare the quote and the demo and is not refunded if you decide not to continue. Custom Marketing also has a deposit before the quote and the demo. The amount is set in the custom quote and is not refunded either. The subscription starts in the second month.', 'group' => 'Prices and payment'],
+        ['q' => 'How does payment work?', 'a' => 'The start price is paid in two parts. For Core Build you pay €100 when you request a quote and demo and the remaining €300 when you agree. For Pro Accelerate you pay €200 when you request a quote and demo and the remaining €600 when you agree. The first amount is paid before we prepare the quote and the demo and is not refunded if you decide not to continue. Enterprise Partnership also has a deposit before the quote and the demo. The amount is set in the custom quote and is not refunded either. The subscription starts in the second month.', 'group' => 'Prices and payment'],
         ['q' => 'How long is the monthly price fixed?', 'a' => 'The subscription price is fixed for the first 6 months. After that it may change, and we tell you in advance. With yearly billing the price holds for the whole paid year.', 'group' => 'Prices and payment'],
         ['q' => 'Is the ad budget included in the price?', 'a' => 'No. The ad budget for Facebook and Instagram is paid by you directly to Meta. We monitor the ads and tell you what they bring.', 'group' => 'Prices and payment'],
         ['q' => 'Is there a guarantee?', 'a' => 'Yes. If your website has no traffic 60 days after launch, we refund what you have paid. Visits are measured with Google Analytics, which we set up at the start.', 'group' => 'Prices and payment'],
@@ -900,7 +900,7 @@ return [
         'billing' => [
             'yearly_months' => 10,
             'yearly_label' => 'Yearly, 2 months free',
-            'note' => 'Yearly billing is 12 months of subscription paid as 10. The subscription starts in the second month, and the start price is paid separately. Custom Marketing is a custom quote.',
+            'note' => 'Yearly billing is 12 months of subscription paid as 10. The subscription starts in the second month, and the start price is paid separately. Enterprise Partnership is a custom quote.',
         ],
         'trust' => [
             ['icon' => 'eye', 'text' => 'Approval before launch. You see the website and approve it before it goes live'],
@@ -911,7 +911,7 @@ return [
         ],
         'items' => [
             [
-                'name' => 'Starter Engine',
+                'name' => 'Core Build',
                 'badge' => '',
                 'highlighted' => false,
                 'audience' => 'Everything you need for your business to have a professional online presence.',
@@ -943,7 +943,7 @@ return [
                 'monthly_items' => [],
             ],
             [
-                'name' => 'Active Marketing and Growth',
+                'name' => 'Pro Accelerate',
                 'badge' => 'Recommended',
                 'highlighted' => true,
                 'audience' => 'Not just an online presence, but steady marketing activity that helps your business grow.',
@@ -954,13 +954,13 @@ return [
                 'button' => '',
                 // Short list for the card (up to 5 lines); the full list is under „See everything included“.
                 'card_items' => [
-                    'Everything in Starter Engine',
+                    'Everything in Core Build',
                     'Brand development and a marketing strategy',
                     'SEO development and review management',
                     'Management of one advertising platform',
                     'Email marketing and conversion optimisation',
                 ],
-                'build_title' => 'Includes everything in Starter Engine, plus',
+                'build_title' => 'Includes everything in Core Build, plus',
                 'build_items' => [
                     'Brand development and a marketing strategy',
                     'Up to 8 content items a month',
@@ -976,7 +976,7 @@ return [
                 'monthly_items' => [],
             ],
             [
-                'name' => 'Custom Marketing',
+                'name' => 'Enterprise Partnership',
                 'badge' => '',
                 'highlighted' => false,
                 'audience' => 'You get a marketing partner who builds and runs the growth strategy for your business.',
@@ -987,13 +987,13 @@ return [
                 'button' => 'Book a call',
                 // Short list for the card (up to 5 lines); the full list is under „See everything included“.
                 'card_items' => [
-                    'Everything in Active Marketing and Growth, tailored to you',
+                    'Everything in Pro Accelerate, tailored to you',
                     'A custom marketing strategy',
                     'Several advertising channels and AI visibility',
                     'CRM integrations and automations',
                     'Strategy meetings and priority communication',
                 ],
-                'build_title' => 'Includes, tailored to your needs, everything in Active Marketing and Growth, plus',
+                'build_title' => 'Includes, tailored to your needs, everything in Pro Accelerate, plus',
                 'build_items' => [
                     'A custom marketing strategy',
                     'Management of several advertising channels',
@@ -1011,7 +1011,7 @@ return [
             ],
         ],
         'compare_title' => 'What each package includes',
-        'compare_note' => 'What exactly goes into Custom Marketing, we agree in the custom quote according to your needs.',
+        'compare_note' => 'What exactly goes into Enterprise Partnership, we agree in the custom quote according to your needs.',
         'compare' => [
             ['label' => 'Branding', 'values' => ['yes', 'yes', 'yes']],
             ['label' => 'Website', 'values' => ['yes', 'yes', 'yes']],
@@ -1034,9 +1034,9 @@ return [
         'terms_title' => 'Terms you know in advance',
         'terms' => [
             ['title' => 'A fixed price', 'text' => 'The price and what you get are written in the quote.'],
-            ['title' => 'The start price in two parts', 'text' => 'For Starter Engine you pay €100 when you request a quote and demo (non-refundable) and the remaining €300 when you agree. For Active Marketing and Growth you pay €200 when you request a quote and demo (non-refundable) and the remaining €600 when you agree. The first amount is paid before we prepare the quote and the demo and is not refunded if you decide not to continue.'],
-            ['title' => 'Subscription from the second month', 'text' => 'The first month is in the start price. After that the subscription is €200 / month for Starter Engine and €650 / month for Active Marketing and Growth. Custom Marketing is from €1,200 / month under a custom quote.'],
-            ['title' => 'Yearly billing with 2 months free', 'text' => 'The yearly subscription is €2,000 instead of €2,400 for Starter Engine and €6,500 instead of €7,800 for Active Marketing and Growth. It is paid once for 12 months, counted from the second month.'],
+            ['title' => 'The start price in two parts', 'text' => 'For Core Build you pay €100 when you request a quote and demo (non-refundable) and the remaining €300 when you agree. For Pro Accelerate you pay €200 when you request a quote and demo (non-refundable) and the remaining €600 when you agree. The first amount is paid before we prepare the quote and the demo and is not refunded if you decide not to continue.'],
+            ['title' => 'Subscription from the second month', 'text' => 'The first month is in the start price. After that the subscription is €200 / month for Core Build and €650 / month for Pro Accelerate. Enterprise Partnership is from €1,200 / month under a custom quote.'],
+            ['title' => 'Yearly billing with 2 months free', 'text' => 'The yearly subscription is €2,000 instead of €2,400 for Core Build and €6,500 instead of €7,800 for Pro Accelerate. It is paid once for 12 months, counted from the second month.'],
             ['title' => 'Fixed subscription price for 6 months', 'text' => 'The subscription price is fixed for the first 6 months. After that it may change, and we tell you in advance. With yearly billing the price holds for the whole paid year.'],
             ['title' => 'Facebook and Instagram ads', 'text' => 'The ad budget for Facebook and Instagram is paid by you directly to Meta. We monitor the ads and tell you what they bring.'],
             ['title' => 'What the monthly fee covers', 'text' => 'We set up and look after hosting, the domain and business email addresses. Plus technical support, regular backups and a monthly report. The content items and the marketing depend on the package.'],

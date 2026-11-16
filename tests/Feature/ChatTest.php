@@ -116,7 +116,7 @@ class ChatTest extends TestCase
         $first = $this->send('Колко струва сайт?')->assertOk()->json();
         $this->assertSame('Стартовият двигател е €400. Искате ли да ви се обадим?', $first['reply']);
         $this->assertStringContainsString('<site_info>', $fake->calls[0]['system'][0]['text']);
-        $this->assertStringContainsString('Стартов двигател', $fake->calls[0]['system'][0]['text']);
+        $this->assertStringContainsString('Core Изграждане', $fake->calls[0]['system'][0]['text']);
         $this->assertSame(['type' => 'ephemeral'], $fake->calls[0]['system'][0]['cacheControl']);
 
         $second = $this->send('Да, Мария, +359 888 111 222, салон във Варна', $first['conversation'])->assertOk()->json();
@@ -181,9 +181,9 @@ class ChatTest extends TestCase
 
     public function test_site_knowledge_follows_the_language_and_the_privacy_policy_mentions_the_chat(): void
     {
-        $this->assertStringContainsString('Стартов двигател', SiteKnowledge::text());
+        $this->assertStringContainsString('Core Изграждане', SiteKnowledge::text());
         app()->setLocale('en');
-        $this->assertStringContainsString('Starter Engine', SiteKnowledge::text());
+        $this->assertStringContainsString('Core Build', SiteKnowledge::text());
 
         $this->get('/poveritelnost')->assertSee('чата на сайта');
         $this->get('/en/privacy')->assertSee('chat on the site');

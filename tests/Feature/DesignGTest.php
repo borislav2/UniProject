@@ -443,7 +443,7 @@ class DesignGTest extends TestCase
         $cards = \App\Support\GPlans::cards($plans);
         $this->assertSame("€4\u{00A0}800", $cards[0]['yearly']);
         $this->assertSame("€8\u{00A0}000", $cards[1]['yearly']);
-        $this->assertSame(0, \App\Support\GPlans::indexFor(['g_items' => [1, 2, 3], 'items' => [['name' => 'Стартов двигател'], ['name' => 'Активен маркетинг и растеж']]], 'Стартов двигател'));
+        $this->assertSame(0, \App\Support\GPlans::indexFor(['g_items' => [1, 2, 3], 'items' => [['name' => 'Core Изграждане'], ['name' => 'Pro Ускорение']]], 'Core Изграждане'));
         $this->assertSame(2, \App\Support\GPlans::indexFor(['g_items' => [1, 2, 3], 'items' => []], null));
     }
 

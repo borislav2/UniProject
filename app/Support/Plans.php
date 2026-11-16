@@ -7,10 +7,22 @@ namespace App\Support;
  */
 class Plans
 {
-    /** Old plan names that still match the current plan (the third plan was „Индивидуален маркетинг и мащабиране“ until November 2026). */
+    /**
+     * Old plan names that still match the current plan: until November 2026 the plans were „Стартов двигател“ / „Активен маркетинг и растеж“ /
+     * „Индивидуален маркетинг“ (before that „Индивидуален маркетинг и мащабиране“), and since 17.11.2026 they are „Core Изграждане“, „Pro Ускорение“
+     * and „Enterprise Партньорство“ (English „Core Build“, „Pro Accelerate“, „Enterprise Partnership“). Old leads, offers and saved projects keep the old text.
+     */
     private const ALIASES = [
-        'индивидуален маркетинг и мащабиране' => 'индивидуален маркетинг',
-        'custom marketing and scaling' => 'custom marketing',
+        'стартов двигател' => 'core изграждане',
+        'активен маркетинг и растеж' => 'pro ускорение',
+        'активен маркетинг' => 'pro ускорение',
+        'индивидуален маркетинг и мащабиране' => 'enterprise партньорство',
+        'индивидуален маркетинг' => 'enterprise партньорство',
+        'starter engine' => 'core build',
+        'active marketing and growth' => 'pro accelerate',
+        'active marketing' => 'pro accelerate',
+        'custom marketing and scaling' => 'enterprise partnership',
+        'custom marketing' => 'enterprise partnership',
     ];
 
     /** A plan name in a comparable form: lower case, "&" = "и", single spaces, old names mapped to the current one. */

@@ -65,7 +65,7 @@ class ClientEmailsTest extends TestCase
     {
         $this->actingAs($this->admin())->get('/admin/emails')->assertOk()
             ->assertSee('Отговор на запитване')
-            ->assertSee('Оферта: Стартов двигател')->assertSee('Оферта: Активен маркетинг и растеж')->assertSee('Оферта: Индивидуален маркетинг')
+            ->assertSee('Оферта: Core Изграждане')->assertSee('Оферта: Pro Ускорение')->assertSee('Оферта: Enterprise Партньорство')
             ->assertDontSee('пакет Бизнес')
             ->assertSee('Имейли до клиенти')
             ->assertSee('Още няма изпратени имейли.');
@@ -105,7 +105,7 @@ class ClientEmailsTest extends TestCase
         $this->actingAs($user)->post('/admin/emails/offer-active/preview', ['data' => $this->offerData()])
             ->assertSee('Как Студио Лавандула ще расте с постоянен поток от запитвания')
             ->assertSee('Благодарим Ви за доверието и интереса към Creatium Lab!')
-            ->assertSee('пакет „Активен маркетинг и растеж“', false)
+            ->assertSee('пакет „Pro Ускорение“', false)
             ->assertSee('€800', false)->assertSee('€650', false)->assertSee('/ месец')
             ->assertSee('Управление и проследяване на един рекламен канал')->assertSee('До 2 имейл кампании месечно')
             ->assertSee('€200 преди да подготвим офертата и демото (не се връщат) и останалите €600 при съгласие')
@@ -115,7 +115,7 @@ class ClientEmailsTest extends TestCase
         $this->actingAs($user)->post('/admin/emails/offer-start/preview', ['data' => ['business' => 'Мотор Про', 'price' => '400', 'monthly_price' => '200']])
             ->assertSee('Мотор Про')->assertDontSee('Предложението е валидно до')->assertDontSee('Поемаме ограничен брой');
         $this->actingAs($user)->post('/admin/emails/inquiry-reply/preview', ['data' => []])
-            ->assertSee('С какво се отличава нашият подход')->assertSee('Стартов двигател')->assertSee('Индивидуален маркетинг')->assertDontSee('мащабиране')
+            ->assertSee('С какво се отличава нашият подход')->assertSee('Core Изграждане')->assertSee('Enterprise Партньорство')->assertDontSee('мащабиране')
             ->assertSee('ПРЕПОРЪЧАН')->assertSee('В какъв времеви рамков период планирате старта на проекта?')
             ->assertSee('С уважение,');
     }
@@ -300,7 +300,7 @@ class ClientEmailsTest extends TestCase
             $this->assertStringContainsString($text, $full);
         }
 
-        // По подразбиране (писмата на собствениците) няма „Какво чухме“, „Защо сега“, „Какво получавате“ и P.S. при Стартов двигател.
+        // По подразбиране (писмата на собствениците) няма „Какво чухме“, „Защо сега“, „Какво получавате“ и P.S. при Core Изграждане.
         $default = $this->render('offer-start');
         foreach (['Какво чухме от Вас', 'Защо сега', 'Какво получавате', 'P.S.', 'Вашият път към клиента'] as $text) {
             $this->assertStringNotContainsString($text, $default);
@@ -367,7 +367,7 @@ class ClientEmailsTest extends TestCase
     public function test_the_three_offers_carry_the_final_prices_deposit_and_the_owners_letters(): void
     {
         $start = $this->render('offer-start');
-        foreach (['Благодарим Ви за отделеното време и възможността да работим върху развитието на Вашия бизнес!', 'пакет „Стартов двигател“', '€400', '€200', 'Изработка на уебсайт', 'Google Business Profile', 'Настройка на Google Analytics и Meta Pixel', 'До 4 съдържателни единици месечно', 'Базово управление на социалните канали', 'Месечен отчет',
+        foreach (['Благодарим Ви за отделеното време и възможността да работим върху развитието на Вашия бизнес!', 'пакет „Core Изграждане“', '€400', '€200', 'Изработка на уебсайт', 'Google Business Profile', 'Настройка на Google Analytics и Meta Pixel', 'До 4 съдържателни единици месечно', 'Базово управление на социалните канали', 'Месечен отчет',
             '€100 преди да подготвим офертата и демото (не се връщат) и останалите €300 при съгласие', '€2 000 вместо €2 400', 'Ще се радваме да станем Ваш партньор в развитието на онлайн присъствието Ви!'] as $text) {
             $this->assertStringContainsString($text, $start);
         }

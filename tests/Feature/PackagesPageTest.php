@@ -17,11 +17,11 @@ class PackagesPageTest extends TestCase
         $this->assertSame(['€400 еднократно за изграждането и първия месец', 'след това €200 / месец'], $plans['items'][0]['prices']);
         $this->assertSame(['€800 еднократно за нов или обновен сайт и първия месец', 'след това €650 / месец'], $plans['items'][1]['prices']);
         $this->assertSame(['Индивидуална оферта', 'от €1 200 / месец'], $plans['items'][2]['prices']);
-        $this->assertSame('Индивидуален маркетинг', $plans['items'][2]['name']);
+        $this->assertSame('Enterprise Партньорство', $plans['items'][2]['name']);
         $this->assertArrayNotHasKey('pricing', $plans);
         $this->assertSame(10, $plans['billing']['yearly_months']);
 
-        // Списъците на собствениците: 8 точки в Стартов двигател, 9 в Активен, 10 в Индивидуален.
+        // Списъците на собствениците: 8 точки в Core Изграждане, 9 в Pro, 10 в Enterprise.
         $this->assertCount(8, $plans['items'][0]['build_items']);
         $this->assertContains('Настройка на Google Analytics и Meta Pixel', $plans['items'][0]['build_items']);
         $this->assertContains('До 8 съдържателни единици месечно', $plans['items'][1]['build_items']);
@@ -44,8 +44,8 @@ class PackagesPageTest extends TestCase
     public function test_plan_names_trust_strip_year_totals_deposit_and_compare_table(): void
     {
         $this->get('/paketi')->assertOk()
-            ->assertSee('Активен маркетинг и растеж')
-            ->assertSee('Индивидуален маркетинг')
+            ->assertSee('Pro Ускорение')
+            ->assertSee('Enterprise Партньорство')
             ->assertDontSee('мащабиране')
             ->assertSee('Препоръчваме')
             ->assertDontSee('Най-предпочитан')
@@ -61,7 +61,7 @@ class PackagesPageTest extends TestCase
             ->assertSee('Предпочитате разговор?')
             ->assertSee('/kontakti#konsultatsiya', false);
         $this->get('/en/packages')->assertOk()
-            ->assertSee('Active Marketing and Growth')->assertSee('Custom Marketing')->assertDontSee('Scaling')
+            ->assertSee('Pro Accelerate')->assertSee('Enterprise Partnership')->assertDontSee('Scaling')
             ->assertSee('from €400')->assertSee('€2,000 a year')->assertSee('€6,500 a year')->assertSee('from €1,200');
     }
 
@@ -175,11 +175,18 @@ class PackagesPageTest extends TestCase
     public function test_demo_package_lookup_accepts_old_and_new_names(): void
     {
         $items = config('creatium.plans.items');
-        foreach (['Активен маркетинг и растеж', 'Активен Маркетинг & Растеж', ' активен  маркетинг и растеж '] as $name) {
+        foreach (['Pro Ускорение', 'pro  ускорение', 'Активен маркетинг и растеж', 'Активен Маркетинг & Растеж', ' активен  маркетинг и растеж ', 'Активен маркетинг'] as $name) {
             $this->assertSame($items[1]['name'], Plans::find($items, $name)['name'], $name);
         }
-        // Старото име на третия пакет още се разпознава (стари записи в админа и демота).
-        $this->assertSame('Индивидуален маркетинг', Plans::find($items, 'Индивидуален маркетинг и мащабиране')['name']);
+        // Старите имена още се разпознават (стари запитвания, оферти и проекти в админа и демота).
+        $this->assertSame('Core Изграждане', Plans::find($items, 'Стартов двигател')['name']);
+        foreach (['Индивидуален маркетинг', 'Индивидуален маркетинг и мащабиране'] as $old) {
+            $this->assertSame('Enterprise Партньорство', Plans::find($items, $old)['name'], $old);
+        }
+        $en = config('creatium_en.plans.items');
+        $this->assertSame('Core Build', Plans::find($en, 'Starter Engine')['name']);
+        $this->assertSame('Pro Accelerate', Plans::find($en, 'Active Marketing and Growth')['name']);
+        $this->assertSame('Enterprise Partnership', Plans::find($en, 'Custom Marketing and Scaling')['name']);
         $this->assertNull(Plans::find($items, null));
         $this->assertNull(Plans::find($items, 'Няма такъв'));
     }

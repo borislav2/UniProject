@@ -38,7 +38,7 @@ class ServicePagesTest extends TestCase
         $this->get('/uslugi/google-profil-i-otzivi')->assertOk()
             ->assertSee('Google профил и отзиви')
             ->assertSee('Включено в пакет')
-            ->assertSee('Активен маркетинг и растеж', false);
+            ->assertSee('Pro Ускорение', false);
 
         $overview = $this->get('/uslugi')->assertOk();
         foreach (config('creatium.service_pages') as $page) {
