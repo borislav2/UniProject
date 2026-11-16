@@ -105,11 +105,9 @@
         @php
             $fonts = [];
             if ($g) {
-                // Design g: the heading and body fonts of the first screen (Bulgarian and Latin subsets); Manrope is not used.
-                foreach (['geologica/files/geologica-%s-300-normal', 'onest/files/onest-%s-400-normal'] as $pattern) {
-                    foreach (['cyrillic', 'latin'] as $subset) {
-                        $fonts[] = rescue(fn () => \Illuminate\Support\Facades\Vite::asset('node_modules/@fontsource/' . sprintf($pattern, $subset) . '.woff2'), '', false);
-                    }
+                // Design g: only the two Cyrillic files of the first screen (heading and body); the small Latin ones load on their own. Manrope is not used.
+                foreach (['geologica-cyrillic-300', 'onest-cyrillic-400'] as $file) {
+                    $fonts[] = rescue(fn () => \Illuminate\Support\Facades\Vite::asset('resources/fonts/g/' . $file . '.woff2'), '', false);
                 }
             } else {
                 foreach (['cyrillic', 'latin'] as $subset) {

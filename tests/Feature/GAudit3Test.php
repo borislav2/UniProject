@@ -153,14 +153,64 @@ class GAudit3Test extends TestCase
         $this->assertSame(['count' => 7, 'percent' => 100, 'message' => 'full'], array_intersect_key(GPanel::state(GPanel::PRESETS['full']), array_flip(['count', 'percent', 'message'])));
         $this->assertSame('low', GPanel::state([])['message']);
         $this->assertSame('low', GPanel::state([5])['message']);
-        $this->assertSame('traffic', GPanel::state([2, 5])['message']);
+        $this->assertSame('traffic', GPanel::state([2, 4])['message']);
         $this->assertSame('base', GPanel::state([4, 5, 6])['message']);
         $this->assertSame('mixed', GPanel::state([1, 4, 5, 6])['message']);
         $this->assertSame('mixed', GPanel::state([2, 4, 5, 6])['message'], 'traffic with the whole base is mixed');
-        $this->assertSame('full', GPanel::state([1, 2, 3, 4, 5, 6])['message'], '6 active win over the other rules');
+        $this->assertSame('mixed', GPanel::state([1, 2, 3, 4, 5, 6])['message'], '6 of 7 still has a missing switch, so it is not "your system is in order"');
         $this->assertSame([0, 14, 28, 42, 57, 71, 85, 100], array_map(fn ($n) => GPanel::state(range(1, 7) ? array_slice(range(1, 7), 0, $n) : [])['percent'], range(0, 7)));
         $this->assertSame('start', GPanel::state([1, 5])['preset']);
         $this->assertNull(GPanel::state([1, 4])['preset']);
+    }
+
+    public function test_the_panel_message_never_contradicts_the_switches(): void
+    {
+        // Starting business plus ads: the fast mobile site (5) is on, so it must not say the site loses clients.
+        $this->assertNotSame('traffic', GPanel::state([1, 3, 5])['message']);
+        $this->assertSame('mixed', GPanel::state([1, 3, 5])['message']);
+        // Ads without the fast site: the traffic message is true.
+        $this->assertSame('traffic', GPanel::state([1, 3])['message']);
+        $this->assertSame('traffic', GPanel::state([2, 4, 6])['message']);
+        // Ads on: never "you rely on recommendations".
+        $this->assertNotSame('low', GPanel::state([3, 5])['message']);
+        // Only a full system says it is in order; 6 of 7 completes what is missing.
+        foreach (range(1, 7) as $off) {
+            $six = array_values(array_diff(range(1, 7), [$off]));
+            $this->assertNotSame('full', GPanel::state($six)['message'], "all but $off");
+            $this->assertNotSame([], GPanel::state($six)['directions'], "all but $off");
+        }
+        $this->assertSame('full', GPanel::state(range(1, 7))['message']);
+        // The ready site without any traffic.
+        $this->assertSame('base', GPanel::state([5, 6])['message']);
+        $this->assertSame('base', GPanel::state([4, 5, 6, 7])['message']);
+        // Every switch leads to an existing direction, so the button always carries the missing ones.
+        foreach (range(1, 7) as $n) {
+            $this->assertContains(GPanel::DIRECTIONS[$n], array_keys(config('creatium.contact_directions_g')), "switch $n");
+            $this->assertNotSame([], GPanel::state(array_values(array_diff(range(1, 7), [$n])))['directions'], "only $n missing");
+        }
+        $this->assertSame(['website'], GPanel::state([1, 2, 3, 5, 6, 7])['directions'], 'brand missing');
+        $this->assertSame(['email'], GPanel::state([1, 2, 3, 4, 5, 6])['directions']);
+    }
+
+    public function test_the_panel_javascript_rules_match_the_php_rules_for_every_combination(): void
+    {
+        $node = trim((string) shell_exec('command -v node'));
+        if ($node === '') {
+            $this->markTestSkipped('node is not installed');
+        }
+        $js = file_get_contents(resource_path('js/g-bar.js'));
+        $this->assertSame(1, preg_match('/const rule = \(on\) => \{.*?\n    \};/s', $js, $m));
+        $script = "const total = 7;\n" . $m[0] . "\nconst out = [];\nfor (let mask = 0; mask < 128; mask++) { const on = []; for (let n = 1; n <= 7; n++) if (mask & (1 << (n - 1))) on.push(n); out.push(rule(on)); }\nconsole.log(JSON.stringify(out));";
+        $file = tempnam(sys_get_temp_dir(), 'gpanel') . '.js';
+        file_put_contents($file, $script);
+        $js = json_decode((string) shell_exec(escapeshellarg($node) . ' ' . escapeshellarg($file)), true);
+        @unlink($file);
+        $php = [];
+        for ($mask = 0; $mask < 128; $mask++) {
+            $on = array_values(array_filter(range(1, 7), fn ($n) => $mask & (1 << ($n - 1))));
+            $php[] = GPanel::message($on);
+        }
+        $this->assertSame($php, $js);
     }
 
     public function test_the_panel_button_ticks_the_missing_directions(): void
@@ -176,7 +226,9 @@ class GAudit3Test extends TestCase
         $this->assertSame(7, substr_count($html, 'role="switch"'));
         $this->assertSame(2, substr_count($html, 'aria-checked="true"'));
         $this->assertStringContainsString('<b data-count>2</b>', $html);
-        $this->assertStringContainsString('(28%)', $html);
+        $this->assertStringNotContainsString('(28%)', $html);
+        $this->assertStringNotContainsString('data-percent', $html);
+        $this->assertMatchesRegularExpression('/<b data-count>2<\/b> <span>от 7<\/span>/u', $html);
         $this->assertStringContainsString('В момента разчитате основно на препоръки.', $html);
         $this->assertSame(1, preg_match_all('/<p class="g-panel-msg"/', $html), 'only one message is rendered');
         $this->assertStringNotContainsString('>Плащате за трафик', $html);
@@ -189,7 +241,8 @@ class GAudit3Test extends TestCase
         $this->assertStringNotContainsString('g-fn', $html);
 
         $js = file_get_contents(resource_path('js/g-bar.js'));
-        $this->assertStringContainsString("if (on.length >= 6) return 'full';", $js);
+        $this->assertStringContainsString("if (on.length >= total) return 'full';", $js);
+        $this->assertStringNotContainsString('data-percent', $js);
         $this->assertStringContainsString("'aria-pressed', 'false'", $js);
     }
 

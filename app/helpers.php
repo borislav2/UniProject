@@ -56,6 +56,28 @@ if (! function_exists('demo_srcset')) {
     }
 }
 
+if (! function_exists('project_srcset')) {
+    /**
+     * srcset of a real project screenshot (`projects.screenshot`, a path under public): the smaller copies next to it ({name}-640.webp, {name}-960.webp) that exist
+     * plus the original with its real width. Empty when there is no smaller copy (an upload from the admin), so the plain `src` is used.
+     */
+    function project_srcset(?string $path, array $widths = [640, 960]): string
+    {
+        if (! $path || ! preg_match('/^(.+)(\.[a-z0-9]+)$/i', $path, $m) || ! is_file(public_path($path))) {
+            return '';
+        }
+        $sources = [];
+        foreach ($widths as $width) {
+            if (is_file(public_path("{$m[1]}-{$width}{$m[2]}"))) {
+                $sources[] = asset("{$m[1]}-{$width}{$m[2]}") . " {$width}w";
+            }
+        }
+        $full = $sources ? (int) (@getimagesize(public_path($path))[0] ?? 0) : 0;
+
+        return $sources && $full ? implode(', ', [...$sources, asset($path) . " {$full}w"]) : '';
+    }
+}
+
 if (! function_exists('gview')) {
     /** A public page: its design G view (`g.<name>`) when design G is shown, otherwise the current view. */
     function gview(string $name, array $data = [], ?string $current = null)

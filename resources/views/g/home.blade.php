@@ -99,7 +99,7 @@
                     @if($project->website_url)<a href="{{ $project->website_url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">@endif
                         <figure>
                             <div class="g-frame">
-                                @if($project->screenshot)<img src="{{ asset($project->screenshot) }}" alt="{{ $project->name }}" width="960" height="600" loading="lazy" decoding="async">@else<div class="g-noimg g-mono">{{ $project->name }}</div>@endif
+                                @if($project->screenshot)<img src="{{ asset($project->screenshot) }}"@if($gSet = project_srcset($project->screenshot)) srcset="{{ $gSet }}" sizes="(min-width: 1100px) min(33vw, 400px), (min-width: 760px) 50vw, calc(100vw - 50px)"@endif alt="{{ $project->name }}" width="960" height="600" loading="lazy" decoding="async">@else<div class="g-noimg g-mono">{{ $project->name }}</div>@endif
                             </div>
                             <figcaption><strong>{{ $project->name }}</strong><span class="g-cat">{{ $project->category->name }}</span></figcaption>
                         </figure>
@@ -121,7 +121,7 @@ $industryLink = g_industry_link($demo);
                 <article class="g-card{{ $loop->index >= $phoneDemos ? ' g-m-hide' : '' }}{{ $gProjects->count() + $loop->index === 8 ? ' g-t-hide' : '' }}">
                     <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
                         <figure>
-                            <div class="g-frame"><img src="{{ demo_img($demo['slug']) }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 760px) 33vw, 100vw" alt="{{ $demo['name'] }}, {{ $demo['industry'] }}" width="960" height="600" loading="lazy" decoding="async"></div>
+                            <div class="g-frame"><img src="{{ demo_img($demo['slug']) }}" srcset="{{ demo_srcset($demo['slug']) }}" sizes="(min-width: 1100px) min(33vw, 400px), (min-width: 760px) 50vw, calc(100vw - 50px)" alt="{{ $demo['name'] }}, {{ $demo['industry'] }}" width="960" height="600" loading="lazy" decoding="async"></div>
                             <figcaption><strong>{{ $demo['industry'] }}</strong></figcaption>
                         </figure>
                     </a>
