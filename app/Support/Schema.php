@@ -150,20 +150,28 @@ class Schema
      */
     public static function postAuthor(Post $post): array
     {
-        $name = trim((string) $post->author?->name);
-        if ($name !== '') {
-            foreach ((array) site('team') as $member) {
-                $first = Str::lower(Str::before((string) ($member['name'] ?? ''), ' '));
-                if ($first !== '' && Str::lower(Str::before($name, ' ')) === $first) {
-                    $person = self::person((array) $member);
-                    if ($person) {
-                        return $person;
-                    }
+        return self::personForUser((string) $post->author?->name)
+            ?? ['@type' => 'Organization', '@id' => self::organizationId(), 'name' => 'Creatium Lab', 'url' => lroute('home')];
+    }
+
+    /** The Person of the team member whose first name matches the user's name, or null (shared accounts such as „Админ“ match nobody). */
+    public static function personForUser(string $userName): ?array
+    {
+        $name = trim($userName);
+        if ($name === '') {
+            return null;
+        }
+        foreach ((array) site('team') as $member) {
+            $first = Str::lower(Str::before((string) ($member['name'] ?? ''), ' '));
+            if ($first !== '' && Str::lower(Str::before($name, ' ')) === $first) {
+                $person = self::person((array) $member);
+                if ($person) {
+                    return $person;
                 }
             }
         }
 
-        return ['@type' => 'Organization', '@id' => self::organizationId(), 'name' => 'Creatium Lab', 'url' => lroute('home')];
+        return null;
     }
 
     private static function number(mixed $value): ?int

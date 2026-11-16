@@ -54,16 +54,40 @@
                     <textarea id="body_{{ $l }}" name="body[{{ $l }}]" rows="16" data-markdown class="{{ $input }} font-mono text-sm" placeholder="Пишете тук. С бутоните горе добавяте подзаглавия, списъци, линкове и снимки.">{{ old("body.$l", $post->tr('body', $l)) }}</textarea>
                 </div>
 
-                <details class="rounded-lg border border-gray-200 p-4" @if(old("meta_title.$l", $post->tr('meta_title', $l)) || old("meta_description.$l", $post->tr('meta_description', $l))) open @endif>
-                    <summary class="font-semibold text-gray-800 cursor-pointer">SEO и споделяне ({{ strtoupper($l) }})</summary>
+                @php
+                    $seoChecks = $post->exists ? \App\Support\Seo\PostSeo::checks($post, $l) : [];
+                    [$seoOk, $seoTotal] = \App\Support\Seo\PostSeo::score($seoChecks);
+                    $effTitle = $post->exists ? \App\Support\Seo\PostSeo::effectiveTitle($post, $l) : '';
+                    $effDesc = $post->exists ? \App\Support\Seo\PostSeo::effectiveDescription($post, $l) : '';
+                @endphp
+                <details class="sx-panel" open>
+                    <summary>SEO и споделяне ({{ strtoupper($l) }}) @if($seoChecks)<span class="sx-score {{ $seoOk >= 9 ? 'ok' : 'warn' }} ml-2">{{ $seoOk }}/{{ $seoTotal }}</span>@endif</summary>
                     <div class="mt-4 space-y-4">
+                        @include('admin.seo._snippet', ['id' => "snippet_$l", 'url' => $post->exists && $post->tr('slug', $l) ? $post->url($l) : rtrim(lroute('blog.index', [], $l), '/') . '/' . ($post->tr('slug', $l) ?: 'adres-na-statiyata'), 'titleInput' => "#meta_title_$l", 'descInput' => "#meta_description_$l", 'fallbackTitle' => $post->tr('meta_title', $l) ? '' : $effTitle, 'fallbackDescription' => $post->tr('meta_description', $l) ? '' : $effDesc])
+                        <div>
+                            <label for="focus_keyword_{{ $l }}" class="block text-sm font-semibold text-gray-700 mb-1">Ключова дума <span class="font-normal text-gray-500">(по какво искате да ви намират; по желание)</span></label>
+                            <input id="focus_keyword_{{ $l }}" name="focus_keyword[{{ $l }}]" value="{{ old("focus_keyword.$l", $post->tr('focus_keyword', $l)) }}" maxlength="120" class="{{ $input }}" placeholder="например изработка на сайт за ресторант">
+                            <p class="text-xs text-gray-500 mt-1">Не се показва на сайта. Само проверява дали думата е на важните места в текста.</p>
+                        </div>
                         @include('admin.seo._fields', ['prefix' => '', 'l' => $l, 'values' => [
                             'meta_title' => old("meta_title.$l", $post->tr('meta_title', $l)),
                             'meta_description' => old("meta_description.$l", $post->tr('meta_description', $l)),
                             'canonical_url' => old("canonical_url.$l", $post->tr('canonical_url', $l)),
                             'og_title' => old("og_title.$l", $post->tr('og_title', $l)),
                             'og_description' => old("og_description.$l", $post->tr('og_description', $l)),
-                        ], 'name' => fn ($field) => "{$field}[$l]"])
+                        ], 'placeholders' => ['meta_title' => $effTitle ? 'Празно = ' . $effTitle : null, 'meta_description' => $effDesc ? 'Празно = ' . $effDesc : null], 'name' => fn ($field) => "{$field}[$l]"])
+                        @if($seoChecks)
+                            <div>
+                                <p class="sx-snippet-label">Проверки за SEO ({{ $seoOk }} от {{ $seoTotal }}, по последно запазеното)</p>
+                                <ul class="sx-check">
+                                    @foreach($seoChecks as $c)
+                                        <li class="{{ $c['state'] }}"><span class="dot"></span><span>{{ $c['label'] }}</span><small>{{ $c['detail'] }}</small></li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @else
+                            <p class="text-xs text-gray-500">Запазете статията, за да видите проверките за SEO.</p>
+                        @endif
                     </div>
                 </details>
             </div>
@@ -96,6 +120,16 @@
                 </select>
                 <a href="{{ route('admin.post-categories.index') }}" class="text-xs text-brand-700 underline">Управление на категориите</a>
             </div>
+            <div>
+                <label for="user_id" class="block text-sm font-semibold text-gray-700 mb-1">Автор</label>
+                <select id="user_id" name="user_id" class="{{ $input }}">
+                    @foreach($authors as $user)
+                        @php $person = \App\Support\Schema::personForUser($user->name); @endphp
+                        <option value="{{ $user->id }}" @selected((int) old('user_id', $post->user_id ?? auth()->id()) === $user->id)>{{ $user->name }}{{ $person ? '' : ' (фирмата)' }}</option>
+                    @endforeach
+                </select>
+                <p class="text-xs text-gray-500 mt-1">В структурираните данни за Google авторът е човекът от екипа със същото име. Общият акаунт води до „Creatium Lab“.@if($post->exists) Сега: {{ \App\Support\Seo\PostSeo::authorLabel($post) }}.@endif</p>
+            </div>
             <div class="flex flex-wrap gap-2 pt-2">
                 <button type="submit" class="inline-flex items-center gap-2 bg-brand-950 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-brand-800"><x-icon name="floppy-disk" /> Запази</button>
                 @foreach($post->exists ? $post->locales() : [] as $l)
@@ -127,19 +161,5 @@
         <button type="submit" class="inline-flex items-center gap-2 text-red-600 hover:text-red-800 font-semibold"><x-icon name="trash" /> Изтрий статията</button>
     </form>
 @endif
+@include('admin.seo._live')
 @endsection
-
-@push('scripts')
-<script>
-    document.querySelectorAll('[data-counter]').forEach(function (field) {
-        var out = document.getElementById(field.dataset.counter);
-        var limit = parseInt(field.dataset.limit, 10);
-        var update = function () {
-            out.textContent = field.value.length + ' / ' + limit;
-            out.classList.toggle('text-red-600', field.value.length > limit);
-        };
-        field.addEventListener('input', update);
-        update();
-    });
-</script>
-@endpush

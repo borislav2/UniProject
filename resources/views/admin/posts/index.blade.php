@@ -5,7 +5,10 @@
 @section('content')
 <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
     <p class="text-gray-600">Статиите се показват на <a href="{{ lroute('blog.index', [], 'bg') }}" target="_blank" class="text-brand-700 underline">/blog</a> и <a href="{{ lroute('blog.index', [], 'en') }}" target="_blank" class="text-brand-700 underline">/en/blog</a>.</p>
-    <a href="{{ route('admin.posts.create') }}" class="inline-flex items-center gap-2 bg-brand-950 text-white px-4 py-2 rounded-lg font-semibold hover:bg-brand-800"><x-icon name="plus" /> Нова статия</a>
+    <div class="flex flex-wrap gap-2">
+        <a href="{{ route('admin.seo.posts') }}" class="adm-btn ghost sm"><x-icon name="magnifying-glass" /> SEO на статиите</a>
+        <a href="{{ route('admin.posts.create') }}" class="inline-flex items-center gap-2 bg-brand-950 text-white px-4 py-2 rounded-lg font-semibold hover:bg-brand-800"><x-icon name="plus" /> Нова статия</a>
+    </div>
 </div>
 
 @php($fb = \App\Support\Facebook\FacebookPublisher::class)
@@ -56,6 +59,7 @@
                 <th class="px-3 py-3">Езици</th>
                 <th class="px-3 py-3">Категория</th>
                 <th class="px-3 py-3">Статус</th>
+                <th class="px-3 py-3">SEO</th>
                 <th class="px-3 py-3">Дата</th>
                 <th class="px-3 py-3">Facebook</th>
                 <th class="px-3 py-3">LinkedIn</th>
@@ -81,6 +85,8 @@
                             <span class="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-700">Чернова</span>
                         @endif
                     </td>
+                    @php($seo = \App\Support\Seo\PostSeo::overview($post))
+                    <td class="px-3 py-3 whitespace-nowrap"><a href="{{ route('admin.posts.edit', $post) }}#seo" class="sx-score {{ $seo['tone'] }}" title="{{ $seo['red'] ? 'Липсва или е твърде дълго заглавие или описание' : 'Изпълнени SEO проверки' }}">{{ $seo['ok'] }}/{{ $seo['total'] }}</a></td>
                     <td class="px-3 py-3 text-gray-600 whitespace-nowrap">{{ ($post->published_at ?? $post->updated_at)->format('d.m.Y') }}</td>
                     <td class="px-3 py-3 whitespace-nowrap">
                         @if($post->facebook_post_id)

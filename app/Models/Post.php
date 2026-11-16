@@ -14,11 +14,11 @@ class Post extends Model
 
     public const STATUSES = ['draft' => 'Чернова', 'published' => 'Публикувана'];
 
-    protected array $translatable = ['title', 'slug', 'excerpt', 'body', 'meta_title', 'meta_description', 'canonical_url', 'og_title', 'og_description'];
+    protected array $translatable = ['title', 'slug', 'excerpt', 'body', 'meta_title', 'meta_description', 'canonical_url', 'og_title', 'og_description', 'focus_keyword'];
 
     protected $fillable = [
         'post_category_id', 'user_id', 'title', 'slug', 'excerpt', 'body', 'meta_title', 'meta_description',
-        'canonical_url', 'og_title', 'og_description', 'cover_image', 'og_image', 'status', 'published_at',
+        'canonical_url', 'og_title', 'og_description', 'focus_keyword', 'cover_image', 'og_image', 'status', 'published_at',
     ];
 
     protected $casts = ['published_at' => 'datetime', 'facebook_posted_at' => 'datetime', 'linkedin_posted_at' => 'datetime'];

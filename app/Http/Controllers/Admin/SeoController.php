@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ContentBlock;
 use App\Support\Content;
+use App\Support\Seo\PageInspector;
+use App\Support\Seo\SiteHealth;
 use App\Support\Uploads;
 use Illuminate\Http\Request;
 
@@ -20,7 +22,13 @@ class SeoController extends Controller
             ->groupBy(fn ($b) => substr($b->key, 4))
             ->map(fn ($rows) => $rows->filter(fn ($b) => array_filter((array) $b->value, 'filled'))->pluck('locale')->all());
 
-        return view('admin.seo.index', ['pages' => Content::SEO_PAGES, 'filled' => $filled]);
+        $pages = PageInspector::pages();
+        $duplicates = PageInspector::duplicates($pages);
+
+        return view('admin.seo.index', [
+            'pages' => Content::SEO_PAGES, 'filled' => $filled, 'info' => $pages, 'duplicates' => $duplicates,
+            'report' => SiteHealth::latest(),
+        ]);
     }
 
     public function edit(string $page)
@@ -32,6 +40,8 @@ class SeoController extends Controller
             'label' => Content::SEO_PAGES[$page],
             'values' => ['bg' => $this->content->seo($page, 'bg'), 'en' => $this->content->seo($page, 'en')],
             'urls' => ['bg' => lroute($page, [], 'bg'), 'en' => lroute($page, [], 'en')],
+            'info' => PageInspector::pages([$page])[$page] ?? [],
+            'report' => SiteHealth::latest(),
         ]);
     }
 
