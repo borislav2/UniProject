@@ -212,6 +212,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('content/{key}', [ContentController::class, 'update'])->name('content.update');
     Route::delete('content/{key}', [ContentController::class, 'reset'])->name('content.reset');
     Route::get('seo', [SeoController::class, 'index'])->name('seo.index');
+    // SEO инструменти: фиксираните адреси са преди seo/{page}, за да не се вземат за име на страница.
+    Route::get('seo/statii', [\App\Http\Controllers\Admin\SeoPostsController::class, 'index'])->name('seo.posts');
+    Route::get('seo/zdrave', [\App\Http\Controllers\Admin\SeoHealthController::class, 'index'])->name('seo.health');
+    Route::post('seo/zdrave/proveri', [\App\Http\Controllers\Admin\SeoHealthController::class, 'run'])->middleware('throttle:3,10')->name('seo.health.run');
+    Route::get('seo/klyuchovi-dumi', [\App\Http\Controllers\Admin\SeoKeywordController::class, 'index'])->name('seo.keywords');
+    Route::post('seo/klyuchovi-dumi', [\App\Http\Controllers\Admin\SeoKeywordController::class, 'store'])->name('seo.keywords.store');
+    Route::post('seo/klyuchovi-dumi/vnasyane', [\App\Http\Controllers\Admin\SeoKeywordController::class, 'import'])->middleware('throttle:20,1')->name('seo.keywords.import');
+    Route::put('seo/klyuchovi-dumi/{keyword}', [\App\Http\Controllers\Admin\SeoKeywordController::class, 'update'])->name('seo.keywords.update');
+    Route::delete('seo/klyuchovi-dumi/{keyword}', [\App\Http\Controllers\Admin\SeoKeywordController::class, 'destroy'])->name('seo.keywords.destroy');
+    Route::post('seo/klyuchovi-dumi/{keyword}/pozitsii', [\App\Http\Controllers\Admin\SeoKeywordController::class, 'position'])->name('seo.keywords.position');
+    Route::delete('seo/klyuchovi-dumi/{keyword}/pozitsii/{position}', [\App\Http\Controllers\Admin\SeoKeywordController::class, 'destroyPosition'])->name('seo.keywords.position.destroy');
+    Route::get('seo/ai', [\App\Http\Controllers\Admin\SeoAiController::class, 'index'])->name('seo.ai');
+    Route::post('seo/ai', [\App\Http\Controllers\Admin\SeoAiController::class, 'store'])->name('seo.ai.store');
+    Route::delete('seo/ai/{check}', [\App\Http\Controllers\Admin\SeoAiController::class, 'destroy'])->name('seo.ai.destroy');
     Route::get('seo/{page}', [SeoController::class, 'edit'])->name('seo.edit');
     Route::put('seo/{page}', [SeoController::class, 'update'])->name('seo.update');
     Route::post('uploads/image', [UploadController::class, 'image'])->name('uploads.image');

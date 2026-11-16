@@ -29,6 +29,7 @@ class PostController extends Controller
         return view('admin.posts.form', [
             'post' => new Post(['status' => 'draft']),
             'categories' => PostCategory::all(),
+            'authors' => \App\Models\User::orderBy('name')->get(),
         ]);
     }
 
@@ -42,7 +43,7 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        return view('admin.posts.form', ['post' => $post, 'categories' => PostCategory::all()]);
+        return view('admin.posts.form', ['post' => $post, 'categories' => PostCategory::all(), 'authors' => \App\Models\User::orderBy('name')->get()]);
     }
 
     public function update(Request $request, Post $post)
@@ -105,6 +106,7 @@ class PostController extends Controller
             'published_at' => 'nullable|date',
             'cover_image' => 'nullable|' . Uploads::IMAGE_RULE,
             'og_image' => 'nullable|' . Uploads::IMAGE_RULE,
+            'user_id' => 'nullable|exists:users,id',
         ];
         foreach (array_keys(self::LOCALES) as $l) {
             $rules += [
@@ -117,6 +119,7 @@ class PostController extends Controller
                 "canonical_url.$l" => 'nullable|url:http,https|max:500',
                 "og_title.$l" => 'nullable|string|max:200',
                 "og_description.$l" => 'nullable|string|max:300',
+                "focus_keyword.$l" => 'nullable|string|max:120',
             ];
         }
         $data = $request->validate($rules, [
@@ -129,7 +132,7 @@ class PostController extends Controller
         }
 
         $translated = [];
-        foreach (['title', 'slug', 'excerpt', 'body', 'meta_title', 'meta_description', 'canonical_url', 'og_title', 'og_description'] as $field) {
+        foreach (['title', 'slug', 'excerpt', 'body', 'meta_title', 'meta_description', 'canonical_url', 'og_title', 'og_description', 'focus_keyword'] as $field) {
             $translated[$field] = [];
         }
 
@@ -144,7 +147,7 @@ class PostController extends Controller
             }
             $translated['title'][$l] = $title;
             $translated['slug'][$l] = $slug ?: $this->uniqueSlug($title, $l, $post);
-            foreach (['excerpt', 'body', 'meta_title', 'meta_description', 'canonical_url', 'og_title', 'og_description'] as $field) {
+            foreach (['excerpt', 'body', 'meta_title', 'meta_description', 'canonical_url', 'og_title', 'og_description', 'focus_keyword'] as $field) {
                 $value = trim((string) ($data[$field][$l] ?? ''));
                 if ($value !== '') {
                     $translated[$field][$l] = $value;
@@ -155,6 +158,8 @@ class PostController extends Controller
         $post->fill($translated + [
             'post_category_id' => $data['post_category_id'] ?? null,
             'status' => $data['status'],
+            // Авторът се сменя само когато е избран (иначе остава този, който е бил: нищо в старите статии не се пипа).
+            'user_id' => $data['user_id'] ?? $post->user_id,
             'published_at' => $data['published_at'] ?? ($data['status'] === 'published' ? ($post->published_at ?? now()) : null),
         ]);
 

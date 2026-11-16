@@ -70,6 +70,16 @@ class SystemHealth
         $add('Продажби', 'Възможности', ! $oppOn ? 'off' : ($oppErrors ? 'warn' : 'ok'),
             ! $oppOn ? 'Изключено: поръчките не се събират сами (ръчното добавяне работи). Нищо не се подава и праща само.' : implode('. ', $oppRows) . '.' . ($oppErrors ? ' Грешка: ' . implode('; ', $oppErrors) : ''),
             ! $oppOn ? 'OPPORTUNITIES_ENABLED=true в .env, после php artisan config:cache' : ($oppErrors ? 'php artisan creatium:opportunities (виж грешката горе; повторният опит е автоматично след час)' : null));
+        $seoReport = \App\Support\Seo\SiteHealth::latest();
+        $seoState = \App\Support\Seo\SiteHealth::state();
+        $seoAuto = \App\Support\Seo\SiteHealth::enabled();
+        $seoStale = $seoReport && $seoAuto && $seoReport->ran_at->lt(now()->subDays(3));
+        $seoState_ = ! $seoReport ? ($seoAuto ? 'warn' : 'off') : ($seoReport->errors > 0 || ! empty($seoState['last_error']) || $seoStale ? 'warn' : 'ok');
+        $add('Сайт', 'SEO', $seoState_,
+            ! $seoReport ? ($seoAuto ? 'Още няма проверка на сайта: ще се пусне сама при следващо посещение.' : 'Автоматичната проверка е изключена (SEO_HEALTH_AUTO).')
+                : 'Последна проверка ' . $seoReport->ran_at->timezone('Europe/Sofia')->format('d.m.Y H:i') . ': оценка ' . $seoReport->score . '/100, грешки ' . $seoReport->errors . ', предупреждения ' . $seoReport->warnings . ', адреси ' . $seoReport->pages . '.'
+                . (! empty($seoState['last_error']) ? ' Последна грешка: ' . $seoState['last_error'] : '') . ($seoStale ? ' Проверката е стара: не е пускана над 3 дни.' : ''),
+            $seoState_ === 'warn' ? 'Отворете SEO, раздел „SEO здраве“, или пуснете php artisan creatium:seo-health' : null);
         $add('Сайт', 'Скорост на телефон в проверката на сайт', filled(config('services.pagespeed.key')) ? 'ok' : 'off',
             filled(config('services.pagespeed.key')) ? 'Отчетът от безплатната проверка включва оценка, LCP, CLS и INP от Google PageSpeed.' : 'По желание. Без ключ отчетът няма оценка за скорост на телефон.',
             filled(config('services.pagespeed.key')) ? null : 'PAGESPEED_API_KEY=... в .env (безплатен ключ от Google Cloud, PageSpeed Insights API)');

@@ -25,7 +25,7 @@ class Profiles
         ],
         'sales' => [
             'label' => 'Маркетинг и продажби',
-            'description' => 'Запитвания, възможности (поръчки и партньори), потенциални клиенти и обаждания, чат разговори, статистика и SEO.',
+            'description' => 'Запитвания, възможности (поръчки и партньори), потенциални клиенти и обаждания, чат разговори, статистика и SEO (страници, статии, здраве на сайта, ключови думи).',
         ],
         'brand' => [
             'label' => 'Бранд и съдържание',
@@ -77,8 +77,8 @@ class Profiles
         return [
             '' => ['today', 'dashboard'],
             'Клиенти' => ['inquiries', 'site-checks', 'projects', 'clients', 'client-emails', 'chats'],
-            'Продажби' => ['outreach', 'outreach-queue', 'outreach-search', 'outreach-autopilot', 'outreach-calls', 'calls-next', 'linkedin', 'opportunities', 'stats', 'reviews'],
-            'Сайт' => ['posts', 'post-categories', 'content', 'seo'],
+            'Продажби' => ['outreach', 'outreach-queue', 'outreach-search', 'outreach-autopilot', 'outreach-calls', 'calls-next', 'linkedin', 'opportunities', 'seo', 'stats', 'reviews'],
+            'Сайт' => ['posts', 'post-categories', 'content'],
             'Настройки' => ['categories', 'technologies', 'users', 'health', 'profile'],
         ];
     }
@@ -93,8 +93,8 @@ class Profiles
             ],
             'sales' => [
                 '' => ['today'],
-                'Продажби' => ['inquiries', 'opportunities', 'outreach', 'outreach-queue', 'outreach-search', 'outreach-calls', 'calls-next', 'chats'],
-                'Анализ' => ['stats', 'dashboard', 'seo'],
+                'Продажби' => ['inquiries', 'opportunities', 'outreach', 'outreach-queue', 'outreach-search', 'outreach-calls', 'calls-next', 'chats', 'seo'],
+                'Анализ' => ['stats', 'dashboard'],
             ],
             'brand' => [
                 '' => ['today'],
@@ -195,7 +195,7 @@ class Profiles
      */
     public static function todaySections(?string $key): array
     {
-        $sales = ['sales-queue', 'sales-opportunities', 'sales-deadlines', 'sales-consultations', 'sales-unread', 'sales-due', 'sales-calls', 'sales-hot', 'sales-followups', 'sales-nostep'];
+        $sales = ['sales-queue', 'sales-opportunities', 'sales-deadlines', 'sales-consultations', 'sales-unread', 'sales-due', 'sales-calls', 'sales-hot', 'sales-followups', 'sales-nostep', 'sales-seo'];
         $dev = ['dev-projects', 'dev-clients', 'dev-site-checks', 'dev-leads', 'dev-health'];
         $brand = ['brand-posts', 'brand-autopost', 'brand-linkedin', 'brand-reviews', 'brand-reports', 'brand-emails'];
 

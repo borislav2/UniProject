@@ -154,6 +154,34 @@ class TodayBlocks
         ]);
     }
 
+    /** SEO здраве: грешките от последната проверка на сайта (по групи), най-тежките първи. Само за четене. */
+    private function blockSalesSeo(): array
+    {
+        $report = \App\Support\Seo\SiteHealth::latest();
+        $url = route('admin.seo.health');
+        if (! $report) {
+            return $this->block('SEO здраве', collect(), ['url' => $url, 'empty' => 'Още няма проверка на сайта.']);
+        }
+        $issues = $report->data['issues'] ?? [];
+        $counts = $report->data['counts'] ?? [];
+        $rows = collect(\App\Support\Seo\SiteHealth::ISSUES)
+            ->filter(fn ($def, $code) => $def[0] === 'error' && ! empty($issues[$code]))
+            ->map(fn ($def, $code) => [
+                'title' => $def[1],
+                'url' => $url . '#' . $code,
+                'chips' => [[($counts[$code] ?? count($issues[$code])) . ' адреса', 'bg-red-100 text-red-800']],
+                'sub' => collect($issues[$code])->take(2)->map(fn ($i) => $i['url'])->join(', '),
+                'tone' => 'danger',
+            ])->values();
+
+        return $this->block('SEO здраве', $rows, [
+            'count' => (int) $report->errors,
+            'hint' => 'оценка ' . $report->score . '/100, проверка от ' . $report->ran_at->timezone('Europe/Sofia')->format('d.m H:i'),
+            'url' => $url,
+            'empty' => 'Няма грешки. Оценка ' . $report->score . '/100.',
+        ]);
+    }
+
     private function blockSalesConsultations(): array
     {
         $rows = $this->only(Today::consultations())->map(function ($p) {

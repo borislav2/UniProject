@@ -1,14 +1,14 @@
-{{-- SEO fields for one language. $name(field) gives the input name, $values the current values, $l the language. --}}
+{{-- Optional $placeholders: ['meta_title' => ..., 'meta_description' => ...] (the default text shown when the field is empty). SEO fields for one language. $name(field) gives the input name, $values the current values, $l the language. --}}
 @php($input = 'w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500')
 <div>
-    <div class="flex items-baseline justify-between"><label for="meta_title_{{ $l }}{{ $prefix }}" class="block text-sm font-semibold text-gray-700 mb-1">Meta Title</label><span id="meta_title_count_{{ $l }}{{ $prefix }}" class="text-xs text-gray-500"></span></div>
-    <input id="meta_title_{{ $l }}{{ $prefix }}" name="{{ $name('meta_title') }}" value="{{ $values['meta_title'] ?? '' }}" maxlength="120" data-counter="meta_title_count_{{ $l }}{{ $prefix }}" data-limit="60" class="{{ $input }}" placeholder="Празно = заглавието на страницата + „| Creatium Lab“">
-    <p class="text-xs text-gray-500 mt-1">Заглавието в Google. Пълното заглавие, до около 60 знака.</p>
+    <div class="flex items-baseline justify-between"><label for="meta_title_{{ $l }}{{ $prefix }}" class="block text-sm font-semibold text-gray-700 mb-1">Meta Title</label><span id="meta_title_count_{{ $l }}{{ $prefix }}" class="sx-len"></span></div>
+    <input id="meta_title_{{ $l }}{{ $prefix }}" name="{{ $name('meta_title') }}" value="{{ $values['meta_title'] ?? '' }}" maxlength="120" data-counter="meta_title_count_{{ $l }}{{ $prefix }}" data-limit="60" data-min="30" class="{{ $input }}" placeholder="{{ ($placeholders ?? [])['meta_title'] ?? 'Празно = заглавието на страницата + „| Creatium Lab“' }}">
+    <p class="text-xs text-gray-500 mt-1">Заглавието в Google. Пълното заглавие, 30 до 60 знака.</p>
 </div>
 <div>
-    <div class="flex items-baseline justify-between"><label for="meta_description_{{ $l }}{{ $prefix }}" class="block text-sm font-semibold text-gray-700 mb-1">Meta Description</label><span id="meta_description_count_{{ $l }}{{ $prefix }}" class="text-xs text-gray-500"></span></div>
-    <textarea id="meta_description_{{ $l }}{{ $prefix }}" name="{{ $name('meta_description') }}" rows="2" maxlength="300" data-counter="meta_description_count_{{ $l }}{{ $prefix }}" data-limit="160" class="{{ $input }}" placeholder="Празно = описанието по подразбиране">{{ $values['meta_description'] ?? '' }}</textarea>
-    <p class="text-xs text-gray-500 mt-1">Текстът под заглавието в Google, до около 160 знака.</p>
+    <div class="flex items-baseline justify-between"><label for="meta_description_{{ $l }}{{ $prefix }}" class="block text-sm font-semibold text-gray-700 mb-1">Meta Description</label><span id="meta_description_count_{{ $l }}{{ $prefix }}" class="sx-len"></span></div>
+    <textarea id="meta_description_{{ $l }}{{ $prefix }}" name="{{ $name('meta_description') }}" rows="2" maxlength="300" data-counter="meta_description_count_{{ $l }}{{ $prefix }}" data-limit="155" data-min="70" class="{{ $input }}" placeholder="{{ ($placeholders ?? [])['meta_description'] ?? 'Празно = описанието по подразбиране' }}">{{ $values['meta_description'] ?? '' }}</textarea>
+    <p class="text-xs text-gray-500 mt-1">Текстът под заглавието в Google, 70 до 155 знака.</p>
 </div>
 <div>
     <label for="canonical_url_{{ $l }}{{ $prefix }}" class="block text-sm font-semibold text-gray-700 mb-1">Canonical URL</label>
