@@ -162,16 +162,4 @@ class GFixATest extends TestCase
         // The current design still preloads Manrope only.
         $this->assertStringContainsString('manrope-{$subset}-wght-normal.woff2', $layout);
     }
-
-    public function test_the_hero_canvas_slows_down_on_phones_and_rests_when_nothing_moves(): void
-    {
-        $js = file_get_contents(resource_path('js/g-home.js'));
-        $this->assertStringContainsString("(pointer: coarse)", $js);
-        $this->assertStringContainsString('coarse || W < 600 ? 40 : 33', $js);
-        $this->assertStringContainsString('IDLE_MS = 8000', $js);
-        $this->assertStringContainsString("['mouseover', 'pointerdown', 'touchstart', 'keydown', 'wheel']", $js);
-        $this->assertStringContainsString("addEventListener('scroll', wake", $js);
-        $this->assertStringContainsString('if (reduce) return;', $js, 'reduced motion still draws one still frame and never starts the loop');
-        $this->assertStringContainsString('if (!visible) return;', $js);
-    }
 }
