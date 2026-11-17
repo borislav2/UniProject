@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', __('Цена за изработка на сайт с пакети от €400'))
-@section('meta_description', __('Цени от €400 старт и €200/месец или €800 старт и €650/месец. Enterprise Партньорство от €1 200/месец. Фиксирана цена и 2 месеца безплатно при годишен план.'))
+@section('title', __('Цена за изработка на сайт с пакети от €500'))
+@section('meta_description', __('Core Изграждане от €500/месец, Pro Ускорение от €800/месец и Enterprise Партньорство от €1 200/месец. Фиксирана цена и 2 месеца безплатно при годишен план.'))
 
 @php
     // FAQPage JSON-LD for the price and payment questions shown on this page.
@@ -68,7 +68,7 @@
                                 <p class="pc-body mt-2 text-sm leading-relaxed">{{ $plan['audience'] }}</p>
                             </div>
 
-                            {{-- Цена: голямо „от €400“, подпис и само годишният абонамент (или „Индивидуална оферта“). Без месечна цена и без плащане на старта. --}}
+                            {{-- Цена: голямо „от €500“, подпис „на месец“ и годишният абонамент. --}}
                             <div class="pc-box relative mt-5 rounded-3xl p-5">
                                 <p class="pc-fg text-4xl xl:text-5xl font-extrabold tracking-tight leading-none tabular-nums">{{ $card['from'] }}</p>
                                 @if($card['caption'] !== '')<p class="pc-body mt-2 text-sm leading-snug">{{ $card['caption'] }}</p>@endif

@@ -25,6 +25,6 @@ class PlanCaptionTest extends TestCase
 
     public function test_packages_page_has_the_new_caption(): void
     {
-        $this->get('/paketi')->assertOk()->assertSee('нов или обновен сайт')->assertDontSee('поправката');
+        $this->get('/paketi')->assertOk()->assertDontSee('поправката');
     }
 }

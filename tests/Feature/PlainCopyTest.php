@@ -186,6 +186,18 @@ class PlainCopyTest extends TestCase
             }
         }
 
+        $superseded = [];
+        foreach (['bg', 'en'] as $lang) {
+            foreach (\App\Support\OnePriceModel2026::REPLACEMENTS[$lang] as $text => $replacement) {
+                $superseded[$text] = true;
+            }
+            foreach (\App\Support\OnePriceModel2026::LISTS[$lang] as [$list]) {
+                array_walk_recursive($list, function ($item) use (&$superseded) {
+                    $superseded[$item] = true;
+                });
+            }
+        }
+
         foreach (PlainCopy2026::REPLACE as $old => $new) {
             $this->assertNotSame($old, $new);
             $this->assertSame([], self::offences($new), $new);
@@ -195,6 +207,10 @@ class PlainCopyTest extends TestCase
                 ['Core Изграждане', 'Pro Ускорение', 'Enterprise Партньорство', 'Core Build', 'Pro Accelerate', 'Enterprise Partnership'],
                 $new
             );
+            // Since 17.11.2026 (OnePriceModel2026) the price and payment texts are replaced once more; such a text is history now.
+            if (! isset($defaults[$renamed]) && (isset($superseded[$renamed]))) {
+                continue;
+            }
             $this->assertArrayHasKey($renamed, $defaults, "Not a config default: $new");
             $this->assertArrayNotHasKey($old, $defaults, "Still a config default: $old");
         }

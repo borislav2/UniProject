@@ -110,7 +110,10 @@ class DepositTerms2026
         foreach ($value['items'] ?? [] as $i => $item) {
             $name = mb_strtolower((string) ($item['name'] ?? ''));
             if (is_array($item) && blank($item['deposit'] ?? null) && (str_contains($name, 'индивидуален') || str_contains($name, 'custom'))) {
-                $value['items'][$i]['deposit'] = config($config . '.plans.items.2.deposit');
+                // The text of that day (the config has no deposit since OnePriceModel2026, 17.11.2026).
+                $value['items'][$i]['deposit'] = $locale === 'en'
+                    ? 'A deposit when you request a quote and demo (non-refundable), the amount is set in the custom quote; the rest when you agree.'
+                    : 'Капаро при заявка за оферта и демо (не се връща), сумата е в индивидуалната оферта; останалото при съгласие.';
             }
         }
 

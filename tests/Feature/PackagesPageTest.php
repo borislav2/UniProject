@@ -14,9 +14,14 @@ class PackagesPageTest extends TestCase
     {
         $plans = config('creatium.plans');
         $this->assertCount(3, $plans['items']);
-        $this->assertSame(['€400 еднократно за изграждането и първия месец', 'след това €200 / месец'], $plans['items'][0]['prices']);
-        $this->assertSame(['€800 еднократно за нов или обновен сайт и първия месец', 'след това €650 / месец'], $plans['items'][1]['prices']);
-        $this->assertSame(['Индивидуална оферта', 'от €1 200 / месец'], $plans['items'][2]['prices']);
+        // One price model (17.11.2026): a monthly subscription only, the same figures as design G.
+        $this->assertSame(['от €500 / месец'], $plans['items'][0]['prices']);
+        $this->assertSame(['от €800 / месец'], $plans['items'][1]['prices']);
+        $this->assertSame(['от €1 200 / месец'], $plans['items'][2]['prices']);
+        foreach ($plans['items'] as $i => $item) {
+            $this->assertSame('', $item['deposit']);
+            $this->assertSame($plans['g_items'][$i]['monthly'], \App\Support\PlanBilling::monthlyPrice($item));
+        }
         $this->assertSame('Enterprise Партньорство', $plans['items'][2]['name']);
         $this->assertArrayNotHasKey('pricing', $plans);
         $this->assertSame(10, $plans['billing']['yearly_months']);
@@ -37,7 +42,7 @@ class PackagesPageTest extends TestCase
         }
 
         $page = $this->get('/paketi')->assertOk();
-        $page->assertSee('€400')->assertSee('€800')->assertSee('€1 200')
+        $page->assertSee('€500')->assertSee('€800')->assertSee('€1 200')
             ->assertSee('Работен капацитет на месец')->assertSee('До 2 ч.')->assertSee('Няколко канала');
     }
 
@@ -51,7 +56,6 @@ class PackagesPageTest extends TestCase
             ->assertDontSee('Най-предпочитан')
             ->assertSee('Всичко необходимо, за да присъства бизнесът ви професионално онлайн.')
             ->assertSee('Получавате маркетингов партньор, който изгражда и управлява стратегията за растеж на бизнеса ви.')
-            ->assertSee('Първата сума се плаща преди да подготвим офертата и демото и не се връща, ако решите да не продължите.')
             ->assertSee('Фиксирана цена в офертата')
             ->assertDontSee('50% при договор')
             ->assertDontSee('безплатно демо')
@@ -62,23 +66,25 @@ class PackagesPageTest extends TestCase
             ->assertSee('/kontakti#konsultatsiya', false);
         $this->get('/en/packages')->assertOk()
             ->assertSee('Pro Accelerate')->assertSee('Enterprise Partnership')->assertDontSee('Scaling')
-            ->assertSee('from €400')->assertSee('€2,000 a year')->assertSee('€6,500 a year')->assertSee('from €1,200');
+            ->assertSee('from €500')->assertSee('€5,000 a year')->assertSee('€8,000 a year')->assertSee('€12,000 a year')->assertSee('from €1,200');
     }
 
-    public function test_the_deposit_is_not_refundable_and_the_demo_is_not_called_free(): void
+    public function test_there_is_no_deposit_and_the_demo_is_not_called_free(): void
     {
         $plans = json_encode([config('creatium.plans'), config('creatium_en.plans'), config('creatium.questions'), config('creatium_en.questions')], JSON_UNESCAPED_UNICODE);
         $this->assertStringNotContainsStringIgnoringCase('безплатно демо', $plans);
         $this->assertStringNotContainsStringIgnoringCase('free demo', $plans);
-        $this->assertStringContainsString('не се връща, ако решите да не продължите', $plans);
+        $this->assertStringNotContainsString('не се връща', $plans);
         $this->assertSame('Фиксирана цена, записана в офертата', config('creatium.home_problem.system_trust')[1]['text']);
 
         $this->get('/usloviya')->assertOk()
-            ->assertSee('Първата част се плаща преди да подготвим офертата и демото и не се връща, ако решите да не продължите.')
-            ->assertSee('Последна промяна 08.11.2026');
+            ->assertSee('Плащате само месечен абонамент според избрания пакет.')
+            ->assertDontSee('не се връща, ако решите да не продължите')
+            ->assertSee('Последна промяна 17.11.2026');
         $this->get('/en/terms')->assertOk()
-            ->assertSee('The first part is paid before we prepare the offer and the demo and is not refunded if you decide not to continue.')
-            ->assertSee('Last updated 8 November 2026');
+            ->assertSee('You pay only a monthly subscription according to the package you choose.')
+            ->assertDontSee('is not refunded if you decide not to continue')
+            ->assertSee('Last updated 17 November 2026');
     }
 
     /** The packages section of the hero (everything before the first section after it). */
@@ -95,10 +101,11 @@ class PackagesPageTest extends TestCase
         $text = \Tests\Feature\PlainCopyTest::visibleText($this->hero($html));
         $ts = ' '; // visibleText() collapses the narrow no-break space of the prices
 
-        foreach (['от €400', 'от €800', "от €1{$ts}200", "€2{$ts}000 на година", "€6{$ts}500 на година", 'Индивидуална оферта'] as $expected) {
+        foreach (['от €500', 'от €800', "от €1{$ts}200", "€5{$ts}000 на година", "€8{$ts}000 на година", "€12{$ts}000 на година"] as $expected) {
             $this->assertStringContainsString($expected, $text);
         }
-        $this->assertSame(2, substr_count($text, 'абонамент, 2 месеца безплатно'));
+        $this->assertSame(3, substr_count($text, 'абонамент, 2 месеца безплатно'));
+        $this->assertSame(3, substr_count($text, 'на месец'));
         // Без месечна цена, без „след това“ и без плащане на старта на картите.
         foreach (['след това', '/ месец', "€200{$ts}/", 'Плащане на старта', '€100 при заявка', '€600 при съгласие'] as $forbidden) {
             $this->assertStringNotContainsString($forbidden, $text, $forbidden);
@@ -148,11 +155,15 @@ class PackagesPageTest extends TestCase
         $plans = config('creatium.plans');
         $billing = \App\Support\PlanBilling::config($plans);
         $card = fn ($i) => \App\Support\PlanBilling::cardPrice($billing, $plans['items'][$i], $i);
-        $this->assertSame('от €400', $card(0)['from']);
-        $this->assertSame('еднократно за изграждането и първия месец', $card(0)['caption']);
-        $this->assertSame("€2\u{202F}000 на година", $card(0)['second']);
+        $this->assertSame('от €500', $card(0)['from']);
+        $this->assertSame('на месец', $card(0)['caption']);
+        $this->assertSame("€5\u{202F}000 на година", $card(0)['second']);
         $this->assertSame("от €1\u{202F}200", $card(2)['from']);
-        $this->assertSame('Индивидуална оферта', $card(2)['second']);
+        $this->assertSame("€12\u{202F}000 на година", $card(2)['second']);
+        // An old saved plan with a start line and a subscription line still reads (start price first).
+        $old = ['prices' => ['€400 еднократно за изграждането и първия месец', 'след това €200 / месец']];
+        $this->assertSame('от €400', \App\Support\PlanBilling::cardPrice($billing, $old, 0)['from']);
+        $this->assertSame('еднократно за изграждането и първия месец', \App\Support\PlanBilling::cardPrice($billing, $old, 0)['caption']);
         // Без отстъпка за годишно плащане годишният ред изчезва.
         $billing['enabled'] = false;
         $this->assertSame('', \App\Support\PlanBilling::cardPrice($billing, $plans['items'][0], 0)['second']);

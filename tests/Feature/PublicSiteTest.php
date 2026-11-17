@@ -132,7 +132,7 @@ class PublicSiteTest extends TestCase
     {
         $this->get('/paketi')->assertOk()
             ->assertSee('Три начина да работим заедно')
-            ->assertSeeInOrder(['Core Изграждане', 'от €400', 'еднократно за изграждането и първия месец', 'на година', 'Pro Ускорение', 'от €800', 'на година', 'Enterprise Партньорство', 'от €1', 'Индивидуална оферта'], false)
+            ->assertSeeInOrder(['Core Изграждане', 'от €500', 'на месец', "€5\u{202F}000 на година", 'Pro Ускорение', 'от €800', "€8\u{202F}000 на година", 'Enterprise Партньорство', 'от €1', "€12\u{202F}000 на година"], false)
             ->assertSee('Получете оферта');
         $this->get('/en/packages')->assertOk()->assertSee('Core Build')->assertSee('Get a quote');
     }

@@ -259,9 +259,9 @@ class PageController extends Controller
         $lines[] = '';
         $plansBg = app(\App\Support\Content::class)->withDefaults('plans', 'bg');
         if ($g) {
-            // Design G: only the monthly figure, because the yearly figures are not confirmed by the owners yet.
+            // Design G: the monthly figure and the yearly one (the same model as the current design, monthly subscription only).
             foreach (\App\Support\GPlans::cards($plansBg) as $card) {
-                $lines[] = '- ' . \App\Support\GPlans::label($card) . '. ' . \App\Support\GPlans::priceLine($card) . (filled($card['audience']) ? '. ' . rtrim($card['audience'], '.') : '');
+                $lines[] = '- ' . \App\Support\GPlans::label($card) . '. ' . \App\Support\GPlans::priceLine($card) . (filled($card['yearly']) ? '. При годишно плащане ' . $card['yearly'] . ' на година, 2 месеца безплатно' : '') . (filled($card['audience']) ? '. ' . rtrim($card['audience'], '.') : '');
             }
         } else {
             array_push($lines, ...\App\Support\PlanBilling::textLines($plansBg, true));

@@ -32,14 +32,14 @@ class Schema
         return \App\Support\Design::is('g') ? g_phones() : array_values((array) config('creatium.contact.phones'));
     }
 
-    /** „€500 – €1200+“ for design G (monthly figures), „€400 – €1200+“ for the current packages (start prices), taken from the package figures themselves. */
+    /** „€500 – €1200+“ in both designs (the monthly figures of the packages), taken from the package figures themselves. */
     public static function priceRange(): string
     {
         $plans = app(Content::class)->withDefaults('plans');
         if (\App\Support\Design::is('g')) {
             $from = collect((array) ($plans['g_items'] ?? []))->map(fn ($p) => self::number($p['monthly'] ?? null))->filter()->values();
         } else {
-            $from = collect(array_values((array) ($plans['items'] ?? [])))->map(fn ($p) => PlanBilling::startPrice((array) $p) ?? PlanBilling::monthlyPrice((array) $p))->filter()->values();
+            $from = collect(array_values((array) ($plans['items'] ?? [])))->map(fn ($p) => PlanBilling::monthlyPrice((array) $p))->filter()->values();
         }
         if ($from->isEmpty()) {
             return '';
