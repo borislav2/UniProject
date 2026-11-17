@@ -72,11 +72,11 @@ class FinalPricesMigrationTest extends TestCase
 
         // Цените, имената, списъците и годишните суми са новите; бележката, бадж-ът и бутонът на собствениците остават.
         $this->assertSame($new['items'][0]['prices'], $row['items'][0]['prices']);
-        $this->assertSame([config('creatium.plans.items.1.prices.0'), 'след това €650 / месец'], $row['items'][1]['prices']);
+        $this->assertSame($new['items'][1]['prices'], $row['items'][1]['prices']);
         $this->assertSame('Enterprise Партньорство', $row['items'][2]['name']);
         $this->assertSame($new['items'][1]['build_items'], $row['items'][1]['build_items']);
         $this->assertSame($new['items'][0]['deposit'], $row['items'][0]['deposit']);
-        $this->assertSame('€7 950 за първата година (€800 + 11 × €650)', $row['items'][1]['year_total']);
+        $this->assertSame($new['items'][1]['year_total'], $row['items'][1]['year_total']);
         $this->assertSame('Хит', $row['items'][1]['badge']);
         $this->assertTrue($row['items'][1]['highlighted']);
         $this->assertSame('Бележка на собствениците', $row['items'][0]['upgrade_note']);
@@ -101,7 +101,7 @@ class FinalPricesMigrationTest extends TestCase
         // Условията: плащането и месечната такса са новите, „Фиксирана цена“ е на собствениците, собственото условие остава накрая.
         $titles = array_column($row['terms'], 'title');
         $this->assertNotContains('Плащане на две части', $titles);
-        $this->assertContains('Плащане на старта на две части', $titles);
+        $this->assertContains('Месечен абонамент', $titles); // the current default terms (since 17.11.2026 the one price model)
         $this->assertContains('Годишно плащане с 2 месеца безплатно', $titles);
         $this->assertSame('Моят текст за фиксираната цена.', $row['terms'][array_search('Фиксирана цена', $titles, true)]['text']);
         $this->assertSame('Моето собствено условие', end($row['terms'])['title']);
@@ -166,7 +166,7 @@ class FinalPricesMigrationTest extends TestCase
         $report = FinalPrices2026::apply();
 
         $questions = ContentBlock::where(['key' => 'questions', 'locale' => 'bg'])->sole()->value;
-        $this->assertStringContainsString('Core Изграждане е €400 еднократно', $questions[0]['a']);
+        $this->assertSame(config('creatium.questions.0.a'), $questions[0]['a']);
         $this->assertSame('Моят собствен отговор със стара цена €600.', $questions[1]['a']);
         $this->assertSame('Моят отговор.', $questions[2]['a']);
         $this->assertContains('questions:bg', $report['untouched_with_old_prices']); // €600 в отговор, който не е стандартният
@@ -191,8 +191,8 @@ class FinalPricesMigrationTest extends TestCase
         FinalPrices2026::apply();
 
         $this->assertFalse(ContentBlock::where('key', 'home_hero' . FinalPrices2026::BACKUP_SUFFIX)->exists());
-        $this->assertSame('€400 еднократно за изграждането и първия месец', app(Content::class)->get('plans.items.0.prices.0'));
-        $this->get('/paketi')->assertOk()->assertSee('€400')->assertDontSee('€600 старт');
+        $this->assertSame(config('creatium.plans.items.0.prices.0'), app(Content::class)->get('plans.items.0.prices.0'));
+        $this->get('/paketi')->assertOk()->assertSee('€500')->assertDontSee('€600 старт');
     }
 
     public function test_nothing_happens_without_overrides(): void

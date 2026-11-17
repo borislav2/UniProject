@@ -81,9 +81,9 @@ return [
 
     // Страница „Често задавани въпроси“ (/vaprosi). „group“ подрежда въпросите в теми; празно = без тема.
     'questions' => [
-        ['q' => 'How is the project budget set?', 'a' => 'The price is fixed and you know it before we start. Core Build is €400 one-off (the build and the first month), then €200 a month. Pro Accelerate is €800 one-off, then €650 a month. Enterprise Partnership is from €1,200 a month under a custom quote. With yearly billing you get 2 months free. What exactly you get and by when is written in the quote.', 'group' => 'Prices and payment'],
+        ['q' => 'How is the project budget set?', 'a' => 'The price is fixed and you know it before we start. Core Build is from €500 a month, Pro Accelerate is from €800 a month and Enterprise Partnership is from €1,200 a month under a custom quote. With yearly billing you get 2 months free, that is €5,000, €8,000 and €12,000 a year. What exactly you get and by when is written in the quote.', 'group' => 'Prices and payment'],
         ['q' => 'What is the monthly subscription for?', 'a' => 'To bring real results, a website needs constant care and development, not just to sit there as a business card. The monthly subscription covers round-the-clock technical security, hosting, regular backups and updates, as well as the marketing work. That means tracking visits in Google Analytics, looking after your Google Maps profile and making sure AI assistants (ChatGPT, Gemini) understand you, email communication and ongoing changes to the site.', 'group' => 'Prices and payment'],
-        ['q' => 'How does payment work?', 'a' => 'The start price is paid in two parts. For Core Build you pay €100 when you request a quote and demo and the remaining €300 when you agree. For Pro Accelerate you pay €200 when you request a quote and demo and the remaining €600 when you agree. The first amount is paid before we prepare the quote and the demo and is not refunded if you decide not to continue. Enterprise Partnership also has a deposit before the quote and the demo. The amount is set in the custom quote and is not refunded either. The subscription starts in the second month.', 'group' => 'Prices and payment'],
+        ['q' => 'How does payment work?', 'a' => 'Payment is monthly, as a subscription. Core Build is from €500 a month, Pro Accelerate from €800 a month and Enterprise Partnership from €1,200 a month under a custom quote. You can also pay yearly and pay for 10 months instead of 12.', 'group' => 'Prices and payment'],
         ['q' => 'How long is the monthly price fixed?', 'a' => 'The subscription price is fixed for the first 6 months. After that it may change, and we tell you in advance. With yearly billing the price holds for the whole paid year.', 'group' => 'Prices and payment'],
         ['q' => 'Is the ad budget included in the price?', 'a' => 'No. The ad budget for Facebook and Instagram is paid by you directly to Meta. We monitor the ads and tell you what they bring.', 'group' => 'Prices and payment'],
         ['q' => 'Is there a guarantee?', 'a' => 'Yes. If your website has no traffic 60 days after launch, we refund what you have paid. Visits are measured with Google Analytics, which we set up at the start.', 'group' => 'Prices and payment'],
@@ -474,7 +474,7 @@ return [
             'slug' => 'website-design', 'icon' => 'code', 'menu' => 'Website design',
             'title' => 'A website that sells',
             'seo_title' => 'Website design for your business | Creatium Lab',
-            'seo_description' => 'A fast, modern website with enquiry forms, bookings and online payments. Fixed price from €400 to start and your approval before launch.',
+            'seo_description' => 'A fast, modern website with enquiry forms, bookings and online payments. Fixed price from €500 a month and your approval before launch.',
             'lead' => 'A fast, modern website that turns visitors into enquiries. You see it on a demo before it goes live.',
             'g_what' => 'We build you a website that loads fast on a phone and leads the visitor to a call, an enquiry or a booking.',
             'problems' => ['The site is slow or breaks on phones', 'People can\'t find how to call or write to you', 'Every change waits weeks for a developer'],
@@ -792,7 +792,7 @@ return [
 
     'plans' => [
         'intro' => 'Three ways to work together, from a professional online presence to an outside marketing department for your company.',
-        // Design G, fourth round: the plans and the five steps (read only by the g views). The yearly figure is monthly × 10 until the owners confirm it.
+        // Design G, fourth round: the plans and the five steps (read only by the g views). The yearly figure is monthly × 10.
         'g_title' => 'A plan for every stage of your business',
         'g_subtitle' => 'From a starting idea to scaling in the market, we build a lasting digital foundation, keep it stable and secure long term growth for you. Explore our packages and choose the solution that fits your current goals exactly.',
         'g_includes_label' => 'What it includes',
@@ -901,11 +901,11 @@ return [
         'billing' => [
             'yearly_months' => 10,
             'yearly_label' => 'Yearly, 2 months free',
-            'note' => 'Yearly billing is 12 months of subscription paid as 10. The subscription starts in the second month, and the start price is paid separately. Enterprise Partnership is a custom quote.',
+            'note' => 'Yearly billing is 12 months of subscription paid as 10. Enterprise Partnership is a custom quote.',
         ],
         'trust' => [
             ['icon' => 'eye', 'text' => 'Approval before launch. You see the website and approve it before it goes live'],
-            ['icon' => 'file-contract', 'text' => 'Payment in two parts. A deposit before the quote and the demo, the rest when you agree'],
+            ['icon' => 'file-contract', 'text' => 'Monthly subscription. You pay only the monthly fee of the package you choose'],
             ['icon' => 'lock', 'text' => 'The domain, profiles and access are in your name'],
             ['icon' => 'envelope-open-text', 'text' => 'A reply within 1 working day'],
             ['icon' => 'tag', 'text' => 'A fixed price in the quote'],
@@ -916,9 +916,9 @@ return [
                 'badge' => '',
                 'highlighted' => false,
                 'audience' => 'Everything you need for your business to have a professional online presence.',
-                'prices' => ['€400 one-off for the build and the first month', 'then €200 / month'],
-                'deposit' => '€100 when you request a quote and demo (non-refundable), the remaining €300 when you agree.',
-                'year_total' => '€2,600 for the first year (€400 + 11 × €200)',
+                'prices' => ['from €500 / month'],
+                'deposit' => '',
+                'year_total' => '',
                 'upgrade_note' => '',
                 'button' => '',
                 // Short list for the card (up to 5 lines); the full list is under „See everything included“.
@@ -948,9 +948,9 @@ return [
                 'badge' => 'Recommended',
                 'highlighted' => true,
                 'audience' => 'Not just an online presence, but steady marketing activity that helps your business grow.',
-                'prices' => ['€800 one-off for a new or refreshed website and the first month', 'then €650 / month'],
-                'deposit' => '€200 when you request a quote and demo (non-refundable), the remaining €600 when you agree.',
-                'year_total' => '€7,950 for the first year (€800 + 11 × €650)',
+                'prices' => ['from €800 / month'],
+                'deposit' => '',
+                'year_total' => '',
                 'upgrade_note' => '',
                 'button' => '',
                 // Short list for the card (up to 5 lines); the full list is under „See everything included“.
@@ -981,8 +981,8 @@ return [
                 'badge' => '',
                 'highlighted' => false,
                 'audience' => 'You get a marketing partner who builds and runs the growth strategy for your business.',
-                'prices' => ['A custom quote', 'from €1,200 / month'],
-                'deposit' => 'A deposit when you request a quote and demo (non-refundable), the amount is set in the custom quote; the rest when you agree.',
+                'prices' => ['from €1,200 / month'],
+                'deposit' => '',
                 'year_total' => '',
                 'upgrade_note' => '',
                 'button' => 'Book a call',
@@ -1029,15 +1029,14 @@ return [
         'steps' => [
             ['title' => 'Enquiry', 'text' => 'You fill in the short form below or call us.'],
             ['title' => 'Call', 'text' => 'We reply within 1 working day and learn what you need.'],
-            ['title' => 'Quote and demo', 'text' => 'The first part of the start price is paid before we prepare the quote and the demo. You get a quote with a fixed price and see a demo of the website.'],
-            ['title' => 'Start after you agree', 'text' => 'When you agree, you pay the rest of the start price. The standard time is 1 to 2 weeks, and the website goes live only after you approve it.'],
+            ['title' => 'Quote and demo', 'text' => 'You get a quote with a fixed price and see a demo of the website.'],
+            ['title' => 'Start after you agree', 'text' => 'When you agree, we start work. The standard time is 1 to 2 weeks, and the website goes live only after you approve it.'],
         ],
         'terms_title' => 'Terms you know in advance',
         'terms' => [
             ['title' => 'A fixed price', 'text' => 'The price and what you get are written in the quote.'],
-            ['title' => 'The start price in two parts', 'text' => 'For Core Build you pay €100 when you request a quote and demo (non-refundable) and the remaining €300 when you agree. For Pro Accelerate you pay €200 when you request a quote and demo (non-refundable) and the remaining €600 when you agree. The first amount is paid before we prepare the quote and the demo and is not refunded if you decide not to continue.'],
-            ['title' => 'Subscription from the second month', 'text' => 'The first month is in the start price. After that the subscription is €200 / month for Core Build and €650 / month for Pro Accelerate. Enterprise Partnership is from €1,200 / month under a custom quote.'],
-            ['title' => 'Yearly billing with 2 months free', 'text' => 'The yearly subscription is €2,000 instead of €2,400 for Core Build and €6,500 instead of €7,800 for Pro Accelerate. It is paid once for 12 months, counted from the second month.'],
+            ['title' => 'Monthly subscription', 'text' => 'You pay a monthly subscription according to the package you choose. Core Build is from €500 / month, Pro Accelerate from €800 / month and Enterprise Partnership from €1,200 / month under a custom quote.'],
+            ['title' => 'Yearly billing with 2 months free', 'text' => 'The yearly subscription is €5,000 instead of €6,000 for Core Build, €8,000 instead of €9,600 for Pro Accelerate and €12,000 instead of €14,400 for Enterprise Partnership. It is paid once for 12 months.'],
             ['title' => 'Fixed subscription price for 6 months', 'text' => 'The subscription price is fixed for the first 6 months. After that it may change, and we tell you in advance. With yearly billing the price holds for the whole paid year.'],
             ['title' => 'Facebook and Instagram ads', 'text' => 'The ad budget for Facebook and Instagram is paid by you directly to Meta. We monitor the ads and tell you what they bring.'],
             ['title' => 'What the monthly fee covers', 'text' => 'We set up and look after hosting, the domain and business email addresses. Plus technical support, regular backups and a monthly report. The content items and the marketing depend on the package.'],

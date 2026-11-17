@@ -5,11 +5,12 @@ namespace App\Support;
 /**
  * Месечно / годишно плащане на абонамента на /paketi (`plans.billing`, собствениците, ноември 2026).
  *
- * Цените са фиксирани и се четат от текста на пакета: първото число в първия ред на `prices` е стартовата цена,
- * първото число във втория ред е месечният абонамент (само за първите два пакета; третият е по индивидуална оферта).
+ * Един модел на цените навсякъде (17.11.2026, решение на собствениците): само месечен абонамент, без еднократна стартова цена и без капаро.
+ * Цените са фиксирани и се четат от текста на пакета: `prices` е един ред („от €500 / месец“), първото число в него е месечният абонамент X.
+ * Стар запис с два реда (стартова цена и абонамент) още се чете: тогава първият ред е стартовата цена S, вторият е абонаментът.
  * Годишно плащане: абонаментът за 12 месеца се плаща като `yearly_months` (10) месеца, т.е. 2 месеца безплатно.
- *   месечно:  на месец X;   първа година S + 11 × X   (първият месец е в стартовата цена)
- *   годишно:  веднъж X × M вместо X × 12;   общо S + X × M   (абонаментът за 12 месеца започва от втория месец)
+ *   месечно:  на месец X;   първа година 12 × X   (със стартова цена S: S + 11 × X, първият месец е в нея)
+ *   годишно:  веднъж X × M вместо X × 12
  * Всички низове се правят тук, на сървъра: страницата е пълна и без JavaScript, а скриптът само показва единия или другия вариант.
  */
 class PlanBilling
@@ -30,7 +31,7 @@ class PlanBilling
         return $billing;
     }
 
-    /** The first euro amount in a price line („€400 еднократно …“, „след това €200 / месец“, „от €1 200 / месец“), or null. */
+    /** The first euro amount in a price line („от €500 / месец“, „от €1 200 / месец“), or null. */
     public static function amount(?string $line): ?int
     {
         if (preg_match('/€\s?(\d[\d\s.,]*)/u', (string) $line, $m) && ($digits = preg_replace('/\D/', '', $m[1])) !== '') {
@@ -40,14 +41,20 @@ class PlanBilling
         return null;
     }
 
+    /** Only an old saved plan with two price lines has a start price (its first line); the single price model has none. */
     public static function startPrice(array $plan): ?int
     {
-        return self::amount(($plan['prices'] ?? [])[0] ?? null);
+        $prices = array_values((array) ($plan['prices'] ?? []));
+
+        return count($prices) >= 2 ? self::amount($prices[0]) : null;
     }
 
+    /** The monthly subscription: the only price line, or the second line of an old saved plan. */
     public static function monthlyPrice(array $plan): ?int
     {
-        return self::amount(($plan['prices'] ?? [])[1] ?? null);
+        $prices = array_values((array) ($plan['prices'] ?? []));
+
+        return self::amount($prices[count($prices) >= 2 ? 1 : 0] ?? null);
     }
 
     public static function money(int|float $amount, ?string $locale = null): string
@@ -58,23 +65,23 @@ class PlanBilling
     }
 
     /**
-     * The numbers of one plan in one billing mode, or null when the plan has none (a custom offer: only the first two plans are priced).
+     * The numbers of one plan in one billing mode, or null when the plan has no monthly price.
      * Keys: monthly (what the card shows per period), once (the yearly sum), instead (12 × the month), year (total for the first year).
      */
     public static function figures(array $billing, array $plan, int $planIndex, string $mode): ?array
     {
         $start = self::startPrice($plan);
         $x = self::monthlyPrice($plan);
-        if ($planIndex > 1 || $start === null || $x === null) {
+        if ($x === null) {
             return null;
         }
 
         $m = $billing['yearly_months'];
         if ($mode === self::YEARLY) {
-            return ['monthly' => (int) round($x * $m / 12), 'once' => $x * $m, 'instead' => $x * 12, 'year' => $start + $x * $m];
+            return ['monthly' => (int) round($x * $m / 12), 'once' => $x * $m, 'instead' => $x * 12, 'year' => ($start ?? 0) + $x * $m];
         }
 
-        return ['monthly' => $x, 'once' => null, 'instead' => null, 'year' => $start + 11 * $x];
+        return ['monthly' => $x, 'once' => null, 'instead' => null, 'year' => $start === null ? 12 * $x : $start + 11 * $x];
     }
 
     /** Ready-to-show strings for one plan in one billing mode. */
@@ -92,7 +99,9 @@ class PlanBilling
                 'price' => self::money($f['once']),
                 'suffix' => __('/ година'),
                 'sub' => __('вместо :instead при месечно плащане', ['instead' => self::money($f['instead'])]),
-                'year' => __(':total общо, от които :start старт и :sub абонамент за 12 месеца', ['total' => self::money($f['year']), 'start' => self::money($start), 'sub' => self::money($f['once'])]),
+                'year' => $start === null
+                    ? __(':total за абонамент за 12 месеца', ['total' => self::money($f['once'])])
+                    : __(':total общо, от които :start старт и :sub абонамент за 12 месеца', ['total' => self::money($f['year']), 'start' => self::money($start), 'sub' => self::money($f['once'])]),
             ];
         }
 
@@ -104,14 +113,15 @@ class PlanBilling
             // Текстът от пакета (ако собствениците са го написали) има предимство пред изчисления.
             'year' => filled($plan['year_total'] ?? null)
                 ? $plan['year_total']
-                : __(':total за първата година (:start + 11 × :monthly)', ['total' => self::money($f['year']), 'start' => self::money($start), 'monthly' => self::money($f['monthly'])]),
+                : ($start === null
+                    ? __(':total за 12 месеца (12 × :monthly)', ['total' => self::money($f['year']), 'monthly' => self::money($f['monthly'])])
+                    : __(':total за първата година (:start + 11 × :monthly)', ['total' => self::money($f['year']), 'start' => self::money($start), 'monthly' => self::money($f['monthly'])])),
         ];
     }
 
     /**
-     * What a package card on /paketi shows (owners, November 2026): a big „от €400“, a short caption, and only the yearly
-     * subscription („€2 000 на година“, with „абонамент, 2 месеца безплатно“) or, for a custom plan, its text („Индивидуална оферта“).
-     * The monthly price is not shown on the cards. Keys: from, caption, second, note.
+     * What a package card on /paketi shows (owners, November 2026): a big „от €500“, the caption „на месец“, and the yearly
+     * subscription („€5 000 на година“, with „абонамент, 2 месеца безплатно“). Keys: from, caption, second, note.
      */
     public static function cardPrice(array $billing, array $plan, int $planIndex): array
     {
@@ -134,7 +144,7 @@ class PlanBilling
             $out['second'] = self::money($f['once']) . ' ' . __('на година');
             $free = 12 - $billing['yearly_months'];
             $out['note'] = $free === 1 ? __('абонамент, 1 месец безплатно') : __('абонамент, :n месеца безплатно', ['n' => $free]);
-        } elseif ($start === null && filled($prices[0] ?? null)) {
+        } elseif ($monthly === null && filled($prices[0] ?? null)) {
             $out['second'] = $prices[0];
         }
 
@@ -153,8 +163,7 @@ class PlanBilling
     }
 
     /**
-     * Prices as plain text lines for Kreo, /llms.txt and the FAQ answer: per package the start price, how the start is paid,
-     * the subscription and the yearly option.
+     * Prices as plain text lines for Kreo, /llms.txt and the FAQ answer: per package the monthly subscription and the yearly option.
      */
     public static function textLines(array $plans, bool $withAudience = false): array
     {

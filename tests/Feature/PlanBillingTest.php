@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
-/** Окончателните цени на собствениците (08.11.2026): фиксирани цени, депозит и превключвател Месечно / Годишно (plans.billing). */
+/** Цените на собствениците: един модел от 17.11.2026 (само месечен абонамент, без стартова цена и капаро), годишно плащане 10 месеца (plans.billing). */
 class PlanBillingTest extends TestCase
 {
     use RefreshDatabase;
@@ -24,15 +24,22 @@ class PlanBillingTest extends TestCase
 
     public function test_prices_are_read_from_the_plan_text(): void
     {
+        // One price model (17.11.2026): one price line, the monthly subscription, no start price.
         $items = $this->plans()['items'];
-        $this->assertSame(400, PlanBilling::startPrice($items[0]));
-        $this->assertSame(200, PlanBilling::monthlyPrice($items[0]));
-        $this->assertSame(800, PlanBilling::startPrice($items[1]));
-        $this->assertSame(650, PlanBilling::monthlyPrice($items[1]));
-        $this->assertNull(PlanBilling::startPrice($items[2])); // „Индивидуална оферта“
-        $this->assertSame(1200, PlanBilling::monthlyPrice($items[2])); // „от €1 200 / месец“
+        foreach ([[500, 0], [800, 1], [1200, 2]] as [$monthly, $i]) {
+            $this->assertNull(PlanBilling::startPrice($items[$i]));
+            $this->assertSame($monthly, PlanBilling::monthlyPrice($items[$i]));
+        }
         $this->assertSame(2000, PlanBilling::amount('€2 000 / година'));
         $this->assertNull(PlanBilling::amount('без цена'));
+
+        // An old saved plan (a start line and a subscription line) still reads: the first line is the start, the second the subscription.
+        $old = ['prices' => ['€400 еднократно за изграждането и първия месец', 'след това €200 / месец']];
+        $this->assertSame(400, PlanBilling::startPrice($old));
+        $this->assertSame(200, PlanBilling::monthlyPrice($old));
+        $this->assertSame(1200, PlanBilling::monthlyPrice(['prices' => ['Индивидуална оферта', 'от €1 200 / месец']]));
+        $this->assertNull(PlanBilling::monthlyPrice(['prices' => []]));
+        $this->assertNull(PlanBilling::monthlyPrice([]));
     }
 
     public function test_figures_for_monthly_and_yearly_billing(): void
@@ -40,21 +47,21 @@ class PlanBillingTest extends TestCase
         $billing = PlanBilling::config($this->plans());
         $items = $this->plans()['items'];
 
-        // Месечно: 400 + 11 × 200 и 800 + 11 × 650 (първият месец е в стартовата цена).
-        $this->assertSame(['monthly' => 200, 'once' => null, 'instead' => null, 'year' => 2600], PlanBilling::figures($billing, $items[0], 0, 'monthly'));
-        $this->assertSame(7950, PlanBilling::figures($billing, $items[1], 1, 'monthly')['year']);
+        // Without a start price the year is twelve months; yearly billing is 10 months (2 months free), the same figures as design G.
+        $this->assertSame(['monthly' => 500, 'once' => null, 'instead' => null, 'year' => 6000], PlanBilling::figures($billing, $items[0], 0, 'monthly'));
+        foreach ([[5000, 6000], [8000, 9600], [12000, 14400]] as $i => [$once, $instead]) {
+            $yearly = PlanBilling::figures($billing, $items[$i], $i, 'yearly');
+            $this->assertSame([$once, $instead, $once], [$yearly['once'], $yearly['instead'], $yearly['year']]);
+            $this->assertSame($this->plans()['g_items'][$i]['yearly'], $yearly['once']);
+        }
 
-        // Годишно: 2 месеца безплатно, €2 000 вместо €2 400 и €6 500 вместо €7 800.
-        $first = PlanBilling::figures($billing, $items[0], 0, 'yearly');
-        $this->assertSame(2000, $first['once']);
-        $this->assertSame(2400, $first['instead']);
-        $this->assertSame(2400, $first['year']); // €400 старт + €2 000 абонамент
-        $second = PlanBilling::figures($billing, $items[1], 1, 'yearly');
-        $this->assertSame([6500, 7800, 7300], [$second['once'], $second['instead'], $second['year']]);
+        // An old saved plan with a start price keeps its old arithmetic.
+        $old = ['prices' => ['€400 еднократно', 'след това €200 / месец']];
+        $this->assertSame(2600, PlanBilling::figures($billing, $old, 0, 'monthly')['year']);
+        $this->assertSame(2400, PlanBilling::figures($billing, $old, 0, 'yearly')['year']);
 
-        // Индивидуалният маркетинг няма годишна сума.
-        $this->assertNull(PlanBilling::figures($billing, $items[2], 2, 'yearly'));
-        $this->assertFalse(PlanBilling::cell($billing, $items[2], 2, 'monthly')['priced']);
+        $this->assertNull(PlanBilling::figures($billing, ['prices' => ['Индивидуална оферта']], 2, 'yearly'));
+        $this->assertFalse(PlanBilling::cell($billing, ['prices' => []], 2, 'monthly')['priced']);
     }
 
     public function test_cell_strings(): void
@@ -63,15 +70,18 @@ class PlanBillingTest extends TestCase
         $item = $this->plans()['items'][0];
 
         $yearly = PlanBilling::cell($billing, $item, 0, 'yearly');
-        $this->assertSame('€2' . self::TS . '000', $yearly['price']);
+        $this->assertSame('€5' . self::TS . '000', $yearly['price']);
         $this->assertSame('/ година', $yearly['suffix']);
-        $this->assertSame('вместо €2' . self::TS . '400 при месечно плащане', $yearly['sub']);
-        $this->assertSame('€2' . self::TS . '400 общо, от които €400 старт и €2' . self::TS . '000 абонамент за 12 месеца', $yearly['year']);
+        $this->assertSame('вместо €6' . self::TS . '000 при месечно плащане', $yearly['sub']);
+        $this->assertSame('€5' . self::TS . '000 за абонамент за 12 месеца', $yearly['year']);
 
-        // Текстът от пакета има предимство за месечния вариант; празен текст се изчислява.
-        $this->assertSame('€2 600 за първата година (€400 + 11 × €200)', PlanBilling::cell($billing, $item, 0, 'monthly')['year']);
-        $item['year_total'] = '';
-        $this->assertSame('€2' . self::TS . '600 за първата година (€400 + 11 × €200)', PlanBilling::cell($billing, $item, 0, 'monthly')['year']);
+        // Без цена на старта: 12 × месеца; текстът от пакета има предимство за месечния вариант.
+        $this->assertSame('€6' . self::TS . '000 за 12 месеца (12 × €500)', PlanBilling::cell($billing, $item, 0, 'monthly')['year']);
+        $item['year_total'] = 'Моят текст';
+        $this->assertSame('Моят текст', PlanBilling::cell($billing, $item, 0, 'monthly')['year']);
+
+        $old = ['prices' => ['€400 еднократно', 'след това €200 / месец']];
+        $this->assertSame('€2' . self::TS . '600 за първата година (€400 + 11 × €200)', PlanBilling::cell($billing, $old, 0, 'monthly')['year']);
     }
 
     public function test_the_toggle_is_off_without_a_discount(): void
@@ -81,35 +91,36 @@ class PlanBillingTest extends TestCase
         $this->assertSame(10, PlanBilling::config([])['yearly_months']);
     }
 
-    public function test_text_lines_state_start_deposit_subscription_and_yearly_option(): void
+    public function test_text_lines_state_the_monthly_subscription_and_the_yearly_option(): void
     {
         $lines = implode("\n", PlanBilling::textLines($this->plans(), true));
-        $this->assertStringContainsString('Core Изграждане. €400 еднократно', $lines);
-        $this->assertStringContainsString('€100 при заявка за оферта и демо (не се връщат), останалите €300 при съгласие.', $lines);
-        $this->assertStringContainsString('€2' . self::TS . '000 вместо €2' . self::TS . '400', $lines);
-        $this->assertStringContainsString('€6' . self::TS . '500 вместо €7' . self::TS . '800', $lines);
-        $this->assertStringContainsString('Enterprise Партньорство. Индивидуална оферта, от €1 200 / месец', $lines);
+        $this->assertStringContainsString('Core Изграждане. от €500 / месец', $lines);
+        $this->assertStringContainsString('Pro Ускорение. от €800 / месец', $lines);
+        $this->assertStringContainsString('Enterprise Партньорство. от €1 200 / месец', $lines);
+        $this->assertStringContainsString('€5' . self::TS . '000 вместо €6' . self::TS . '000', $lines);
+        $this->assertStringContainsString('€8' . self::TS . '000 вместо €9' . self::TS . '600', $lines);
+        $this->assertStringContainsString('€12' . self::TS . '000 вместо €14' . self::TS . '400', $lines);
         $this->assertStringContainsString('Всичко необходимо, за да присъства бизнесът ви професионално онлайн.', $lines);
+        $this->assertDoesNotMatchRegularExpression(\App\Support\OnePriceModel2026::OLD_PATTERN, $lines);
     }
 
-    public function test_kreo_the_faq_answer_and_llms_use_the_final_prices(): void
+    public function test_kreo_the_faq_answer_and_llms_use_the_one_price_model(): void
     {
         $knowledge = SiteKnowledge::text();
-        foreach (['€400 еднократно', '€800 еднократно', 'от €1 200 / месец', '€100 при заявка за оферта и демо', 'Първата сума не се връща', 'Работен капацитет на месец'] as $text) {
+        foreach (['от €500 / месец', 'от €800 / месец', 'от €1 200 / месец', 'само месечен абонамент, без еднократна стартова цена', 'Работен капацитет на месец'] as $text) {
             $this->assertStringContainsString($text, $knowledge);
         }
-        $this->assertStringNotContainsString('€600 старт', $knowledge);
+        $this->assertDoesNotMatchRegularExpression(\App\Support\OnePriceModel2026::OLD_PATTERN, $knowledge);
         $this->assertStringNotContainsString('плъзгач', $knowledge);
 
         $answer = FaqResponder::answer('Колко струва сайт?');
-        $this->assertStringContainsString('€400 еднократно', $answer);
-        $this->assertStringContainsString('след това €650 / месец', $answer);
+        $this->assertStringContainsString('от €500 / месец', $answer);
+        $this->assertStringContainsString('от €800 / месец', $answer);
         $this->assertStringContainsString('/paketi', $answer);
 
         $this->get('/llms.txt')->assertOk()
-            ->assertSee('- Core Изграждане. €400 еднократно', false)
-            ->assertSee('€200 при заявка за оферта и демо (не се връщат), останалите €600 при съгласие.', false)
-            ->assertSee('Enterprise Партньорство. Индивидуална оферта, от €1 200 / месец', false)
+            ->assertSee('- Core Изграждане. от €500 / месец', false)
+            ->assertSee('- Enterprise Партньорство. от €1 200 / месец', false)
             ->assertDontSee('плъзгач', false);
     }
 

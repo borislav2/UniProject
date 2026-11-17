@@ -82,7 +82,7 @@ class ClientEmailsTest extends TestCase
             ->assertSee('value="Екипът на Creatium Lab"', false)
             ->assertSee('value="Предложение за постоянен растеж за {business} | Creatium Lab"', false)
             ->assertSee('Какво включва')->assertSee('<details', false)
-            ->assertSee('value="800"', false)->assertSee('value="650"', false)
+            ->assertSee('value="800"', false)->assertDontSee('value="650"', false)
             ->assertSee('value="' . now()->addDays(7)->toDateString() . '"', false);
 
         $this->actingAs($user)->get('/admin/emails/nyama')->assertNotFound();
@@ -106,10 +106,10 @@ class ClientEmailsTest extends TestCase
             ->assertSee('Как Студио Лавандула ще расте с постоянен поток от запитвания')
             ->assertSee('Благодарим Ви за доверието и интереса към Creatium Lab!')
             ->assertSee('пакет „Pro Ускорение“', false)
-            ->assertSee('€800', false)->assertSee('€650', false)->assertSee('/ месец')
+            ->assertSee('€800', false)->assertDontSee('€650', false)->assertSee('/ месец')
             ->assertSee('Управление и проследяване на един рекламен канал')->assertSee('До 2 имейл кампании месечно')
-            ->assertSee('€200 преди да подготвим офертата и демото (не се връщат) и останалите €600 при съгласие')
-            ->assertSee('€6 500 вместо €7 800')
+            ->assertSee('Плащането е месечно, по абонамент.')
+            ->assertSee('€8 000 вместо €9 600')
             ->assertSee('Предложението е валидно до ' . now()->addWeek()->format('d.m.Y') . ' г.')
             ->assertSee('Поемаме ограничен брой нови проекти')->assertDontSee('безплатно демо')->assertDontSee('Демо преди старта');
         $this->actingAs($user)->post('/admin/emails/offer-start/preview', ['data' => ['business' => 'Мотор Про', 'price' => '400', 'monthly_price' => '200']])
@@ -247,8 +247,8 @@ class ClientEmailsTest extends TestCase
 
         $this->actingAs($user)->post('/admin/emails/offer-active', [
             'to' => 'not-an-email', 'subject' => 'Оферта',
-            'data' => $this->offerData(['price' => '', 'valid_until' => now()->subDay()->toDateString()]),
-        ])->assertSessionHasErrors(['to', 'data.price', 'data.valid_until']);
+            'data' => $this->offerData(['monthly_price' => '', 'valid_until' => now()->subDay()->toDateString()]),
+        ])->assertSessionHasErrors(['to', 'data.monthly_price', 'data.valid_until']);
 
         Mail::assertNothingSent();
         $this->assertSame(0, ClientEmail::count());
@@ -367,21 +367,25 @@ class ClientEmailsTest extends TestCase
     public function test_the_three_offers_carry_the_final_prices_deposit_and_the_owners_letters(): void
     {
         $start = $this->render('offer-start');
-        foreach (['Благодарим Ви за отделеното време и възможността да работим върху развитието на Вашия бизнес!', 'пакет „Core Изграждане“', '€400', '€200', 'Изработка на уебсайт', 'Google Business Profile', 'Настройка на Google Analytics и Meta Pixel', 'До 4 съдържателни единици месечно', 'Базово управление на социалните канали', 'Месечен отчет',
-            '€100 преди да подготвим офертата и демото (не се връщат) и останалите €300 при съгласие', '€2 000 вместо €2 400', 'Ще се радваме да станем Ваш партньор в развитието на онлайн присъствието Ви!'] as $text) {
+        foreach (['Благодарим Ви за отделеното време и възможността да работим върху развитието на Вашия бизнес!', 'пакет „Core Изграждане“', '€500', 'Месечен абонамент', 'Изработка на уебсайт', 'Google Business Profile', 'Настройка на Google Analytics и Meta Pixel', 'До 4 съдържателни единици месечно', 'Базово управление на социалните канали', 'Месечен отчет',
+            'Плащането е месечно, по абонамент.', '€5 000 вместо €6 000', 'Ще се радваме да станем Ваш партньор в развитието на онлайн присъствието Ви!'] as $text) {
             $this->assertStringContainsString($text, $start);
         }
         $this->assertStringNotContainsString('безплатно демо', $start);
         $this->assertStringNotContainsString('Демо преди старта', $start);
 
         $individual = $this->render('offer-individual');
-        foreach (['Благодарим Ви за проведената среща', 'индивидуално предложение за маркетингово партньорство', 'Съгласно индивидуално изготвената оферта', 'от €1 200', 'Приоритетна комуникация', 'CRM интеграции', 'Партньорството може да включва', 'Надяваме се това да бъде началото на успешно и дългосрочно партньорство!', 'Екипът на Creatium Lab', config('creatium.contact.email')] as $text) {
+        foreach (['Благодарим Ви за проведената среща', 'индивидуално предложение за маркетингово партньорство', 'от €1 200', 'Месечно партньорство', 'Приоритетна комуникация', 'CRM интеграции', 'Партньорството може да включва', 'Надяваме се това да бъде началото на успешно и дългосрочно партньорство!', 'Екипът на Creatium Lab', config('creatium.contact.email')] as $text) {
             $this->assertStringContainsString($text, $individual);
         }
-        // Без €-префикс пред текстовата цена, без гаранция за трафик и без срок на валидност от подразбиране.
-        $this->assertStringNotContainsString('€Съгласно', $individual);
+        // Без €-префикс пред текстовата цена („от €1 200“ не става „€от €1 200“).
+        $this->assertStringNotContainsString('€от', $individual);
         $this->assertStringContainsString('Ако 60 дни след пускането на сайта нямате трафик', $individual);
-        $this->assertStringContainsString('Капаро преди да подготвим офертата и демото (не се връща)', $individual);
+        $this->assertStringContainsString('Плащането е месечно, по абонамент; сумата и останалите условия са в индивидуално изготвената оферта.', $individual);
+        // Без еднократна цена и без капаро: нито една от старите суми.
+        foreach ([$start, $individual] as $html) {
+            $this->assertDoesNotMatchRegularExpression(\App\Support\OnePriceModel2026::OLD_PATTERN, $html);
+        }
 
         $template = ClientEmails::find('offer-individual');
         $this->assertSame('individual', $template['package']);

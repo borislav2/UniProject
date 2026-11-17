@@ -32,11 +32,12 @@ class DepositTermsTest extends TestCase
         $this->assertSame([], DepositTerms2026::apply());
     }
 
-    public function test_site_says_the_deposit_is_not_refunded_and_capacity_is_monthly(): void
+    public function test_site_has_no_deposit_any_more_and_capacity_is_monthly(): void
     {
-        $this->get('/paketi')->assertOk()->assertSee('не се връщат')->assertSee('Работен капацитет на месец');
-        $this->get('/en/packages')->assertOk()->assertSee('non-refundable')->assertSee('Working capacity per month');
-        $this->get('/usloviya')->assertOk()->assertSee('не се връща, ако решите да не продължите');
+        // Since 17.11.2026 (OnePriceModel2026) there is no deposit; the monthly capacity label stays.
+        $this->get('/paketi')->assertOk()->assertDontSee('не се връщат')->assertSee('Работен капацитет на месец');
+        $this->get('/en/packages')->assertOk()->assertDontSee('non-refundable')->assertSee('Working capacity per month');
+        $this->get('/usloviya')->assertOk()->assertDontSee('не се връща, ако решите да не продължите');
     }
 
     public function test_admin_copy_gets_the_individual_plan_deposit_once(): void
@@ -58,10 +59,9 @@ class DepositTermsTest extends TestCase
         $this->assertSame([], DepositTerms2026::applyIndividual());
     }
 
-    public function test_individual_plan_shows_its_deposit_and_terms_say_so(): void
+    public function test_the_terms_describe_the_monthly_subscription_of_the_individual_plan(): void
     {
-        // Картите вече не показват плащането на старта; условията и въпросите го описват.
         $this->get('/paketi')->assertOk()->assertSee('Enterprise Партньорство');
-        $this->get('/usloviya')->assertOk()->assertSee('При Enterprise Партньорство (от €1 200 на месец) също се плаща капаро');
+        $this->get('/usloviya')->assertOk()->assertSee('Enterprise Партньорство е от €1 200 на месец според индивидуалната оферта')->assertDontSee('капаро');
     }
 }

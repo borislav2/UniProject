@@ -165,21 +165,25 @@
 <div style="height:14px;line-height:14px;font-size:0;">&nbsp;</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0f1a2b" style="background:#0f1a2b;border-radius:14px;">
 <tr>
+{{-- Един модел на цените (17.11.2026): само месечен абонамент. Еднократната цена е по желание и се показва само в стари записи и ако е попълнена. --}}
+@php($hasPrice = $t('price') !== '')
 @php($hasMonthly = $t('monthly_price') !== '')
+@if($hasPrice)
 <td width="{{ $hasMonthly ? '50%' : '100%' }}" valign="top" align="center" style="padding:24px 12px 18px;{{ $hasMonthly ? 'border-right:1px solid #2a4468;' : '' }}">
 @if($t('price_label') !== '')<div style="{{ $f }}font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#9cc0eb;">{{ $t('price_label') }}</div>@endif
 <div style="{{ $f }}{{ $bigStyle($t('price')) }}font-weight:bold;color:#ffffff;padding-top:6px;">{{ $money($t('price')) }}</div>
 @if($t('price_note') !== '')<div style="{{ $f }}font-size:13px;color:#c5d6ec;">{{ $t('price_note') }}</div>@endif
 </td>
+@endif
 @if($hasMonthly)
-<td width="50%" valign="top" align="center" style="padding:24px 12px 18px;">
+<td width="{{ $hasPrice ? '50%' : '100%' }}" valign="top" align="center" style="padding:24px 12px 18px;">
 @if($t('monthly_label') !== '')<div style="{{ $f }}font-size:12px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#9cc0eb;">{{ $t('monthly_label') }}</div>@endif
 <div style="{{ $f }}{{ $bigStyle($t('monthly_price')) }}font-weight:bold;color:#ffffff;padding-top:6px;">{{ $money($t('monthly_price')) }}</div>
 <div style="{{ $f }}font-size:13px;color:#c5d6ec;">/ месец</div>
 </td>
 @endif
 </tr>
-<tr><td colspan="2" style="padding:0 24px 16px;">
+<tr><td colspan="{{ $hasPrice && $hasMonthly ? 2 : 1 }}" style="padding:0 24px 16px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
 @foreach([['Срок', $t('deadline')], ['Плащане', $t('payment')], ['Абонамент', $t('subscription_terms')], ['Годишно', $t('yearly_terms')], ['Гаранция', $t('guarantee')], ['Реклама', $t('ad_budget')]] as [$label, $value])
 @if($value !== '')

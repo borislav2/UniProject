@@ -117,9 +117,6 @@ class SiteKnowledge
             $out[] = "\n### " . $plan['name'];
             $out[] = $plan['audience'] ?? '';
             $out[] = 'Prices: ' . implode('; ', (array) ($plan['prices'] ?? []));
-            if (filled($plan['deposit'] ?? null)) {
-                $out[] = 'Start price payment: ' . $plan['deposit'];
-            }
             foreach (['build' => 'build_items', 'monthly' => 'monthly_items'] as $label => $field) {
                 if (! empty($plan[$field])) {
                     $out[] = ($plan[$label . '_title'] ?? $label) . ': ' . implode('; ', (array) $plan[$field]);
@@ -129,7 +126,7 @@ class SiteKnowledge
 
         $plansFull = app(\App\Support\Content::class)->withDefaults('plans');
         $out[] = "\n### " . __('Цени и плащане');
-        $out[] = __('Цените са фиксирани. Стартовата цена се плаща на две части, първата сума преди да подготвим офертата и демото, останалата при съгласие. Първата сума не се връща, ако клиентът не продължи; кажи го ясно, ако питат.');
+        $out[] = __('Цените са фиксирани. Плащането е само месечен абонамент, без еднократна стартова цена. Годишното плащане е за 10 месеца вместо 12. Не измисляй минимален срок на договора, отстъпки или условия, които не са посочени тук.');
         array_push($out, ...\App\Support\PlanBilling::textLines($plansFull));
         if (! empty($plansFull['compare'])) {
             $out[] = __('Сравнение') . ' (' . implode(' | ', array_map(fn ($p) => $p['name'], array_values($plansFull['items'] ?? []))) . '):';
