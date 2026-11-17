@@ -69,6 +69,9 @@
     </div>
 </article>
 
+{{-- The next step after reading: a call (the closer of /za-nas) and the free site check; existing strings only. --}}
+@include('partials.g.closer', ['kicker' => __('Имате въпроси?'), 'text' => __('Запазете час за разговор'), 'label' => __('Запазете час'), 'href' => lroute('contact') . '#konsultatsiya', 'link' => ['label' => __('Безплатна проверка на сайт'), 'href' => lroute('site-check')]])
+
 @if($related->isNotEmpty())
     <section class="g-s g-related">
         <div class="g-wrap">

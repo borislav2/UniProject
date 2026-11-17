@@ -137,6 +137,7 @@
     @stack('head')
 </head>
 <body class="bg-white text-gray-900 antialiased dark:bg-ink-950 dark:text-gray-100">
+@if($g)<a class="g-skip" href="#main">{{ __('Към съдържанието') }}</a>@endif
     @if(config('creatium.gtm_id'))
         <!-- Google Tag Manager (noscript) -->
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ config('creatium.gtm_id') }}" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
@@ -283,7 +284,8 @@
     </header>
     @endif
 
-    <main>
+    @if($g)<main id="main" tabindex="-1">@else<main>@endif
+
         @yield('content')
     </main>
 

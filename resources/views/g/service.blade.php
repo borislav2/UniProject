@@ -21,6 +21,10 @@
             <ul class="g-list g-problems">
                 @foreach($page['problems'] as $problem)<li><span>{{ $problem }}</span></li>@endforeach
             </ul>
+            <div class="g-get g-get-line g-get-side">
+                <p class="g-mono g-mute">{{ __('Какво получавате') }}</p>
+                <p>{{ $page['result'] }}</p>
+            </div>
         </div>
         <div>
             <h2 class="g-h g-sub-h g-rows-label">{{ __('Какво правим') }}</h2>
@@ -29,10 +33,6 @@
                     <li><h3>{{ $item }}</h3></li>
                 @endforeach
             </ol>
-            <div class="g-get g-get-line">
-                <p class="g-mono g-mute">{{ __('Какво получавате') }}</p>
-                <p>{{ $page['result'] }}</p>
-            </div>
         </div>
     </div>
 </section>

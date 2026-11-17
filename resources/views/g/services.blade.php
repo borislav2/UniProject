@@ -12,8 +12,13 @@
     $gPlans = collect(\App\Support\GPlans::cards(app(\App\Support\Content::class)->withDefaults('plans')))->keyBy('index');
 @endphp
 
+@php
+    // A link from the page head to the interactive panel at the bottom, with the panel's own heading as the label (no new copy).
+    $gJump = \Illuminate\Support\Facades\Blade::render('<a class="g-link g-jump" href="#sistema"><span>{{ $label }}</span><x-icon name="arrow-right" class="g-ar g-ar-down" /></a>', ['label' => \App\Support\GPanel::texts()['title']]);
+@endphp
+
 @section('content')
-@include('partials.g.page-head', ['heading' => filled($gPage['g_title'] ?? null) ? $gPage['g_title'] : $page['title'], 'sub' => filled($gPage['g_text'] ?? null) ? $gPage['g_text'] : $page['intro']])
+@include('partials.g.page-head', ['heading' => filled($gPage['g_title'] ?? null) ? $gPage['g_title'] : $page['title'], 'sub' => filled($gPage['g_text'] ?? null) ? $gPage['g_text'] : $page['intro'], 'actions' => $gJump])
 
 <section class="g-s">
     <div class="g-wrap">

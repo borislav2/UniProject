@@ -715,6 +715,7 @@ return [
             'msg_mixed' => 'You have a good base, but the chain breaks between the steps. Adding the remaining elements will lift the results of what you already do.',
             'msg_full' => 'Your system is in order. From here we work on fine tuning and growing the volume.',
             'button' => 'See how we complete what is missing',
+            'button_full' => 'Talk to us about fine tuning',
         ],
     ],
 
