@@ -1,9 +1,9 @@
 @php
-    // Слайдове 1600×900. Същото съдържание като на сайта (site()), затова промените от админа влизат и тук.
-    // PDF: node tools/presentation/render.mjs (вижте файла). Страницата е noindex.
+    // Слайдове 1600×900 в стила на дизайн Г (светли и мастилени, квадратни, един акцент). Същото съдържание като на сайта (site()), затова промените от админа влизат и тук.
+    // Показва се винаги в новия вид, при всеки creatium.design. PDF: node tools/presentation/render.mjs (вижте файла). Страницата е noindex.
     $title = e($hero['title']);
     foreach (array_filter((array) ($hero['accent'] ?? [])) as $word) {
-        $title = preg_replace('/(?<![\p{L}])(' . preg_quote(e($word), '/') . ')(?![\p{L}])/u', '<span class="text-accent">$1</span>', $title, 1);
+        $title = preg_replace('/(?<![\p{L}])(' . preg_quote(e($word), '/') . ')(?![\p{L}])/u', '<span class="gp-accent">$1</span>', $title, 1);
     }
     $engineNodes = array_values(array_map(function ($card) {
         preg_match('/^(.+?)\s*\((.+)\)\s*$/u', $card['label'], $m);
@@ -22,101 +22,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>{{ __('Презентация на Creatium Lab') }}</title>
-    @vite(['resources/css/app.css'])
-    <style>
-        @page { size: 1600px 900px; margin: 0; }
-        html, body { margin: 0; background: #0b1422; }
-        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        .slide { position: relative; width: 1600px; height: 900px; overflow: hidden; break-after: page; page-break-after: always; margin: 0 auto 24px; }
-        .slide:last-child { break-after: auto; page-break-after: auto; }
-        @media print { html, body { background: #fff; } .slide { margin: 0; } }
-        /* Gradient text and blur turn into boxes and megabytes in PDF: plain colors here. */
-        .text-accent { background: none; color: #8fb5e0; }
-        .numeral { background: none !important; color: #2d63a3; }
-        @media screen and (max-width: 1640px) { body { zoom: calc(100vw / 1640px); } }
-        .slide-pad { padding: 96px 112px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
-        .slide-foot { position: absolute; left: 112px; right: 112px; bottom: 44px; display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; letter-spacing: 0.06em; }
-    </style>
+    @vite(['resources/css/presentation.css'])
 </head>
-<body class="font-sans antialiased">
+<body class="gp-deck">
 
 {{-- 1. Cover --}}
-<section class="slide surface-night text-white on-dark">
-    <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_70%_30%,black_20%,transparent_70%)]"></div>
-    <div class="relative slide-pad justify-between">
-        <img src="{{ asset('images/logo-white.webp') }}" alt="Creatium Lab" class="h-12 w-auto self-start">
+<section class="gp-slide is-ink">
+    <div class="gp-pad is-between">
+        <img src="{{ asset('images/logo-g-dark-352.webp') }}" alt="Creatium Lab" class="gp-logo">
         <div>
-            <p class="kicker text-base">{{ $trust['eyebrow'] }}</p>
-            <h1 class="display mt-8 text-[6.5rem] leading-[1.02] max-w-[72rem]">{!! $title !!}</h1>
-            <p class="mt-8 text-3xl font-bold text-brand-200 max-w-[60rem]">{{ $hero['highlight'] }}</p>
+            @if(filled($trust['eyebrow'] ?? null))<p class="gp-k">{{ $trust['eyebrow'] }}</p>@endif
+            <h1 class="gp-h is-xl">{!! $title !!}</h1>
+            <p class="gp-lead">{{ $hero['highlight'] }}</p>
         </div>
-        <div class="flex gap-16 text-xl">
-            <span class="font-bold">{{ $site }}</span>
-            <span class="text-gray-300">{{ $contact['email'] }}</span>
-            <span class="text-gray-300">{{ $contact['phones'][0] ?? '' }}</span>
+        <div style="display:flex;gap:64px;font-size:22px;">
+            <span style="font-weight:500;">{{ $site }}</span>
+            <span style="color:var(--on-ink-mute);">{{ $contact['email'] }}</span>
+            <span style="color:var(--on-ink-mute);">{{ $contact['phones'][0] ?? '' }}</span>
         </div>
     </div>
 </section>
 
 {{-- 2. Problem --}}
-<section class="slide bg-white">
-    <div class="slide-pad">
-        <p class="kicker kicker-light text-base">{{ __('Проблемът') }}</p>
-        <h2 class="display mt-6 text-6xl text-brand-950 max-w-[70rem]">{{ $problem['title'] }}</h2>
-        <div class="mt-auto grid grid-cols-3 gap-8">
+<section class="gp-slide">
+    <div class="gp-pad">
+        <p class="gp-k">{{ __('Проблемът') }}</p>
+        <h2 class="gp-h is-l">{{ $problem['title'] }}</h2>
+        <div class="gp-grid c3 gp-push">
             @foreach($problem['scenarios'] as $scenario)
-                <div class="rounded-3xl p-10 {{ $loop->last ? 'bg-brand-950 text-white' : 'border border-gray-200 bg-gray-50' }}">
-                    <span class="text-sm font-bold uppercase tracking-[0.2em] {{ $loop->last ? 'text-emerald-300' : 'text-red-700' }}">{{ $scenario['label'] }}</span>
-                    <h3 class="mt-5 text-3xl font-extrabold tracking-tight leading-tight {{ $loop->last ? '' : 'text-brand-950' }}">{{ $scenario['title'] }}</h3>
-                    <p class="mt-5 text-lg leading-relaxed {{ $loop->last ? 'text-gray-300' : 'text-gray-600' }}">{{ $scenario['text'] }}</p>
+                <div class="gp-card {{ $loop->last ? 'is-solid' : '' }}">
+                    <span class="gp-k">{{ $scenario['label'] }}</span>
+                    <h3 style="margin-top:20px;">{{ $scenario['title'] }}</h3>
+                    <p>{{ $scenario['text'] }}</p>
                 </div>
             @endforeach
         </div>
     </div>
-    <div class="slide-foot text-gray-400"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
+    <div class="gp-foot"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
 </section>
 
 {{-- 3. The engine --}}
-<section class="slide surface-night text-white on-dark">
-    <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]"></div>
-    <div class="relative slide-pad">
-        <p class="kicker text-base">{{ $trust['engine_eyebrow'] }}</p>
-        <h2 class="display mt-6 text-6xl max-w-[60rem]">{{ $engine['title'] }}</h2>
-        <div class="relative mt-auto mb-10 grid grid-cols-2 gap-x-[26rem] gap-y-20">
-            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none"><g stroke="rgb(143 181 224 / 0.5)" stroke-width="2" stroke-dasharray="6 8" fill="none" vector-effect="non-scaling-stroke"><path d="M50 50 L22 22" vector-effect="non-scaling-stroke"/><path d="M50 50 L78 22" vector-effect="non-scaling-stroke"/><path d="M50 50 L22 78" vector-effect="non-scaling-stroke"/><path d="M50 50 L78 78" vector-effect="non-scaling-stroke"/></g></svg>
-            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-60 h-60 rounded-full bg-brand-gradient ring-1 ring-white/25 shadow-[0_0_120px_-10px_rgb(59_119_189/0.9)] flex flex-col items-center justify-center text-center">
-                <x-icon name="cogs" class="text-4xl text-brand-100" />
-                <span class="mt-3 px-6 text-2xl font-extrabold leading-tight">{{ $trust['engine_center'] }}</span>
+<section class="gp-slide is-ink">
+    <div class="gp-pad">
+        <p class="gp-k">{{ $trust['engine_eyebrow'] }}</p>
+        <h2 class="gp-h is-l">{{ $engine['title'] }}</h2>
+        <div class="gp-engine" style="margin-bottom:24px;">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><g stroke="rgba(236,238,240,.35)" stroke-width="1" fill="none"><path d="M50 50 L22 22" vector-effect="non-scaling-stroke"/><path d="M50 50 L78 22" vector-effect="non-scaling-stroke"/><path d="M50 50 L22 78" vector-effect="non-scaling-stroke"/><path d="M50 50 L78 78" vector-effect="non-scaling-stroke"/></g></svg>
+            <div class="gp-core">
+                <span class="gp-core-ico"><x-icon name="cogs" /></span>
+                <span>{{ $trust['engine_center'] }}</span>
             </div>
             @foreach($engineNodes as $node)
-                <div class="relative edge glass rounded-3xl p-8 flex items-center gap-6">
-                    <span class="w-16 h-16 shrink-0 rounded-2xl bg-brand-500/25 flex items-center justify-center"><x-icon :name="$node['icon']" class="text-2xl text-brand-200" /></span>
+                <div class="gp-node">
+                    <span class="ico"><x-icon :name="$node['icon']" /></span>
                     <span>
-                        <span class="block text-sm font-bold tracking-[0.2em] text-brand-300">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
-                        <span class="block text-3xl font-extrabold">{{ $node['name'] }}</span>
-                        @if($node['tag'])<span class="block text-lg text-gray-400">{{ $node['tag'] }}</span>@endif
+                        <span class="gp-num" style="display:block;margin-bottom:6px;">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                        <b>{{ $node['name'] }}</b>
+                        @if($node['tag'])<small>{{ $node['tag'] }}</small>@endif
                     </span>
                 </div>
             @endforeach
         </div>
     </div>
-    <div class="slide-foot text-gray-500"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
+    <div class="gp-foot"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
 </section>
 
 {{-- 4. What is included --}}
-<section class="slide bg-brand-50">
-    <div class="slide-pad">
-        <p class="kicker kicker-light text-base">{{ __('Какво включва') }}</p>
-        <div class="mt-10 grid grid-cols-2 gap-10 flex-1">
+<section class="gp-slide is-surface">
+    <div class="gp-pad is-dense">
+        <p class="gp-k">{{ __('Какво включва') }}</p>
+        <div class="gp-grid c2" style="margin-top:22px;flex:1;">
             @foreach(['tech', 'growth'] as $group)
-                <div class="rounded-3xl bg-white p-10 border border-gray-200">
-                    <p class="text-sm font-bold uppercase tracking-[0.2em] text-brand-600">{{ $engine[$group . '_tag'] }}</p>
-                    <h3 class="mt-2 text-4xl font-extrabold tracking-tight text-brand-950">{{ $engine[$group . '_title'] }}</h3>
-                    <ul class="mt-8 space-y-5">
+                <div class="gp-card is-tight">
+                    <p class="gp-k">{{ $engine[$group . '_tag'] }}</p>
+                    <h3 style="margin-top:10px;">{{ $engine[$group . '_title'] }}</h3>
+                    <ul class="gp-list" style="margin-top:22px;">
                         @foreach($engine[$group . '_items'] as $item)
-                            <li class="flex gap-4">
-                                <span class="mt-1.5 w-6 h-6 shrink-0 rounded-full bg-brand-50 flex items-center justify-center"><x-icon name="check" class="text-xs text-brand-600" /></span>
-                                <span><span class="block text-xl font-bold text-brand-950">{{ $item['title'] }}</span><span class="block text-base text-gray-600 leading-snug">{{ $item['text'] }}</span></span>
+                            <li>
+                                <span class="tick"><x-icon name="check" /></span>
+                                <span><b>{{ $item['title'] }}</b><span class="t">{{ $item['text'] }}</span></span>
                             </li>
                         @endforeach
                     </ul>
@@ -124,151 +108,148 @@
             @endforeach
         </div>
     </div>
-    <div class="slide-foot text-gray-400"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
+    <div class="gp-foot"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
 </section>
 
 {{-- 5. Who we work with --}}
-<section class="slide bg-white">
-    <div class="slide-pad">
-        <div class="grid grid-cols-12 gap-16 flex-1">
-            <div class="col-span-5">
-                <p class="kicker kicker-light text-base">{{ $trust['fit_eyebrow'] }}</p>
-                <h2 class="display mt-6 text-6xl text-brand-950">{{ $trust['fit_title'] }}</h2>
-                <p class="mt-8 text-2xl text-gray-600 leading-relaxed">{{ $trust['fit_text'] }}</p>
+<section class="gp-slide">
+    <div class="gp-pad">
+        <div style="display:grid;grid-template-columns:5fr 7fr;gap:72px;flex:1;">
+            <div>
+                <p class="gp-k">{{ $trust['fit_eyebrow'] }}</p>
+                <h2 class="gp-h is-l">{{ $trust['fit_title'] }}</h2>
+                <p class="gp-lead" style="font-size:25px;color:var(--mute);">{{ $trust['fit_text'] }}</p>
             </div>
-            <ol class="col-span-7 self-center divide-y divide-gray-200 border-y border-gray-200">
+            <ol class="gp-rows" style="align-self:center;">
                 @foreach($trust['fit_items'] as $item)
-                    <li class="flex gap-8 py-8">
-                        <span class="numeral !text-6xl">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
-                        <span><span class="block text-3xl font-extrabold tracking-tight text-brand-950">{{ $item['title'] }}</span><span class="mt-2 block text-xl text-gray-600 leading-snug">{{ $item['text'] }}</span></span>
+                    <li>
+                        <span class="gp-num">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                        <span><b>{{ $item['title'] }}</b><span class="t">{{ $item['text'] }}</span></span>
                     </li>
                 @endforeach
             </ol>
         </div>
     </div>
-    <div class="slide-foot text-gray-400"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
+    <div class="gp-foot"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
 </section>
 
 {{-- 6. Process --}}
-<section class="slide surface-night text-white on-dark">
-    <div class="relative slide-pad">
-        <p class="kicker text-base">{{ __('Работен процес') }}</p>
-        <h2 class="display mt-6 text-6xl max-w-[66rem]">{{ $process['title'] }}</h2>
-        <div class="mt-auto mb-6 grid grid-cols-3 gap-6">
+<section class="gp-slide is-ink">
+    <div class="gp-pad">
+        <p class="gp-k">{{ __('Работен процес') }}</p>
+        <h2 class="gp-h is-l">{{ $process['title'] }}</h2>
+        <div class="gp-grid c3 is-steps">
             @foreach($process['steps'] as $step)
-                <div class="relative edge glass rounded-3xl p-8">
-                    <div class="flex items-center gap-5"><span class="text-5xl font-extrabold tracking-tight text-brand-300">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span><span class="h-px flex-1 bg-white/15"></span></div>
-                    <h3 class="mt-5 text-2xl font-extrabold">{{ $step['title'] }}</h3>
-                    <p class="mt-2 text-base text-gray-400 leading-snug">{{ $step['text'] }}</p>
+                <div class="gp-card">
+                    <span class="gp-num" style="font-size:22px;">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                    <h3>{{ $step['title'] }}</h3>
+                    <p>{{ $step['text'] }}</p>
                 </div>
             @endforeach
         </div>
     </div>
-    <div class="slide-foot text-gray-500"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
+    <div class="gp-foot"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
 </section>
 
 {{-- 7. Packages --}}
-<section class="slide bg-brand-50">
-    <div class="slide-pad">
-        <p class="kicker kicker-light text-base">{{ __('Пакети') }}</p>
-        <h2 class="display mt-6 text-6xl text-brand-950">{{ __('Три пакета с ясни цени.') }}</h2>
-        <div class="mt-auto grid grid-cols-3 gap-8">
+<section class="gp-slide is-surface">
+    <div class="gp-pad">
+        <p class="gp-k">{{ __('Пакети') }}</p>
+        <h2 class="gp-h is-l">{{ __('Три пакета с ясни цени.') }}</h2>
+        <div class="gp-grid c3 gp-push">
             @foreach($plans['items'] as $plan)
-                <div class="rounded-3xl p-8 flex flex-col {{ ! empty($plan['highlighted']) ? 'bg-brand-950 text-white shadow-2xl' : 'bg-white border border-gray-200' }}">
-                    @if(filled($plan['badge'] ?? null))<span class="self-start rounded-full px-4 py-1.5 text-sm font-bold {{ ! empty($plan['highlighted']) ? 'bg-white text-brand-950' : 'bg-brand-50 text-brand-700' }}">{{ $plan['badge'] }}</span>@endif
-                    <h3 class="mt-5 text-3xl font-extrabold tracking-tight leading-tight {{ empty($plan['highlighted']) ? 'text-brand-950' : '' }}">{{ $plan['name'] }}</h3>
-                    <p class="mt-3 text-lg leading-snug {{ empty($plan['highlighted']) ? 'text-gray-600' : 'text-gray-300' }}">{{ $plan['audience'] }}</p>
+                <div class="gp-plan {{ ! empty($plan['highlighted']) ? 'is-hi' : '' }}">
+                    @if(filled($plan['badge'] ?? null))<span class="gp-badge">{{ $plan['badge'] }}</span>@else<span class="gp-badge-gap"></span>@endif
+                    <h3>{{ $plan['name'] }}</h3>
+                    <p class="aud">{{ $plan['audience'] }}</p>
                     @php($card = \App\Support\PlanBilling::cardPrice(\App\Support\PlanBilling::config($plans), $plan, $loop->index))
-                    <div class="mt-auto pt-6">
-                        <p class="text-5xl font-extrabold tracking-tight">{{ $card['from'] }}</p>
-                        @if($card['caption'] !== '')<p class="mt-2 text-lg {{ empty($plan['highlighted']) ? 'text-gray-600' : 'text-gray-300' }}">{{ $card['caption'] }}</p>@endif
-                        @if($card['second'] !== '')
-                            <p class="mt-5 pt-4 border-t text-2xl font-bold {{ empty($plan['highlighted']) ? 'border-gray-200' : 'border-white/15' }}">{{ $card['second'] }}</p>
-                            @if($card['note'] !== '')<p class="mt-1 text-base {{ empty($plan['highlighted']) ? 'text-gray-600' : 'text-gray-300' }}">{{ $card['note'] }}</p>@endif
-                        @endif
-                    </div>
+                    <p class="price">{{ $card['from'] }}</p>
+                    @if($card['caption'] !== '')<p class="cap">{{ $card['caption'] }}</p>@endif
+                    @if($card['second'] !== '')
+                        <p class="second">{{ $card['second'] }}</p>
+                        @if($card['note'] !== '')<p class="note">{{ $card['note'] }}</p>@endif
+                    @endif
                 </div>
             @endforeach
         </div>
     </div>
-    <div class="slide-foot text-gray-400"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
+    <div class="gp-foot"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
 </section>
 
 {{-- 8. Industries (demos) --}}
-<section class="slide surface-night text-white on-dark">
-    <div class="relative slide-pad">
-        <div class="flex items-end justify-between gap-10">
+<section class="gp-slide is-ink">
+    <div class="gp-pad">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:40px;">
             <div>
-                <p class="kicker text-base">{{ $trust['demos_eyebrow'] }}</p>
-                <h2 class="display mt-6 text-6xl">{{ $trust['demos_title'] }}</h2>
+                <p class="gp-k">{{ $trust['demos_eyebrow'] }}</p>
+                <h2 class="gp-h is-l">{{ $trust['demos_title'] }}</h2>
             </div>
-            <p class="max-w-[34rem] text-lg text-gray-400 leading-relaxed">{{ $trust['demos_text'] }}</p>
+            <p style="max-width:34rem;font-size:19px;line-height:1.55;color:var(--on-ink-mute);">{{ $trust['demos_text'] }}</p>
         </div>
-        <div class="mt-auto mb-6 grid grid-cols-3 gap-6">
+        <div class="gp-grid c3 is-demos">
             @foreach(array_slice($demos, 0, 6) as $demo)
-                <div class="relative edge glass rounded-2xl overflow-hidden">
-                    <div class="relative h-44 overflow-hidden bg-white/5">
+                <div class="gp-demo">
+                    <div class="shot">
                         @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
-                            <img src="{{ demo_img($demo['slug']) }}" alt="" class="w-full h-full object-cover object-top">
+                            <img src="{{ demo_img($demo['slug']) }}" alt="">
                         @endif
                     </div>
-                    <div class="p-5"><span class="block text-xs font-bold uppercase tracking-[0.2em] text-brand-300">{{ $demo['industry'] }}</span><span class="mt-1 block text-xl font-extrabold">{{ $demo['name'] }}</span></div>
+                    <div class="meta"><span class="gp-k">{{ $demo['industry'] }}</span><b>{{ $demo['name'] }}</b></div>
                 </div>
             @endforeach
         </div>
     </div>
-    <div class="slide-foot text-gray-500"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
+    <div class="gp-foot"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
 </section>
 
 {{-- 9. Principles and team --}}
-<section class="slide bg-white">
-    <div class="slide-pad">
-        <div class="grid grid-cols-12 gap-14 flex-1">
-            <div class="col-span-7">
-                <p class="kicker kicker-light text-base">{{ $trust['principles_eyebrow'] }}</p>
-                <h2 class="display mt-6 text-5xl text-brand-950">{{ $trust['principles_title'] }}</h2>
-                <div class="mt-10 grid grid-cols-2 gap-x-10 gap-y-8">
+<section class="gp-slide">
+    <div class="gp-pad">
+        <div style="display:grid;grid-template-columns:7fr 5fr;gap:64px;flex:1;">
+            <div>
+                <p class="gp-k">{{ $trust['principles_eyebrow'] }}</p>
+                <h2 class="gp-h is-m">{{ $trust['principles_title'] }}</h2>
+                <div class="gp-grid c2" style="margin-top:44px;gap:36px 44px;">
                     @foreach($trust['principle_items'] as $item)
-                        <div>
-                            <span class="numeral !text-5xl">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
-                            <h3 class="mt-3 text-2xl font-extrabold tracking-tight text-brand-950 leading-tight">{{ $item['title'] }}</h3>
-                            <p class="mt-2 text-base text-gray-600 leading-snug">{{ $item['text'] }}</p>
+                        <div class="gp-pr">
+                            <span class="gp-num">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                            <h3>{{ $item['title'] }}</h3>
+                            <p>{{ $item['text'] }}</p>
                         </div>
                     @endforeach
                 </div>
             </div>
-            <div class="col-span-5 flex flex-col gap-6 justify-center">
+            <div style="display:flex;flex-direction:column;gap:20px;justify-content:center;">
                 @foreach($team as $member)
-                    <div class="flex items-center gap-6 rounded-3xl border border-gray-200 bg-gray-50 p-6">
+                    <div class="gp-person">
                         @if(filled($member['image'] ?? null) && is_file(public_path($member['image'])))
-                            <img src="{{ asset($member['image']) }}" alt="" class="w-28 h-28 rounded-2xl object-cover">
+                            <img src="{{ asset($member['image']) }}" alt="">
                         @endif
                         <div>
-                            <p class="text-2xl font-extrabold text-brand-950">{{ $member['name'] }}</p>
-                            <p class="mt-1 text-lg font-semibold text-brand-600">{{ $member['role'] }}</p>
+                            <b>{{ $member['name'] }}</b>
+                            <span>{{ $member['role'] }}</span>
                         </div>
                     </div>
                 @endforeach
             </div>
         </div>
     </div>
-    <div class="slide-foot text-gray-400"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
+    <div class="gp-foot"><span>Creatium Lab</span><span>{{ $n() }}</span></div>
 </section>
 
 {{-- 10. Contact --}}
-<section class="slide surface-night text-white on-dark">
-    <div class="absolute inset-0 bg-grid-light [mask-image:radial-gradient(ellipse_at_30%_70%,black_20%,transparent_70%)]"></div>
-    <div class="relative slide-pad justify-between">
-        <img src="{{ asset('images/logo-white.webp') }}" alt="Creatium Lab" class="h-12 w-auto self-start">
+<section class="gp-slide is-ink">
+    <div class="gp-pad is-between">
+        <img src="{{ asset('images/logo-g-dark-352.webp') }}" alt="Creatium Lab" class="gp-logo">
         <div>
-            <p class="kicker text-base">{{ $trust['contact_eyebrow'] }}</p>
-            <h2 class="display mt-6 text-7xl max-w-[66rem]">{{ __('Разговор с нас за вашия бизнес.') }}</h2>
-            <p class="mt-6 text-2xl text-gray-300 max-w-[56rem]">{{ __(':minutes минути разговор. Разглеждаме сайта и присъствието ви в Google и ви казваме какво бихме направили първо.', ['minutes' => config('creatium.booking.minutes')]) }}</p>
+            <p class="gp-k">{{ $trust['contact_eyebrow'] }}</p>
+            <h2 class="gp-h is-xl" style="font-size:80px;">{{ __('Разговор с нас за вашия бизнес.') }}</h2>
+            <p class="gp-lead" style="font-size:26px;max-width:56rem;">{{ __(':minutes минути разговор. Разглеждаме сайта и присъствието ви в Google и ви казваме какво бихме направили първо.', ['minutes' => config('creatium.booking.minutes')]) }}</p>
         </div>
-        <div class="grid grid-cols-3 gap-6">
-            <div class="relative edge glass rounded-2xl p-6"><p class="text-sm font-bold uppercase tracking-[0.2em] text-brand-300">{{ __('Сайт') }}</p><p class="mt-2 text-2xl font-bold">{{ $site }}</p></div>
-            <div class="relative edge glass rounded-2xl p-6"><p class="text-sm font-bold uppercase tracking-[0.2em] text-brand-300">{{ __('Имейл') }}</p><p class="mt-2 text-2xl font-bold">{{ $contact['email'] }}</p></div>
-            <div class="relative edge glass rounded-2xl p-6"><p class="text-sm font-bold uppercase tracking-[0.2em] text-brand-300">{{ __('Телефон') }}</p><p class="mt-2 text-2xl font-bold">{{ implode(' · ', $contact['phones']) }}</p></div>
+        <div class="gp-grid c3 is-contact" style="gap:24px;">
+            <div class="gp-contact"><p class="gp-k">{{ __('Сайт') }}</p><p class="v">{{ $site }}</p></div>
+            <div class="gp-contact"><p class="gp-k">{{ __('Имейл') }}</p><p class="v">{{ $contact['email'] }}</p></div>
+            <div class="gp-contact"><p class="gp-k">{{ __('Телефон') }}</p><p class="v">{{ implode(' · ', $contact['phones']) }}</p></div>
         </div>
     </div>
 </section>

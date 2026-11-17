@@ -148,7 +148,7 @@ class ClientEmailsTest extends TestCase
                 && str_contains($html, '€800')
                 && str_contains($html, 'валидно до ' . now()->addWeek()->format('d.m.Y'))
                 && ! str_contains($html, '{business}') && ! str_contains($html, '{client_name}')
-                && ! str_contains(preg_replace('/<!--\[if mso\].*?<!\[endif\]-->/s', '', $html), '['); // no unfilled [поле], ignoring the Outlook-only font comment
+                && ! str_contains(preg_replace('/<style.*?<\/style>/s', '', $html), '['); // no unfilled [поле], ignoring the CSS block (attribute selectors of the dark mode)
         });
 
         $log = ClientEmail::sole();
@@ -400,14 +400,15 @@ class ClientEmailsTest extends TestCase
         $this->actingAs($user)->get('/admin/emails/offer-active')->assertOk()->assertSee('value="' . now()->addDays(7)->toDateString() . '"', false);
     }
 
-    public function test_every_email_uses_one_font(): void
+    public function test_every_email_uses_only_the_three_g_font_stacks(): void
     {
         $html = view('emails.client.offer', ['data' => ['client_name' => 'Ивон', 'business' => 'Pet Bowls', 'price' => '800'], 'package' => 'active', 'subject' => 'x'])->render();
-        $this->assertStringContainsString('font-family: Arial, Helvetica, sans-serif !important;', $html);
-        $this->assertStringContainsString('<!--[if mso]>', $html);
+        // Design G (17.11.2026): Onest for text, Geologica for headings, JetBrains Mono for labels, each with system fallbacks (web fonts are not reliable in mail).
+        $allowed = ['Onest,Segoe UI,Helvetica,Arial,sans-serif', 'Geologica,Segoe UI,Arial,sans-serif', 'JetBrains Mono,Consolas,Menlo,monospace'];
         preg_match_all('/font-family:\s*([^;"]+)/', $html, $m);
+        $this->assertNotEmpty($m[1]);
         foreach ($m[1] as $stack) {
-            $this->assertMatchesRegularExpression('/^Arial,\s*Helvetica,\s*sans-serif/', trim(str_replace(' !important', '', $stack)));
+            $this->assertContains(trim($stack), $allowed);
         }
         // The plain-text part does not get the CSS.
         $this->assertStringNotContainsString('font-family', \App\Support\PlainText::fromHtml($html));

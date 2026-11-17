@@ -1,0 +1,156 @@
+/*
+ * Презентацията (/prezentatsiya, /en/presentation) и PDF-ът от нея, в стила на дизайн Г (17.11.2026): светли и мастилени слайдове 1600x900,
+ * квадратни ъгли, тънки линии, без градиенти, сенки и блясък, един оранжев акцент. Собствен файл, без Tailwind и без app.css:
+ * изглежда еднакво при всеки creatium.design. Шрифтовете са същите самостоятелно хоствани файлове като на сайта.
+ */
+@font-face { font-family: 'Geologica'; font-style: normal; font-display: block; font-weight: 300 500; src: url('../fonts/g/geologica-cyrillic-300.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'Geologica'; font-style: normal; font-display: block; font-weight: 300 500; src: url('../fonts/g/geologica-latin-300.woff2') format('woff2'); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2212; }
+@font-face { font-family: 'Onest'; font-style: normal; font-display: block; font-weight: 400 500; src: url('../fonts/g/onest-cyrillic-400.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'Onest'; font-style: normal; font-display: block; font-weight: 400 500; src: url('../fonts/g/onest-latin-400.woff2') format('woff2'); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2212; }
+@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-display: block; font-weight: 400 500; src: url('../fonts/g/jetbrains-mono-cyrillic-500.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-display: block; font-weight: 400 500; src: url('../fonts/g/jetbrains-mono-latin-500.woff2') format('woff2'); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2212; }
+
+@page { size: 1600px 900px; margin: 0; }
+
+.gp-deck {
+    --bg: #ECEEF0; --surface: #F7F8F9; --field: #FFFFFF; --ink: #0C0E12; --mute: #4A5058; --line: rgba(12, 14, 18, .16);
+    --accent: #E8431B; --accent-text: #C4300F; --on-ink: #ECEEF0; --on-ink-mute: #9AA0A9; --ink-line: rgba(236, 238, 240, .2);
+    --head: 'Geologica', 'Onest', system-ui, sans-serif; --body: 'Onest', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+html:has(.gp-deck), html:has(.gp-deck) body { margin: 0; background: #0C0E12; }
+.gp-deck { font: 400 20px/1.5 var(--body); color: var(--ink); -webkit-font-smoothing: antialiased; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.gp-deck *, .gp-deck *::before, .gp-deck *::after { box-sizing: border-box; border-radius: 0; }
+:where(.gp-deck) :where(h1, h2, h3, p, ul, ol) { margin: 0; padding: 0; }
+:where(.gp-deck) :where(ul, ol) { list-style: none; }
+@media screen and (max-width: 1640px) { .gp-deck { zoom: calc(100vw / 1640px); } }
+
+.gp-slide { position: relative; width: 1600px; height: 900px; overflow: hidden; break-after: page; page-break-after: always; margin: 0 auto 24px; background: var(--bg); }
+.gp-slide:last-child { break-after: auto; page-break-after: auto; }
+@media print { html:has(.gp-deck), html:has(.gp-deck) body { background: #fff; } .gp-slide { margin: 0; } }
+.gp-slide.is-surface { background: var(--surface); }
+.gp-slide.is-ink { background: var(--ink); color: var(--on-ink); }
+.gp-pad { position: relative; height: 100%; padding: 96px 112px 112px; display: flex; flex-direction: column; }
+.gp-pad.is-between { justify-content: space-between; }
+.gp-foot { position: absolute; left: 112px; right: 112px; bottom: 44px; display: flex; justify-content: space-between; font: 500 14px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+.is-ink .gp-foot { color: var(--on-ink-mute); }
+
+/* Type */
+.gp-k { font: 500 15px/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
+.is-ink .gp-k { color: var(--accent); }
+.gp-k::before { content: ''; display: inline-block; width: 10px; height: 10px; background: var(--accent); margin-right: 14px; vertical-align: 1px; }
+.gp-h { font: 300 60px/1.1 var(--head); letter-spacing: -.02em; margin-top: 28px; max-width: 74rem; }
+.gp-h.is-xl { font-size: 92px; line-height: 1.04; max-width: 80rem; }
+.gp-h.is-l { font-size: 60px; }
+.gp-h.is-m { font-size: 48px; }
+.gp-accent { color: var(--accent-text); }
+.is-ink .gp-accent { color: var(--accent); }
+.gp-lead { font: 400 30px/1.4 var(--body); margin-top: 32px; max-width: 60rem; }
+.is-ink .gp-lead { color: var(--on-ink-mute); }
+.gp-logo { height: 44px; width: auto; align-self: flex-start; display: block; }
+.gp-num { font: 500 18px/1 var(--mono); letter-spacing: .1em; color: var(--accent-text); }
+.is-ink .gp-num { color: var(--accent); }
+
+/* Cards: square, hairline */
+.gp-card { background: var(--field); border: 1px solid var(--line); padding: 40px; }
+.is-ink .gp-card { background: transparent; border-color: var(--ink-line); }
+.gp-card.is-solid { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+.gp-card h3 { font: 400 32px/1.2 var(--head); letter-spacing: -.01em; }
+.gp-card p { margin-top: 18px; font-size: 20px; line-height: 1.55; color: var(--mute); }
+.is-ink .gp-card p, .gp-card.is-solid p { color: var(--on-ink-mute); }
+.gp-card .gp-k { font-size: 14px; }
+.gp-card.is-solid .gp-k { color: var(--accent); }
+.gp-grid { display: grid; gap: 28px; }
+.gp-grid.c2 { grid-template-columns: repeat(2, 1fr); }
+.gp-grid.c3 { grid-template-columns: repeat(3, 1fr); }
+.gp-push { margin-top: auto; }
+
+/* 3. The engine */
+.gp-engine { position: relative; margin-top: auto; padding-top: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px 380px; }
+.gp-engine > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.gp-core { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; width: 250px; height: 250px; background: var(--accent); color: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 28px; font: 400 28px/1.2 var(--head); }
+.gp-core .gp-core-ico { font-size: 40px; line-height: 1; margin-bottom: 14px; }
+.gp-core svg { position: static; }
+.gp-node { position: relative; z-index: 1; display: flex; align-items: center; gap: 24px; padding: 26px 30px; background: var(--ink); border: 1px solid var(--ink-line); }
+.gp-node .ico { width: 64px; height: 64px; flex: none; border: 1px solid var(--ink-line); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 26px; }
+.gp-node b { display: block; font: 400 27px/1.18 var(--head); }
+.gp-node small { display: block; margin-top: 4px; font-size: 18px; color: var(--on-ink-mute); }
+
+/* 4. Included */
+.gp-list li { display: flex; gap: 16px; padding: 11px 0; border-top: 1px solid var(--line); }
+.gp-list li:first-child { border-top: 0; padding-top: 0; }
+.gp-list .tick { flex: none; width: 22px; height: 22px; margin-top: 4px; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; }
+.gp-list .tick { font-size: 11px; }
+.gp-list b { display: block; font: 500 19px/1.3 var(--body); }
+.gp-list span.t { display: block; margin-top: 2px; font-size: 16px; line-height: 1.38; color: var(--mute); }
+
+/* 5. Fit list */
+.gp-rows { border-top: 1px solid var(--line); }
+.gp-rows li { display: flex; gap: 36px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+.gp-rows b { display: block; font: 400 28px/1.2 var(--head); letter-spacing: -.01em; }
+.gp-rows span.t { display: block; margin-top: 6px; font-size: 18px; line-height: 1.45; color: var(--mute); }
+.gp-rows .gp-num { font-size: 22px; padding-top: 12px; width: 44px; flex: none; }
+
+/* 7. Packages */
+.gp-plan { display: flex; flex-direction: column; padding: 36px; background: var(--field); border: 1px solid var(--line); }
+.gp-plan.is-hi { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+.gp-badge { align-self: flex-start; font: 500 13px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 8px 12px; border: 1px solid var(--line-strong, rgba(12, 14, 18, .5)); }
+.gp-plan.is-hi .gp-badge { background: var(--accent); border-color: var(--accent); color: #0B0C0F; }
+.gp-plan h3 { margin-top: 22px; font: 400 34px/1.15 var(--head); letter-spacing: -.01em; }
+.gp-plan .aud { margin-top: 12px; font-size: 20px; line-height: 1.45; color: var(--mute); }
+.gp-plan.is-hi .aud, .gp-plan.is-hi .cap { color: var(--on-ink-mute); }
+.gp-plan .price { margin-top: auto; padding-top: 28px; font: 300 64px/1.05 var(--head); letter-spacing: -.02em; }
+.gp-plan .cap { margin-top: 8px; font-size: 20px; color: var(--mute); }
+.gp-plan .second { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); font: 400 26px/1.3 var(--head); }
+.gp-plan.is-hi .second { border-color: var(--ink-line); }
+.gp-plan .note { margin-top: 4px; font-size: 17px; color: var(--mute); }
+.gp-plan.is-hi .note { color: var(--on-ink-mute); }
+
+/* 8. Industries */
+.gp-demo { border: 1px solid var(--ink-line); }
+.gp-demo .shot { height: 150px; overflow: hidden; background: #15171D; }
+.gp-demo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.gp-demo .meta { padding: 16px 22px 18px; }
+.gp-demo .meta .gp-k { font-size: 12px; color: var(--accent); }
+.gp-demo .meta .gp-k::before { display: none; }
+.gp-demo b { display: block; margin-top: 6px; font: 400 24px/1.25 var(--head); }
+
+/* 9. Principles and team */
+.gp-pr h3 { margin-top: 12px; font: 400 27px/1.2 var(--head); letter-spacing: -.01em; }
+.gp-pr p { margin-top: 8px; font-size: 18px; line-height: 1.5; color: var(--mute); }
+.gp-person { display: flex; align-items: center; gap: 24px; padding: 22px; background: var(--field); border: 1px solid var(--line); }
+.gp-person img { width: 112px; height: 112px; object-fit: cover; flex: none; display: block; }
+.gp-person b { display: block; font: 400 28px/1.2 var(--head); }
+.gp-person span { display: block; margin-top: 6px; font: 500 14px/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent-text); }
+
+/* 10. Contact */
+.gp-contact { padding: 28px; border: 1px solid var(--ink-line); }
+.gp-contact .gp-k { font-size: 13px; }
+.gp-contact .gp-k::before { display: none; }
+.gp-contact p.v { margin-top: 10px; font: 400 28px/1.25 var(--head); }
+
+.gp-card.is-tight { padding: 30px 34px; }
+.gp-card.is-tight h3 { font-size: 30px; }
+/* Slide 4 carries two lists of seven items: tighter type and side padding so everything stays on the slide */
+.gp-pad.is-dense { padding: 56px 72px 100px; }
+.gp-pad.is-dense .gp-card.is-tight { padding: 22px 28px; }
+.gp-pad.is-dense .gp-card.is-tight h3 { font-size: 27px; margin-top: 8px; }
+.gp-pad.is-dense .gp-list { margin-top: 16px; }
+.gp-pad.is-dense .gp-list li { padding: 8px 0; gap: 14px; }
+.gp-pad.is-dense .gp-list b { font-size: 17px; }
+.gp-pad.is-dense .gp-list span.t { font-size: 14.5px; line-height: 1.35; }
+.gp-pad.is-dense .gp-list .tick { width: 20px; height: 20px; margin-top: 2px; }
+
+.gp-badge-gap { display: block; height: 34px; }
+/* Slide 6: six process steps in two rows */
+.gp-grid.is-steps { gap: 20px; margin-top: 36px; margin-bottom: 0; }
+.gp-grid.is-steps .gp-card { padding: 24px 28px; }
+.gp-grid.is-steps .gp-card h3 { margin-top: 12px; font-size: 24px; }
+.gp-grid.is-steps .gp-card p { margin-top: 8px; font-size: 16px; line-height: 1.45; }
+/* Slide 8: six industry cards under the heading */
+.gp-grid.is-demos { margin-top: 30px; gap: 22px; }
+.gp-grid.is-demos .gp-demo .shot { height: 118px; }
+.gp-grid.is-demos .gp-demo b { font-size: 21px; }
+.gp-grid.is-demos .gp-demo .meta { padding: 14px 20px 16px; }
+/* Slide 10: the phone box is wider so two numbers fit on one line */
+.gp-grid.is-contact { grid-template-columns: 1fr 1fr 1.6fr; }
+.gp-grid.is-contact p.v { white-space: nowrap; }

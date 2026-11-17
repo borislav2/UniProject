@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head><meta charset="utf-8">@include('emails._font')</head>
-<body style="font-family:Arial,Helvetica,sans-serif; color: #111827; line-height: 1.5;">
+<body style="font-family:Onest,Segoe UI,Helvetica,Arial,sans-serif; color: #0C0E12; line-height: 1.5;">
     <h2 style="margin-bottom: 4px;">Ново запитване от сайта</h2>
-    <p style="margin-top: 0; color: #6b7280;">{{ $lead->created_at->format('d.m.Y H:i') }}</p>
+    <p style="margin-top: 0; color: #5A6068;">{{ $lead->created_at->format('d.m.Y H:i') }}</p>
 
     {{-- Етикетите са в отделна клетка, без двоеточие (собствениците, ноември 2026: без тирета и двоеточия). --}}
-    @php($row = 'padding: 4px 16px 4px 0; color: #6b7280; vertical-align: top; white-space: nowrap;')
+    @php($row = 'padding: 4px 16px 4px 0; color: #5A6068; vertical-align: top; white-space: nowrap;')
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 12px;">
         <tr><td style="{{ $row }}">Име</td><td><strong>{{ str_replace('Запитване от ', '', $lead->name) }}</strong></td></tr>
         @if($lead->client_email)
@@ -33,7 +33,7 @@
         @endif
     </table>
     <p style="margin-bottom: 4px;"><strong>Съобщение</strong></p>
-    <p style="white-space: pre-line; background: #f3f4f6; padding: 12px; border-radius: 6px;">{{ $lead->description }}</p>
+    <p style="white-space: pre-line; background: #FFFFFF; padding: 12px; ">{{ $lead->description }}</p>
 
     <p><a href="{{ route('admin.projects.show', $lead) }}">Отвори в административния панел</a></p>
 </body>
