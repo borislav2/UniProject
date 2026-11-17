@@ -34,6 +34,8 @@ class GPanel
         return [
             'on' => $on,
             'count' => $count,
+            // 6 or 7 of 7: nothing left to complete, the button invites a talk about fine tuning.
+            'nearly_full' => $count >= self::COUNT - 1,
             'percent' => intdiv($count * 100, self::COUNT),
             'message' => self::message($on),
             'missing' => $missing,

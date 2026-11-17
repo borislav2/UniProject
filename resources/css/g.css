@@ -579,3 +579,16 @@ html.design-g.dark .g-plan:not(.g-rec) > .g-btn { box-shadow: 0 1px 2px rgba(0, 
 .design-g .g-in[aria-invalid="true"] { border-color: #B42318; }
 html.design-g.dark .g-in[aria-invalid="true"] { border-color: #FF8A7A; }
 /* === /Form errors === */
+
+/* Skip link: the first focusable thing on the page, hidden above the screen until it gets focus; the main area takes focus without a ring */
+.design-g .g-skip { position: absolute; left: 16px; top: -120px; z-index: 100; padding: 12px 18px; background: var(--g-ink); color: var(--g-on-ink); font: 500 15px var(--g-body); text-decoration: none; }
+.design-g .g-skip:focus { top: max(8px, env(safe-area-inset-top, 0px)); }
+.design-g main:focus { outline: none; }
+
+/* Package cards on a phone: a swipeable row (scroll snap, no script needed). The next card peeks; g-bar.js starts on the recommended one.
+   Reading and tab order stay the cards' own order. The row bleeds to the screen edges so the page itself never scrolls sideways. */
+@media (max-width: 759px) {
+    .design-g .g-plans { display: flex; gap: 12px; border: 0; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding: 4px max(16px, env(safe-area-inset-left, 0px)) 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+    .design-g .g-plan, .design-g .g-plan:last-child { flex: 0 0 84%; border: 1px solid var(--g-line-strong); scroll-snap-align: center; scroll-snap-stop: always; }
+    .design-g .g-plans :focus-visible { outline-offset: -3px; }
+}

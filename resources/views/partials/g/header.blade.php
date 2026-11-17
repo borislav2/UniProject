@@ -6,11 +6,20 @@
         \App\Http\Controllers\PageController::serviceUrl($key),
         request()->routeIs('services.show', 'en.services.show') && request()->route('slug') === $service['slug'],
     ])->values()->all();
+    // „Безплатна проверка на сайт“ is the last item of „Услуги“, so /proverka-na-sait has its own current item.
+    $gServices[] = [__('Безплатна проверка на сайт'), lroute('site-check'), $is('site-check')];
+    // „За нас“ is a dropdown too (the labels of the footer): who we are, the news (when the blog is on) and the questions.
+    $gAbout = [[__('Кои сме ние'), lroute('about'), $is('about')]];
+    if (config('creatium.blog_enabled')) {
+        $gAbout[] = [__('Новини'), lroute('blog.index'), $is('blog.*')];
+    }
+    $gAbout[] = [__('Често задавани въпроси'), lroute('faq'), $is('faq')];
+    // A parent shows its current state when it is the page itself or one of its items is current; it is the current item when the page is its own link.
     $gNav = [
-        [__('Услуги'), lroute('services'), $is('services', 'services.show', 'site-check'), $gServices],
-        [__('Пакети'), lroute('packages'), $is('packages'), []],
-        [__('Проекти'), lroute('portfolio'), $is('portfolio'), []],
-        [__('За нас'), lroute('about'), $is('about', 'blog.*', 'faq'), []],
+        [__('Услуги'), lroute('services'), $is('services', 'services.show', 'site-check'), $gServices, 'services'],
+        [__('Пакети'), lroute('packages'), $is('packages'), [], null],
+        [__('Проекти'), lroute('portfolio'), $is('portfolio'), [], null],
+        [__('За нас'), lroute('about'), $is('about', 'blog.*', 'faq'), $gAbout, 'about'],
     ];
     $gOffer = g_offer_url();
     $gOther = $locale === 'en' ? 'bg' : 'en';
@@ -22,12 +31,12 @@
             <img class="g-logo-w" src="{{ asset('images/logo-g-dark.webp') }}" srcset="{{ asset('images/logo-g-dark-224.webp') }} 224w, {{ asset('images/logo-g-dark-352.webp') }} 352w, {{ asset('images/logo-g-dark.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="" aria-hidden="true" width="445" height="64">
         </a>
         <nav class="g-nav" aria-label="{{ __('Основна навигация') }}">
-            @foreach($gNav as [$label, $href, $active, $children])
+            @foreach($gNav as [$label, $href, $active, $children, $ddKey])
                 @if($children)
                     <div class="g-dd" data-g-dd>
-                        <a href="{{ $href }}" @if($active) aria-current="page" @endif>{{ $label }}</a>
-                        <button type="button" class="g-dd-btn" aria-expanded="false" aria-controls="g-dd-services" aria-label="{{ __('Покажи услугите') }}"><i aria-hidden="true"></i></button>
-                        <div class="g-dd-panel" id="g-dd-services">
+                        <a href="{{ $href }}" id="g-dd-{{ $ddKey }}-link" @if($active) aria-current="page" @endif>{{ $label }}</a>
+                        <button type="button" class="g-dd-btn" aria-expanded="false" aria-controls="g-dd-{{ $ddKey }}" @if($ddKey === 'services') aria-label="{{ __('Покажи услугите') }}" @else aria-labelledby="g-dd-{{ $ddKey }}-link" @endif><i aria-hidden="true"></i></button>
+                        <div class="g-dd-panel" id="g-dd-{{ $ddKey }}">
                             @foreach($children as [$childLabel, $childHref, $childActive])
                                 <a href="{{ $childHref }}" @if($childActive) aria-current="page" @endif>{{ $childLabel }}</a>
                             @endforeach
@@ -51,16 +60,14 @@
     </div>
     <div id="mobile-menu" class="mobile-menu g-mm hidden">
         <div class="g-wrap">
-            @foreach($gNav as [$label, $href, $active, $children])
+            @foreach($gNav as [$label, $href, $active, $children, $ddKey])
                 <a href="{{ $href }}">{{ $label }}</a>
                 @foreach($children as [$childLabel, $childHref])
+                    @continue($childHref === $href)
                     <a href="{{ $childHref }}" class="g-sub g-mm-child">{{ $childLabel }}</a>
                 @endforeach
             @endforeach
-            <a href="{{ lroute('site-check') }}" class="g-sub">{{ __('Безплатна проверка на сайт') }}</a>
-            @if(config('creatium.blog_enabled'))<a href="{{ lroute('blog.index') }}" class="g-sub">{{ __('Новини') }}</a>@endif
-            <a href="{{ lroute('faq') }}" class="g-sub">{{ __('Често задавани въпроси') }}</a>
-            <a href="{{ lroute('contact') }}" class="g-sub">{{ __('Контакти') }}</a>
+            <a href="{{ lroute('contact') }}" class="g-sub g-mm-child">{{ __('Контакти') }}</a>
             @auth
                 <a href="{{ route('admin.dashboard') }}" class="g-sub">{{ __('Административен панел') }}</a>
             @endauth

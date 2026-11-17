@@ -33,7 +33,7 @@
                         @php($n = $i + 1)
                         <li>
                             <button type="button" role="switch" aria-checked="{{ in_array($n, $state['on'], true) ? 'true' : 'false' }}" data-n="{{ $n }}" data-dir="{{ $directionOf[$n] ?? '' }}">
-                                <span class="g-sw-n g-mono">{{ str_pad((string) $n, 2, '0', STR_PAD_LEFT) }}</span>
+                                <span class="g-sw-n g-mono" aria-hidden="true">{{ str_pad((string) $n, 2, '0', STR_PAD_LEFT) }}</span>
                                 <span class="g-sw-label">{{ $label }}</span>
                                 <span class="g-sw-state g-mono" aria-hidden="true"><span data-on>{{ __('Вкл.') }}</span><span data-off>{{ __('Изкл.') }}</span></span>
                                 <span class="g-sw-track" aria-hidden="true"><i></i></span>
@@ -46,7 +46,7 @@
                     <p class="g-panel-count"><b data-count>{{ $state['count'] }}</b> <span>{{ $texts['of'] }} {{ \App\Support\GPanel::COUNT }}</span></p>
                     <div class="g-meter" role="presentation"><div data-bar style="width: {{ $state['percent'] }}%"></div></div>
                     <p class="g-panel-msg" data-msg aria-live="polite">{{ $messages[$state['message']] }}</p>
-                    <a class="g-btn" data-cta href="{{ \App\Support\GPanel::contactUrl($state['directions']) }}">{{ $texts['button'] }}<i></i></a>
+                    <a class="g-btn" data-cta data-label="{{ $texts['button'] }}" data-label-full="{{ $texts['button_full'] ?? $texts['button'] }}" href="{{ \App\Support\GPanel::contactUrl($state['directions']) }}"><span data-cta-label>{{ $state['nearly_full'] ? ($texts['button_full'] ?? $texts['button']) : $texts['button'] }}</span><i></i></a>
                 </div>
             </div>
         </div>
