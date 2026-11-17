@@ -24,27 +24,54 @@ document.querySelectorAll('[data-g-billing-root]').forEach((root) => {
     });
 });
 
-// "Услуги" dropdown: hover and focus open it in CSS; the small button toggles it, Esc closes it and Escape from a link returns to the button.
+// Package cards on a phone (below 760px they are a swipeable row): start with the recommended card in the middle so both neighbours peek.
+document.querySelectorAll('.g-plans').forEach((row) => {
+    const rec = row.querySelector('.g-rec');
+    if (rec && row.scrollWidth > row.clientWidth + 1) row.scrollLeft = Math.max(0, rec.offsetLeft - (row.clientWidth - rec.offsetWidth) / 2);
+});
+
+// Header dropdowns ("Услуги", "За нас"): hover and focus open them in CSS; the small button toggles (Enter and Space), Enter on a link follows it,
+// Esc closes and returns focus to the button, the arrow keys move between the button and the items. A closed state (data-closed) is dropped
+// when focus or the pointer comes back from outside, so a keyboard user can always reach the items again.
 document.querySelectorAll('[data-g-dd]').forEach((dd) => {
     const button = dd.querySelector('.g-dd-btn');
-    const sync = () => button.setAttribute('aria-expanded', dd.matches(':hover, :focus-within, .is-open') && !dd.hasAttribute('data-closed') ? 'true' : 'false');
+    const items = () => Array.from(dd.querySelectorAll('.g-dd-panel a'));
+    const isOpen = () => dd.matches(':hover, :focus-within, .is-open') && !dd.hasAttribute('data-closed');
+    const sync = () => button.setAttribute('aria-expanded', isOpen() ? 'true' : 'false');
+    const open = () => { dd.removeAttribute('data-closed'); dd.classList.add('is-open'); sync(); };
+    const close = () => { dd.classList.remove('is-open'); dd.setAttribute('data-closed', ''); sync(); };
+    // On a touch screen the emulated hover opens the panel just before the click, so the state before the tap is remembered.
+    let before = null;
+    button.addEventListener('pointerdown', (event) => { before = event.pointerType === 'touch' ? isOpen() : null; });
     button.addEventListener('click', () => {
-        const open = button.getAttribute('aria-expanded') === 'true';
-        dd.classList.toggle('is-open', !open);
-        if (open) dd.setAttribute('data-closed', '');
-        else dd.removeAttribute('data-closed');
-        sync();
+        const wasOpen = before === null ? isOpen() : before;
+        before = null;
+        if (wasOpen) close(); else open();
     });
     dd.addEventListener('mouseenter', () => { dd.removeAttribute('data-closed'); sync(); });
     dd.addEventListener('mouseleave', () => { dd.classList.remove('is-open'); dd.removeAttribute('data-closed'); sync(); });
-    dd.addEventListener('focusin', sync);
-    dd.addEventListener('focusout', () => setTimeout(() => { if (!dd.contains(document.activeElement)) dd.classList.remove('is-open'); sync(); }, 0));
+    dd.addEventListener('focusin', (event) => {
+        if (!event.relatedTarget || !dd.contains(event.relatedTarget)) dd.removeAttribute('data-closed');
+        sync();
+    });
+    dd.addEventListener('focusout', () => setTimeout(() => { if (!dd.contains(document.activeElement)) { dd.classList.remove('is-open'); dd.removeAttribute('data-closed'); } sync(); }, 0));
+    dd.addEventListener('keydown', (event) => {
+        const list = items();
+        const index = list.indexOf(document.activeElement);
+        if (event.key === 'ArrowDown' && (document.activeElement === button || index > -1)) {
+            event.preventDefault();
+            open();
+            (list[index + 1] || list[0]).focus();
+        } else if (event.key === 'ArrowUp' && index > -1) {
+            event.preventDefault();
+            (index === 0 ? button : list[index - 1]).focus();
+        }
+    });
     document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape' || button.getAttribute('aria-expanded') !== 'true') return;
-        dd.classList.remove('is-open');
-        dd.setAttribute('data-closed', '');
-        if (dd.contains(document.activeElement) && document.activeElement !== button) button.focus();
-        sync();
+        const inside = dd.contains(document.activeElement);
+        close();
+        if (inside) button.focus();
     });
     document.addEventListener('click', (event) => {
         if (!dd.contains(event.target)) { dd.classList.remove('is-open'); sync(); }
@@ -105,6 +132,9 @@ document.querySelectorAll('[data-g-panel]').forEach((panel) => {
         const missing = new Set(switches.filter((s) => s.getAttribute('aria-checked') !== 'true').map((s) => s.dataset.dir).filter(Boolean));
         const directions = order.filter((direction) => missing.has(direction));
         cta.href = panel.dataset.contact + (directions.length ? `?napravleniya=${directions.join(',')}` : '') + '#kontakt';
+        // 6 or 7 of 7: nothing left to complete, so the button invites a talk (same rule as GPanel::state nearly_full).
+        const label = cta.querySelector('[data-cta-label]');
+        if (label) label.textContent = (on.length >= total - 1 ? cta.dataset.labelFull : cta.dataset.label) || cta.dataset.label;
     };
     switches.forEach((button) => button.addEventListener('click', () => {
         button.setAttribute('aria-checked', button.getAttribute('aria-checked') === 'true' ? 'false' : 'true');

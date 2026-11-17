@@ -417,3 +417,16 @@ html.design-g.dark .g-sv { --sv-card: #1A1D25; --sv-card2: #20242D; --sv-t: colo
     .design-g .g-posts[data-span~="three"] > .g-post:first-child .g-post-title { font-size: 1.6rem; }
 }
 /* ===== end of fix round B (g-pages.css) ===== */
+
+/* /uslugi: the link from the page head to the panel (its own heading as the label) and the panel's room under the sticky header */
+.design-g .g-panel { scroll-margin-top: 84px; }
+.design-g .g-link .g-ar.g-ar-down { transform: rotate(90deg); }
+.design-g .g-link:hover .g-ar.g-ar-down { transform: rotate(90deg) translateX(3px); }
+.design-g .g-ph .g-cta .g-jump { margin-top: 0; }
+
+/* Service page: the result sits under the problems on the left, so the short column is not a hole beside the longer list */
+.design-g .g-get-side { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--g-line); }
+.design-g .g-link.g-jump { display: inline-flex; align-items: flex-start; gap: 8px; min-height: 0; padding: 10px 0; line-height: 1.4; text-decoration: none; }
+.design-g .g-jump > span { text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--g-accent) 70%, transparent); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.design-g .g-jump:hover > span { text-decoration-color: var(--g-accent); text-decoration-thickness: 2px; }
+.design-g .g-jump .g-ar.g-ar-down { flex: none; margin: .3em 0 0; }

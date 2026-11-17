@@ -298,9 +298,11 @@ class GAudit3Test extends TestCase
         $this->assertStringContainsString('data-g-dd', $html);
         $this->assertStringContainsString('class="g-dd-btn" aria-expanded="false" aria-controls="g-dd-services"', $html);
         $panel = substr($html, strpos($html, 'class="g-dd-panel"'), 1500);
-        $this->assertSame(7, substr_count(substr($panel, 0, strpos($panel, '</div>')), '<a '));
+        // The seven services and, last, the free website check (UX round, 17.11.2026).
+        $this->assertSame(8, substr_count(substr($panel, 0, strpos($panel, '</div>')), '<a '));
         $this->assertStringContainsString('Разработка на софтуер', $panel);
-        $this->assertSame(7, substr_count($html, 'class="g-sub g-mm-child"'));
+        // Phone menu: 8 under Услуги, news and questions under За нас (the About item repeats its parent and is left out), and Контакти.
+        $this->assertSame(11, substr_count($html, 'class="g-sub g-mm-child"'));
         $this->assertStringContainsString('.design-g .g-dd:hover .g-dd-panel', file_get_contents(resource_path('css/g.css')));
         $this->assertStringContainsString("event.key !== 'Escape'", file_get_contents(resource_path('js/g-bar.js')));
 
