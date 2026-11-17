@@ -31,15 +31,17 @@ class MailFormatTest extends TestCase
         $this->assertStringNotContainsString('<', $text);
 
         $this->assertStringContainsString('src="cid:', $email->getHtmlBody());
-        $this->assertCount(1, $email->getAttachments());
-        $this->assertSame('inline', $email->getAttachments()[0]->getDisposition());
+        $this->assertCount(2, $email->getAttachments());
+        foreach ($email->getAttachments() as $attachment) {
+            $this->assertSame('inline', $attachment->getDisposition());
+        }
     }
 
     public function test_the_admin_preview_still_loads_the_logo_from_the_site(): void
     {
         $html = view('emails.client.demo-site', ['data' => ['client_name' => 'Мария', 'business' => 'Лавандула', 'sender' => 'Екипът', 'demo_url' => '']])->render();
 
-        $this->assertStringContainsString('src="' . asset('images/logo-white.png') . '"', $html);
+        $this->assertStringContainsString('src="' . asset('images/logo-g.png') . '"', $html);
     }
 
     public function test_plain_text_conversion(): void
