@@ -18,7 +18,7 @@
 @endphp
 
 @section('content')
-@include('partials.g.page-head', ['heading' => filled($gPage['g_title'] ?? null) ? $gPage['g_title'] : $page['title'], 'sub' => filled($gPage['g_text'] ?? null) ? $gPage['g_text'] : $page['intro'], 'actions' => $gJump])
+@include('partials.g.page-head', ['heading' => filled($gPage['g_title'] ?? null) ? $gPage['g_title'] : $page['title'], 'sub' => filled($gPage['g_text'] ?? null) ? $gPage['g_text'] : $page['intro'], 'actions' => $gJump, 'dark' => true])
 
 <section class="g-s">
     <div class="g-wrap">
