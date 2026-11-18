@@ -192,4 +192,17 @@ class GUxTest extends TestCase
         $this->get('/en/services')->assertOk()->assertSee('data-label-full="Talk to us about fine tuning"', false);
         $this->assertStringContainsString('on.length >= total - 1 ? cta.dataset.labelFull', file_get_contents(resource_path('js/g-bar.js')));
     }
+
+    public function test_services_and_service_pages_have_a_dark_head_in_g_only(): void
+    {
+        config(['creatium.design' => 'g']);
+        foreach (['/uslugi', '/uslugi/izrabotka-na-sait', '/uslugi/seo-i-ai-vidimost', '/en/services'] as $path) {
+            $this->assertStringContainsString('g-ph-dark', $this->get($path)->assertOk()->getContent(), $path);
+        }
+        foreach (['/paketi', '/za-nas', '/kontakti'] as $path) {
+            $this->assertStringNotContainsString('g-ph-dark', $this->get($path)->assertOk()->getContent(), $path);
+        }
+        config(['creatium.design' => 'current']);
+        $this->assertStringNotContainsString('g-ph-dark', $this->get('/uslugi')->getContent());
+    }
 }

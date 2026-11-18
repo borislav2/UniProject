@@ -430,3 +430,16 @@ html.design-g.dark .g-sv { --sv-card: #1A1D25; --sv-card2: #20242D; --sv-t: colo
 .design-g .g-jump > span { text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--g-accent) 70%, transparent); text-decoration-thickness: 1px; text-underline-offset: 4px; }
 .design-g .g-jump:hover > span { text-decoration-color: var(--g-accent); text-decoration-thickness: 2px; }
 .design-g .g-jump .g-ar.g-ar-down { flex: none; margin: .3em 0 0; }
+
+/* Dark page head on /uslugi and the service pages (owners, 18.11.2026: like the service heads of the old design).
+   The section re-maps the G tokens to the dark set, so the text, links, buttons and the service illustration follow. */
+.design-g .g-ph-dark {
+    --g-bg: #0C0E12; --g-surface: #15171D; --g-field: #0C0E12; --g-ink: #ECEEF0; --g-mute: #A3A9B2;
+    --g-line: rgba(236, 238, 240, .16); --g-line-strong: rgba(236, 238, 240, .55); --g-field-line: rgba(236, 238, 240, .34);
+    --g-accent: #FF5A33; --g-accent-text: #FF5A33; --g-accent-btn: #FF5A33; --g-accent-btn-fg: #0B0C0F; --g-on-ink: #0C0E12;
+    background: #0C0E12; color: var(--g-ink); padding-bottom: clamp(48px, 7vw, 96px);
+}
+html.design-g.dark .g-ph-dark { --g-bg: #15171D; --g-surface: #1C1F27; --g-field: #15171D; background: #15171D; border-bottom: 1px solid var(--g-line); }
+.design-g .g-ph-dark .g-lead, .design-g .g-ph-dark .g-ph-more { color: var(--g-mute); }
+.design-g .g-ph-dark + section.g-s, .design-g .g-ph-dark + .g-s { padding-top: var(--g-pad); }
+.design-g .g-ph-dark .g-sv { --sv-card: #1A1D25; --sv-card2: #20242D; --sv-t: color-mix(in srgb, var(--g-ink) 14%, transparent); }

@@ -1,5 +1,5 @@
-{{-- Head of an inner page in design G: a light Geologica headline, one lead paragraph, an optional small note under it and optionally more paragraphs. No label above the headline. $note, $heading, $sub, $more (list of paragraphs), $visualKey (a service_pages key: its illustration beside the text). --}}
-<section class="g-ph{{ ! empty($visualKey) ? ' g-ph-vis-on' : '' }}">
+{{-- Head of an inner page in design G: a light Geologica headline, one lead paragraph, an optional small note under it and optionally more paragraphs. No label above the headline. $note, $heading, $sub, $more (list of paragraphs), $visualKey (a service_pages key: its illustration beside the text), $dark (true = a dark band like the service heads of the old design, used on /uslugi and the service pages). --}}
+<section class="g-ph{{ ! empty($visualKey) ? ' g-ph-vis-on' : '' }}{{ ! empty($dark) ? ' g-ph-dark' : '' }}">
     <div class="g-wrap">
         @if(! empty($visualKey))<div class="g-ph-text">@endif
         <h1 class="g-h">{{ $heading }}</h1>
