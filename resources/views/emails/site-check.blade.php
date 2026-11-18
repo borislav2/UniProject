@@ -47,6 +47,8 @@
 </table>
 </td></tr>
 
+<tr><td class="g-pad" style="padding:14px {{ $pad }}px 0;{{ $f }}font-size:14px;line-height:1.6;color:#4A5058;">{{ __('Специалист от нашия екип ще ви изпрати и личен преглед на сайта до два работни дни.') }}</td></tr>
+
 @if($top)
 <tr><td class="g-pad" style="padding:24px {{ $pad }}px 0;">
 @include('emails.client._parts', ['part' => 'label', 'text' => __('Какво да оправите първо'), 'color' => '#B42318'])

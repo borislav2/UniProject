@@ -38,6 +38,8 @@
         </div>
     </div>
 
+    @include('admin.inquiries._review')
+
     @if($summary)
         {{-- Обобщение на проверката: поводът за разговора. --}}
         @php

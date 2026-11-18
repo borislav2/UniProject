@@ -1,44 +1,36 @@
 @extends('layouts.public')
 
-{{-- /proverka-na-sait in design G: what we check as numbered rows, the form (domain, email, consent) and what happens after the report. --}}
+{{-- /proverka-na-sait in design G (owners' brief, 18.11.2026, section 9). A dark head with the headline and the request form beside it, the report mock-up with the four
+     things we get for the client, the four points of the check and the FAQ. The check is both automatic (the report by email within minutes) and personal
+     (a specialist writes within two working days, see App\Support\SiteCheck\ReviewDue). All texts come from config site_check_page (BG and EN). --}}
+@php
+    $sc = (array) site('site_check_page');
+    $goals = (array) ($sc['goals'] ?? []);
+    $faq = array_values((array) ($sc['faq'] ?? []));
+    $different = array_values((array) ($sc['different'] ?? []));
+@endphp
 @section('title', __('Безплатна проверка на сайт за SEO, скорост и Google'))
-@section('meta_description', __('Въведете адреса на сайта си и получете безплатен отчет на имейла. Обхождаме до :n страници за счупени връзки, заглавия, скорост, HTTPS, sitemap и още.', ['n' => config('creatium.site_check.crawl_limit')]))
+@section('meta_description', $sc['meta_description'] ?? '')
 @section('g_lean', 'inner')
 
-@php
-    $checks = [
-        ['lock', __('Защитена връзка'), __('Работи ли HTTPS и води ли адресът без „s“ към него.')],
-        ['gauge-high', __('Скорост на сървъра'), __('Колко бързо започва да се зарежда страницата.')],
-        ['heading', __('Заглавие и описание за Google'), __('Има ли ги и с подходяща дължина ли са.')],
-        ['display', __('Телефон'), __('Настроен ли е сайтът за телефон и набира ли се номерът с едно докосване.')],
-        ['eye', __('Видим ли е за Google'), __('Дали сайтът не е скрит по погрешка и има ли карта на сайта.')],
-        ['robot', __('Данни за Google и AI'), __('Описан ли е бизнесът така, че машините да го разберат, и не спира ли сайтът ChatGPT и другите AI асистенти.')],
-        ['link', __('Споделяне на линк'), __('Какво се показва, когато някой изпрати линка ви.')],
-        ['image', __('Снимки'), __('Имат ли описания, които Google разбира, и не са ли твърде тежки.')],
-        ['triangle-exclamation', __('Счупени връзки и грешки'), __('Страници, които не се отварят, пренасочвания и връзки към несъществуващи адреси.')],
-        ['clipboard-list', __('Всички страници, не само първата'), __('Заглавия и описания без повторения, основни заглавия, достатъчно текст и страници, скрити от Google.')],
-    ];
-@endphp
-
 @section('content')
-@include('partials.g.page-head', ['note' => __('Безплатно'), 'heading' => __('Проверка на сайт'), 'sub' => __('Въведете адреса на сайта и имейл. Обхождаме до :n страници и до няколко минути получавате отчет на имейла какво работи и какво да оправите.', ['n' => config('creatium.site_check.crawl_limit')])])
-
-<section class="g-s">
-    <div class="g-wrap g-sys">
-        <div class="g-sh">
-            <h2 class="g-h">{{ __('Какво проверяваме') }}</h2>
-            <p class="g-sh-text">{{ __('Автоматично обхождаме до :n страници на сайта ви. Отчетът е на разбираем език, с обяснение какво значи всеки резултат и къде е проблемът.', ['n' => config('creatium.site_check.crawl_limit')]) }}</p>
-            <div id="site-check-form" class="g-fbox g-sticky-form">
+<section class="g-ph g-ph-dark g-ph-vis-on g-ph-check">
+    <div class="g-wrap">
+        <div class="g-ph-text">
+            <h1 class="g-h">{{ $sc['title'] ?? '' }}</h1>
+            <p class="g-lead">{{ $sc['text'] ?? '' }}</p>
+        </div>
+        <div class="g-ph-vis">
+            <div id="site-check-form" class="g-fbox">
                 @if(session('site_check_sent'))
                     <div class="g-thanks" role="status" tabindex="-1" data-g-thanks>
                         <p class="g-mono">{{ __('Изпратено') }}</p>
-                        <h2 class="g-h">{{ __('Проверката започна') }}</h2>
-                        <p>{{ __('Ще изпратим отчета на :email до няколко минути, защото обхождането на целия сайт отнема малко повече време. Ако не го виждате, проверете папка „Спам“ или „Промоции“.', ['email' => session('site_check_sent')]) }}</p>
+                        <h2 class="g-h">{{ $sc['thanks_title'] ?? '' }}</h2>
+                        <p>{{ strtr($sc['thanks_text'] ?? '', [':domain' => session('site_check_domain', ''), ':email' => session('site_check_sent')]) }}</p>
                         <a class="g-btn g-ghost" href="{{ lroute('site-check') }}">{{ __('Проверете друг сайт') }}</a>
                     </div>
                     <script>(function () { var t = document.querySelector('#site-check-form [data-g-thanks]'); if (t) { t.scrollIntoView({ block: 'center' }); t.focus({ preventScroll: true }); } })();</script>
                 @else
-                    <h2 class="g-h g-fh">{{ __('Получете отчета на имейла си') }}</h2>
                     <form action="{{ lroute('site-check.submit') }}" method="POST" class="g-f" novalidate>
                         @csrf
                         <div class="g-trap" aria-hidden="true">
@@ -46,15 +38,24 @@
                             <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
                         </div>
                         <div class="g-fld">
-                            <label for="domain">{{ __('Адрес на сайта') }}</label>
+                            <label for="domain">{{ $sc['domain_label'] ?? '' }}</label>
                             <input class="g-in" type="text" id="domain" name="domain" value="{{ old('domain') }}" required inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="{{ __('vashiyatsait.bg') }}"@error('domain') aria-invalid="true" aria-describedby="err-domain"@enderror>
                             @error('domain')<p class="g-err" id="err-domain">{{ $message }}</p>@enderror
                         </div>
                         <div class="g-fld">
-                            <label for="email">{{ __('Имейл за отчета') }}</label>
+                            <label for="email">{{ $sc['email_label'] ?? '' }}</label>
                             <input class="g-in" type="email" id="email" name="email" value="{{ old('email') }}" required autocomplete="email"@error('email') aria-invalid="true" aria-describedby="err-email"@enderror>
                             @error('email')<p class="g-err" id="err-email">{{ $message }}</p>@enderror
                         </div>
+                        <fieldset class="g-fld g-opts"@error('goal') data-g-invalid tabindex="-1" aria-describedby="err-goal"@enderror>
+                            <legend>{{ $sc['goal_label'] ?? '' }}</legend>
+                            <div class="g-chips g-chips-goal">
+                                @foreach($goals as $key => $label)
+                                    <label class="g-chip-opt"><input type="radio" name="goal" value="{{ $key }}" @checked((string) old('goal') === (string) $key)><span>{{ $label }}</span></label>
+                                @endforeach
+                            </div>
+                            @error('goal')<p class="g-err" id="err-goal">{{ $message }}</p>@enderror
+                        </fieldset>
                         <div class="g-fld">
                             <label class="g-chk">
                                 <input type="checkbox" name="consent" value="1" {{ old('consent') ? 'checked' : '' }}@error('consent') aria-invalid="true" aria-describedby="err-consent"@enderror>
@@ -63,32 +64,49 @@
                             @error('consent')<p class="g-err" id="err-consent">{{ $message }}</p>@enderror
                         </div>
                         @include('partials.turnstile')
-                        <p class="g-promise">{{ __('Безплатно и без ангажимент. Не изпращаме реклами.') }}</p>
-                        <button type="submit" class="g-btn g-big">{{ __('Проверете сайта') }}</button>
+                        <button type="submit" class="g-btn g-big">{{ $sc['button'] ?? '' }}</button>
+                        <p class="g-promise">{{ $sc['promise'] ?? '' }}</p>
                     </form>
                     @include('partials.g.form-feedback', ['box' => '#site-check-form'])
                 @endif
             </div>
         </div>
-        <ol class="g-rows g-rows-tight">
-            @foreach($checks as [$icon, $title, $text])
-                <li><h3>{{ $title }}</h3><p>{{ $text }}</p></li>
+    </div>
+</section>
+
+<section class="g-s">
+    <div class="g-wrap g-sys">
+        <div class="g-sh">
+            <p class="g-mono g-mute">{{ $sc['different_label'] ?? '' }}</p>
+            <h2 class="g-h">{{ $sc['different_title'] ?? '' }}</h2>
+            <div class="g-check-vis">@include('partials.g.site-check-visual', ['kind' => 'report'])</div>
+        </div>
+        <ol class="g-rows g-rows-tight g-numbered">
+            @foreach($different as $item)
+                <li><span class="g-n g-mono" aria-hidden="true">{{ sprintf('%02d', $loop->iteration) }}</span><h3>{{ $item['title'] ?? '' }}</h3><p>{{ $item['text'] ?? '' }}</p></li>
             @endforeach
         </ol>
     </div>
 </section>
 
 <section class="g-s g-last">
-    <div class="g-wrap">
+    <div class="g-wrap g-sys">
         <div class="g-sh">
-            <h2 class="g-h g-sub-h">{{ __('След отчета') }}</h2>
+            <div class="g-check-vis">@include('partials.g.site-check-visual', ['kind' => 'points'])</div>
         </div>
-        <ul class="g-rows g-rows-tight">
-            <li><h3>{{ __('Оправяте сами') }}</h3><p>{{ __('Всеки резултат е обяснен. Много от нещата се оправят за минути от човека, който поддържа сайта.') }}</p></li>
-            <li><h3>{{ __('Подробен одит') }}</h3><p>{{ __('Преглеждаме целия сайт ръчно и ви даваме план какво да оправите първо. Цената е според големината на сайта.') }}</p></li>
-            <li><h3>{{ __('Оправяме ние') }}</h3><p>{{ __('Ако не искате да се занимавате, кажете ни. Ще ви кажем цената, преди да започнем.') }}</p></li>
-        </ul>
-        <p class="g-after"><a class="g-link" href="{{ lroute('contact') }}">{{ __('Свържете се с нас') }}</a></p>
+        <div>
+            <h2 class="g-h g-sub-h g-faq-h">{{ $sc['faq_title'] ?? '' }}</h2>
+            @include('partials.g.faq', ['items' => $faq])
+        </div>
     </div>
 </section>
+
+{{-- '@' . 'context': Blade иначе чете @context като своя директива и поврежда ключа. --}}
+<script type="application/ld+json">
+{!! json_encode([
+    '@' . 'context' => 'https://schema.org',
+    '@type' => 'FAQPage',
+    'mainEntity' => array_map(fn ($qa) => ['@type' => 'Question', 'name' => $qa['q'], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $qa['a']]], $faq),
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}
+</script>
 @endsection

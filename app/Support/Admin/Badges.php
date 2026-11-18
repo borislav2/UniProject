@@ -38,7 +38,9 @@ class Badges
 
         return [
             'inquiries' => Project::formLeads()->whereNull('read_at')->count(),
-            'site_checks' => Project::siteChecks()->whereNull('read_at')->count(),
+            // Непрочетени проверки и такива с личен преглед за днес или просрочен.
+            'site_checks' => Project::siteChecks()->where(fn ($q) => $q->whereNull('read_at')
+                ->orWhere(fn ($q) => $q->whereNull('reviewed_at')->where('review_due_at', '<=', now('Europe/Sofia')->endOfDay()->utc())))->count(),
             'late_payments' => Project::subscribers()->with('payments')->get()->filter(fn ($client) => $client->paymentState()['state'] === 'late')->count(),
             'callbacks' => $callbacks,
             'queue' => OutreachProspect::awaitingApproval()->count(),
