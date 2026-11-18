@@ -109,6 +109,13 @@ class SiteKnowledge
             foreach ($page['faq'] ?? [] as [$q, $a]) {
                 $out[] = "Q: $q\nA: $a";
             }
+            // The questions of the design G service page (brief of the owners, 18.11.2026), when they are not the same question.
+            $asked = array_column((array) ($page['faq'] ?? []), 0);
+            foreach ($page['g_faq'] ?? [] as $item) {
+                if (! in_array($item['q'], $asked, true)) {
+                    $out[] = "Q: {$item['q']}\nA: {$item['a']}";
+                }
+            }
         }
 
         $plans = site('plans') ?? [];

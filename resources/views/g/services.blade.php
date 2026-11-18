@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-{{-- /uslugi in design G: numbered editorial rows for the seven services (software development included), then the interactive panel and the next step. The funnel is gone (third round, 16.11.2026). --}}
+{{-- /uslugi in design G: numbered editorial rows for the eight services (software development and AI agents included), then the interactive panel and the next step. The funnel is gone (third round, 16.11.2026). --}}
 @section('title', __('Изработка на сайт, SEO, Google профил и имейл маркетинг'))
 @section('meta_description', __('Сайт, който продава, SEO и видимост в ChatGPT, Google профил и отзиви, имейл кампании и поддръжка. Всичко за онлайн клиенти, от един екип.'))
 @section('g_lean', 'inner')
@@ -19,6 +19,8 @@
 
 @section('content')
 @include('partials.g.page-head', ['heading' => filled($gPage['g_title'] ?? null) ? $gPage['g_title'] : $page['title'], 'sub' => filled($gPage['g_text'] ?? null) ? $gPage['g_text'] : $page['intro'], 'actions' => $gJump, 'dark' => true])
+
+@include('partials.g.platforms')
 
 <section class="g-s">
     <div class="g-wrap">

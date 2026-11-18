@@ -121,4 +121,14 @@
 <g class="sv-bar"><rect class="sv-m" x="300" y="204" width="14" height="28"/><rect class="sv-m" x="324" y="188" width="14" height="44"/><rect class="sv-m" x="348" y="196" width="14" height="36"/><rect class="sv-m" x="372" y="170" width="14" height="62"/><rect class="sv-m" x="396" y="182" width="14" height="50"/><rect class="sv-m" x="420" y="156" width="14" height="76"/><rect class="sv-a" x="444" y="142" width="14" height="90"/></g>
 <rect class="sv-t" x="298" y="248" width="180" height="5"/><rect class="sv-t" x="298" y="260" width="140" height="5"/><rect class="sv-t" x="298" y="272" width="160" height="5"/></svg>
 @break
+@case('ai_agents')
+<svg class="g-sv" viewBox="0 0 520 325" aria-hidden="true" focusable="false"><rect class="sv-b" x=".5" y=".5" width="519" height="324"/>
+<path class="sv-e" d="M232 120C200 120 196 76 164 76M232 204C200 204 196 250 164 250M288 120C320 120 324 76 356 76M288 204C320 204 324 250 356 250"/>
+<path class="sv-flow sv-s2" d="M232 120C200 120 196 76 164 76M232 204C200 204 196 250 164 250M288 120C320 120 324 76 356 76M288 204C320 204 324 250 356 250"/>
+<rect class="sv-c" x="28" y="48" width="136" height="56"/><rect class="sv-k" x="40" y="62" width="28" height="28"/><rect class="sv-ws" x="45" y="69" width="18" height="14"/><path class="sv-ws" d="M45 70L54 77L63 70"/><rect class="sv-m" x="78" y="66" width="60" height="6"/><rect class="sv-t" x="78" y="78" width="40" height="4"/>
+<rect class="sv-c" x="28" y="222" width="136" height="56"/><rect class="sv-k" x="40" y="236" width="28" height="28"/><rect class="sv-ws" x="45" y="243" width="18" height="15"/><path class="sv-ws" d="M45 248H63"/><rect class="sv-m" x="78" y="240" width="60" height="6"/><rect class="sv-t" x="78" y="252" width="40" height="4"/>
+<rect class="sv-c" x="356" y="48" width="136" height="56"/><rect class="sv-k" x="368" y="62" width="28" height="28"/><circle class="sv-w" cx="382" cy="72" r="4"/><path class="sv-w" d="M374 86A8 8 0 0 1 390 86Z"/><rect class="sv-m" x="406" y="66" width="60" height="6"/><rect class="sv-t" x="406" y="78" width="40" height="4"/>
+<rect class="sv-c" x="356" y="222" width="136" height="56"/><rect class="sv-k" x="368" y="236" width="28" height="28"/><rect class="sv-ws" x="373" y="241" width="18" height="18"/><path class="sv-ws" d="M373 247H391"/><rect class="sv-m" x="406" y="240" width="60" height="6"/><rect class="sv-t" x="406" y="252" width="40" height="4"/>
+<rect class="sv-k" x="220" y="102" width="80" height="120"/><rect class="sv-w" x="234" y="124" width="52" height="40"/><circle class="sv-a" cx="248" cy="144" r="5"/><circle class="sv-a" cx="272" cy="144" r="5"/><rect class="sv-ws" x="246" y="176" width="28" height="3"/><path class="sv-ws" d="M260 102V90"/><circle class="sv-as sv-ring" cx="260" cy="86" r="6"/><circle class="sv-a" cx="260" cy="86" r="3"/></svg>
+@break
 @endswitch

@@ -21,6 +21,12 @@ class FaqResponder
             foreach ($page['faq'] ?? [] as [$q, $a]) {
                 $pairs[] = [$q, $a];
             }
+            // The questions of the design G service pages (brief of the owners, 18.11.2026), when they are not the same question.
+            foreach ($page['g_faq'] ?? [] as $item) {
+                if (! in_array($item['q'], array_column($pairs, 0), true)) {
+                    $pairs[] = [$item['q'], $item['a']];
+                }
+            }
         }
 
         return $pairs;
