@@ -80,6 +80,9 @@ class Telegram
         if ($lead->lead_channel) {
             $lines[] = 'Канал: ' . e($lead->lead_channel);
         }
+        if ($lead->review_due_at && ! $lead->reviewed_at) {
+            $lines[] = '⏰ Личен преглед до <b>' . e(\App\Support\SiteCheck\ReviewDue::label($lead->review_due_at)) . '</b>';
+        }
         $lines[] = route('admin.projects.show', $lead);
 
         // Вътре в код, който вече върви след отговора (проверката на сайт), пращаме веднага.

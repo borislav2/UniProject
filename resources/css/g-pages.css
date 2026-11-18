@@ -443,3 +443,17 @@ html.design-g.dark .g-ph-dark { --g-bg: #15171D; --g-surface: #1C1F27; --g-field
 .design-g .g-ph-dark .g-lead, .design-g .g-ph-dark .g-ph-more { color: var(--g-mute); }
 .design-g .g-ph-dark + section.g-s, .design-g .g-ph-dark + .g-s { padding-top: var(--g-pad); }
 .design-g .g-ph-dark .g-sv { --sv-card: #1A1D25; --sv-card2: #20242D; --sv-t: color-mix(in srgb, var(--g-ink) 14%, transparent); }
+
+/* ===== /proverka-na-sait (brief section 9, 18.11.2026): the request form in the dark head, the goal choice, the two drawings ===== */
+.design-g .g-ph-check .g-ph-vis { align-self: start; }
+.design-g .g-ph-check .g-fbox { background: var(--g-surface); }
+.design-g .g-ph-check .g-promise { color: var(--g-mute); font-size: 14px; font-weight: 400; line-height: 1.5; }
+.design-g .g-chips-goal { flex-direction: column; align-items: stretch; }
+.design-g .g-chips-goal .g-chip-opt { width: 100%; }
+.design-g .g-chip-opt input[type="radio"] { border-radius: 50%; }
+.design-g .g-chip-opt input[type="radio"]::after { width: 8px; height: 8px; border: 0; border-radius: 50%; background: var(--g-on-ink); transform: scale(0); }
+.design-g .g-chip-opt input[type="radio"]:checked::after { transform: scale(1); }
+.design-g .g-chip-opt:has(input[type="radio"]:checked) input::after { background: var(--g-ink); }
+.design-g .g-check-vis { margin-top: 8px; max-width: 520px; }
+.design-g .g-check-vis .g-sv { max-width: none; }
+.design-g .g-faq-h { margin-bottom: 8px; }

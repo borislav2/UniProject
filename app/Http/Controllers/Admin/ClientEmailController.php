@@ -7,6 +7,7 @@ use App\Mail\ClientTemplateMail;
 use App\Models\ClientEmail;
 use App\Models\Project;
 use App\Support\ClientEmails;
+use App\Support\SiteCheck\SiteReviewDraft;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -45,6 +46,10 @@ class ClientEmailController extends Controller
                 $defaults['site_status'] = $problems ? implode('; ', $problems) : 'Сайтът работи без прекъсвания'
                     . ($project->ssl_expires_at ? ', SSL сертификатът е валиден до ' . $project->ssl_expires_at->format('d.m.Y') : '') . '.';
             }
+        }
+
+        if ($project && $tpl['key'] === 'site-review') {
+            $defaults = array_merge($defaults, SiteReviewDraft::for($project));
         }
 
         // „Използвай отново“: полетата и темата на вече изпратен имейл със същия шаблон.
@@ -146,6 +151,12 @@ class ClientEmailController extends Controller
         }
 
         $log->forceFill(['sent_at' => now()])->save();
+
+        // Личният преглед към проверката на сайт е изпратен: отбелязваме го (изчезва от „Днес“ и от просрочените).
+        if ($log->project && $tpl['key'] === 'site-review') {
+            $log->project->forceFill(['reviewed_at' => now(), 'read_at' => $log->project->read_at ?? now()])->save();
+            $log->project->notes()->create(['user_id' => $request->user()->id, 'kind' => 'note', 'body' => 'Изпратен е личен преглед на ' . $validated['to'] . '.']);
+        }
 
         // Ако запитването още няма имейл, запазваме този, на който писахме.
         if ($log->project && ! $log->project->client_email) {

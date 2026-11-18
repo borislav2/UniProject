@@ -25,6 +25,12 @@
             <tr><td style="{{ $row }}">Разговор</td><td>{{ \App\Support\Booking::label($lead->consultation_at) }}
                 (<a href="{{ \App\Support\Booking::googleCalendarUrl($lead->consultation_at, 'Разговор с ' . str_replace('Запитване от ', '', $lead->name), 'Телефон ' . $lead->client_phone . "\n" . route('admin.projects.show', $lead)) }}">добави в Google Календар</a>)</td></tr>
         @endif
+        @if($lead->review_due_at)
+            <tr><td style="{{ $row }}">Личен преглед до</td><td><strong>{{ \App\Support\SiteCheck\ReviewDue::label($lead->review_due_at) }}</strong></td></tr>
+        @endif
+        @if($lead->check_goal && \App\Support\SiteCheck\ReviewDue::goalLabel($lead->check_goal))
+            <tr><td style="{{ $row }}">Основна цел</td><td>{{ \App\Support\SiteCheck\ReviewDue::goalLabel($lead->check_goal) }}</td></tr>
+        @endif
         @if($lead->business_size)
             <tr><td style="{{ $row }}">Размер на бизнеса</td><td>{{ $lead->business_size }}</td></tr>
         @endif

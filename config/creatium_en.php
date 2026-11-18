@@ -1409,4 +1409,57 @@ return [
             ['name' => '_gcl_au', 'provider' => 'Google Ads (Google Ireland Ltd.)', 'purpose' => 'Measures inquiries coming from our Google ads', 'duration' => 'up to 90 days'],
         ],
     ],
+    // The /website-check page in design G. The check is both automatic (a report by email within minutes) and manual (a personal review
+    // by a specialist within two working days). Goals are keys; their labels live here (the admin reads the Bulgarian ones).
+    'site_check_page' => [
+        'title' => 'Find out exactly why your website is not bringing the customers you expect and how to change that',
+        'text' => 'Most business owners feel their online presence could work much better, but do not know where to start. Our team will carry out a thorough, hands-on review of your website, your Google positions and your visibility in AI search, to give you a clear picture without empty talk.',
+        'meta_description' => 'Request a free audit of your website. The automatic report arrives by email within minutes, the personal review by a specialist within two working days.',
+        'domain_label' => 'Your website address',
+        'email_label' => 'Business email',
+        'goal_label' => 'What is your main goal right now',
+        'goals' => [
+            'leads' => 'More enquiries',
+            'google' => 'Better ranking in Google',
+            'speed' => 'A faster, more modern website',
+        ],
+        'button' => 'Request your free audit',
+        'promise' => 'The automatic report arrives by email within minutes, and a personal review from a specialist on our team within two working days.',
+        'thanks_title' => 'The check has started',
+        'thanks_text' => 'The automatic report for :domain will reach :email within minutes. You will get a personal review from a specialist on our team within two working days. If you do not see the email, check your Spam or Promotions folder.',
+        'report_visual' => [
+            'label' => 'Preview of the audit report',
+            'doc_title' => 'Audit report',
+            'doc_site' => 'yourwebsite.com',
+            'recommendation' => 'Recommendation',
+            'sections' => [
+                ['title' => 'Loading speed', 'tip' => 'Shrink the heavy images on the home page'],
+                ['title' => 'Mobile usability', 'tip' => 'Make the contact button bigger'],
+                ['title' => 'Technical SEO', 'tip' => 'Add a title and description for Google'],
+                ['title' => 'Visibility in AI search', 'tip' => 'Describe your services clearly for ChatGPT'],
+            ],
+        ],
+        'different_label' => 'What you get',
+        'different_title' => 'Why this review is different from automatic online tools',
+        'different' => [
+            ['title' => 'A view through the eyes of your real customer', 'text' => 'We check how your site works on a mobile phone, how quickly it becomes clear what you do and how easy it is to get in touch.'],
+            ['title' => 'A diagnosis of the technical brakes', 'text' => 'We find the hidden problems with speed, indexing and structure that stop Google from ranking you ahead of your competitors.'],
+            ['title' => 'A visibility test in the new AI search engines', 'text' => 'We check whether ChatGPT, Gemini and Perplexity recognise your brand and services.'],
+            ['title' => 'A concrete plan with priorities', 'text' => 'You get an ordered list of the most important steps, the ones that will bring the fastest effect for your business.'],
+        ],
+        'points_visual' => [
+            'label' => 'The four points of the check',
+            'points' => [
+                ['title' => 'Mobile experience', 'sub' => 'the thumb test'],
+                ['title' => 'Speed and code', 'sub' => 'Core Web Vitals'],
+                ['title' => 'Search engines', 'sub' => 'Google and Bing indexing'],
+                ['title' => 'AI citation', 'sub' => 'ChatGPT and Gemini check'],
+            ],
+        ],
+        'faq_title' => 'Frequently asked questions',
+        'faq' => [
+            ['q' => 'Why do you do this analysis for free?', 'a' => 'We believe the best way to start a conversation is to give you real value before we have worked together. When you see how thorough our approach is, you can decide for yourself whether you want our help with the work.'],
+            ['q' => 'How long does the analysis take?', 'a' => 'You get the automatic report by email within minutes, and the results of the check, prepared personally by a specialist on our team, within two working days after you send the request.'],
+        ],
+    ],
 ];

@@ -33,7 +33,11 @@ class SendSiteCheckReport
             $report = null;
         }
 
-        $notes = [];
+        // Срокът за личния преглед и целта на човека отиват най-отгоре в бележките (описанието се пише наново).
+        $notes = array_values(array_filter([
+            $lead->review_due_at ? ReviewDue::note($lead->review_due_at) : null,
+            ReviewDue::goalNote($lead->check_goal),
+        ]));
         $sent = false;
         if ($report) {
             $problems = collect(SiteAudit::items($report))->where('severity', '!=', 'notice')->pluck('title');
