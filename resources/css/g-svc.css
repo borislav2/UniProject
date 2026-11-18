@@ -327,3 +327,14 @@ html.design-g.dark .g-cmp-result, html.design-g.dark .g-ai-cite em, .design-g .g
 .design-g .g-agent-col.is-agent li + li::after { content: ""; position: absolute; left: 15px; top: -6px; width: 7px; height: 7px; border-right: 1px solid var(--g-ink); border-bottom: 1px solid var(--g-ink); transform: rotate(45deg); }
 .design-g .g-agent-col.is-agent li:last-child { background: color-mix(in srgb, var(--g-accent) 12%, var(--sv-card2)); }
 .design-g .g-agent-col.is-bot li + li::after { content: ""; position: absolute; left: 15px; top: -6px; width: 7px; height: 7px; border-right: 1px solid var(--g-ink); border-bottom: 1px solid var(--g-ink); transform: rotate(45deg); }
+
+/* Owners, 18.11.2026: no empty left column on the service pages. People read left to right, so the heading
+   sits on top and the numbered rows and the FAQ use the full width below it. */
+.design-g .g-svc-sec .g-sys { display: block; }
+.design-g .g-svc-sec .g-sys > .g-sh { position: static; margin-bottom: var(--g-gap); max-width: 46em; }
+.design-g .g-svc-sec .g-sys > .g-sh h2 { max-width: 22em; }
+@media (min-width: 900px) and (max-width: 1180px) {
+    .design-g .g-svc-rows.g-numbered li { grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1.15fr); }
+    .design-g .g-svc-rows.g-numbered p { grid-column: 3; }
+}
+.design-g .g-svc-sec .g-svc-rows + .g-svc-fig { margin-top: clamp(32px, 4vw, 56px); max-width: 760px; }

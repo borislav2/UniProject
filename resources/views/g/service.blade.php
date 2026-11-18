@@ -49,13 +49,13 @@
         <div class="g-sh">
             <h2 class="g-h">{{ $page['g_problems_title'] ?? __('Познато ли ви е?') }}</h2>
             @if(filled($page['g_problems_intro'] ?? null))<p class="g-sh-text">{{ $page['g_problems_intro'] }}</p>@endif
-            @if($isWebsite && ! empty($vis['hero']))<div class="g-svc-fig">{!! view('partials.g.svc.website', ['slot' => 'hero', 'v' => $vis['hero'], 'page' => $page])->render() !!}</div>@endif
         </div>
         <ol class="g-rows g-numbered g-svc-rows">
             @foreach($problems as $problem)
                 <li><span class="g-n g-mono">{{ $pad($loop->iteration) }}</span><h3>{{ $problem['title'] }}</h3><p>{{ $problem['text'] }}</p></li>
             @endforeach
         </ol>
+        @if($isWebsite && ! empty($vis['hero']))<div class="g-svc-fig">{!! view('partials.g.svc.website', ['slot' => 'hero', 'v' => $vis['hero'], 'page' => $page])->render() !!}</div>@endif
     </div>
 </section>
 @endif
