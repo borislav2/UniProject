@@ -111,6 +111,8 @@ class HomeController extends Controller
             'g_directions' => 'nullable|array',
             'g_directions.*' => ['string', Rule::in(array_keys((array) config('creatium.contact_directions_g')))],
             'budget' => ['nullable', 'string', Rule::in(array_keys((array) config('creatium.contact_budgets_g')))],
+            // The short form on the website service page (18.11.2026) adds an optional description of the project; the main G form has no message box.
+            'message' => 'nullable|string|max:2000',
             'consultation' => ['nullable', 'string', function ($attribute, $value, $fail) {
                 if (! Booking::resolve($value)) {
                     $fail(__('Този час вече е зает. Моля, изберете друг.'));
@@ -143,7 +145,11 @@ class HomeController extends Controller
             $business !== '' ? 'Бизнес или сайт ' . $business : '',
             ! empty($validated['budget']) ? 'Ориентировъчен месечен бюджет ' . config('creatium.contact_budgets_g')[$validated['budget']] : '',
         ], 'strlen');
+        $message = trim((string) ($validated['message'] ?? ''));
         $description = $lines ? implode("\n", $lines) : 'Без съобщение. ' . $service . '.';
+        if ($message !== '') {
+            $description = $message . ($lines ? "\n\n" . implode("\n", $lines) : '');
+        }
 
         return $this->storeLead($request, $validated + ['site_url' => $business], mb_substr($service, 0, 255), $description);
     }

@@ -291,18 +291,19 @@ class GAudit3Test extends TestCase
         $this->get('/en/services')->assertOk()->assertSee('Check how your system works right now');
     }
 
-    public function test_the_header_services_dropdown_lists_the_seven_services_and_the_mobile_menu_too(): void
+    public function test_the_header_services_dropdown_lists_the_eight_services_and_the_mobile_menu_too(): void
     {
         $this->g();
         $html = $this->get('/')->assertOk()->getContent();
         $this->assertStringContainsString('data-g-dd', $html);
         $this->assertStringContainsString('class="g-dd-btn" aria-expanded="false" aria-controls="g-dd-services"', $html);
         $panel = substr($html, strpos($html, 'class="g-dd-panel"'), 1500);
-        // The seven services and, last, the free website check (UX round, 17.11.2026).
-        $this->assertSame(8, substr_count(substr($panel, 0, strpos($panel, '</div>')), '<a '));
+        // The eight services (AI agents included) and, last, the free website check (UX round, 17.11.2026).
+        $this->assertSame(9, substr_count(substr($panel, 0, strpos($panel, '</div>')), '<a '));
         $this->assertStringContainsString('Разработка на софтуер', $panel);
-        // Phone menu: 8 under Услуги, news and questions under За нас (the About item repeats its parent and is left out), and Контакти.
-        $this->assertSame(11, substr_count($html, 'class="g-sub g-mm-child"'));
+        $this->assertStringContainsString('AI агенти', $panel);
+        // Phone menu: 9 under Услуги, news and questions under За нас (the About item repeats its parent and is left out), and Контакти.
+        $this->assertSame(12, substr_count($html, 'class="g-sub g-mm-child"'));
         $this->assertStringContainsString('.design-g .g-dd:hover .g-dd-panel', file_get_contents(resource_path('css/g.css')));
         $this->assertStringContainsString("event.key !== 'Escape'", file_get_contents(resource_path('js/g-bar.js')));
 

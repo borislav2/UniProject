@@ -632,20 +632,24 @@ class DesignGTest extends TestCase
         config(['creatium.design' => 'g']);
 
         $services = (array) config('creatium.service_pages');
-        $this->assertCount(7, $services);
+        $this->assertCount(8, $services);
 
         $list = $this->get('/uslugi')->assertOk()->getContent();
-        $this->assertSame(7, substr_count($list, 'class="g-svc-vis"'));
-        $this->assertSame(7, substr_count($list, 'class="g-sv"'));
+        $this->assertSame(8, substr_count($list, 'class="g-svc-vis"'));
+        $this->assertSame(8, substr_count($list, 'class="g-sv"'));
+        preg_match_all('#<svg class="g-sv".*?</svg>#s', $list, $svgs);
+        foreach ($svgs[0] as $svg) {
+            $this->assertLessThan(8192, strlen($svg), 'a service illustration is too big');
+        }
 
         foreach ($services as $key => $service) {
             $this->assertMatchesRegularExpression('/data-g-service="' . $key . '">\s*<div class="g-svc-vis"><svg class="g-sv"/', $list, "no visual for {$key} on /uslugi");
 
+            // The page: the first screen of the brief has its own visual (the website page has the form, its visual sits beside the problems).
             $page = $this->get(\App\Http\Controllers\PageController::serviceUrl($key))->assertOk()->getContent();
-            $this->assertSame(1, substr_count($page, 'class="g-sv"'), "no visual on the {$key} page");
             $this->assertStringContainsString('g-ph-vis', $page);
+            $this->assertMatchesRegularExpression('/<figure class="g-bv g-bv-/', $page, "no visual on the {$key} page");
             $this->assertStringContainsString('aria-hidden="true"', $page);
-            $this->assertLessThan(6144, strlen(substr($page, strpos($page, '<svg class="g-sv"'), strpos($page, '</svg>', strpos($page, '<svg class="g-sv"')) - strpos($page, '<svg class="g-sv"'))), "{$key} visual is too big");
         }
     }
 
@@ -816,18 +820,18 @@ class DesignGTest extends TestCase
         $this->assertStringContainsString('section.g-s#paketi { padding-top: calc(var(--g-pad) * .6); }', $css);
     }
 
-    public function test_g_services_page_has_seven_plain_services_each_with_what_we_do_what_you_get_and_a_package(): void
+    public function test_g_services_page_has_eight_plain_services_each_with_what_we_do_what_you_get_and_a_package(): void
     {
         config(['creatium.design' => 'g']);
         $html = $this->get('/uslugi')->assertOk()->getContent();
 
-        $this->assertSame(7, substr_count($html, 'data-g-service="'));
-        foreach (['website', 'seo', 'google', 'email', 'support', 'shopping', 'software'] as $key) {
+        $this->assertSame(8, substr_count($html, 'data-g-service="'));
+        foreach (['website', 'seo', 'google', 'email', 'support', 'shopping', 'software', 'ai_agents'] as $key) {
             $this->assertStringContainsString('data-g-service="' . $key . '"', $html);
             $this->assertStringContainsString('href="' . PageController::serviceUrl($key) . '"', $html);
         }
-        $this->assertSame(7, substr_count($html, 'Какво получавате'));
-        $this->assertSame(7, substr_count($html, 'Какво правим'));
+        $this->assertSame(8, substr_count($html, 'Какво получавате'));
+        $this->assertSame(8, substr_count($html, 'Какво правим'));
         $this->assertStringContainsString('Правим ви сайт, който се зарежда бързо на телефон', $html);
         $this->assertStringContainsString('Core Изграждане', $html);
         $this->assertStringContainsString('Цена по оферта', $html);
@@ -838,7 +842,7 @@ class DesignGTest extends TestCase
         $this->assertStringNotContainsString('Стартов двигател', $page->getContent());
 
         $en = $this->get('/en/services')->assertOk();
-        $this->assertSame(7, substr_count($en->getContent(), 'data-g-service="'));
+        $this->assertSame(8, substr_count($en->getContent(), 'data-g-service="'));
         $this->assertDoesNotMatchRegularExpression('/\p{Cyrillic}/u', PlainCopyTest::visibleText($en->getContent()));
     }
 

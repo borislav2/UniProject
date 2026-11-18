@@ -1,6 +1,6 @@
 {{-- Header of the redesign (concept G): the logo image (white one in the dark theme), four links, the theme and language switches and one button. --}}
 @php
-    // Third round (16.11.2026): „Услуги“ opens a dropdown with all the services (the seven of service_pages, software development included).
+    // Third round (16.11.2026): „Услуги“ opens a dropdown with all the services (the eight of service_pages, software development and AI agents included).
     $gServices = collect(site('service_pages'))->map(fn ($service, $key) => [
         $service['menu'],
         \App\Http\Controllers\PageController::serviceUrl($key),
