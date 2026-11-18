@@ -422,6 +422,32 @@ class TodayBlocks
         return $this->block('Нови проверки на сайт', $rows, ['url' => route('admin.site-checks.index'), 'empty' => 'Няма непрочетени проверки.']);
     }
 
+    /** Личните прегледи към безплатните проверки на сайт, които са за днес или вече са просрочени (обещахме ги до два работни дни). */
+    private function blockDevReviews(): array
+    {
+        $rows = $this->only(Project::reviewsPending()
+            ->where('review_due_at', '<=', now('Europe/Sofia')->endOfDay()->utc())
+            ->orderBy('review_due_at')->get())
+            ->map(function ($p) {
+                $overdue = $p->review_due_at->isPast();
+                $summary = $p->siteCheckSummary();
+                $goal = \App\Support\SiteCheck\ReviewDue::goalLabel($p->check_goal);
+
+                return [
+                    'title' => $summary['domain'] ?? $p->website_url ?? $p->name,
+                    'url' => route('admin.projects.show', $p),
+                    'chips' => [$overdue ? ['Просрочен', 'bg-red-100 text-red-800'] : ['Днес', 'bg-amber-100 text-amber-800']],
+                    'sub' => 'Личен преглед до ' . \App\Support\SiteCheck\ReviewDue::label($p->review_due_at) . ($goal ? ' · цел ' . $goal : ''),
+                    'sub_tone' => $overdue ? 'danger' : null,
+                    'tone' => $overdue ? 'danger' : 'warn',
+                    'phone' => $p->client_phone,
+                    'actions' => [['Изпрати личния преглед', route('admin.client-emails.create', ['template' => 'site-review', 'project' => $p->id]), 'get', true]],
+                ];
+            });
+
+        return $this->block('Лични прегледи за изпращане', $rows, ['hint' => 'до два работни дни', 'url' => route('admin.site-checks.index'), 'empty' => 'Няма прегледи за днес.']);
+    }
+
     private function blockDevLeads(): array
     {
         $id = $this->userId();
@@ -632,6 +658,7 @@ class TodayBlocks
                 ['label' => 'Проекти в работа', 'value' => $count('dev-projects'), 'url' => route('admin.projects.index', ['filter' => 'active'])],
                 ['label' => 'Клиенти с проблем', 'value' => $count('dev-clients'), 'hot' => $count('dev-clients') > 0, 'url' => route('admin.clients.index')],
                 ['label' => 'Нови проверки', 'value' => $count('dev-site-checks'), 'url' => route('admin.site-checks.index')],
+                ['label' => 'Лични прегледи', 'value' => $count('dev-reviews'), 'hot' => $count('dev-reviews') > 0, 'url' => route('admin.site-checks.index')],
                 ['label' => 'Със следваща стъпка', 'value' => $count('dev-leads')],
                 ['label' => 'Предупреждения', 'value' => $count('dev-health'), 'hot' => $count('dev-health') > 0, 'url' => route('admin.health')],
             ],

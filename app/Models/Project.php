@@ -51,6 +51,9 @@ class Project extends Model
         'monitor_alerted_at',
         'ssl_expires_at',
         'domain_expires_at',
+        'review_due_at',
+        'reviewed_at',
+        'check_goal',
     ];
     
     protected $casts = [
@@ -69,6 +72,8 @@ class Project extends Model
         'ssl_expires_at' => 'datetime',
         'domain_expires_at' => 'datetime',
         'site_check_report' => 'array',
+        'review_due_at' => 'datetime',
+        'reviewed_at' => 'datetime',
     ];
 
     /** Етапите на продажбата за запитванията. Отворените са тези, които още чакат действие от нас. */
@@ -179,6 +184,25 @@ class Project extends Model
     public function scopeSiteChecks(Builder $query): Builder
     {
         return $query->where('source', 'website')->where('service', self::SITE_CHECK_SERVICE);
+    }
+
+    /** Проверки на сайт, чийто личен преглед още не е изпратен (само такива имат срок). */
+    public function scopeReviewsPending(Builder $query): Builder
+    {
+        return $query->siteChecks()->whereNotNull('review_due_at')->whereNull('reviewed_at');
+    }
+
+    /** Личният преглед към проверката: null (няма срок), done (изпратен), overdue (срокът е минал) или due (чака). */
+    public function reviewState(): ?string
+    {
+        if (! $this->review_due_at) {
+            return null;
+        }
+        if ($this->reviewed_at) {
+            return 'done';
+        }
+
+        return $this->review_due_at->isPast() ? 'overdue' : 'due';
     }
 
     /** Запитвания на човека от екипа и неразпределените (за да не остане нищо без човек). */

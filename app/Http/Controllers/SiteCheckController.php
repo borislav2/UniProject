@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Project;
 use App\Support\LeadAttribution;
+use App\Support\SiteCheck\ReviewDue;
 use App\Support\SiteCheck\SendSiteCheckReport;
 use App\Support\SiteCheck\SiteChecker;
 use Illuminate\Http\Request;
@@ -32,11 +33,14 @@ class SiteCheckController extends Controller
             }],
             'email' => 'required|email|max:255',
             'consent' => 'accepted',
+            // Само в новия дизайн: основната цел на човека. По желание, за да работи и старата форма без нея.
+            'goal' => ['nullable', 'string', 'in:' . implode(',', array_keys(ReviewDue::goals()))],
             \App\Support\Turnstile::FIELD => \App\Support\Turnstile::rules(),
         ], \App\Support\Turnstile::messages() + [
             'domain.required' => __('Моля, въведете адреса на сайта.'),
             'email.required' => __('Моля, въведете имейл, на който да изпратим отчета.'),
             'email.email' => __('Моля, въведете валиден имейл.'),
+            'goal.in' => __('Моля, изберете една от целите в списъка.'),
             'consent.accepted' => __('Моля, потвърдете, че сте запознати с Политиката за поверителност.'),
         ]);
 
@@ -60,9 +64,15 @@ class SiteCheckController extends Controller
         }
 
         $attribution = $request->session()->get(LeadAttribution::SESSION_KEY);
+        // Освен автоматичния отчет всяка заявка получава личен преглед от специалист до два работни дни.
+        $due = ReviewDue::after();
+        $goal = $validated['goal'] ?? null;
         $lead = Project::create([
             'name' => 'Проверка на сайт: ' . $domain,
-            'description' => "Проверката на {$domain} тече. Отчетът ще бъде изпратен на {$email}.",
+            'description' => "Проверката на {$domain} тече. Отчетът ще бъде изпратен на {$email}.\n" . ReviewDue::note($due)
+                . ($goal ? "\n" . ReviewDue::goalNote($goal) : ''),
+            'review_due_at' => $due,
+            'check_goal' => $goal,
             'start_date' => now()->toDateString(),
             'status' => 'Planning',
             'manager' => 'Неразпределен',
@@ -87,6 +97,7 @@ class SiteCheckController extends Controller
 
         return redirect(lroute('site-check'))
             ->with('site_check_sent', $email)
+            ->with('site_check_domain', $domain)
             ->with('lead_created', true)
             ->with('lead_service', self::SERVICE);
     }
