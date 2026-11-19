@@ -366,7 +366,7 @@ return [
                 'Локално SEO и Google Бизнес профил',
                 'Оптимизация на продажби и рекламни бюджети',
             ],
-            'image' => 'images/team/vladimir-tsonchev.webp',
+            'image' => 'images/team/vladimir-tsonchev-2026.webp',
             'linkedin' => 'https://www.linkedin.com/in/vladimirtsonchev/',
         ],
         [
