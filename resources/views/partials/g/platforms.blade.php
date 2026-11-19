@@ -6,7 +6,7 @@
 @if($platforms)
 <section class="g-plat" aria-labelledby="g-plat-h" data-g-plat>
     <div class="g-wrap g-plat-top">
-        <h2 class="g-mono g-mute" id="g-plat-h">{{ __('Работим с водещите платформи') }}</h2>
+        <p class="g-mono g-mute g-plat-h" id="g-plat-h">{{ __('Работим с водещите платформи') }}</p>
         <button type="button" class="g-plat-btn" aria-pressed="false" data-g-plat-toggle><span data-off>{{ __('Пауза') }}</span><span data-on>{{ __('Пусни') }}</span></button>
     </div>
     <div class="g-plat-view">
