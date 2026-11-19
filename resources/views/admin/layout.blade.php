@@ -6,10 +6,11 @@
     <title>@yield('title', 'Админ') · Creatium Lab</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" href="{{ asset('favicon.ico') }}?v=2" sizes="any">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}?v=2">
     {{-- Админът може да се добави към началния екран на телефона като приложение (отваря „Днес“). --}}
     <link rel="manifest" href="{{ asset('admin.webmanifest') }}">
-    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}?v=2">
     <meta name="theme-color" content="#0C0E12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Creatium">
