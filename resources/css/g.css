@@ -168,6 +168,11 @@ html.chat-open .g-preview { display: none; }
 .design-g .g-trust { margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; list-style: none; color: var(--g-mute); font-size: 15px; }
 .design-g .g-trust li { display: flex; align-items: center; gap: 8px; }
 .design-g .g-trust li::before { content: ""; width: 5px; height: 5px; background: var(--g-mute); flex: none; }
+/* Hero text over the contour lines: near-ink colour, a little larger, and a halo in the page colour so a line never cuts through a letter (text only, the canvas is untouched) */
+.design-g .g-hero .g-lead, .design-g .g-hero .g-trust { color: var(--g-ink); text-shadow: 0 0 2px var(--g-bg), 0 0 8px var(--g-bg), 0 0 16px var(--g-bg), 0 0 28px var(--g-bg); }
+.design-g .g-hero .g-lead { font-size: clamp(1.15rem, 1.55vw, 1.4rem); line-height: 1.5; max-width: 34em; }
+.design-g .g-hero .g-trust { font-size: 16px; }
+.design-g .g-hero .g-trust li::before { background: var(--g-accent); }
 
 /* The six services under the hero: two columns of hairline rows, a real title and a readable text each */
 .design-g .g-svc-home { padding-block: 0 !important; }

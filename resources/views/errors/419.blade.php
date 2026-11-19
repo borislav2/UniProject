@@ -1,3 +1,7 @@
+@php
+    // Design G: the same message in the design's own layout; the old design below is unchanged.
+    if (\App\Support\Design::is('g')) { echo view('g.errors.419', ['exception' => $exception ?? null])->render(); return; }
+@endphp
 @extends('layouts.public')
 
 @section('title', __('Сесията е изтекла'))

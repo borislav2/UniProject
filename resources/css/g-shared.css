@@ -18,20 +18,22 @@
 
 @theme {
     --font-sans: 'Onest', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    --color-brand-50: #eef4fb;
-    --color-brand-100: #dae7f6;
-    --color-brand-200: #bcd3ee;
-    --color-brand-300: #8fb5e0;
-    --color-brand-400: #5d91cd;
-    --color-brand-500: #3b77bd;
-    --color-brand-600: #2d63a3;
-    --color-brand-700: #274f84;
-    --color-brand-800: #22406a;
-    --color-brand-900: #1c3252;
-    --color-brand-950: #0f1a2b;
-    --color-ink-950: #070d18;
-    --color-ink-900: #0b1424;
-    --color-ink-800: #111e33;
+    /* The shared partials (chat, cookie banner, contact form) were written with the old design's brand and ink colours. Here every one of them is a
+       neutral of the G palette, so a utility that is not overridden by g.css can never show navy or blue. The accent is the one colour. */
+    --color-brand-50: #F7F8F9;
+    --color-brand-100: #ECEEF0;
+    --color-brand-200: #D3D6DB;
+    --color-brand-300: #9AA0A9;
+    --color-brand-400: #6F757F;
+    --color-brand-500: #4A5058;
+    --color-brand-600: #C4300F;
+    --color-brand-700: #2B2F36;
+    --color-brand-800: #1C1F27;
+    --color-brand-900: #14161C;
+    --color-brand-950: #0C0E12;
+    --color-ink-950: #0B0C0F;
+    --color-ink-900: #12141A;
+    --color-ink-800: #161922;
 }
 
 @layer base {
@@ -40,7 +42,7 @@
 }
 
 /* The few app.css rules the chat widget needs */
-.chat-pulse { border: 2px solid rgb(93 145 205 / 0.7); animation: chat-pulse 2.4s ease-out infinite; will-change: transform, opacity; }
+.chat-pulse { border: 2px solid rgb(232 67 27 / 0.7); animation: chat-pulse 2.4s ease-out infinite; will-change: transform, opacity; }
 @keyframes chat-pulse { 0% { transform: scale(1); opacity: 1; } 70%, 100% { transform: scale(1.12, 1.35); opacity: 0; } }
 .chat-teaser:not(.hidden) { animation: chat-teaser-in .35s ease-out both; }
 @keyframes chat-teaser-in { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }

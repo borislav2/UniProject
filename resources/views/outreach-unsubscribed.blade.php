@@ -1,16 +1,11 @@
-@php($english = $prospect->mailLanguage() === 'en')
-<!doctype html>
-<html lang="{{ $english ? 'en' : 'bg' }}">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>{{ $english ? 'You are unsubscribed' : 'Отписахте се' }} | Creatium Lab</title></head>
-<body style="margin:0;padding:48px 16px;background:#f5f8fc;font-family:Arial,Helvetica,sans-serif;color:#1f2a3a;">
-<div style="max-width:480px;margin:0 auto;background:#fff;border-radius:14px;padding:32px;box-shadow:0 10px 30px -15px rgb(15 26 43/.3);">
-@if($english)
-<h1 style="margin:0 0 12px;font-size:22px;color:#0f1a2b;">You are unsubscribed</h1>
-<p style="margin:0;line-height:1.6;">The address {{ $prospect->email }} has been removed and will not receive any more emails from Creatium Lab. Sorry to have bothered you.</p>
-@else
-<h1 style="margin:0 0 12px;font-size:22px;color:#0f1a2b;">Отписахте се</h1>
-<p style="margin:0;line-height:1.6;">Адресът {{ $prospect->email }} е премахнат и няма да получава повече писма от Creatium Lab. Извинете за безпокойството.</p>
-@endif
-</div>
-</body>
-</html>
+{{-- Confirmation after the one-click unsubscribe of an outreach email (shared by both designs, always in the G style: it is the recipient's first sight of us). --}}
+@php
+    $english = $prospect->mailLanguage() === 'en';
+    echo view('errors._g-standalone', [
+        'code' => '', 'en' => $english, 'links' => true,
+        'heading' => $english ? 'You are unsubscribed' : 'Отписахте се',
+        'text' => $english
+            ? 'The address ' . $prospect->email . ' has been removed and will not receive any more emails from Creatium Lab. Sorry to have bothered you.'
+            : 'Адресът ' . $prospect->email . ' е премахнат и няма да получава повече писма от Creatium Lab. Извинете за безпокойството.',
+    ])->render();
+@endphp

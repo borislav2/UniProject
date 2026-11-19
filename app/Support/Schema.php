@@ -15,6 +15,18 @@ use Illuminate\Support\Str;
  */
 class Schema
 {
+    /** The default share image (Open Graph, Twitter card, JSON-LD image): design G, 1200 x 630, English text on /en. Made by tools/og. */
+    public static function shareImage(): string
+    {
+        return asset(app()->getLocale() === 'en' ? 'images/og-g-en.png' : 'images/og-g.png');
+    }
+
+    /** The logo for JSON-LD: the G logo (PNG, crawlers do not read WebP logos reliably); the old design keeps its own file. */
+    public static function logoUrl(): string
+    {
+        return asset(Design::is('g') ? 'images/logo-g.png' : 'images/logo.webp');
+    }
+
     /** The language-neutral address of the business entity (the Bulgarian home page). */
     public static function organizationId(): string
     {
@@ -66,8 +78,8 @@ class Schema
             '@id' => self::organizationId(),
             'name' => 'Creatium Lab',
             'url' => lroute('home'),
-            'logo' => asset('images/logo.webp'),
-            'image' => asset('images/og-image.png'),
+            'logo' => self::logoUrl(),
+            'image' => self::shareImage(),
             'description' => __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.'),
             'email' => $contact['email'] ?? null,
             'telephone' => $phones[0] ?? null,

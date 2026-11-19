@@ -16,9 +16,9 @@
         'dateModified' => $post->updated_at->toAtomString(),
         'inLanguage' => app()->getLocale(),
         'mainEntityOfPage' => $post->url(),
-        'image' => $post->cover_image ? asset($post->cover_image) : asset('images/og-image.png'),
+        'image' => $post->cover_image ? asset($post->cover_image) : \App\Support\Schema::shareImage(),
         'author' => \App\Support\Schema::postAuthor($post),
-        'publisher' => ['@type' => 'Organization', '@id' => \App\Support\Schema::organizationId(), 'name' => 'Creatium Lab', 'logo' => ['@type' => 'ImageObject', 'url' => asset('images/logo.png')]],
+        'publisher' => ['@type' => 'Organization', '@id' => \App\Support\Schema::organizationId(), 'name' => 'Creatium Lab', 'logo' => ['@type' => 'ImageObject', 'url' => \App\Support\Schema::logoUrl()]],
     ])
     <script type="application/ld+json">{!! json_encode($ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
 @endpush
