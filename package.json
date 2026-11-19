@@ -20,7 +20,8 @@
         "@fontsource/jetbrains-mono": "^5.3.0",
         "@fontsource/onest": "^5.3.1",
         "@tailwindcss/typography": "^0.5.20",
-        "easymde": "^2.21.0"
+        "easymde": "^2.21.0",
+        "three": "0.169.0"
     },
     "overrides": {
         "shell-quote": "^1.11.0",

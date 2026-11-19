@@ -9,6 +9,7 @@
 @push('head')
 @include('partials.home-ld')
 @vite(['resources/js/g-home.js'])
+@vite(['resources/js/g-kreo.js'])
 @endpush
 
 @php
@@ -139,6 +140,9 @@ $industryLink = g_industry_link($demo);
     </div>
 </section>
 @endif
+
+{{-- How we work: the four steps of the website service told with Kreo (a sticky 3D story on a wide screen, a list with stills elsewhere) --}}
+@include('partials.g.kreo-story')
 
 {{-- Packages: three equal cards, monthly or yearly, with the groups of what is included --}}
 <section class="g-s" id="paketi">

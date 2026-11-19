@@ -338,3 +338,7 @@ html.design-g.dark .g-cmp-result, html.design-g.dark .g-ai-cite em, .design-g .g
     .design-g .g-svc-rows.g-numbered p { grid-column: 3; }
 }
 .design-g .g-svc-sec .g-svc-rows + .g-svc-fig { margin-top: clamp(32px, 4vw, 56px); max-width: 760px; }
+
+/* AI agents: the still of the three robots under the problems */
+.design-g .g-svc-team { line-height: 0; -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }
+.design-g .g-svc-team img { width: 100%; height: auto; max-width: 720px; }
