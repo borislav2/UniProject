@@ -1,0 +1,48 @@
+/*
+ * Design G home, the 3D touches (imported by g-lean.css, so only the home page gets it; behaviour in resources/js/g-3d.js):
+ *  1. #proekti: every screenshot sits in a laptop. On a wide screen with a mouse the row is posed (left turned right, middle straight,
+ *     right turned left) and g-3d.js eases the angles with the scroll and the pointer. Phones and tablets: a straight laptop.
+ *  2. #paketi: Core and Enterprise turn to the sides, PRO is pulled forward with a plain translate (no scale or rotation, text stays crisp).
+ *  3. #tsel: a canvas globe (g-3d.js) on the right of the dark band, or half a globe under the text on narrow screens.
+ * Only transform is animated. No box changes size with JavaScript or with scrolling, so there is no layout shift.
+ */
+
+/* ---- 1. Laptops ---- */
+.design-g .g-laptops { --g-laptop-ink: #0C0E12; --g-laptop-base: linear-gradient(#D3D6DB, #A4A9B1); }
+html.design-g.dark .g-laptops { --g-laptop-ink: #1C1F27; --g-laptop-base: linear-gradient(#5A606B, #373B43); }
+.design-g .g-laptops .g-frame { position: relative; margin-bottom: 18px; padding: 9px 9px 11px; background: var(--g-laptop-ink); border: 0; border-radius: 9px 9px 2px 2px; box-shadow: 0 26px 34px -22px rgba(12, 14, 18, .5), 0 0 0 1px rgba(236, 238, 240, .06); }
+html.design-g.dark .g-laptops .g-frame { box-shadow: 0 26px 34px -22px rgba(0, 0, 0, .8), 0 0 0 1px rgba(236, 238, 240, .22); }
+.design-g .g-laptops .g-frame::before { content: ""; position: absolute; top: 3px; left: 50%; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: #343943; }
+.design-g .g-laptops .g-frame::after { content: ""; position: absolute; left: -2.5%; right: -2.5%; bottom: -9px; height: 9px; background: var(--g-laptop-base); border-radius: 0 0 10px 10px; box-shadow: 0 8px 14px -8px rgba(12, 14, 18, .55); }
+.design-g .g-laptops .g-frame img { border-radius: 1px; }
+.design-g .g-laptops .g-noimg { aspect-ratio: 16 / 10; }
+html.design-g.dark .g-laptops .g-frame img { outline: 0; }
+
+@media (min-width: 1100px) and (hover: hover) and (pointer: fine) {
+    .design-g #proekti { overflow-x: clip; }
+    .design-g .g-laptops .g-frame { --rx: 8deg; --ry: 0deg; transform: perspective(1500px) rotateX(var(--rx)) rotateY(var(--ry)); transform-origin: 50% 100%; }
+    .design-g .g-laptops .g-card:nth-child(3n + 1) .g-frame { --ry: 13deg; }
+    .design-g .g-laptops .g-card:nth-child(3n) .g-frame { --ry: -13deg; }
+}
+
+/* ---- 2. Packages ---- */
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+    .design-g .g-plans[data-g-tilt] { border: 0; column-gap: 22px; padding: 30px 0 22px; perspective: 1800px; }
+    .design-g .g-plans[data-g-tilt] .g-plan, .design-g .g-plans[data-g-tilt] .g-plan:last-child { border: 1px solid var(--g-line-strong); }
+    .design-g .g-plans[data-g-tilt] .g-plan:not(.g-rec) { background: var(--g-surface); box-shadow: 0 34px 40px -30px rgba(12, 14, 18, .4); }
+    .design-g .g-plans[data-g-tilt] .g-plan:first-child { transform: rotateY(7deg); }
+    .design-g .g-plans[data-g-tilt] .g-plan:last-child { transform: rotateY(-7deg); }
+    .design-g .g-plans[data-g-tilt] .g-plan.g-rec { transform: translateY(-14px); z-index: 2; box-shadow: 0 44px 60px -30px rgba(12, 14, 18, .6); }
+    html.design-g.dark .g-plans[data-g-tilt] .g-plan:not(.g-rec) { box-shadow: 0 34px 40px -30px rgba(0, 0, 0, .8); }
+}
+
+/* ---- 3. Globe in "Нашата цел" ---- */
+.design-g #tsel { position: relative; overflow: hidden; --gs: min(360px, 88vw); }
+.design-g #tsel .g-wrap { position: relative; z-index: 0; padding-bottom: calc(var(--gs) * .34); }
+.design-g .g-globe { position: absolute; z-index: -1; left: 50%; bottom: calc(var(--gs) * -.62); width: var(--gs); height: var(--gs); margin-left: calc(var(--gs) * -.5); display: block; pointer-events: none; opacity: .85; }
+@media (min-width: 900px) {
+    .design-g #tsel { --gs: clamp(300px, 36vw, 580px); }
+    .design-g #tsel .g-wrap { padding-bottom: 0; }
+    .design-g .g-globe { left: auto; bottom: auto; right: calc(var(--gs) * -.32); top: 50%; margin: calc(var(--gs) * -.5) 0 0; opacity: 1; }
+    .design-g #tsel .g-goal, .design-g #tsel .g-pr { max-width: calc(100% - var(--gs) * .54 - 6px); }
+}
