@@ -50,7 +50,7 @@ return [
                 'Local SEO and Google Business Profile',
                 'Sales and ad budget optimisation',
             ],
-            'image' => 'images/team/vladimir-tsonchev.webp',
+            'image' => 'images/team/vladimir-tsonchev-2026.webp',
             'linkedin' => 'https://www.linkedin.com/in/vladimirtsonchev/',
         ],
         [
