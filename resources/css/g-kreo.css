@@ -1,0 +1,39 @@
+/*
+ * Design G home, „Как работим“ (partials/g/kreo-story.blade.php, resources/js/g-kreo.js). Imported by g-lean.css.
+ * Base = a plain list of the four steps with a still above each (phones, reduced motion, no WebGL, no JavaScript).
+ * .g-kreo-3d (set by g-kreo.js on a wide screen without reduced motion and with WebGL2) = the sticky scroll story: the steps stacked on the
+ * left, one shown at a time, the canvas (aria-hidden) on the right, with the first still as the poster until the 3D code is there.
+ */
+.design-g .g-kreo-steps { list-style: none; margin: var(--g-gap) 0 0; padding: 0; display: grid; gap: 40px 32px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 760px) { .design-g .g-kreo-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 40px; } }
+.design-g .g-kreo-step { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.design-g .g-kreo-still { margin: 0 0 14px; line-height: 0; -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent), linear-gradient(to bottom, #000 82%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent), linear-gradient(to bottom, #000 82%, transparent); mask-composite: intersect; }
+.design-g .g-kreo-still img { width: 100%; height: auto; }
+.design-g .g-kreo-step .g-n { color: var(--g-accent-text); }
+.design-g .g-kreo-step h3 { font: 400 1.3rem/1.25 var(--g-head); letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.design-g .g-kreo-step p { color: var(--g-mute); margin: 0; max-width: 34em; }
+.design-g .g-kreo-stage, .design-g .g-kreo-bar { display: none; }
+
+/* Story mode */
+@media (min-width: 1024px) {
+    .design-g .g-kreo-3d .g-kreo-story { height: 380vh; height: 380svh; }
+    .design-g .g-kreo-3d .g-kreo-stick { position: sticky; top: 68px; height: calc(100vh - 68px); height: calc(100svh - 68px); min-height: 560px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 4vw, 64px); align-items: center; }
+    .design-g .g-kreo-3d .g-kreo-text { position: relative; z-index: 1; display: grid; gap: clamp(24px, 4vh, 48px); align-content: center; }
+    .design-g .g-kreo-3d .g-kreo-text h2 { font-size: clamp(1.5rem, 2.2vw, 2.1rem); max-width: 20em; }
+    .design-g .g-kreo-3d .g-kreo-steps { display: grid; margin: 0; gap: 0; grid-template-columns: minmax(0, 1fr); }
+    .design-g .g-kreo-3d .g-kreo-step { grid-area: 1 / 1; gap: 12px; opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s ease; pointer-events: none; }
+    .design-g .g-kreo-3d .g-kreo-step.is-active { opacity: 1; transform: none; pointer-events: auto; }
+    .design-g .g-kreo-3d .g-kreo-still { display: none; }
+    .design-g .g-kreo-3d .g-kreo-step .g-n { font: 300 clamp(3rem, 5.5vw, 5rem)/1 var(--g-head); letter-spacing: -.03em; }
+    .design-g .g-kreo-3d .g-kreo-step h3 { font-size: clamp(1.5rem, 2.3vw, 2.1rem); line-height: 1.15; }
+    .design-g .g-kreo-3d .g-kreo-step p { font-size: 1.05rem; }
+    .design-g .g-kreo-3d .g-kreo-bar { display: block; position: relative; height: 2px; background: var(--g-line); }
+    .design-g .g-kreo-3d .g-kreo-bar i { position: absolute; inset: 0 auto 0 0; width: calc(var(--kreo-p, 0) * 100%); background: var(--g-accent); }
+    .design-g .g-kreo-3d .g-kreo-stage { display: block; position: relative; height: 100%; min-width: 0; }
+    .design-g .g-kreo-stage .g-kreo-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transition: opacity .5s ease; }
+    /* the canvas has square edges: the floor and the orange line fade out before them */
+    .design-g .g-kreo-stage { -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 93%, transparent), linear-gradient(to bottom, #000 80%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent, #000 9%, #000 93%, transparent), linear-gradient(to bottom, #000 80%, transparent); mask-composite: intersect; }
+    .design-g .g-kreo-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .5s ease; }
+    .design-g .g-kreo-stage.is-live .g-kreo-canvas { opacity: 1; }
+    .design-g .g-kreo-stage.is-live .g-kreo-poster { opacity: 0; }
+}

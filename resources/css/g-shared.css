@@ -50,3 +50,8 @@
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
 }
+
+/* Pre-rendered Kreo stills come in a light and a dark file (partials/g/kreo-still.blade.php): the theme class picks one. */
+.design-g .g-kreo-dark { display: none; }
+html.design-g.dark .g-kreo-light { display: none; }
+html.design-g.dark .g-kreo-dark { display: block; }
