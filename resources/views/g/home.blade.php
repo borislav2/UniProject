@@ -8,7 +8,7 @@
 
 @push('head')
 @include('partials.home-ld')
-@vite(['resources/js/g-home.js'])
+@vite(['resources/js/g-home.js', 'resources/js/g-3d.js'])
 @vite(['resources/js/g-kreo.js'])
 @endpush
 
@@ -94,7 +94,7 @@
             $gDemos = collect($demos)->take(max(0, 9 - $gProjects->count()))->values();
             $phoneDemos = 3 - min(2, $gProjects->count());
         @endphp
-        <div class="g-work" data-g-projects>
+        <div class="g-work g-laptops" data-g-projects data-g-laptops>
             @foreach($gProjects as $project)
                 <article class="g-card{{ $loop->index >= 2 ? ' g-m-hide' : '' }}{{ $loop->index === 8 ? ' g-t-hide' : '' }}">
                     @if($project->website_url)<a href="{{ $project->website_url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">@endif
@@ -151,7 +151,7 @@ $industryLink = g_industry_link($demo);
             <h2 class="g-h">{{ $plans['g_title'] ?? __('План за всеки етап от вашия бизнес') }}</h2>
             @if(filled($plans['g_subtitle'] ?? null))<p class="g-sh-text g-under">{{ $plans['g_subtitle'] }}</p>@endif
         </div>
-        @include('partials.g.plan-cards')
+        @include('partials.g.plan-cards', ['gTilt' => true])
     </div>
 </section>
 
@@ -191,6 +191,7 @@ $industryLink = g_industry_link($demo);
 {{-- Our goal (fifth round, 13.11.2026, instead of "The agency"): one sentence, a short text and the three promises --}}
 <section class="g-band" id="tsel">
     <div class="g-wrap">
+        <canvas class="g-globe" data-g-globe aria-hidden="true"></canvas>
         <p class="g-mono g-goal-k">{{ __('Нашата цел') }}</p>
         <div class="g-goal">
             <h2 class="g-h">{!! $accent($trust['g_goal_title'] ?? $trust['agency_title'] ?? '', $trust['g_goal_accent'] ?? $trust['agency_accent'] ?? []) !!}</h2>

@@ -342,3 +342,6 @@ html.design-g.dark .g-cmp-result, html.design-g.dark .g-ai-cite em, .design-g .g
 /* AI agents: the still of the three robots under the problems */
 .design-g .g-svc-team { line-height: 0; -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }
 .design-g .g-svc-team img { width: 100%; height: auto; max-width: 720px; }
+/* The AI agents team picture sits in the middle of the page, no empty column beside it (owners: no empty space). */
+.design-g .g-svc-fig.g-svc-team { margin-left: auto; margin-right: auto; max-width: 760px; }
+.design-g .g-svc-fig.g-svc-team img { margin: 0 auto; }

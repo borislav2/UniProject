@@ -3,4 +3,5 @@
  * that are fully converted. Inner pages load g-inner.css, which adds g-pages.css.
  */
 @import './g-shared.css';
+@import './g-3d.css';
 @import './g-kreo.css';

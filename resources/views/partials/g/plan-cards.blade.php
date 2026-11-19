@@ -14,7 +14,7 @@
         <div class="g-tog" role="group" aria-label="{{ __('Плащане') }}"><button type="button" data-b="m" aria-pressed="true">{{ __('Месечно') }}</button><button type="button" data-b="y" aria-pressed="false">{{ __('Годишно') }}</button></div>
         <p class="g-tognote">{{ __('Цените са в евро.') }} @if(filled($plans['g_yearly_note'] ?? null)){{ __('Годишно плащане') }}, {{ \Illuminate\Support\Str::lower($plans['g_yearly_note']) }}.@endif</p>
     @endif
-    <div class="g-plans">
+    <div class="g-plans"@if(! empty($gTilt)) data-g-tilt @endif>
         @foreach($gCards as $card)
             @php($isRec = $card['index'] === $gRec)
             <article id="paket-{{ $card['index'] }}" class="g-plan {{ $isRec ? 'g-rec' : '' }}" data-plan="{{ $card['index'] }}">
