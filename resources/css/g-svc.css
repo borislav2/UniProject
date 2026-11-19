@@ -319,8 +319,8 @@ html.design-g.dark .g-cmp-result, html.design-g.dark .g-ai-cite em, .design-g .g
 @media (min-width: 520px) { .design-g .g-agent { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 20px; } }
 .design-g .g-agent-col { padding: 16px; background: var(--sv-card); border: 1px solid var(--sv-edge); min-width: 0; }
 .design-g .g-agent-col.is-agent { border-color: var(--g-accent); box-shadow: inset 0 3px 0 var(--g-accent); }
-.design-g .g-agent-col h3 { margin-bottom: 14px; color: var(--g-mute); }
-.design-g .g-agent-col.is-agent h3 { color: var(--g-accent-text); }
+.design-g .g-agent-col .g-agent-name { margin-bottom: 14px; color: var(--g-mute); }
+.design-g .g-agent-col.is-agent .g-agent-name { color: var(--g-accent-text); }
 .design-g .g-agent-col ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
 .design-g .g-agent-col li { position: relative; padding: 10px 12px; background: var(--sv-card2); border: 1px solid var(--sv-edge); font-size: 14.5px; line-height: 1.35; }
 .design-g .g-agent-col li + li::before { content: ""; position: absolute; left: 18px; top: -14px; height: 14px; border-left: 1px solid var(--g-ink); }

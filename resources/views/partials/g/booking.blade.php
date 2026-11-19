@@ -11,7 +11,7 @@
     <div class="g-days" data-booking-days role="tablist" aria-label="{{ __('Ден') }}" hidden>
         @foreach($bookingDays as $day)
             @php($key = $day['date']->format('Y-m-d'))
-            <button type="button" data-day="{{ $key }}" role="tab" aria-selected="{{ $key === $selectedDay ? 'true' : 'false' }}">
+            <button type="button" data-day="{{ $key }}" role="tab" aria-label="{{ ucfirst($day['date']->locale(app()->getLocale())->isoFormat('dddd, D MMMM')) }}" aria-selected="{{ $key === $selectedDay ? 'true' : 'false' }}">
                 <span class="g-mono">{{ $day['date']->locale(app()->getLocale())->isoFormat('dd') }}</span>
                 <b>{{ $day['date']->format('j') }}</b>
                 <span class="g-mono">{{ $day['date']->locale(app()->getLocale())->isoFormat('MMM') }}</span>

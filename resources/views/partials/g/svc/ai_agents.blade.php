@@ -6,7 +6,7 @@
             <div class="g-agent">
                 @foreach(['bot' => $v['bot'], 'agent' => $v['agent']] as $side => $col)
                     <section class="g-agent-col is-{{ $side }}" aria-label="{{ $col['name'] }}">
-                        <h3 class="g-mono">{{ $col['name'] }}</h3>
+                        <p class="g-mono g-agent-name">{{ $col['name'] }}</p>
                         <ol>
                             @foreach((array) $col['steps'] as $step)<li>{{ $step }}</li>@endforeach
                         </ol>

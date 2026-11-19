@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'Privacy policy')
-@section('meta_description', 'How Creatium Lab collects, uses and protects your personal data.')
+@section('meta_description', 'How Creatium Lab collects, uses and protects your personal data from the website, forms, chat and cookies, and what rights you have.')
 
 @section('content')
 @include('partials/page-header', ['heading' => 'Privacy policy'])
