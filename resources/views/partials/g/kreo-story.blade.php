@@ -18,7 +18,7 @@
                     <h2 class="g-h" id="kak-rabotim-h">{{ $kreoPage['g_process_title'] ?? $kreoSteps[0]['title'] }}</h2>
                     <ol class="g-kreo-steps">
                         @foreach($kreoSteps as $step)
-                            <li class="g-kreo-step{{ $loop->first ? ' is-active' : '' }}" data-g-step>
+                            <li class="g-kreo-step{{ $loop->first ? ' is-active' : '' }}" data-g-step data-short="{{ $step['short'] ?? '' }}">
                                 <figure class="g-kreo-still">
                                     @include('partials.g.kreo-still', ['base' => 'kreo-' . $loop->iteration . ($loop->first ? '-' . $kreoLang : '')])
                                 </figure>

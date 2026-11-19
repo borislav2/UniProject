@@ -124,10 +124,11 @@ export function createStory({ canvas, width, height, pixelRatio = 1.5, planTitle
     // ---- Station 0: the whiteboard with the plan (the four step titles)
     const board = new Group();
     board.position.set(X[0] + 0.35, 0, -0.55);
-    board.rotation.y = -0.2;
+    board.rotation.y = -0.08;
     board.scale.setScalar(0.92);
     scene.add(board);
-    const boardTex = canvasTex(1400, 900, (x, w, h) => {
+    const boardTex = canvasTex(2100, 1350, (x, w, h) => {
+        x.scale(1.5, 1.5);
         x.fillStyle = '#fff';
         x.fillRect(0, 0, w, h);
         const list = planTitles.length ? planTitles : ['', '', '', ''];
@@ -138,12 +139,15 @@ export function createStory({ canvas, width, height, pixelRatio = 1.5, planTitle
             x.strokeRect(64, y - 44, 56, 56);
             if (i === 0) { x.strokeStyle = '#E8431B'; x.lineWidth = 9; x.beginPath(); x.moveTo(74, y - 18); x.lineTo(92, y - 2); x.lineTo(116, y - 38); x.stroke(); }
             x.fillStyle = '#C4300F';
-            x.font = '500 30px "JetBrains Mono", monospace';
-            x.fillText(String(i + 1).padStart(2, '0'), 146, y - 4);
+            x.font = '500 34px "JetBrains Mono", monospace';
+            x.fillText(String(i + 1).padStart(2, '0'), 146, y - 2);
             x.fillStyle = '#0C0E12';
-            x.font = '300 58px Geologica, Onest, sans-serif';
-            const lines = wrap(x, title, 700).slice(0, 2);
-            lines.forEach((ln, k) => x.fillText(ln, 226, y + 6 + k * 66 - (lines.length > 1 ? 33 : 0)));
+            // Big, regular weight and one line: readable from the camera distance.
+            let size = 74;
+            x.font = `400 ${size}px Onest, Geologica, sans-serif`;
+            while (size > 46 && x.measureText(title).width > 720) { size -= 4; x.font = `400 ${size}px Onest, Geologica, sans-serif`; }
+            const lines = wrap(x, title, 720).slice(0, 2);
+            lines.forEach((ln, k) => x.fillText(ln, 216, y + 10 + k * (size + 6) - (lines.length > 1 ? (size + 6) / 2 : 0)));
         });
         // A page sketch on the right, boxes only: a header, a picture, three blocks.
         x.strokeStyle = '#0C0E12';
@@ -159,7 +163,7 @@ export function createStory({ canvas, width, height, pixelRatio = 1.5, planTitle
         x.fillStyle = '#E8431B';
         x.fillRect(1010, 660, 150, 36);
     });
-    const panel = new Mesh(new RoundedBoxGeometry(2.3, 1.48, 0.05, 4, 0.02), [0, 1, 2, 3, 4, 5].map((i) => (i === 4 ? new MeshStandardMaterial({ map: boardTex, roughness: 0.5 }) : new MeshStandardMaterial({ color: '#0C0E12', roughness: 0.4 }))));
+    const panel = new Mesh(new RoundedBoxGeometry(2.3, 1.48, 0.05, 4, 0.02), [0, 1, 2, 3, 4, 5].map((i) => (i === 4 ? new MeshBasicMaterial({ map: boardTex, toneMapped: false }) : new MeshStandardMaterial({ color: '#0C0E12', roughness: 0.4 }))));
     panel.position.y = 1.52;
     panel.castShadow = true;
     board.add(panel);

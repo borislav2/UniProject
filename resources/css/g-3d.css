@@ -27,11 +27,10 @@ html.design-g.dark .g-laptops .g-frame img { outline: 0; }
 
 /* ---- 2. Packages ---- */
 @media (min-width: 900px) and (hover: hover) and (pointer: fine) {
-    .design-g .g-plans[data-g-tilt] { border: 0; column-gap: 22px; padding: 30px 0 22px; perspective: 1800px; }
+    .design-g .g-plans[data-g-tilt] { border: 0; column-gap: 22px; padding: 30px 0 22px; }
     .design-g .g-plans[data-g-tilt] .g-plan, .design-g .g-plans[data-g-tilt] .g-plan:last-child { border: 1px solid var(--g-line-strong); }
     .design-g .g-plans[data-g-tilt] .g-plan:not(.g-rec) { background: var(--g-surface); box-shadow: 0 34px 40px -30px rgba(12, 14, 18, .4); }
-    .design-g .g-plans[data-g-tilt] .g-plan:first-child { transform: rotateY(7deg); }
-    .design-g .g-plans[data-g-tilt] .g-plan:last-child { transform: rotateY(-7deg); }
+    /* No rotation (owners, 19.11.2026): turned cards render blurry text on ordinary monitors. Only PRO is lifted. */
     .design-g .g-plans[data-g-tilt] .g-plan.g-rec { transform: translateY(-14px); z-index: 2; box-shadow: 0 44px 60px -30px rgba(12, 14, 18, .6); }
     html.design-g.dark .g-plans[data-g-tilt] .g-plan:not(.g-rec) { box-shadow: 0 34px 40px -30px rgba(0, 0, 0, .8); }
 }
@@ -45,4 +44,14 @@ html.design-g.dark .g-laptops .g-frame img { outline: 0; }
     .design-g #tsel .g-wrap { padding-bottom: 0; }
     .design-g .g-globe { left: auto; bottom: auto; right: calc(var(--gs) * -.32); top: 50%; margin: calc(var(--gs) * -.5) 0 0; opacity: 1; }
     .design-g #tsel .g-goal, .design-g #tsel .g-pr { max-width: calc(100% - var(--gs) * .54 - 6px); }
+}
+
+/* „Нашата цел“ text order (owners, 19.11.2026): heading, then the paragraph under it, then the three promises in one tidy row,
+   all in the left column next to the globe; reading goes top to bottom, no paragraph floating in the middle. */
+@media (min-width: 900px) {
+    .design-g #tsel .g-goal { grid-template-columns: minmax(0, 1fr); row-gap: 20px; align-items: start; }
+    .design-g #tsel .g-goal h2 { max-width: 16em; }
+    .design-g #tsel .g-goal-text { max-width: 36em; padding-bottom: 0; }
+    .design-g #tsel .g-pr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 32px; padding-top: 24px; border-top: 1px solid var(--g-band-line); }
+    .design-g #tsel .g-pr p { display: grid; gap: 4px; }
 }

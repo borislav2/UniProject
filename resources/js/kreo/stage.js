@@ -4,7 +4,8 @@ import { createStory } from './story.js';
 
 export async function mount({ section, stageEl, getT, onLost }) {
     const root = document.documentElement;
-    const titles = [...section.querySelectorAll('[data-g-step] h3')].map((h) => h.textContent.trim());
+    // The board shows the short step names (config short, e.g. „Стратегия“) so they are readable from afar; the full title is the fallback.
+    const titles = [...section.querySelectorAll('[data-g-step]')].map((li) => (li.dataset.short || li.querySelector('h3')?.textContent || '').trim());
 
     // The whiteboard is painted on a canvas, so the fonts of the site must be there first.
     try {
