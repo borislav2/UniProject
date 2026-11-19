@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'Политика за поверителност')
-@section('meta_description', 'Как Creatium Lab събира, използва и защитава личните ви данни.')
+@section('meta_description', 'Как Creatium Lab събира, използва и защитава личните ви данни от сайта, формите, чата и бисквитките и какви права имате.')
 
 @section('content')
 @include('partials/page-header', ['heading' => 'Политика за поверителност'])
