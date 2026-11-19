@@ -22,4 +22,18 @@ class DesignDefaultTest extends TestCase
         $this->assertStringContainsString('design-g', $html);
         $this->assertStringNotContainsString('<meta name="robots" content="noindex">', $html);
     }
+
+    public function test_the_g_favicon_is_linked_and_present(): void
+    {
+        config(['creatium.design' => 'g']);
+        $html = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('favicon.svg', $html);
+        $this->assertStringContainsString('favicon.ico', $html);
+        $svg = file_get_contents(public_path('favicon.svg'));
+        $this->assertStringContainsString('#0C0E12', $svg);
+        $this->assertStringContainsString('#E8431B', $svg);
+        foreach (['favicon.ico', 'favicon-64.png', 'apple-touch-icon.png', 'images/icon-192.png', 'images/icon-512.png'] as $file) {
+            $this->assertFileExists(public_path($file));
+        }
+    }
 }
