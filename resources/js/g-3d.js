@@ -18,8 +18,9 @@ function laptops() {
     const run = () => { if (!raf && on) raf = requestAnimationFrame(tick); };
     function tick() {
         raf = 0;
-        const vh = window.innerHeight, rects = [];
         const live = cards.filter((c) => c.seen || c.busy);
+        if (!live.length) return; // nothing near the screen: no layout read
+        const vh = window.innerHeight, rects = [];
         for (const c of live) rects.push(c.el.getBoundingClientRect());
         let busy = false;
         live.forEach((c, i) => {
@@ -78,25 +79,32 @@ function laptops() {
 }
 
 // Globe: fibonacci points joined to their neighbours, depth shaded, a few signal points; a 2D canvas, about 30 fps, only while visible.
+// Nothing is computed or measured while the page starts: the points, the colours and the canvas size are set up in the first observer callback
+// (it runs after the browser's own layout) once the band is within a screen of the viewport, so the still frame is ready before it is seen.
 function globe() {
     const cv = document.querySelector('[data-g-globe]');
     const ctx = cv && cv.getContext && cv.getContext('2d');
     if (!ctx) return;
     const band = cv.closest('section') || cv.parentNode;
-    const css = getComputedStyle(band);
-    const ink = css.getPropertyValue('--g-band-fg').trim() || '#ECEEF0';
-    const hot = css.getPropertyValue('--g-accent-on-band').trim() || '#FF5A33';
-    const N = window.innerWidth < 760 ? 260 : 380, GA = Math.PI * (3 - Math.sqrt(5));
+    const small = mq('(max-width: 759px)'); // the same test as a width under 760px, without reading the layout
+    const GA = Math.PI * (3 - Math.sqrt(5));
     const pts = [], edges = [];
-    for (let i = 0; i < N; i++) {
-        const y = 1 - (2 * i) / (N - 1), r = Math.sqrt(1 - y * y);
-        pts.push([Math.cos(GA * i) * r, y, Math.sin(GA * i) * r]);
-    }
-    for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
-        const a = pts[i], b = pts[j];
-        if ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2 < 21 / N) edges.push([i, j]);
-    }
+    let ink = '#ECEEF0', hot = '#FF5A33';
     let S = 0, dpr = 1, yaw = 0.6, mx = 0, my = 0, tx = 0, ty = 0, last = 0, raf = 0, seen = false;
+    const build = () => {
+        const css = getComputedStyle(band);
+        ink = css.getPropertyValue('--g-band-fg').trim() || ink;
+        hot = css.getPropertyValue('--g-accent-on-band').trim() || hot;
+        const N = small.matches ? 260 : 380;
+        for (let i = 0; i < N; i++) {
+            const y = 1 - (2 * i) / (N - 1), r = Math.sqrt(1 - y * y);
+            pts.push([Math.cos(GA * i) * r, y, Math.sin(GA * i) * r]);
+        }
+        for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+            const a = pts[i], b = pts[j];
+            if ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2 < 21 / N) edges.push([i, j]);
+        }
+    };
     const size = () => {
         dpr = Math.min(window.devicePixelRatio || 1, 1.5);
         S = cv.clientWidth;
@@ -161,16 +169,29 @@ function globe() {
         draw();
     }
     const go = () => { if (!raf && seen && !document.hidden && !reduce.matches) { last = performance.now(); raf = requestAnimationFrame(frame); } };
-    size();
-    window.addEventListener('resize', size, { passive: true });
-    if (reduce.matches || !('IntersectionObserver' in window)) return; // one still frame
-    new IntersectionObserver((es) => { seen = es[0].isIntersecting; go(); }).observe(band);
-    document.addEventListener('visibilitychange', go);
-    band.addEventListener('pointermove', (e) => {
-        const r = band.getBoundingClientRect();
-        tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
-        ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
-    }, { passive: true });
+    const start = () => {
+        build();
+        size();
+        window.addEventListener('resize', size, { passive: true });
+        if (reduce.matches || !('IntersectionObserver' in window)) return; // one still frame
+        new IntersectionObserver((es) => { seen = es[0].isIntersecting; go(); }).observe(band);
+        document.addEventListener('visibilitychange', go);
+        band.addEventListener('pointermove', (e) => {
+            const r = band.getBoundingClientRect();
+            tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+            ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+        }, { passive: true });
+    };
+    if ('IntersectionObserver' in window) {
+        const near = new IntersectionObserver((es) => {
+            if (!es.some((e) => e.isIntersecting)) return;
+            near.disconnect();
+            start();
+        }, { rootMargin: '300px 0px' });
+        near.observe(band);
+    } else {
+        requestAnimationFrame(() => requestAnimationFrame(start));
+    }
 }
 
 laptops();

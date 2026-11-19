@@ -11,17 +11,21 @@ if (section) {
     const wide = window.matchMedia('(min-width: 1024px)');
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    const hasGl = (() => {
+    // The WebGL probe creates a context, so it runs only when the scene could actually start (wide screen, motion allowed), never on a phone.
+    let glChecked = null;
+    const hasGl = () => {
+        if (glChecked !== null) return glChecked;
         try {
             const probe = document.createElement('canvas');
             const gl = probe.getContext('webgl2');
             if (gl) gl.getExtension('WEBGL_lose_context')?.loseContext();
-
-            return !!gl;
+            glChecked = !!gl;
         } catch (e) {
-            return false;
+            glChecked = false;
         }
-    })();
+
+        return glChecked;
+    };
 
     let near = false;
     let active = false;
@@ -91,7 +95,7 @@ if (section) {
     }
 
     function evaluate() {
-        const on = hasGl && wide.matches && !calm.matches && !broken;
+        const on = wide.matches && !calm.matches && !broken && hasGl();
         section.classList.toggle('g-kreo-3d', on);
         if (on !== active) {
             active = on;

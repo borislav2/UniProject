@@ -155,10 +155,10 @@ class GFixATest extends TestCase
             $total += filesize(resource_path('fonts/g/' . $file));
         }
         $this->assertLessThan(60 * 1024, $total, 'about 55 KB for all six');
-        // Mono keeps its Cyrillic file (Bulgarian labels), and only the two Cyrillic files of the first screen are preloaded.
+        // Mono keeps its Cyrillic file (Bulgarian labels). All six files paint the first screen, so all six are preloaded (see GPerformanceTest).
         $this->assertStringContainsString('jetbrains-mono-cyrillic-500.woff2', $css);
         $layout = file_get_contents(resource_path('views/layouts/public.blade.php'));
-        $this->assertStringContainsString("['geologica-cyrillic-300', 'onest-cyrillic-400']", $layout);
+        $this->assertStringContainsString("['geologica-cyrillic-300', 'onest-cyrillic-400', 'geologica-latin-300', 'onest-latin-400', 'jetbrains-mono-cyrillic-500', 'jetbrains-mono-latin-500']", $layout);
         // The current design still preloads Manrope only.
         $this->assertStringContainsString('manrope-{$subset}-wght-normal.woff2', $layout);
     }
