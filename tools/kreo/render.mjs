@@ -28,7 +28,7 @@ $out = [];
 foreach (['bg', 'en'] as $lang) {
     $p = $s($lang);
     $out[$lang] = [
-        'titles' => array_column($p['website']['g_process'], 'title'),
+        'titles' => array_map(fn ($s) => $s['short'] ?? $s['title'], $p['website']['g_process']),
         'labels' => array_slice(array_column($p['ai_agents']['g_vis']['v2']['modules'], 'name'), 0, 2) + [2 => $p['ai_agents']['g_vis']['v2']['modules'][3]['name']],
     ];
 }
