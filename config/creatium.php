@@ -302,8 +302,8 @@ return [
     // Публичен блог (/blog, линк в менюто, sitemap). BLOG_ENABLED=false го скрива (404); админът работи и така.
     'blog_enabled' => (bool) env('BLOG_ENABLED', true),
 
-    // Дизайнът на публичния сайт: current (сегашният) или g (новият, концепция Г). current + ?dizain=g за влезли админи е преглед.
-    'design' => env('CREATIUM_DESIGN', 'current'),
+    // Дизайнът на публичния сайт: g (концепция Г, главният от 19.11.2026) или current (старият). CREATIUM_DESIGN=current в .env връща стария.
+    'design' => env('CREATIUM_DESIGN', 'g'),
 
     // Вграден CSS в HTML-а (по-бързо първо зареждане). По подразбиране само в production.
     'inline_css' => (bool) env('INLINE_CSS', env('APP_ENV') === 'production'),
