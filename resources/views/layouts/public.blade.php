@@ -48,7 +48,9 @@
             $pageDescription = rtrim($pageDescription, '.') . $pageNote . '.';
         }
         $canonicalUrl = $seo['canonical_url'] ?? ($canonical ?? url()->current());
-        $ogImage = isset($seo['og_image']) ? asset($seo['og_image']) : asset('images/og-image.png');
+        // Share image in the G style. Images are cached for a year and social networks cache by URL, so the files carry new names:
+        // og-g.png (Bulgarian text) and og-g-en.png (English), made by tools/og.
+        $ogImage = isset($seo['og_image']) ? asset($seo['og_image']) : \App\Support\Schema::shareImage();
 
         // The same page in the other language: for the switcher (always) and hreflang (only real translations).
         if (isset($pageAlternates)) {
@@ -90,12 +92,16 @@
     <meta property="og:description" content="{{ $seo['og_description'] ?? $pageDescription }}">
     <meta property="og:url" content="{{ $canonicalUrl }}">
     <meta property="og:image" content="{{ $ogImage }}">
+    <meta property="og:image:alt" content="{{ $seo['og_title'] ?? 'Creatium Lab' }}">
     @unless(isset($seo['og_image']))
+        <meta property="og:image:type" content="image/png">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
     @endunless
     @include('partials.breadcrumbs-ld')
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{{ $ogImage }}">
+    <meta name="twitter:image:alt" content="{{ $seo['og_title'] ?? 'Creatium Lab' }}">
     {{-- G: two metas, the browser bar follows light and dark (JS keeps both in step with the site's theme toggle). --}}{!! $g ? '<meta name="theme-color" content="#ECEEF0" media="(prefers-color-scheme: light)">' . "\n    " . '<meta name="theme-color" content="#0B0C0F" media="(prefers-color-scheme: dark)">' : '<meta name="theme-color" content="#0f1a2b">' !!}
     <link rel="icon" href="{{ asset('favicon.ico') }}?v=2" sizes="any">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}?v=2">

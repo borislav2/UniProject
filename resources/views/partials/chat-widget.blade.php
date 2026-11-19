@@ -5,6 +5,7 @@
     Текстът от сървъра се показва като текст (textContent); само адресите стават връзки.
 --}}
 @php
+    $classic = \App\Support\Design::is('g') ? [] : (array) json_decode(view('partials.chat-widget-classic')->render(), true);
     $chatSuggestions = [__('Колко струва един сайт?'), __('За колко време е готов?'), __('Какво включва месечната поддръжка?'), __('Искам да запазя час за разговор')];
 @endphp
 <style>
@@ -17,10 +18,10 @@
      data-send="{{ route('chat.send') }}" data-history="{{ url('/chat') }}" data-token="{{ csrf_token() }}" data-locale="{{ app()->getLocale() }}"
      data-error="{{ __('Нещо се обърка. Опитайте пак след малко или ни пишете на :email.', ['email' => config('creatium.contact.email')]) }}"
      data-busy="{{ __('Много съобщения за кратко време. Изчакайте минута и опитайте пак.') }}">
-    <div class="hidden fixed inset-0 sm:inset-auto sm:bottom-24 sm:right-5 sm:w-[25rem] sm:h-[36rem] sm:max-h-[calc(100vh-8rem)] flex-col overflow-hidden bg-white shadow-[0_30px_80px_-20px_rgb(15_26_43/0.55)] sm:rounded-3xl sm:ring-1 sm:ring-gray-200 dark:bg-ink-900 dark:sm:ring-white/10"
+    <div class="hidden fixed inset-0 sm:inset-auto sm:bottom-24 sm:right-5 sm:w-[25rem] sm:h-[36rem] sm:max-h-[calc(100vh-8rem)] flex-col overflow-hidden bg-white sm:ring-1 sm:ring-gray-200 dark:bg-ink-900 dark:sm:ring-white/10{{ $classic['panel'] ?? '' }}"
          role="dialog" aria-modal="false" aria-labelledby="chat-title" data-chat-panel>
         <div class="surface-night on-dark relative flex items-center gap-3 px-5 py-4 text-white">
-            <span class="relative w-10 h-10 shrink-0 rounded-2xl bg-brand-gradient ring-1 ring-white/20 flex items-center justify-center"><x-icon name="robot" class="text-brand-100" /><span class="absolute -right-0.5 -bottom-0.5 w-3 h-3 rounded-full bg-emerald-400 ring-2 ring-ink-950"></span></span>
+            <span class="relative w-10 h-10 shrink-0 rounded-2xl {{ $classic['icon'] ?? 'bg-brand-600' }} ring-1 ring-white/20 flex items-center justify-center"><x-icon name="robot" class="text-brand-100" /><span class="absolute -right-0.5 -bottom-0.5 w-3 h-3 rounded-full bg-emerald-400 ring-2 ring-ink-950"></span></span>
             <div class="min-w-0">
                 <p id="chat-title" class="font-extrabold leading-tight">{{ __('Крео') }}</p>
                 <p class="text-xs text-gray-400">{{ __('Асистентът на Creatium Lab') }}</p>
@@ -51,7 +52,7 @@
     </div>
 
     {{-- Покана: показва се веднъж на 3 дни след няколко секунди, ако посетителят още не е писал (creatium-chat-teaser). --}}
-    <div class="chat-teaser hidden absolute bottom-full right-0 mb-3 w-64 rounded-2xl rounded-br-md bg-white p-4 pr-9 text-sm leading-snug text-gray-800 shadow-[0_20px_50px_-15px_rgb(15_26_43/0.45)] ring-1 ring-gray-200 dark:bg-ink-900 dark:text-gray-100 dark:ring-white/10" data-chat-teaser>
+    <div class="chat-teaser hidden absolute bottom-full right-0 mb-3 w-64 rounded-2xl rounded-br-md bg-white p-4 pr-9 text-sm leading-snug text-gray-800 {{ $classic['teaser'] ?? '' }} ring-1 ring-gray-200 dark:bg-ink-900 dark:text-gray-100 dark:ring-white/10" data-chat-teaser>
         <button type="button" class="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-white/10 dark:hover:text-white" aria-label="{{ __('Затвори') }}" data-chat-teaser-close><x-icon name="minus" class="text-[10px]" /></button>
         <button type="button" class="text-left" data-chat-teaser-open>
             <strong class="block text-brand-950 dark:text-white">{{ __('Здравейте, аз съм Крео!') }}</strong>
@@ -59,7 +60,7 @@
         </button>
     </div>
 
-    <button type="button" class="chat-toggle group relative flex items-center gap-3 rounded-full bg-gradient-to-br from-brand-700 to-brand-500 py-2.5 pl-2.5 pr-5 text-white shadow-[0_18px_45px_-10px_rgb(45_99_163/0.8)] ring-1 ring-white/25 transition hover:-translate-y-0.5 hover:shadow-[0_22px_50px_-10px_rgb(45_99_163/0.95)]" aria-expanded="false" aria-controls="chat" data-chat-toggle>
+    <button type="button" class="chat-toggle group relative flex items-center gap-3 rounded-full {{ $classic['toggle'] ?? 'bg-brand-950' }} py-2.5 pl-2.5 pr-5 text-white ring-1 ring-white/25 transition hover:-translate-y-0.5" aria-expanded="false" aria-controls="chat" data-chat-toggle>
         <span class="chat-pulse pointer-events-none absolute inset-0 rounded-full" aria-hidden="true"></span>
         <span class="relative w-10 h-10 rounded-full bg-white/15 flex items-center justify-center ring-1 ring-white/30">
             <x-icon name="robot" class="text-base text-white" />

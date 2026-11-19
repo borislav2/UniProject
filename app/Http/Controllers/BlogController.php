@@ -51,7 +51,8 @@ class BlogController extends Controller
                 'canonical_url' => $post->tr('canonical_url'),
                 'og_title' => $post->tr('og_title'),
                 'og_description' => $post->tr('og_description'),
-                'og_image' => $post->og_image ?? $post->cover_image,
+                // Design G shares the G drawing of a starter cover, not the old-design file.
+                'og_image' => $post->og_image ?? (\App\Support\Design::is('g') ? g_cover($post) : $post->cover_image),
             ],
         ]);
     }

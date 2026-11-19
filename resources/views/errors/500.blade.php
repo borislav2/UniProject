@@ -1,3 +1,15 @@
+@php
+    // Design G has its own standalone error page (no database, no layout); the old design below is unchanged.
+    if (\App\Support\Design::is('g')) {
+        $en = request()->segment(1) === 'en';
+        echo view('errors._g-standalone', [
+            'code' => '500', 'en' => $en,
+            'heading' => $en ? 'Something went wrong' : 'Нещо се обърка',
+            'text' => $en ? 'A technical error occurred. Please try again in a moment or email us at' : 'Възникна техническа грешка. Опитайте отново след малко или ни пишете на',
+        ])->render();
+        return;
+    }
+@endphp
 @php($en = request()->segment(1) === 'en')
 <!DOCTYPE html>
 <html lang="{{ $en ? 'en' : 'bg' }}">
