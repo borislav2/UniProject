@@ -106,8 +106,10 @@
         @php
             $fonts = [];
             if ($g) {
-                // Design g: only the two Cyrillic files of the first screen (heading and body); the small Latin ones load on their own. Manrope is not used.
-                foreach (['geologica-cyrillic-300', 'onest-cyrillic-400'] as $file) {
+                // Design g: the six files every first screen paints with (heading and body, Cyrillic and the small Latin part that carries
+                // spaces, digits and punctuation, plus the mono labels of the header). Without these the Latin and mono files are found only
+                // after the CSS is parsed, one request level deeper. Manrope is not used.
+                foreach (['geologica-cyrillic-300', 'onest-cyrillic-400', 'geologica-latin-300', 'onest-latin-400', 'jetbrains-mono-cyrillic-500', 'jetbrains-mono-latin-500'] as $file) {
                     $fonts[] = rescue(fn () => \Illuminate\Support\Facades\Vite::asset('resources/fonts/g/' . $file . '.woff2'), '', false);
                 }
             } else {

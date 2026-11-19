@@ -25,9 +25,19 @@ document.querySelectorAll('[data-g-billing-root]').forEach((root) => {
 });
 
 // Package cards on a phone (below 760px they are a swipeable row): start with the recommended card in the middle so both neighbours peek.
+// The geometry is read in a ResizeObserver callback (delivered after the browser has laid the page out, before it paints), so the startup
+// script never forces a layout of its own; the row is positioned once, in the same frame it first gets its size.
 document.querySelectorAll('.g-plans').forEach((row) => {
-    const rec = row.querySelector('.g-rec');
-    if (rec && row.scrollWidth > row.clientWidth + 1) row.scrollLeft = Math.max(0, rec.offsetLeft - (row.clientWidth - rec.offsetWidth) / 2);
+    const center = () => {
+        const rec = row.querySelector('.g-rec');
+        if (rec && row.scrollWidth > row.clientWidth + 1) row.scrollLeft = Math.max(0, rec.offsetLeft - (row.clientWidth - rec.offsetWidth) / 2);
+    };
+    if ('ResizeObserver' in window) {
+        const watcher = new ResizeObserver(() => { watcher.disconnect(); center(); });
+        watcher.observe(row);
+    } else {
+        requestAnimationFrame(() => requestAnimationFrame(center));
+    }
 });
 
 // Header dropdowns ("Услуги", "За нас"): hover and focus open them in CSS; the small button toggles (Enter and Space), Enter on a link follows it,
