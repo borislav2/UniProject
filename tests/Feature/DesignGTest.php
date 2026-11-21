@@ -199,8 +199,11 @@ class DesignGTest extends TestCase
         $html = $this->get('/')->assertOk()->getContent();
         $this->assertStringContainsString('data-g-bar', $html);
         $this->assertStringContainsString('Обадете се', $html);
-        $this->assertMatchesRegularExpression('/class="g-bar-call" href="tel:\+?[0-9]+"/', $html);
+        $this->assertMatchesRegularExpression('/class="g-bar-call" href="tel:\+?[0-9]+" aria-label="Обадете се"/', $html);
         $this->assertStringContainsString('class="g-bar-offer" href="#kontakt">Изпратете запитване', $html);
+        // The free website check sits in the phone bar and in the header.
+        $this->assertStringContainsString('class="g-bar-check" href="' . url('/proverka-na-sait') . '">Безплатна проверка', $html);
+        $this->assertStringContainsString('g-check" href="' . url('/proverka-na-sait') . '"', $html);
         $this->assertStringNotContainsString('Получете оферта', $html);
 
         // Inner pages carry it too, in English as well.
