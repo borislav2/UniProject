@@ -9,7 +9,16 @@
     $height = $height ?? 720;
     $sizes = $sizes ?? '(min-width: 1024px) 560px, calc(100vw - 32px)';
     $url = fn (string $file) => asset('images/kreo/' . $file) . '?v=' . (@filemtime(public_path('images/kreo/' . $file)) ?: 1);
+    // A middle size (720) when the file exists: a 560px box on desktop and a phone at about 2x then load 720, not 960.
+    $mid = $mid ?? 720;
 @endphp
 @foreach(['' => 'g-kreo-light', '-dark' => 'g-kreo-dark'] as $theme => $themeClass)
-    <img class="{{ trim(($class ?? '') . ' ' . $themeClass) }}" src="{{ $url($base . '-' . $wide . $theme . '.webp') }}" srcset="{{ $url($base . '-' . $narrow . $theme . '.webp') }} {{ $narrow }}w, {{ $url($base . '-' . $wide . $theme . '.webp') }} {{ $wide }}w" sizes="{{ $sizes }}" alt="" width="{{ $wide }}" height="{{ $height }}" @if(empty($eager))loading="lazy" @endif decoding="async">
+    @php
+        $set = [$narrow => $base . '-' . $narrow . $theme . '.webp'];
+        if ($mid > $narrow && $mid < $wide && is_file(public_path('images/kreo/' . $base . '-' . $mid . $theme . '.webp'))) {
+            $set[$mid] = $base . '-' . $mid . $theme . '.webp';
+        }
+        $set[$wide] = $base . '-' . $wide . $theme . '.webp';
+    @endphp
+    <img class="{{ trim(($class ?? '') . ' ' . $themeClass) }}" src="{{ $url($base . '-' . $wide . $theme . '.webp') }}" srcset="{{ collect($set)->map(fn ($file, $w) => $url($file) . ' ' . $w . 'w')->implode(', ') }}" sizes="{{ $sizes }}" alt="" width="{{ $wide }}" height="{{ $height }}" @if(empty($eager))loading="lazy" @endif decoding="async">
 @endforeach

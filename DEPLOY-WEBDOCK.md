@@ -75,6 +75,10 @@ sudo bash /var/www/creatiumlab/deploy/update-nginx.sh
 
 Проверка: `curl -sI https://creatiumlab.com/ | grep -i -E "strict|frame|nosniff|referrer|content-security"` трябва да покаже петте заглавки (същото и за адрес на картинка или файл от `/build/`).
 
+Скриптът включва и HTTP/2 на HTTPS реда на certbot (`listen 443 ssl http2;`) и по-силна gzip компресия (`/etc/nginx/conf.d/00-creatium-gzip.conf`: ниво 5, `Vary`, и `text/javascript`, `text/plain`, `application/xml` в `gzip_types`). На 21.11.2026 сайтът вървеше само на HTTP/1.1 с gzip ниво 1 и сървърът отговаряше за 0,5 до 0,9 s; това е основната причина за бавния Speed Index на телефон. Накрая скриптът казва дали PHP OPcache е включен; ако не е: `sudo dnf install -y php-opcache && sudo systemctl restart php-fpm`.
+
+Проверка: `curl -sI --http2 https://creatiumlab.com/ | head -1` трябва да покаже `HTTP/2 200`, а `curl -s -o /dev/null -w '%{time_starttransfer}\n' https://creatiumlab.com/` времето до първия байт.
+
 ## 6. Имейл от сървъра
 
 Изходящият порт 25 често е блокиран при VPS доставчици. Ползвайте SMTP на порт **587** (Google Workspace, Brevo, Mailgun, Postmark, Resend) и добавете SPF/DKIM/DMARC записите му в DNS. След `configure-env.sh` имейлите само се записват в лога (`MAIL_MAILER=log`), затова настройте SMTP веднъж с `bash deploy/configure-mail.sh` (като `deploy`; подробности в DEPLOY.md, раздел „Имейл“) и проверете с `php artisan creatium:test-mail`.

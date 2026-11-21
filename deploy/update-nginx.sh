@@ -2,13 +2,15 @@
 # Обновява вече работещата Nginx конфигурация (след certbot):
 #  - кеширане на статичните файлове (creatium-static.conf);
 #  - заглавки за сигурност (HSTS, CSP, X-Frame-Options, ...) за страниците и за статичните файлове
-#    (creatium-security.conf).
+#    (creatium-security.conf);
+#  - HTTP/2 за HTTPS (certbot не го включва) и по-силна gzip компресия (creatium-gzip.conf), за по-бърз сайт на телефон.
 # Безопасно е да се пусне повече от веднъж. Пуска се като root:  sudo bash deploy/update-nginx.sh
 set -euo pipefail
 
 CONF="/etc/nginx/conf.d/creatiumlab.conf"
 STATIC="/etc/nginx/creatium-static.conf"
 SECURITY="/etc/nginx/creatium-security.conf"
+GZIP="/etc/nginx/conf.d/00-creatium-gzip.conf"
 DIR="$(dirname "$0")"
 
 [ "$(id -u)" -eq 0 ] || { echo "Пуснете като root (с sudo)."; exit 1; }
@@ -47,10 +49,31 @@ awk -v inc="include $SECURITY;" '
     }' "$CONF" > "$CONF.tmp"
 cat "$CONF.tmp" > "$CONF" && rm -f "$CONF.tmp"
 
+# 4. HTTP/2 на HTTPS реда (nginx 1.20: "listen 443 ssl http2;"). Много файлове наведнъж по една връзка, важно на бавен телефон.
+sed -i -E '/http2/! s#^([[:space:]]*listen[[:space:]]+(\[::\]:)?443[[:space:]]+ssl)#\1 http2#' "$CONF"
+
+# 5. Компресия на ниво http: по-силна (5 вместо 1), Vary за кешовете, и за JavaScript с type text/javascript.
+#    gzip_types в сървърния блок остава, тук се добавят само нивото, Vary и минималният размер.
+cat > "$GZIP" <<'GZ'
+gzip_comp_level 5;
+gzip_vary on;
+gzip_min_length 256;
+gzip_proxied any;
+GZ
+command -v restorecon >/dev/null && restorecon "$GZIP" || true
+sed -i -E 's#^([[:space:]]*gzip_types )text/css application/javascript application/json image/svg\+xml;#\1text/css text/javascript application/javascript application/json image/svg+xml text/plain application/xml;#' "$CONF"
+
 if ! nginx -t; then
     cp "$BACKUP" "$CONF"
+    rm -f "$GZIP"
     echo "Грешка в конфигурацията: върнах старата ($BACKUP). Nginx не е презареден."
     exit 1
 fi
 systemctl reload nginx
-echo "Готово: статичните файлове се кешират 30 дни, заглавките за сигурност са включени навсякъде."
+echo "Готово: статичните файлове се кешират 30 дни, заглавките за сигурност са включени навсякъде, HTTP/2 и gzip ниво 5 са включени."
+# PHP: без OPcache всяка страница се компилира наново и сървърът отговаря бавно.
+if php -r 'exit((int) !(function_exists("opcache_get_status") && ini_get("opcache.enable")));' 2>/dev/null; then
+    echo "OPcache: включен."
+else
+    echo "ВНИМАНИЕ: OPcache изглежда изключен за PHP-FPM. Инсталирайте php-opcache (dnf install php-opcache) и рестартирайте php-fpm."
+fi
