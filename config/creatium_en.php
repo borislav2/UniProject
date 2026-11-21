@@ -1414,7 +1414,7 @@ return [
     'site_check_page' => [
         'title' => 'Find out exactly why your website is not bringing the customers you expect and how to change that',
         'text' => 'Most business owners feel their online presence could work much better, but do not know where to start. Our team will carry out a thorough, hands-on review of your website, your Google positions and your visibility in AI search, to give you a clear picture without empty talk.',
-        'meta_description' => 'Request a free audit of your website. The automatic report arrives by email within minutes, the personal review by a specialist within two working days.',
+        'meta_description' => 'Check your website for free. The automatic report reaches your inbox within minutes, and a specialist reviews it personally within two working days.',
         'domain_label' => 'Your website address',
         'email_label' => 'Business email',
         'goal_label' => 'What is your main goal right now',
@@ -1423,8 +1423,8 @@ return [
             'google' => 'Better ranking in Google',
             'speed' => 'A faster, more modern website',
         ],
-        'button' => 'Request your free audit',
-        'promise' => 'The automatic report arrives by email within minutes, and a personal review from a specialist on our team within two working days.',
+        'button' => 'Check my website',
+        'promise' => 'You get the automatic report by email within minutes. Within two working days a specialist on our team reviews it personally and writes to you.',
         'thanks_title' => 'The check has started',
         'thanks_text' => 'The automatic report for :domain will reach :email within minutes. You will get a personal review from a specialist on our team within two working days. If you do not see the email, check your Spam or Promotions folder.',
         'report_visual' => [
