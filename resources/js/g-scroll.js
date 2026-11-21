@@ -101,13 +101,14 @@ function story(root) {
     if (stp.length !== 4 || Object.values(el).some((v) => !v)) return; // the design is made for four steps; anything else stays the static list
     const WORD = el.typed.textContent;
     const B = [0, 0.22, 0.44, 0.64], END = 0.82;
-    let on = false, raf = 0, cur = 0, target = 0, range = 1, VW = 0, VH = 0, ws = 1, lastP = -1;
+    let on = false, raf = 0, cur = 0, target = 0, range = 1, VW = 0, VH = 0, ws = 1, lastP = -1, narrow = false;
 
     function measure() { // reads only
         range = Math.max(1, root.offsetHeight - stage.offsetHeight);
         VW = viz.clientWidth;
         VH = viz.clientHeight;
         ws = Math.min(VW / 610, VH / 640, 1.35);
+        narrow = VW < 500; // phone: the three result cards settle earlier and sit further apart, so nothing overlaps while step 02 is read
     }
 
     function textRender(q, P) {
@@ -172,9 +173,15 @@ function story(root) {
             const k = seg(p, a, b, eo), c = seg(p, 0.4, 0.47, eio);
             T(e, lerp(lerp(0, fx, k), 0, c), lerp(lerp(qy, fy, k), 0, c), lerp(lerp(0.3, 1, k), 0.4, c), seg(p, a, a + 0.035, lin) * (1 - seg(p, 0.4, 0.44, lin)));
         };
-        card(el.cg, 0.2, 0.27, 0, -85);
-        card(el.cm, 0.22, 0.29, -103, 88);
-        card(el.cc, 0.24, 0.31, 103, 88);
+        if (narrow) {
+            card(el.cg, 0.19, 0.24, 0, -98);
+            card(el.cm, 0.2, 0.25, -101, 100);
+            card(el.cc, 0.21, 0.26, 101, 100);
+        } else {
+            card(el.cg, 0.2, 0.27, 0, -85);
+            card(el.cm, 0.22, 0.29, -103, 88);
+            card(el.cc, 0.24, 0.31, 103, 88);
+        }
         const pa = seg(p, 0.42, 0.5, eo);
         T(el.ph, lerp(0, -128, t4), 0, lerp(0.7, 1, pa) * lerp(1, 0.86, t4), seg(p, 0.425, 0.455, lin) * lerp(1, 0.92, t4));
         sts.forEach((e, i) => {

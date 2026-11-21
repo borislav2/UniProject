@@ -132,8 +132,8 @@ html.design-g.dark .g-sc {
 
 /* still strip on narrow screens: the fixed-size mock-ups never exceed the screen */
 @media (max-width: 520px) {
-    .design-g .g-sc-q { width: 100%; font-size: 19px; padding: 0 14px; gap: 10px; }
-    .design-g .g-sc-cg { width: 100%; }
+    .design-g .g-sc:not(.is-on) .g-sc-q { width: 100%; font-size: 19px; padding: 0 14px; gap: 10px; }
+    .design-g .g-sc:not(.is-on) .g-sc-cg { width: 100%; }
     .design-g .g-sc-btns { margin-top: 28px; }
 }
 
