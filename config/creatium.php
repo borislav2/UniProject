@@ -38,11 +38,19 @@ return [
     ],
 
     // Google Tag Manager. По подразбиране е включен само в production; GTM_ID= (празно) в .env го изключва.
-    // Аналитиката и пикселите (GA4, Clarity, Meta) се настройват в GTM и тръгват само след съгласие в банера (Consent Mode v2).
+    // Аналитиката и пикселите (GA4, Meta) се настройват в GTM, Clarity е в кода (clarity_id по-долу), и тръгват само след съгласие в банера (Consent Mode v2).
     'gtm_id' => (function () {
         $id = (string) env('GTM_ID', env('APP_ENV') === 'production' ? 'GTM-5FWFH2B7' : '');
 
         return preg_match('/^GTM-[A-Z0-9]{4,12}$/', $id) ? $id : null;
+    })(),
+
+    // Microsoft Clarity (за Владимир, 21.11.2026): зарежда се от кода, но само след съгласие за аналитични бисквитки в банера
+    // и само когато има GTM (банерът е там). По подразбиране само в production; CLARITY_ID= (празно) в .env го изключва.
+    'clarity_id' => (function () {
+        $id = (string) env('CLARITY_ID', env('APP_ENV') === 'production' ? 'z4gl536rzv' : '');
+
+        return preg_match('/^[a-z0-9]{6,20}$/', $id) ? $id : null;
     })(),
 
     // Код за потвърждение в Google Search Console (метод „HTML tag“). Не е нужен, ако домейнът е потвърден през DNS.
