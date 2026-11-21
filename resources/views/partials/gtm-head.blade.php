@@ -13,6 +13,31 @@ gtag('set', 'ads_data_redaction', true);
     } catch (e) {}
 })();
 </script>
+@if(config('creatium.clarity_id'))
+{{-- Microsoft Clarity: never before consent. window.creatiumClarity() loads it once; it runs here for a stored "analytics yes"
+     (after the page has loaded) and from the cookie banner when the visitor accepts analytics. Withdrawing consent clears its
+     cookies and reloads the page, so it does not load again. --}}
+<script>
+(function () {
+    var started = false;
+    window.creatiumClarity = function () {
+        if (started) return;
+        started = true;
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", @json(config('creatium.clarity_id')));
+    };
+    try {
+        var c = JSON.parse(localStorage.getItem('creatium-consent'));
+        if (c && c.analytics && Date.now() - c.at < 31536000000) {
+            if (document.readyState === 'complete') { window.creatiumClarity(); } else { window.addEventListener('load', window.creatiumClarity); }
+        }
+    } catch (e) {}
+})();
+</script>
+@endif
 <!-- Google Tag Manager -->
 {{-- Loaded 2.5 s after the page has loaded, or at the visitor's first scroll, tap or key press, so the tags don't compete with the
      first paint on slow phones (PageSpeed). Events pushed before that, such as generate_lead, wait in dataLayer and are sent when it loads. --}}

@@ -63,6 +63,7 @@
         try { localStorage.setItem(KEY, JSON.stringify({analytics: analytics, marketing: marketing, at: Date.now()})); } catch (e) {}
         gtag('consent', 'update', {analytics_storage: analytics ? 'granted' : 'denied', ad_storage: marketing ? 'granted' : 'denied', ad_user_data: marketing ? 'granted' : 'denied', ad_personalization: marketing ? 'granted' : 'denied'});
         dataLayer.push({event: 'consent_update', consent_analytics: analytics, consent_marketing: marketing});
+        if (analytics && window.creatiumClarity) { window.creatiumClarity(); }
         banner.classList.add('hidden');
         if (previous && ((previous.analytics && !analytics) || (previous.marketing && !marketing))) {
             clearTrackingCookies();
