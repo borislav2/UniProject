@@ -211,20 +211,16 @@ class DesignGTest extends TestCase
         $this->get('/en')->assertOk()->assertSee('Call us')->assertSee('Send inquiry');
     }
 
-    public function test_the_hero_has_the_three_new_points_and_no_eyebrow_or_site_check_link(): void
+    public function test_the_hero_has_no_eyebrow_and_both_buttons(): void
     {
         config(['creatium.design' => 'g']);
         $html = $this->get('/')->assertOk()->getContent();
 
-        foreach (['Прозрачно бюджетно планиране', 'AI за маркетинг и криейтив', 'Стратегически брандинг'] as $line) {
-            $this->assertStringContainsString("<li>{$line}</li>", $html);
-        }
-        $hero = substr($html, strpos($html, 'class="g-hero"'), strpos($html, 'id="proekti"') - strpos($html, 'class="g-hero"'));
+        $hero = substr($html, strpos($html, 'class="g-sc"'), strpos($html, 'id="proekti"') - strpos($html, 'class="g-sc"'));
         $this->assertStringNotContainsString('g-eyebrow', $hero);
         $this->assertStringNotContainsString('Дигитална агенция', $hero);
-        $this->assertStringNotContainsString('Проверете сайта си безплатно', $hero);
-        $this->assertStringNotContainsString('/proverka-na-sait', $hero);
         $this->assertStringContainsString('Изпратете запитване', $hero);
+        $this->assertStringContainsString('/proverka-na-sait"', $hero);
 
         // The header uses the logo image (a white one for the dark theme), and every CTA reads „Изпратете запитване“.
         $this->assertStringContainsString('class="g-logo-d" src="' . asset('images/logo-g.webp') . '"', $html);
@@ -295,7 +291,7 @@ class DesignGTest extends TestCase
         $html = $this->get('/')->assertOk()->getContent();
         $this->assertStringContainsString('resources/css/g-lean.css', $html);
         $this->assertStringContainsString('resources/js/g-bar.js', $html);
-        $this->assertStringContainsString('resources/js/g-home.js', $html);
+        $this->assertStringContainsString('resources/js/g-scroll.js', $html);
         $this->assertStringNotContainsString('resources/css/app.css', $html);
         $this->assertStringNotContainsString('resources/js/app.js', $html);
 
@@ -934,7 +930,7 @@ class DesignGTest extends TestCase
         foreach (['g.css', 'g-pages.css', 'g-shared.css'] as $file) {
             $css .= file_get_contents(resource_path('css/' . $file));
         }
-        $js = file_get_contents(resource_path('js/g-home.js')) . file_get_contents(resource_path('js/g-bar.js'));
+        $js = file_get_contents(resource_path('js/g-scroll.js')) . file_get_contents(resource_path('js/g-bar.js'));
 
         $this->assertDoesNotMatchRegularExpression('/backdrop-filter|font-style:\s*italic|font:\s*italic|\bnoise\b|\bgrain\b/i', $css);
         $this->assertDoesNotMatchRegularExpression('/(?<!-)(linear|radial|conic)-gradient\((?!100deg|45deg|135deg|180deg)/', $css);

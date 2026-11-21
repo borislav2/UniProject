@@ -8,7 +8,7 @@
 
 @push('head')
 @include('partials.home-ld')
-@vite(['resources/js/g-home.js', 'resources/js/g-3d.js'])
+@vite(['resources/js/g-scroll.js', 'resources/js/g-3d.js'])
 @vite(['resources/js/g-kreo.js'])
 @endpush
 
@@ -30,7 +30,7 @@
         'text' => $p['text'] ?? '',
         'href' => filled($p['service'] ?? null) && isset($servicePages[$p['service']]) ? \App\Http\Controllers\PageController::serviceUrl($p['service']) : lroute('services'),
     ])->values();
-    $heroTrust = array_values(array_filter((array) ($trust['g_hero_points'] ?? [])));
+    $heroLead = filled($hero['g_highlight'] ?? null) ? $hero['g_highlight'] : ($hero['highlight'] ?? null);
 
     // Proof: only what really exists. A Google rating needs a review count, testimonials a quote, results a value and a text.
     $rating = (float) ($reviews['rating'] ?? 0);
@@ -43,25 +43,66 @@
 
 @section('content')
 
-{{-- Hero: a drifting topographic map behind the headline (the signature), then the six services as one row; all of it fits the first screen on a desktop --}}
-<section class="g-hero" aria-label="{{ __('Начало') }}">
-    <canvas id="g-topo" aria-hidden="true"></canvas>
-    <div class="g-wrap">
-        <h1 class="g-h" data-g-clear>{!! $accent($hero['title'], $hero['accent'] ?? []) !!}</h1>
-        @php
-            $heroLead = filled($hero['g_highlight'] ?? null) ? $hero['g_highlight'] : ($hero['highlight'] ?? null);
-        @endphp
-        @if(filled($heroLead))
-            <p class="g-lead" data-g-clear>{{ $heroLead }}</p>
-        @endif
-        <div class="g-cta">
-            <a class="g-btn" data-g-clear href="{{ g_offer_url() }}">{{ __('Изпратете запитване') }}<i></i></a>
-            <a class="g-btn g-ghost" data-g-clear href="{{ lroute('packages') }}">{{ __('Вижте пакетите') }}</a>
+{{-- Hero: the headline over faint contour lines, then (with JavaScript, no reduced motion) the screen stays pinned while four steps play beside one stage
+     (search, three results, a phone, the inquiry) and a compact closing releases the page. Without JavaScript, or with reduced motion, it is the hero, the four
+     steps as a list and a still visual. The headline is plain server-rendered text (the LCP), nothing starts hidden. Behaviour in resources/js/g-scroll.js. --}}
+@php
+    $storyQuery = (string) ($hero['g_story_query'] ?? '');
+    $storySteps = collect((array) ($hero['g_story'] ?? []))->filter(fn ($step) => filled($step['title'] ?? null))->values();
+@endphp
+<section class="g-sc" data-g-scene aria-label="{{ __('Начало') }}">
+    <div class="g-sc-stage">
+        <canvas class="g-sc-topo" aria-hidden="true"></canvas>
+        <div class="g-wrap">
+            <div class="g-sc-in">
+                <div class="g-sc-hero">
+                    <h1 class="g-h">{!! $accent($hero['title'], $hero['accent'] ?? []) !!}</h1>
+                    @if(filled($heroLead))<p class="g-sc-lead">{{ $heroLead }}</p>@endif
+                    <div class="g-sc-btns">
+                        <a class="g-btn" href="{{ g_offer_url() }}">{{ __('Изпратете запитване') }}<i></i></a>
+                        <a class="g-btn g-ghost" href="{{ lroute('site-check') }}">{{ __('Проверете сайта си') }}<i></i></a>
+                    </div>
+                </div>
+                @if($storySteps->isNotEmpty())
+                <div class="g-sc-txt">
+                    <div class="g-sc-prog" aria-hidden="true">@foreach($storySteps as $step)<i></i>@endforeach</div>
+                    <ol class="g-sc-stk">
+                        @foreach($storySteps as $step)
+                            <li class="g-sc-stp"><span class="g-mono">{{ sprintf('%02d', $loop->iteration) }}</span><h2>{{ $step['title'] }}</h2>@if(filled($step['text'] ?? null))<p>{{ $step['text'] }}</p>@endif</li>
+                        @endforeach
+                    </ol>
+                </div>
+                @endif
+                <div class="g-sc-end">
+                    @if(filled($heroLead))<p>{{ $heroLead }}</p>@endif
+                    <div class="g-sc-btns">
+                        <a class="g-btn" href="{{ g_offer_url() }}">{{ __('Изпратете запитване') }}<i></i></a>
+                        <a class="g-btn g-ghost" href="{{ lroute('site-check') }}">{{ __('Проверете сайта си') }}<i></i></a>
+                    </div>
+                </div>
+                @if(filled($hero['g_story_hint'] ?? null))<div class="g-sc-hint" aria-hidden="true"><span class="g-mono">{{ $hero['g_story_hint'] }}</span><i></i></div>@endif
+            </div>
         </div>
-        @if($heroTrust)
-            <ul class="g-trust" data-g-clear>
-                @foreach($heroTrust as $line)<li>{{ $line }}</li>@endforeach
-            </ul>
+        @if($storySteps->isNotEmpty())
+        {{-- The stage: decorative mock-ups only (labels go through __()), hidden from assistive technology --}}
+        <div class="g-sc-viz" aria-hidden="true"><div class="g-sc-cam">
+            <i class="g-sc-ln"></i><i class="g-sc-dot"></i><i class="g-sc-dot g-sc-dot2"></i>
+            <div class="k g-sc-q"><svg width="22" height="22" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="6" cy="6" r="4.5"/><path d="M9.5 9.5L14 14"/></svg><span><span class="g-sc-typed">{{ $storyQuery }}</span><span class="g-sc-caret"></span></span></div>
+            <div class="k g-sc-cg"><span class="ml">Google</span><div class="hit"><div class="u">{{ __('vashiyat-biznes.bg') }}</div><div class="tt">{{ __('Вашият бизнес') }}</div></div><i class="sk"></i></div>
+            <div class="k g-sc-cm"><svg width="194" height="98" viewBox="0 0 194 98"><rect class="m0" width="194" height="98"/><rect class="m1" x="14" y="12" width="52" height="30"/><rect class="m1" x="128" y="56" width="52" height="30"/><rect class="m1" x="132" y="10" width="40" height="26"/><g class="mr"><path d="M0 50H194"/><path d="M84 0V98"/><path d="M0 84L110 20"/></g><path class="mp" d="M84 66C74 54 70 49 70 42a14 14 0 1 1 28 0c0 7-4 12-14 24z"/><circle class="md" cx="84" cy="42" r="4.5"/></svg><span class="ml">Maps</span><div class="nm">{{ __('Вашият бизнес') }}</div><i class="sk"></i></div>
+            <div class="k g-sc-cc"><span class="ml">ChatGPT</span><div class="bu">{{ $storyQuery }}</div><div class="ba">{{ __('Препоръчвам') }} <b>{{ __('Вашият бизнес') }}</b></div></div>
+            <div class="k g-sc-ph"><div class="nb"></div><div class="pc">
+                <div class="tp st"><span>{{ __('Вашият бизнес') }}</span><s></s></div>
+                <div class="hero st"><span class="ml">{{ __('Услуги') }}</span><h3>{{ __('Вашият бизнес') }}</h3></div>
+                <div class="ln2 st"><i class="sk"></i><i class="sk"></i></div>
+                <div class="row1 st"><div class="b1">{{ __('Запазете консултация') }}</div><div class="b2">{{ __('Услуги') }}</div></div>
+                <div class="svc st"><i></i><div><i class="sk"></i><i class="sk"></i></div></div>
+                <div class="svc st"><i></i><div><i class="sk"></i><i class="sk"></i></div></div>
+                <div class="svc st"><i></i><div><i class="sk"></i><i class="sk"></i></div></div></div>
+                <div class="bar"><div>{{ __('Обадете се') }}</div></div></div>
+            <div class="k g-sc-iq"><span class="ring"></span><span class="ml">{{ __('Запитване') }}</span><div class="t">{{ __('Ново запитване') }}</div><div class="d">{{ __('Вашият бизнес') }}</div>
+                <div class="tk"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 8.5L6.5 12.5L13.5 4" stroke-dasharray="16"/></svg>{{ __('Нов клиент') }}</div></div>
+        </div></div>
         @endif
     </div>
 </section>
