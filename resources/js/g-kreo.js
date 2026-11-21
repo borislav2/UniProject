@@ -102,7 +102,8 @@ if (section) {
             current = -1;
             window[on ? 'addEventListener' : 'removeEventListener']('scroll', onScroll, { passive: true });
             window[on ? 'addEventListener' : 'removeEventListener']('resize', onScroll, { passive: true });
-            if (on) sync(); else stop();
+            // The class change above invalidates layout: read the position in the next frame, not right away (no forced reflow at start).
+            if (on) onScroll(); else stop();
         }
         if (on && near) load();
     }
