@@ -123,6 +123,10 @@ html.design-g.dark .g-logo .g-logo-w { display: block; }
 .design-g .g-tbtn:hover { border-color: var(--g-ink); background: color-mix(in srgb, var(--g-ink) 8%, transparent); }
 .design-g .g-offer { display: none; margin-left: 8px; }
 @media (min-width: 640px) { .design-g .g-offer { display: inline-flex; } }
+/* „Безплатна проверка“ in the header: beside the offer button where the nav leaves room (phones have it in the bottom bar) */
+.design-g .g-check { display: none; margin-left: 8px; }
+.design-g .g-tools .g-btn { white-space: nowrap; }
+@media (min-width: 768px) and (max-width: 899px), (min-width: 1180px) { .design-g .g-check { display: inline-flex; } }
 @media (min-width: 900px) { .design-g .g-nav { display: flex; } .design-g .g-tools { margin-left: 0; } .design-g .g-burger { display: none; } }
 .design-g .g-burger.is-open .g-b1 { transform: translateY(3px) rotate(45deg); transform-origin: center; transform-box: fill-box; }
 .design-g .g-burger.is-open .g-b2 { transform: translateY(-3px) rotate(-45deg); transform-origin: center; transform-box: fill-box; }
@@ -361,9 +365,12 @@ html.design-g { --g-accent-on-band: #FF5A33; }
 /* Phone bar (below 768px) and the chat button: the chat is a small round button above the bar and never covers the content */
 .design-g .g-bar { display: none; }
 @media (max-width: 767px) {
-    .design-g .g-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: grid; grid-template-columns: 1fr 1.3fr; background: var(--g-bg); border-top: 1px solid var(--g-line-strong); padding-bottom: env(safe-area-inset-bottom, 0px); transition: transform .3s; }
+    .design-g .g-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: grid; grid-template-columns: 56px 1fr 1fr; background: var(--g-bg); border-top: 1px solid var(--g-line-strong); padding-bottom: env(safe-area-inset-bottom, 0px); transition: transform .3s; }
     .design-g .g-bar.is-off { transform: translateY(100%); }
-    .design-g .g-bar a { display: flex; align-items: center; justify-content: center; height: 56px; font: 500 15px var(--g-body); color: var(--g-ink); text-decoration: none; }
+    .design-g .g-bar a { display: flex; align-items: center; justify-content: center; height: 56px; padding: 0 8px; font: 500 14px/1.2 var(--g-body); text-align: center; color: var(--g-ink); text-decoration: none; }
+    .design-g .g-bar:not(:has(.g-bar-call)) { grid-template-columns: 1fr 1fr; }
+    .design-g .g-bar .g-bar-call { border-right: 1px solid var(--g-line); }
+    .design-g .g-bar .g-bar-check { color: var(--g-accent-text); }
     .design-g .g-bar .g-bar-offer { background: var(--g-ink); color: var(--g-on-ink); }
     .design-g .g-ft { padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
     .design-g .g-preview { bottom: calc(68px + env(safe-area-inset-bottom, 0px)); }

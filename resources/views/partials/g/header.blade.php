@@ -52,6 +52,7 @@
             <button type="button" class="g-tbtn" data-theme-toggle aria-label="{{ __('Тъмна тема') }}" aria-pressed="false">
                 <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.8a6.2 6.2 0 0 0 0 12.4z" fill="currentColor"/></svg>
             </button>
+            <a class="g-btn g-sm g-ghost g-check" href="{{ lroute('site-check') }}" @if($is('site-check')) aria-current="page" @endif>{{ __('Безплатна проверка') }}</a>
             <a class="g-btn g-sm g-offer" href="{{ $gOffer }}">{{ __('Изпратете запитване') }}</a>
             <button type="button" class="mobile-menu-button g-tbtn g-burger" aria-label="{{ __('Меню') }}" aria-expanded="false" aria-controls="mobile-menu">
                 <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path class="g-b1" d="M2 6h14" stroke="currentColor" stroke-width="1.4"/><path class="g-b2" d="M2 12h14" stroke="currentColor" stroke-width="1.4"/></svg>
