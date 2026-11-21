@@ -59,7 +59,7 @@
                         <div class="g-fld">
                             <label class="g-chk">
                                 <input type="checkbox" name="consent" value="1" {{ old('consent') ? 'checked' : '' }}@error('consent') aria-invalid="true" aria-describedby="err-consent"@enderror>
-                                <span>{!! __('Съгласен/на съм да използвате имейла ми, за да ми изпратите отчета и да се свържете с мен за него. Прочетох :link.', ['link' => '<a href="' . e(lroute('privacy')) . '" target="_blank">' . e(__('Политиката за поверителност')) . '</a>']) !!}</span>
+                                <span>{!! __('Съгласявам се да ми изпратите отчета на този имейл и да се свържете с мен за него. Прочетох :link.', ['link' => '<a href="' . e(lroute('privacy')) . '" target="_blank">' . e(__('Политиката за поверителност')) . '</a>']) !!}</span>
                             </label>
                             @error('consent')<p class="g-err" id="err-consent">{{ $message }}</p>@enderror
                         </div>

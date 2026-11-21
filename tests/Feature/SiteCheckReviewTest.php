@@ -116,7 +116,7 @@ class SiteCheckReviewTest extends TestCase
             'без празни приказки',
             'Адрес на вашия уебсайт', 'Служебен имейл', 'Коя е основната ви цел в момента',
             'Повече запитвания', 'По-добро класиране в Google', 'По-бърз и модерен сайт',
-            'Заявете безплатния си одит',
+            'Проверете сайта ми',
             'Скорост на зареждане', 'Мобилна използваемост', 'Техническо SEO', 'Видимост в AI търсачките',
             'Защо този преглед е различен от автоматичните онлайн инструменти',
             'Поглед през очите на вашия реален клиент', 'Диагностика на техническите спирачки', 'Тест за видимост в новите AI търсачки', 'Конкретен план с приоритети',
@@ -152,7 +152,7 @@ class SiteCheckReviewTest extends TestCase
 
         foreach ([
             'Find out exactly why your website is not bringing the customers you expect', 'Your website address', 'Business email', 'What is your main goal right now',
-            'More enquiries', 'Better ranking in Google', 'A faster, more modern website', 'Request your free audit',
+            'More enquiries', 'Better ranking in Google', 'A faster, more modern website', 'Check my website',
             'Loading speed', 'Mobile usability', 'Technical SEO', 'Visibility in AI search',
             'Why this review is different from automatic online tools', 'Mobile experience', 'AI citation', 'Frequently asked questions',
             'within two working days',

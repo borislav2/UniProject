@@ -70,7 +70,7 @@
                         <div>
                             <label class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
                                 <input type="checkbox" name="consent" value="1" class="mt-1 accent-brand-600" {{ old('consent') ? 'checked' : '' }}>
-                                <span>{!! __('Съгласен/на съм да използвате имейла ми, за да ми изпратите отчета и да се свържете с мен за него. Прочетох :link.', ['link' => '<a href="' . e(lroute('privacy')) . '" target="_blank" class="text-brand-700 underline dark:text-brand-300">' . e(__('Политиката за поверителност')) . '</a>']) !!}</span>
+                                <span>{!! __('Съгласявам се да ми изпратите отчета на този имейл и да се свържете с мен за него. Прочетох :link.', ['link' => '<a href="' . e(lroute('privacy')) . '" target="_blank" class="text-brand-700 underline dark:text-brand-300">' . e(__('Политиката за поверителност')) . '</a>']) !!}</span>
                             </label>
                             @error('consent')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
                         </div>
