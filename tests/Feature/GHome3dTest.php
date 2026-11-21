@@ -32,7 +32,7 @@ class GHome3dTest extends TestCase
     public function test_home_loads_the_3d_script_with_the_other_home_scripts(): void
     {
         $view = file_get_contents(resource_path('views/g/home.blade.php'));
-        $this->assertStringContainsString("@vite(['resources/js/g-home.js', 'resources/js/g-3d.js'])", $view);
+        $this->assertStringContainsString("@vite(['resources/js/g-scroll.js', 'resources/js/g-3d.js'])", $view);
         $this->assertStringContainsString('resources/js/g-3d.js', file_get_contents(base_path('vite.config.js')));
         $this->assertStringContainsString('./g-3d.css', file_get_contents(resource_path('css/g-lean.css')));
         // Small, dependency free and not a bundle of its own libraries.
@@ -87,17 +87,11 @@ class GHome3dTest extends TestCase
         }
     }
 
-    public function test_the_hero_markup_is_unchanged(): void
+    public function test_the_hero_is_the_scroll_scene_without_3d_markers(): void
     {
-        $hero = $this->section($this->home(), '<section class="g-hero"') . '</section>';
-        // The structure with every text and link value removed: it must stay exactly as it was before the 3D work.
-        $shape = preg_replace('/\s+/', ' ', preg_replace(['/>[^<]+</u', '/(aria-label|href)="[^"]*"/u'], ['><', '$1=""'], $hero));
-        $this->assertSame(
-            '<section class="g-hero" aria-label=""><canvas id="g-topo" aria-hidden="true"></canvas><div class="g-wrap"><h1 class="g-h" data-g-clear><em></em></h1>'
-            . '<p class="g-lead" data-g-clear></p><div class="g-cta"><a class="g-btn" data-g-clear href=""><i></i></a><a class="g-btn g-ghost" data-g-clear href=""></a></div>'
-            . '<ul class="g-trust" data-g-clear><li></li><li></li><li></li></ul></div></section>',
-            trim($shape)
-        );
+        $hero = $this->section($this->home(), '<section class="g-sc"') . '</section>';
+        $this->assertStringContainsString('data-g-scene', $hero);
+        $this->assertStringNotContainsString('g-topo', $hero);
         foreach (['g-laptops', 'g-globe', 'data-g-tilt'] as $marker) {
             $this->assertStringNotContainsString($marker, $hero);
         }

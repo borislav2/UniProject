@@ -50,11 +50,10 @@ class GNoOldDesignTest extends TestCase
     public function test_the_hero_subtitle_is_a_real_class_with_a_strong_colour_and_enough_contrast(): void
     {
         $html = $this->get('/')->assertOk()->getContent();
-        $this->assertMatchesRegularExpression('/<p class="g-lead" data-g-clear>[^<]+<\/p>/u', $html);
-        $this->assertStringContainsString('class="g-trust"', $html);
+        $this->assertMatchesRegularExpression('/<p class="g-sc-lead">[^<]+<\/p>/u', $html);
 
         $css = file_get_contents(resource_path('css/g.css'));
-        $this->assertMatchesRegularExpression('/\.design-g \.g-hero \.g-lead, \.design-g \.g-hero \.g-trust \{ color: var\(--g-ink\); text-shadow:[^}]*var\(--g-bg\)/', $css, 'the hero subtitle uses the ink colour with a halo in the page colour');
+        $this->assertMatchesRegularExpression('/\.design-g \.g-sc-lead \{[^}]*color: var\(--g-mute\)/', file_get_contents(resource_path('css/g-scroll.css')), 'the hero subtitle uses a token colour');
 
         // Contrast of the ink on the page colour, light and dark, from the tokens themselves (WCAG 2.x).
         $token = fn (string $block, string $name) => preg_match('/' . preg_quote($name, '/') . ': (#[0-9A-Fa-f]{6})/', $block, $m) ? $m[1] : $this->fail("missing $name");

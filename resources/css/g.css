@@ -158,25 +158,12 @@ html.design-g.dark .g-logo .g-logo-w { display: block; }
 html.chat-open .g-preview { display: none; }
 .design-g .g-preview:hover { background: var(--g-accent-btn); color: var(--g-accent-btn-fg); }
 
-/* Hero: the headline, one sentence, two buttons and three short points. The accent word is the only coloured word of the site. */
-.design-g .g-hero { position: relative; overflow: hidden; }
-.design-g .g-hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; -webkit-mask-image: linear-gradient(100deg, rgba(0,0,0,.4) 0%, rgba(0,0,0,.75) 40%, #000 70%); mask-image: linear-gradient(100deg, rgba(0,0,0,.4) 0%, rgba(0,0,0,.75) 40%, #000 70%); }
-.design-g .g-hero .g-wrap { position: relative; display: flex; flex-direction: column; padding-top: clamp(48px, 9vh, 104px); padding-bottom: clamp(48px, 9vh, 96px); }
+/* Hero: see g-scroll.css (home only). Shared: lead, cta */
 .design-g .g-ph-note { margin-top: 16px; }
 .design-g .g-code { color: var(--g-mute); margin-bottom: 16px; }
-.design-g .g-hero h1 { font-size: clamp(2.3rem, 4.6vw, 4.4rem); max-width: 17em; }
-.design-g .g-hero h1 em { font-style: normal; color: var(--g-accent); font-weight: 400; }
 .design-g .g-goal h2 em { font-style: normal; font-weight: 400; }
 .design-g .g-lead { margin-top: 20px; max-width: 36em; font-size: clamp(1.05rem, 1.3vw, 1.2rem); color: var(--g-mute); line-height: 1.55; }
 .design-g .g-cta { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; }
-.design-g .g-trust { margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; list-style: none; color: var(--g-mute); font-size: 15px; }
-.design-g .g-trust li { display: flex; align-items: center; gap: 8px; }
-.design-g .g-trust li::before { content: ""; width: 5px; height: 5px; background: var(--g-mute); flex: none; }
-/* Hero text over the contour lines: near-ink colour, a little larger, and a halo in the page colour so a line never cuts through a letter (text only, the canvas is untouched) */
-.design-g .g-hero .g-lead, .design-g .g-hero .g-trust { color: var(--g-ink); text-shadow: 0 0 2px var(--g-bg), 0 0 8px var(--g-bg), 0 0 16px var(--g-bg), 0 0 28px var(--g-bg); }
-.design-g .g-hero .g-lead { font-size: clamp(1.15rem, 1.55vw, 1.4rem); line-height: 1.5; max-width: 34em; }
-.design-g .g-hero .g-trust { font-size: 16px; }
-.design-g .g-hero .g-trust li::before { background: var(--g-accent); }
 
 /* The six services under the hero: two columns of hairline rows, a real title and a readable text each */
 .design-g .g-svc-home { padding-block: 0 !important; }
@@ -429,9 +416,7 @@ html.design-g { --g-accent-on-band: #FF5A33; }
 @media (max-width: 520px) {
     .design-g .g-hd-in { height: 60px; gap: 8px; }
     .design-g .g-logo img { height: 26px; }
-    .design-g .g-hero .g-cta .g-btn { flex: 1 1 100%; }
     .design-g .g-price { font-size: 2.6rem; }
-    .design-g .g-hero canvas { opacity: .55; }
     .design-g .g-mm { max-height: calc(100svh - 60px); }
 }
 @media (prefers-reduced-motion: reduce) { .design-g *, .design-g *::before, .design-g *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
