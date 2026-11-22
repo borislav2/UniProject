@@ -135,7 +135,9 @@ class StarterBlogPosts
                 // Корица по избор ('cover' = път под public/): само ако файлът съществува.
                 'cover_image' => isset($post['cover']) && is_file(public_path($post['cover'])) ? $post['cover'] : null,
                 'status' => $status,
-                'published_at' => $status === 'published' ? $dates[$i] : null,
+                // A post can carry its own 'publish_at' (Sofia time, 'Y-m-d H:i'), e.g. the daily posts: three a day at fixed hours.
+                'published_at' => $status !== 'published' ? null
+                    : (isset($post['publish_at']) ? Carbon::parse($post['publish_at'], 'Europe/Sofia')->utc() : $dates[$i]),
             ]);
             $added++;
         }
