@@ -59,8 +59,12 @@ class DailyBlogPostsTest extends TestCase
 
                 // Links: only real pages, never blog posts; then strip URLs before the punctuation checks.
                 preg_match_all('/\]\(([^)]+)\)/', $post['body'], $links);
-                $this->assertGreaterThanOrEqual(1, count($links[1]), "$id has no internal link");
+                $this->assertGreaterThanOrEqual(1, count(array_filter($links[1], fn ($l) => str_starts_with($l, '/'))), "$id has no internal link");
                 foreach ($links[1] as $link) {
+                    // News articles may also link to their real source (external https); internal links stay on the allowed pages.
+                    if (str_starts_with($link, 'https://') && ! str_contains($link, 'creatiumlab.com')) {
+                        continue;
+                    }
                     $this->assertContains($link, $allowedLinks, "$id links to $link");
                 }
                 $text = $post['title'] . "\n" . $post['excerpt'] . "\n" . preg_replace('/\]\([^)]+\)/', ']', $post['body']);
