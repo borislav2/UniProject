@@ -336,7 +336,7 @@
     "Вижте": "See",
     "Имате въпроси?": "Have questions?",
     "Събрали сме отговорите на най-честите въпроси за цени, срокове и работа с нас.": "We have collected the answers to the most common questions about prices, timing and working with us.",
-    "Отговори на най-честите въпроси за цени, плащане, срокове, Google и AI видимост и грижата за сайта след пускането.": "Answers to the most common questions about prices, payment, timing, Google and AI visibility and looking after the site after launch.",
+    "Отговори за цени, плащане, срокове, Google и AI видимост и грижата за сайта след пускането.": "Answers about prices, payment, timing, Google and AI visibility and looking after the site after launch.",
     "Цени, срокове, Google и AI, грижата след пускането. Ако не намерите отговор, попитайте ни директно.": "Prices, timing, Google and AI, care after launch. If you don't find an answer, ask us directly.",
     "Теми": "Topics",
     "Не намерихте отговор?": "Didn't find an answer?",
@@ -604,7 +604,7 @@
     "Вижте сайта": "View the site",
     "Сайтовете по браншове са на български.": "The industry websites are in Bulgarian.",
     "Проекти и сайтове за ресторант, хотел, салон и автосервиз": "Websites for a restaurant, hotel, salon and car repair",
-    "Сайтове за ресторант, хотел, салон, фитнес, зъболекар, адвокат, автосервиз, покриви, имоти и онлайн магазин. Вижте сайт, който носи запитвания.": "Websites for a restaurant, hotel, salon, gym, dentist, law firm, car repair, roofing, real estate and an online shop. See a website that brings enquiries.",
+    "Сайтове за ресторант, хотел, салон, фитнес, зъболекар, адвокат, автосервиз, покриви, имоти и магазин. Вижте сайт, който носи запитвания.": "Websites for a restaurant, hotel, salon, gym, dentist, law firm, car repair, roofing, property and a shop. See a site that brings enquiries.",
     "Имате ли примери, портфолио или проекти, които сте правили?": "Do you have examples, a portfolio or projects you have built?",
     "Вижте нашите проекти и сайтовете за различни браншове.": "See our projects and the websites for different industries.",
     "Новини": "News",
@@ -888,5 +888,6 @@
     "Вижте пакетите ни": "See our packages",
     "Можете и просто да отговорите на този имейл или да ни звъннете на": "You can also simply reply to this email or call us on",
     "Можете и просто да отговорите на този имейл.": "You can also simply reply to this email.",
-    "Проверката е автоматична и гледа техническите основи на сайта. Не оценява качеството на текстовете и профила в Google Business, не знае как сайтът се подрежда в Google и не показва дали носи запитвания.": "The check is automatic and looks at the technical basics of the site. It does not judge the quality of the texts or the Google Business profile, does not know how the site ranks in Google and does not show whether it brings enquiries."
+    "Проверката е автоматична и гледа техническите основи на сайта. Не оценява качеството на текстовете и профила в Google Business, не знае как сайтът се подрежда в Google и не показва дали носи запитвания.": "The check is automatic and looks at the technical basics of the site. It does not judge the quality of the texts or the Google Business profile, does not know how the site ranks in Google and does not show whether it brings enquiries.",
+    "Kreo и екипът от AI агенти": "Kreo and the team of AI agents"
 }

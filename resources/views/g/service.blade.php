@@ -58,7 +58,7 @@
         @if($isWebsite && ! empty($vis['hero']))<div class="g-svc-fig">{!! view('partials.g.svc.website', ['slot' => 'hero', 'v' => $vis['hero'], 'page' => $page])->render() !!}</div>@endif
         @if($key === 'ai_agents')
             {{-- The three robot team (sales, support, the internal team), a still rendered with tools/kreo; the names on the plates are the departments of the map below --}}
-            <figure class="g-svc-fig g-svc-team">@include('partials.g.kreo-still', ['base' => 'team-' . (app()->getLocale() === 'en' ? 'en' : 'bg'), 'wide' => 1200, 'narrow' => 600, 'height' => 720, 'sizes' => '(min-width: 900px) 640px, calc(100vw - 32px)'])</figure>
+            <figure class="g-svc-fig g-svc-team">@include('partials.g.kreo-still', ['base' => 'team-' . (app()->getLocale() === 'en' ? 'en' : 'bg'), 'wide' => 1200, 'narrow' => 600, 'height' => 720, 'sizes' => '(min-width: 900px) 640px, calc(100vw - 32px)', 'alt' => __('Kreo и екипът от AI агенти')])</figure>
         @endif
     </div>
 </section>

@@ -1,7 +1,7 @@
 <article class="reveal card-hover group rounded-2xl border border-gray-200 bg-white overflow-hidden flex flex-col dark:border-white/10 dark:bg-white/[0.03]">
     <a href="{{ $post->url() }}" class="block aspect-[16/9] bg-brand-50 overflow-hidden dark:bg-white/5" tabindex="-1" aria-hidden="true">
         @if($post->cover_image)
-            <img src="{{ asset($post->cover_image) }}" alt="" width="640" height="360" loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]">
+            <img src="{{ asset($post->cover_image) }}" alt="{{ $post->tr('title') }}" width="640" height="360" loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]">
         @else
             <span class="w-full h-full bg-brand-gradient flex items-center justify-center"><x-icon name="file" class="text-3xl text-white/40" /></span>
         @endif

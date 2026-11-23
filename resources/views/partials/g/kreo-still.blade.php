@@ -1,6 +1,6 @@
 {{--
     A pre-rendered Kreo still (tools/kreo/render.mjs, public/images/kreo): two files per theme, shown by the theme class, each with a 2 size srcset and its real
-    width and height. Decorative (alt empty): the text beside it says everything. $base = file name without size and theme ('kreo-1-bg', 'team-en'),
+    width and height. $alt = short description (give one; empty only for a pure repeat). $base = file name without size and theme ('kreo-1-bg', 'team-en'),
     $wide / $narrow = the two widths, $height = height of the wide one, $class, $sizes, $eager (no lazy loading).
 --}}
 @php
@@ -20,5 +20,5 @@
         }
         $set[$wide] = $base . '-' . $wide . $theme . '.webp';
     @endphp
-    <img class="{{ trim(($class ?? '') . ' ' . $themeClass) }}" src="{{ $url($base . '-' . $wide . $theme . '.webp') }}" srcset="{{ collect($set)->map(fn ($file, $w) => $url($file) . ' ' . $w . 'w')->implode(', ') }}" sizes="{{ $sizes }}" alt="" width="{{ $wide }}" height="{{ $height }}" @if(empty($eager))loading="lazy" @endif decoding="async">
+    <img class="{{ trim(($class ?? '') . ' ' . $themeClass) }}" src="{{ $url($base . '-' . $wide . $theme . '.webp') }}" srcset="{{ collect($set)->map(fn ($file, $w) => $url($file) . ' ' . $w . 'w')->implode(', ') }}" sizes="{{ $sizes }}" alt="{{ $alt ?? '' }}" width="{{ $wide }}" height="{{ $height }}" @if(empty($eager))loading="lazy" @endif decoding="async">
 @endforeach

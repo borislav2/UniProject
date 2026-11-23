@@ -28,7 +28,7 @@
     <div class="g-wrap g-hd-in">
         <a class="g-logo" href="{{ lroute('home') }}" aria-label="{{ __('Creatium Lab, начало') }}">
             <img class="g-logo-d" src="{{ asset('images/logo-g.webp') }}" srcset="{{ asset('images/logo-g-224.webp') }} 224w, {{ asset('images/logo-g-352.webp') }} 352w, {{ asset('images/logo-g.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" width="445" height="64" fetchpriority="high">
-            <img class="g-logo-w" src="{{ asset('images/logo-g-dark.webp') }}" srcset="{{ asset('images/logo-g-dark-224.webp') }} 224w, {{ asset('images/logo-g-dark-352.webp') }} 352w, {{ asset('images/logo-g-dark.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="" aria-hidden="true" width="445" height="64">
+            <img class="g-logo-w" src="{{ asset('images/logo-g-dark.webp') }}" srcset="{{ asset('images/logo-g-dark-224.webp') }} 224w, {{ asset('images/logo-g-dark-352.webp') }} 352w, {{ asset('images/logo-g-dark.webp') }} 445w" sizes="(min-width: 768px) 223px, 195px" alt="Creatium Lab" aria-hidden="true" width="445" height="64">
         </a>
         <nav class="g-nav" aria-label="{{ __('Основна навигация') }}">
             @foreach($gNav as [$label, $href, $active, $children, $ddKey])

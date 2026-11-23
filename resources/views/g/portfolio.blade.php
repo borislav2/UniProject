@@ -2,7 +2,7 @@
 
 {{-- /proekti in design G: one grid of equal 16:10 previews, real projects first, then the industry sites, with no label. --}}
 @section('title', __('Проекти и сайтове за ресторант, хотел, салон и автосервиз'))
-@section('meta_description', __('Сайтове за ресторант, хотел, салон, фитнес, зъболекар, адвокат, автосервиз, покриви, имоти и онлайн магазин. Вижте сайт, който носи запитвания.'))
+@section('meta_description', __('Сайтове за ресторант, хотел, салон, фитнес, зъболекар, адвокат, автосервиз, покриви, имоти и магазин. Вижте сайт, който носи запитвания.'))
 @section('g_lean', 'inner')
 
 @php

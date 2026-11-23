@@ -50,7 +50,7 @@
 
             @if($posts->hasPages())
                 <nav class="g-pager" aria-label="{{ __('Страници') }}">
-                    @if($posts->onFirstPage())<span></span>@else<a class="g-btn g-ghost g-sm" href="{{ $posts->previousPageUrl() }}" rel="prev">{{ __('По-нови') }}</a>@endif
+                    @if($posts->onFirstPage())<span></span>@else<a class="g-btn g-ghost g-sm" href="{{ page_url($posts, $posts->currentPage() - 1) }}" rel="prev">{{ __('По-нови') }}</a>@endif
                     <span class="g-mono g-mute">{{ __('Страница :current от :last', ['current' => $posts->currentPage(), 'last' => $posts->lastPage()]) }}</span>
                     @if($posts->hasMorePages())<a class="g-btn g-ghost g-sm" href="{{ $posts->nextPageUrl() }}" rel="next">{{ __('По-стари') }}</a>@else<span></span>@endif
                 </nav>

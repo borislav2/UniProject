@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', __('Въпроси за изработка на сайт, цена, срокове и SEO'))
-@section('meta_description', __('Отговори на най-честите въпроси за цени, плащане, срокове, Google и AI видимост и грижата за сайта след пускането.'))
+@section('meta_description', __('Отговори за цени, плащане, срокове, Google и AI видимост и грижата за сайта след пускането.'))
 @section('g_lean', 'inner')
 
 @push('head')

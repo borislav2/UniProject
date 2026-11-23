@@ -38,14 +38,19 @@
 
         // SEO: values from the controller (blog posts) or the admin's per-page settings override the view's defaults.
         $seo = array_filter($seo ?? [], 'filled') ?: app(\App\Support\Content::class)->seo($routeName);
-        // „ | Creatium Lab“ отпада, когато заглавието стане над 70 знака (Google иначе го реже по средата).
-        // Страница 2 и следващите на списък (блог) получават свое заглавие и описание, за да не повтарят първата страница.
-        $pageNote = ($pageNumber ?? 1) > 1 ? ' ' . __('страница :n', ['n' => $pageNumber]) : '';
-        $baseTitle = trim($__env->yieldContent('title', __('Сайтове и дигитален маркетинг за бизнеси')) . $pageNote);
-        $pageTitle = $seo['meta_title'] ?? (mb_strlen($baseTitle) + 15 > 60 ? $baseTitle : $baseTitle . ' | Creatium Lab');
+        // „ | Creatium Lab“ отпада, когато цялото заглавие заедно с него би надхвърлило 60 знака (Google иначе го реже).
+        // Страница 2 и следващите на списък (блог) получават свое заглавие и описание („…, страница 2“), дори когато заглавието и
+        // описанието идват от администрацията, за да не повтарят първата страница.
+        $pageLabel = ($pageNumber ?? 1) > 1 ? __('страница :n', ['n' => $pageNumber]) : '';
+        $baseTitle = trim($__env->yieldContent('title', __('Сайтове и дигитален маркетинг за бизнеси')));
+        $titleNote = $pageLabel !== '' ? ', ' . $pageLabel : '';
+        $pageTitle = isset($seo['meta_title'])
+            ? $seo['meta_title'] . $titleNote
+            : (mb_strlen($baseTitle . $titleNote) + mb_strlen(' | Creatium Lab') > 60 ? $baseTitle . $titleNote : $baseTitle . $titleNote . ' | Creatium Lab');
         $pageDescription = $seo['meta_description'] ?? trim($__env->yieldContent('meta_description', __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.')));
-        if ($pageNote !== '' && ! isset($seo['meta_description'])) {
-            $pageDescription = rtrim($pageDescription, '.') . $pageNote . '.';
+        if ($pageLabel !== '') {
+            $descNote = ' ' . mb_strtoupper(mb_substr($pageLabel, 0, 1)) . mb_substr($pageLabel, 1) . '.';
+            $pageDescription = \App\Support\Seo\Snippet::fit($pageDescription, 155 - mb_strlen($descNote)) . $descNote;
         }
         $canonicalUrl = $seo['canonical_url'] ?? ($canonical ?? url()->current());
         // Share image in the G style. Images are cached for a year and social networks cache by URL, so the files carry new names:
@@ -366,9 +371,6 @@
                     @if(config('creatium.gtm_id'))
                         <a href="#" data-cookie-settings class="hover:text-white">{{ __('Настройки за бисквитки') }}</a>
                     @endif
-                    @guest
-                        <a href="{{ route('login') }}" rel="nofollow" class="hover:text-white">{{ __('Вход за екипа') }}</a>
-                    @endguest
                 </div>
             </div>
         </div>
@@ -377,7 +379,7 @@
     @endif
 
     @if($gPreview)
-        <a href="?dizain=star" class="g-preview" rel="nofollow">{{ __('Преглед на новия дизайн') }} <span aria-hidden="true">·</span> {{ __('Изход') }}</a>
+        <a href="?dizain=star" class="g-preview">{{ __('Преглед на новия дизайн') }} <span aria-hidden="true">·</span> {{ __('Изход') }}</a>
     @endif
 
     @if(config('creatium.chat.enabled'))

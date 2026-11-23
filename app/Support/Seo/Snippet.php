@@ -18,6 +18,38 @@ class Snippet
 
     public const TITLE_PX = 580;
 
+    /**
+     * A description that fits $max characters: whole when it fits, else cut after the last full sentence that leaves at least
+     * DESC_MIN characters, else at the last word with "…". Never ends on a dash, colon, comma or semicolon. The layout (post
+     * fallback) and the admin preview (PostSeo) both use it, so they stay equal.
+     */
+    public static function fit(string $text, int $max = self::DESC_MAX): string
+    {
+        $text = trim((string) preg_replace('/\s+/u', ' ', $text));
+        if (mb_strlen($text) <= $max) {
+            return $text;
+        }
+
+        $head = mb_substr($text, 0, $max + 1);
+        // The last sentence end (. ! ?) that is followed by a space or the cut, inside the limit.
+        if (preg_match_all('/[.!?…](?=\s|$)/u', $head, $m, PREG_OFFSET_CAPTURE)) {
+            foreach (array_reverse($m[0]) as [, $byte]) {
+                $len = mb_strlen(substr($head, 0, $byte)) + 1;
+                if ($len >= self::DESC_MIN && $len <= $max) {
+                    return mb_substr($head, 0, $len);
+                }
+            }
+        }
+
+        $cut = mb_substr($text, 0, $max - 1);
+        // Back to the last whole word (the next character was a space when the cut is already on a boundary).
+        if (mb_substr($text, $max - 1, 1) !== ' ' && ($pos = mb_strrpos($cut, ' ')) !== false && $pos > 0) {
+            $cut = mb_substr($cut, 0, $pos);
+        }
+
+        return rtrim($cut, " ,;:.-–—") . '…';
+    }
+
     public static function length(?string $text): int
     {
         return mb_strlen(trim((string) $text));
