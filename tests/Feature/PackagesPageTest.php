@@ -75,7 +75,7 @@ class PackagesPageTest extends TestCase
         $this->assertStringNotContainsStringIgnoringCase('безплатно демо', $plans);
         $this->assertStringNotContainsStringIgnoringCase('free demo', $plans);
         $this->assertStringNotContainsString('не се връща', $plans);
-        $this->assertSame('Фиксирана цена, записана в офертата', config('creatium.home_problem.system_trust')[1]['text']);
+        $this->assertSame('Фиксирана цена, записана в офертата', config('creatium.home_problem.system_trust')[0]['text']);
 
         $this->get('/usloviya')->assertOk()
             ->assertSee('Плащате само месечен абонамент според избрания пакет.')
