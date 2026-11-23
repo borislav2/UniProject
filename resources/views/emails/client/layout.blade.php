@@ -41,8 +41,10 @@
 
 <tr><td class="g-pad" style="padding:26px {{ $pad }}px 0;"><div style="border-top:1px solid #D9DBDE;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
 <tr><td class="g-pad" style="padding:22px {{ $pad }}px 30px;{{ $f }}font-size:14px;line-height:1.6;color:#0C0E12;">
-@php($signature = $data['sender'] ?? __('Екипът на Creatium Lab'))
+@php($signature = $data['sender'] ?? (trim($__env->yieldContent('sender')) ?: __('Екипът на Creatium Lab')))
 {{ __('С уважение,') }}<br><strong style="color:#0C0E12;">{{ $signature }}</strong>@unless(str_contains($signature, 'Creatium Lab'))<br><span style="color:#5A6068;">Creatium Lab</span>@endunless
+@hasSection('after_signature')<br>@yield('after_signature')
+@endif
 </td></tr>
 @hasSection('ps')
 <tr><td class="g-pad" style="padding:0 {{ $pad }}px 30px;{{ $f }}font-size:14px;line-height:1.6;color:#4A5058;"><strong style="color:#0C0E12;">P.S.</strong> @yield('ps')</td></tr>

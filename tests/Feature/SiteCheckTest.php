@@ -114,7 +114,8 @@ class SiteCheckTest extends TestCase
             $this->assertSame(100, $mail->report['home_score']);
             $this->assertSame([], array_values(array_filter($mail->report['issues'], fn ($i) => $i['severity'] !== 'notice')));
             $html = $mail->render();
-            $this->assertStringContainsString('Искам подробен одит', $html);
+            $this->assertStringContainsString('Запазете разговор', $html);
+            $this->assertStringContainsString('/kontakti#konsultatsiya', $html);
             $this->assertStringContainsString('Заглавие за Google', $html);
 
             return $mail->hasTo('ivan@firma.bg') && $mail->hasReplyTo(config('creatium.contact.email'));
@@ -148,7 +149,7 @@ class SiteCheckTest extends TestCase
                 $this->assertContains($expected, $titles);
             }
             $this->assertLessThan(50, $mail->report['score']);
-            $this->assertStringContainsString('Какво да оправите', $mail->render());
+            $this->assertStringContainsString('Най-важното, което открихме', $mail->render());
 
             return true;
         });
@@ -218,7 +219,8 @@ class SiteCheckTest extends TestCase
         $this->post('/en/website-check', ['domain' => 'firma.bg', 'email' => 'ivan@firma.bg', 'consent' => '1'])->assertRedirect('/en/website-check');
 
         Mail::assertSent(SiteCheckReportMail::class, function ($mail) {
-            $this->assertStringContainsString('I want a detailed audit', $mail->render());
+            $this->assertStringContainsString('Book a call', $mail->render());
+            $this->assertStringContainsString('/en/contact#konsultatsiya', $mail->render());
             $this->assertMatchesRegularExpression('/^Check of firma\.bg, score (9\d|100) out of 100$/', $mail->envelope()->subject);
 
             return true;

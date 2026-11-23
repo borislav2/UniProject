@@ -174,9 +174,9 @@ class ShoppingReadinessTest extends TestCase
             $this->assertNotNull($mail->report['shopping']);
             $html = $mail->render();
             $this->assertStringContainsString('Готовност за Google Shopping', $html);
-            $this->assertStringContainsString('Страница за доставка', $html);
-            $this->assertStringContainsString('GTIN или MPN на продуктите', $html);
-            $this->assertStringContainsString('Липсва GTIN или MPN на 1 от 1 продукта.', $html);
+            $this->assertStringContainsString('Днес 8 от 9 неща са наред.', $html);
+            // Подробният списък е част от личния преглед, не от имейла.
+            $this->assertStringNotContainsString('GTIN или MPN на продуктите', $html);
             $this->assertStringContainsString('/uslugi/podgotovka-za-google-shopping', $html);
 
             return true;
@@ -204,7 +204,8 @@ class ShoppingReadinessTest extends TestCase
         Mail::assertSent(SiteCheckReportMail::class, function ($mail) {
             $html = $mail->render();
             $this->assertStringContainsString('Google Shopping readiness', $html);
-            $this->assertStringContainsString('Shipping page', $html);
+            $this->assertStringContainsString('Today 9 of 9 things are in order.', $html);
+            $this->assertStringNotContainsString('Shipping page', $html);
             $this->assertStringContainsString('/en/services/google-shopping-readiness', $html);
             $this->assertStringNotContainsString('Готовност за Google Shopping', $html);
 

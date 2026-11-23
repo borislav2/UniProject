@@ -160,12 +160,13 @@ class SiteCrawlTest extends TestCase
             $this->assertSame(5, $mail->report['crawl']['analyzed']);
             $this->assertLessThan(100, $mail->report['score']);
             $html = $mail->render();
-            $this->assertStringContainsString('Какво да оправите първо', $html);
+            $this->assertStringContainsString('Най-важното, което открихме', $html);
             $this->assertStringContainsString('Счупени вътрешни връзки, 404 (1)', $html);
-            $this->assertStringContainsString('https://firma.bg/stara', $html);
+            // Точните страници са част от личния преглед, не от имейла.
+            $this->assertStringNotContainsString('https://firma.bg/stara', $html);
             $this->assertSame([], PlainCopyTest::offences(PlainCopyTest::visibleText($html)));
-            $this->assertStringContainsString('Проверихме 5 страници', $html);
-            $this->assertStringContainsString('Искам подробен одит', $html);
+            $this->assertStringContainsString('Обходихме 5 страници', $html);
+            $this->assertStringContainsString('Запазете разговор', $html);
 
             return true;
         });
@@ -194,7 +195,7 @@ class SiteCrawlTest extends TestCase
             $html = $mail->render();
             $this->assertStringContainsString('Broken internal links, 404 (1)', $html);
             $this->assertSame([], PlainCopyTest::offences(PlainCopyTest::visibleText($html)));
-            $this->assertStringContainsString('What to fix first', $html);
+            $this->assertStringContainsString('The most important things we found', $html);
             $this->assertStringNotContainsString('Счупени', $html);
 
             return true;
