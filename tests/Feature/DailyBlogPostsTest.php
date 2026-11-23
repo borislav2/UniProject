@@ -59,8 +59,12 @@ class DailyBlogPostsTest extends TestCase
 
                 // Links: only real pages, never blog posts; then strip URLs before the punctuation checks.
                 preg_match_all('/\]\(([^)]+)\)/', $post['body'], $links);
-                $this->assertGreaterThanOrEqual(1, count($links[1]), "$id has no internal link");
+                $this->assertGreaterThanOrEqual(1, count(array_filter($links[1], fn ($l) => str_starts_with($l, '/'))), "$id has no internal link");
                 foreach ($links[1] as $link) {
+                    // News articles may also link to their real source (external https); internal links stay on the allowed pages.
+                    if (str_starts_with($link, 'https://') && ! str_contains($link, 'creatiumlab.com')) {
+                        continue;
+                    }
                     $this->assertContains($link, $allowedLinks, "$id links to $link");
                 }
                 $text = $post['title'] . "\n" . $post['excerpt'] . "\n" . preg_replace('/\]\([^)]+\)/', ']', $post['body']);
@@ -81,5 +85,36 @@ class DailyBlogPostsTest extends TestCase
         foreach ($perDay as $day => $ids) {
             $this->assertCount(3, $ids, "$day should have three articles");
         }
+    }
+
+    public function test_every_daily_article_has_a_cover_and_a_g_version(): void
+    {
+        foreach ($this->files() as $file) {
+            foreach (StarterBlogPosts::data($file)['posts'] as $post) {
+                $this->assertSame('images/blog/' . $post['slug'] . '.webp', $post['cover'] ?? null, $post['slug']);
+                $this->assertFileExists(public_path($post['cover']), $post['slug']);
+                $this->assertFileExists(public_path('images/blog/g/' . $post['slug'] . '.webp'), $post['slug']);
+                $this->assertFileExists(public_path('images/blog/g/' . $post['slug'] . '-640.webp'), $post['slug']);
+            }
+        }
+    }
+
+    public function test_fill_covers_fills_blank_and_never_overwrites(): void
+    {
+        $file = $this->files()[0];
+        $posts = StarterBlogPosts::data($file)['posts'];
+        // Already imported without a cover, as on the live site.
+        StarterBlogPosts::import(file: $file);
+        Post::query()->update(['cover_image' => null]);
+        $kept = Post::where('slug->bg', $posts[0]['slug'])->firstOrFail();
+        $kept->update(['cover_image' => 'uploads/blog/own.webp']);
+
+        $count = StarterBlogPosts::fillCovers($file);
+
+        $this->assertSame(count($posts) - 1, $count);
+        $this->assertSame('uploads/blog/own.webp', $kept->fresh()->cover_image, 'An existing cover is never overwritten');
+        $second = Post::where('slug->bg', $posts[1]['slug'])->firstOrFail();
+        $this->assertSame($posts[1]['cover'], $second->cover_image);
+        $this->assertSame(0, StarterBlogPosts::fillCovers($file), 'A second run changes nothing');
     }
 }

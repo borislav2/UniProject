@@ -106,6 +106,29 @@ class StarterBlogPosts
     }
 
     /**
+     * Слага корици на статии, които вече са в базата (import() пропуска съществуващите): за всяка статия от $file с 'cover',
+     * чийто файл съществува, и само ако cover_image още е празен (по български адрес). Каквото е качено или сменено, не се пипа.
+     * Връща броя на пълнените.
+     */
+    public static function fillCovers(string $file): int
+    {
+        $filled = 0;
+        foreach (self::data($file)['posts'] as $data) {
+            if (empty($data['cover']) || ! is_file(public_path($data['cover']))) {
+                continue;
+            }
+            $post = Post::where('slug->bg', $data['slug'])->first();
+            if ($post && blank($post->cover_image)) {
+                $post->cover_image = $data['cover'];
+                $post->save();
+                $filled++;
+            }
+        }
+
+        return $filled;
+    }
+
+    /**
      * Добавя статиите, които още ги няма (по адрес на български). Връща броя на добавените.
      * С $status = 'draft' влизат като чернови без дата: собствениците ги преглеждат и публикуват от админа.
      */
