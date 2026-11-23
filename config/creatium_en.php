@@ -1421,7 +1421,7 @@ return [
     'site_check_page' => [
         'title' => 'Find out exactly why your website is not bringing the customers you expect and how to change that',
         'text' => 'Most business owners feel their online presence could work much better, but do not know where to start. Our team will carry out a thorough, hands-on review of your website, your Google positions and your visibility in AI search, to give you a clear picture without empty talk.',
-        'meta_description' => 'Check your website for free. The automatic report reaches your inbox within minutes, and a specialist reviews it personally within two working days.',
+        'meta_description' => 'Check your website for free. The report reaches your inbox within minutes, and a specialist reviews it personally within two working days.',
         'domain_label' => 'Your website address',
         'email_label' => 'Business email',
         'goal_label' => 'What is your main goal right now',

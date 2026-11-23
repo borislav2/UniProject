@@ -196,3 +196,13 @@ if (! function_exists('g_cover_srcset')) {
         return asset($small) . ' 640w, ' . asset($full) . ' 1200w';
     }
 }
+
+if (! function_exists('page_url')) {
+    /** Link to page $page of a paginator; page 1 is the clean list address, never "?page=1" (a duplicate of it). */
+    function page_url(\Illuminate\Contracts\Pagination\Paginator $paginator, int $page): string
+    {
+        $url = $paginator->url(max(1, $page));
+
+        return $page <= 1 ? (string) preg_replace('/[?&]page=1(?=&|$)/', '', $url) : $url;
+    }
+}

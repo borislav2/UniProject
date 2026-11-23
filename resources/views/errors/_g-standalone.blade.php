@@ -48,7 +48,7 @@
 <body>
     <main>
         <img class="logo light" src="/images/logo-g.webp" alt="Creatium Lab" width="209" height="30">
-        <img class="logo dark" src="/images/logo-g-dark.webp" alt="" aria-hidden="true" width="209" height="30">
+        <img class="logo dark" src="/images/logo-g-dark.webp" alt="Creatium Lab" aria-hidden="true" width="209" height="30">
         @if(filled($code))<p class="code">{{ $code }}</p>@endif
         <h1>{{ $heading }}</h1>
         @php($links = $links ?? $code !== '503')

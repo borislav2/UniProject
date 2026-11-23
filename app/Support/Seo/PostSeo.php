@@ -29,12 +29,13 @@ class PostSeo
 
     public static function effectiveDescription(Post $post, string $locale): ?string
     {
+        // Own description as written; the fallback (excerpt or the start of the text) is cut at a sentence or word to fit Google.
         return $post->tr('meta_description', $locale) ?? ($post->tr('title', $locale) ? self::summary($post, $locale) : null);
     }
 
     private static function summary(Post $post, string $locale): string
     {
-        return $post->excerptOrSummary($locale);
+        return Snippet::fit($post->excerptOrSummary($locale, 400));
     }
 
     /** @return list<array{id: string, label: string, state: string, detail: string}> state: ok | warn | bad */

@@ -47,7 +47,7 @@ class BlogController extends Controller
             'ogType' => 'article',
             'seo' => [
                 'meta_title' => $post->tr('meta_title'),
-                'meta_description' => $post->tr('meta_description') ?? $post->excerptOrSummary(),
+                'meta_description' => \App\Support\Seo\PostSeo::effectiveDescription($post, $locale),
                 'canonical_url' => $post->tr('canonical_url'),
                 'og_title' => $post->tr('og_title'),
                 'og_description' => $post->tr('og_description'),

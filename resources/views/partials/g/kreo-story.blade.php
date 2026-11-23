@@ -20,7 +20,7 @@
                         @foreach($kreoSteps as $step)
                             <li class="g-kreo-step{{ $loop->first ? ' is-active' : '' }}" data-g-step data-short="{{ $step['short'] ?? '' }}">
                                 <figure class="g-kreo-still">
-                                    @include('partials.g.kreo-still', ['base' => 'kreo-' . $loop->iteration . ($loop->first ? '-' . $kreoLang : '')])
+                                    @include('partials.g.kreo-still', ['base' => 'kreo-' . $loop->iteration . ($loop->first ? '-' . $kreoLang : ''), 'alt' => $step['title']])
                                 </figure>
                                 <span class="g-n g-mono">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
                                 <h3>{{ $step['title'] }}</h3>
@@ -31,7 +31,7 @@
                     <div class="g-kreo-bar" aria-hidden="true"><i></i></div>
                 </div>
                 <div class="g-kreo-stage" data-g-kreo-stage aria-hidden="true">
-                    @include('partials.g.kreo-still', ['base' => 'kreo-1-' . $kreoLang, 'class' => 'g-kreo-poster', 'eager' => false])
+                    @include('partials.g.kreo-still', ['base' => 'kreo-1-' . $kreoLang, 'class' => 'g-kreo-poster', 'eager' => false, 'alt' => $kreoSteps[0]['title']])
                 </div>
             </div>
         </div>

@@ -51,7 +51,7 @@
                     @if($posts->onFirstPage())
                         <span></span>
                     @else
-                        <a href="{{ $posts->previousPageUrl() }}" rel="prev" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-5 py-2.5 font-semibold text-brand-950 hover:border-brand-300 dark:border-white/15 dark:text-white"><x-icon name="arrow-left" class="text-xs" /> {{ __('По-нови') }}</a>
+                        <a href="{{ page_url($posts, $posts->currentPage() - 1) }}" rel="prev" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-5 py-2.5 font-semibold text-brand-950 hover:border-brand-300 dark:border-white/15 dark:text-white"><x-icon name="arrow-left" class="text-xs" /> {{ __('По-нови') }}</a>
                     @endif
                     <span class="text-sm text-gray-500 dark:text-gray-400">{{ __('Страница :current от :last', ['current' => $posts->currentPage(), 'last' => $posts->lastPage()]) }}</span>
                     @if($posts->hasMorePages())

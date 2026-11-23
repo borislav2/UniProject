@@ -85,7 +85,7 @@ class GKreoTest extends TestCase
             $block = $this->section($this->get($path)->getContent());
             $this->assertSame(0, preg_match('#<img(?![^>]*\swidth="\d+"[^>]*\sheight="\d+")[^>]*>#', $block), 'every still has width and height');
             foreach ([$first, 'kreo-2', 'kreo-3', 'kreo-4'] as $base) {
-                $this->assertMatchesRegularExpression('#<img class="g-kreo-light" src="[^"]*/images/kreo/' . $base . '-960\.webp\?v=\d+" srcset="[^"]*' . $base . '-480\.webp\?v=\d+ 480w, [^"]*' . $base . '-960\.webp\?v=\d+ 960w"[^>]*alt="" width="960" height="720"#', $block, $base);
+                $this->assertMatchesRegularExpression('#<img class="g-kreo-light" src="[^"]*/images/kreo/' . $base . '-960\.webp\?v=\d+" srcset="[^"]*' . $base . '-480\.webp\?v=\d+ 480w, [^"]*' . $base . '-960\.webp\?v=\d+ 960w"[^>]*alt="[^"]+" width="960" height="720"#', $block, $base);
                 $this->assertStringContainsString($base . '-960-dark.webp', $block);
             }
             $this->assertStringNotContainsString('<canvas', $block, 'the canvas is made by the script, never by the page');
@@ -149,7 +149,7 @@ class GKreoTest extends TestCase
         $this->g();
         foreach (['bg', 'en'] as $lang) {
             $html = $this->get(PageController::serviceUrl('ai_agents', $lang))->assertOk()->getContent();
-            $this->assertMatchesRegularExpression('#<figure class="g-svc-fig g-svc-team">\s*<img class="g-kreo-light" src="[^"]*/images/kreo/team-' . $lang . '-1200\.webp\?v=\d+" srcset="[^"]*team-' . $lang . '-600\.webp\?v=\d+ 600w, [^"]*team-' . $lang . '-1200\.webp\?v=\d+ 1200w"[^>]*alt="" width="1200" height="720"#', $html);
+            $this->assertMatchesRegularExpression('#<figure class="g-svc-fig g-svc-team">\s*<img class="g-kreo-light" src="[^"]*/images/kreo/team-' . $lang . '-1200\.webp\?v=\d+" srcset="[^"]*team-' . $lang . '-600\.webp\?v=\d+ 600w, [^"]*team-' . $lang . '-1200\.webp\?v=\d+ 1200w"[^>]*alt="[^"]+" width="1200" height="720"#', $html);
             $this->assertStringContainsString('team-' . $lang . '-1200-dark.webp', $html);
             $this->assertStringNotContainsString('data-g-kreo', $html, 'no WebGL on the AI agents page');
             // The department names on the plates are the ones of the map on the same page.
