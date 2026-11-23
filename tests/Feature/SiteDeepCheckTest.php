@@ -427,8 +427,8 @@ class SiteDeepCheckTest extends TestCase
 
     public function test_the_email_is_sorted_into_areas_in_both_languages_and_follows_the_copy_rules(): void
     {
-        foreach (['bg' => ['Какво да оправите първо', 'Оценка по области', 'Техническо', 'Видимост в AI', 'Локално и доверие', 'Проследяване', 'Съдържание и заглавия', 'Искам подробен одит'],
-            'en' => ['What to fix first', 'Score by area', 'Technical', 'AI visibility', 'Local and trust', 'Tracking', 'Content and titles', 'I want a detailed audit']] as $locale => $needles) {
+        foreach (['bg' => ['Най-важното, което открихме', 'Оценка по области', 'Техническо', 'Видимост в AI', 'Локално и доверие', 'Проследяване', 'Съдържание и заглавия', 'Кои сме', 'Борислав, Владимир и Мария, Creatium Lab<', 'Запазете разговор', '/kontakti#konsultatsiya', '/paketi', 'къщи за гости', 'личния преглед и разговора с екипа', '/uslugi/izrabotka-na-sait', '/uslugi/seo-i-ai-vidimost'],
+            'en' => ['The most important things we found', 'Score by area', 'Technical', 'AI visibility', 'Local and trust', 'Tracking', 'Content and titles', 'Who we are', 'Borislav, Vladimir and Maria, Creatium Lab<', 'Book a call', '/en/contact#konsultatsiya', '/en/packages', 'guest houses', 'personal review and the conversation with the team', '/en/services/website-design', '/en/services/seo-and-ai-visibility']] as $locale => $needles) {
             $report = $this->fullReport($locale);
             $html = (new SiteCheckReportMail($report))->render();
 
@@ -442,7 +442,10 @@ class SiteDeepCheckTest extends TestCase
             if ($locale === 'en') {
                 $this->assertDoesNotMatchRegularExpression('/\p{Cyrillic}/u', preg_replace(['#https?://\S+#', '/“[^”]*”/u'], '', PlainCopyTest::visibleText($html)), 'English email has no Cyrillic');
             }
-            // Най-много 5 неща на област и няма твърдения за позиции или резултати.
+            // Няма дълги списъци, примери и безплатни инструкции, консултацията не е наречена безплатна.
+            $this->assertStringNotContainsString('Например', $html);
+            $this->assertStringNotContainsString('Искам подробен одит', $html);
+            $this->assertDoesNotMatchRegularExpression('/free (call|consultation)|безплатн\w* (разговор|консултация)/iu', preg_replace('/Безплатна проверка на сайт|Free website check/u', '', PlainCopyTest::visibleText($html)));
             $this->assertStringNotContainsStringIgnoringCase('ranking', preg_replace('/not a position in Google|do not promise a result|how the site ranks in Google|affects rankings/i', '', $html));
         }
         app()->setLocale('bg');
@@ -486,6 +489,7 @@ class SiteDeepCheckTest extends TestCase
             $report = $old + ['reachable' => true, 'url' => 'https://stariat.bg/'];
             $html = (new SiteCheckReportMail($report))->render();
             $this->assertStringContainsString($locale === 'bg' ? 'Оценка по области' : 'Score by area', $html);
+            $this->assertStringContainsString($locale === 'bg' ? 'Запазете разговор' : 'Book a call', $html);
             $this->assertSame([], PlainCopyTest::offences(PlainCopyTest::visibleText($html)), $locale);
         }
         app()->setLocale('bg');
