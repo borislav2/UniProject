@@ -82,4 +82,35 @@ class DailyBlogPostsTest extends TestCase
             $this->assertCount(3, $ids, "$day should have three articles");
         }
     }
+
+    public function test_every_daily_article_has_a_cover_and_a_g_version(): void
+    {
+        foreach ($this->files() as $file) {
+            foreach (StarterBlogPosts::data($file)['posts'] as $post) {
+                $this->assertSame('images/blog/' . $post['slug'] . '.webp', $post['cover'] ?? null, $post['slug']);
+                $this->assertFileExists(public_path($post['cover']), $post['slug']);
+                $this->assertFileExists(public_path('images/blog/g/' . $post['slug'] . '.webp'), $post['slug']);
+                $this->assertFileExists(public_path('images/blog/g/' . $post['slug'] . '-640.webp'), $post['slug']);
+            }
+        }
+    }
+
+    public function test_fill_covers_fills_blank_and_never_overwrites(): void
+    {
+        $file = $this->files()[0];
+        $posts = StarterBlogPosts::data($file)['posts'];
+        // Already imported without a cover, as on the live site.
+        StarterBlogPosts::import(file: $file);
+        Post::query()->update(['cover_image' => null]);
+        $kept = Post::where('slug->bg', $posts[0]['slug'])->firstOrFail();
+        $kept->update(['cover_image' => 'uploads/blog/own.webp']);
+
+        $count = StarterBlogPosts::fillCovers($file);
+
+        $this->assertSame(count($posts) - 1, $count);
+        $this->assertSame('uploads/blog/own.webp', $kept->fresh()->cover_image, 'An existing cover is never overwritten');
+        $second = Post::where('slug->bg', $posts[1]['slug'])->firstOrFail();
+        $this->assertSame($posts[1]['cover'], $second->cover_image);
+        $this->assertSame(0, StarterBlogPosts::fillCovers($file), 'A second run changes nothing');
+    }
 }

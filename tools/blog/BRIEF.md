@@ -50,3 +50,11 @@ Before writing, open database/data/blog-posts.php in /home/user/UniProject and c
 11. **Titles.** 45 to 65 characters. The title starts with the phrase people would type into Google. No colon, no dash, no question mark spam.
 
 After writing, re-read every article and fix any violation: search your file for "–", "—", " - ", ":" (outside the PHP syntax and URLs) and the banned phrases.
+
+## Covers
+
+Every new daily article needs a cover, or the blog shows it without a picture. For each new batch of articles (details in `tools/blog-covers/README.md`):
+1. **Scene.** In `tools/blog-covers/cover-g.html` add one hand drawn scene per new slug (the key is the slug). Design G: light surface, ink, thin frames, one orange accent, simple UI mock-ups and icons that show the article's own idea (a price breakdown, an inbox with a subject line, a Search Console graph, a map with pins). Every scene is different. Visible text follows the owners' rule: no dashes, no colons except clock times and URLs, no invented statistics, short labels only. Do not touch existing scenes. Use only icons that exist in `icons.json`.
+2. **Render.** `PLAYWRIGHT_PATH=/opt/node22/lib/node_modules/playwright/index.mjs node tools/blog-covers/render-g.mjs -o /tmp/covers <slugs>`, look at every PNG and fix clipping and overlaps, then `php tools/blog-covers/render-g.php /tmp/covers 88` (writes `public/images/blog/g/{slug}.webp` and `{slug}-640.webp`). Also copy the 1200 version to `public/images/blog/{slug}.webp`: the post's `cover_image` is that path, `g_cover()` maps it to the G file, and the share image and JSON-LD use the original.
+3. **Data file.** Add `'cover' => 'images/blog/{slug}.webp'` to each post in `database/data/daily-*.php`. `DailyBlogPostsTest` fails when a daily post has no cover or the G files are missing.
+4. **Live posts.** Posts already on the live site are skipped by `import()`, so ship a migration that calls `StarterBlogPosts::fillCovers('<file>')` for the new files (example `2026_11_24_000001_daily_blog_covers.php`, skipped in tests). It sets `cover_image` only where it is blank and never overwrites a cover the owners set.
