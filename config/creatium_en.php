@@ -131,7 +131,7 @@ return [
             'The website is ready, the ads are running, and the phone stays silent.',
             'We saw it again and again. A business pays one person for the website and another for ads. Each does their part, but nobody answers the simple question of whether customers are coming.',
             'So we work as one team. Borislav builds the website and the technical side, Vladimir makes sure people find you and contact you. We answer for the whole path, from the first visit to the first enquiry, and after.',
-            'You talk directly to the people who do the work. The price is written in the offer, and you get a reply within one working day. We are with you all the way to results.',
+            'The price is written in the offer, and you get a reply within one working day. We are with you all the way to results.',
         ],
     ],
 
@@ -222,7 +222,6 @@ return [
             ],
         ],
         'system_trust' => [
-            ['icon' => 'handshake', 'text' => 'You talk directly to the people who work for you'],
             ['icon' => 'tag', 'text' => 'A fixed price, written in the quote'],
             ['icon' => 'reply', 'text' => 'A reply within one working day'],
         ],
@@ -460,7 +459,7 @@ return [
         'principle_items' => [
             ['title' => 'Customer first, decoration second', 'text' => 'Every page leads to one action. That is a call, an inquiry or a purchase. The design serves that.'],
             ['title' => 'We measure, we don\'t guess', 'text' => 'Every website starts with Google Analytics and Search Console. You see where inquiries come from.'],
-            ['title' => 'We are with you all the way to launch', 'text' => 'You work directly with the people who build your website and marketing. Your questions don\'t go through account managers.'],
+            ['title' => 'We are with you all the way to launch', 'text' => 'We stay with you after launch. We watch the website, reply within one working day and send you a report every month.'],
             ['title' => 'Everything is in your name', 'text' => 'The domain, profiles and access are yours from day one. If you ever leave, you take everything.'],
         ],
         'demos_eyebrow' => 'Industries',
