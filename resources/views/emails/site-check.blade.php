@@ -129,7 +129,7 @@
 <div style="padding-top:26px;">@include('emails.client._parts', $lbl(__('Кои сме')))</div>
 <div style="font-family:Geologica,Segoe UI,Arial,sans-serif;font-size:22px;line-height:1.3;font-weight:300;color:#0C0E12;padding-top:8px;">{{ __('Екип от трима души, който се грижи за сайта ви') }}</div>
 <div style="{{ $f }}font-size:15px;line-height:1.65;color:#4A5058;padding-top:10px;">{{ __('Creatium Lab е екип от трима души, :names. Започнахме го, защото малките български фирми получават или евтин сайт, за който после никой не се грижи, или голяма агенция, която не могат да си позволят.', ['names' => $teamNames]) }}</div>
-<div style="{{ $f }}font-size:15px;line-height:1.65;color:#4A5058;padding-top:10px;">{{ __('Искаме един екип, който изгражда сайта и го поддържа работещ и видим. Говорите директно с хората, които вършат работата.') }}</div>
+<div style="{{ $f }}font-size:15px;line-height:1.65;color:#4A5058;padding-top:10px;">{{ __('Искаме един екип, който изгражда сайта и го поддържа работещ и видим.') }}</div>
 <div style="{{ $f }}font-size:15px;line-height:1.65;color:#4A5058;padding-top:10px;">{{ __('Работим с малки и средни фирми и услуги, например клиники, счетоводители, къщи за гости, автосервизи и онлайн магазини.') }}</div>
 </td></tr>
 
