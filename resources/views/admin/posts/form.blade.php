@@ -125,10 +125,10 @@
                 <select id="user_id" name="user_id" class="{{ $input }}">
                     @foreach($authors as $user)
                         @php $person = \App\Support\Schema::personForUser($user->name); @endphp
-                        <option value="{{ $user->id }}" @selected((int) old('user_id', $post->user_id ?? auth()->id()) === $user->id)>{{ $user->name }}{{ $person ? '' : ' (фирмата)' }}</option>
+                        <option value="{{ $user->id }}" @selected((int) old('user_id', $post->user_id ?? auth()->id()) === $user->id)>{{ $user->name }}{{ $person ? '' : ' (по категорията или фирмата)' }}</option>
                     @endforeach
                 </select>
-                <p class="text-xs text-gray-500 mt-1">В структурираните данни за Google авторът е човекът от екипа със същото име. Общият акаунт води до „Creatium Lab“.@if($post->exists) Сега: {{ \App\Support\Seo\PostSeo::authorLabel($post) }}.@endif</p>
+                <p class="text-xs text-gray-500 mt-1">В структурираните данни за Google авторът е човекът от екипа със същото име. Общият акаунт взема автора по категорията (Владимир, Борислав или Мария, виж creatium.blog_authors), а без категория води до „Creatium Lab“.@if($post->exists) Сега: {{ \App\Support\Seo\PostSeo::authorLabel($post) }}.@endif</p>
             </div>
             <div class="flex flex-wrap gap-2 pt-2">
                 <button type="submit" class="inline-flex items-center gap-2 bg-brand-950 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-brand-800"><x-icon name="floppy-disk" /> Запази</button>

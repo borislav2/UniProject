@@ -61,6 +61,8 @@ foreach (['bg', 'en'] as $locale) {
 
         Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
         Route::get($locale === 'en' ? '/blog/category/{slug}' : '/blog/kategoriya/{slug}', [BlogController::class, 'category'])->name('blog.category');
+        // The Markdown twin of a post is registered first so that „{slug}.md“ is never read as a slug.
+        Route::get('/blog/{slug}.md', [BlogController::class, 'markdown'])->where('slug', '[A-Za-z0-9_-]+')->name('blog.markdown');
         Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
         Route::post($locale === 'en' ? '/contact' : '/kontakti', [HomeController::class, 'submitContact'])
@@ -100,6 +102,10 @@ Route::get('/nov-dizain', function (\Illuminate\Http\Request $request) {
 })->middleware('signed')->name('design.link');
 Route::get('/robots.txt', [PageController::class, 'robots'])->name('robots');
 Route::get('/llms.txt', [PageController::class, 'llms'])->name('llms');
+Route::get('/llms-full.txt', [PageController::class, 'llmsFull'])->name('llms-full');
+Route::get('/en/llms-full.txt', [PageController::class, 'llmsFull'])->name('en.llms-full');
+// IndexNow: the key file that proves we own the site (public by design, the body is the key only).
+Route::get('/{key}.txt', [PageController::class, 'indexNowKey'])->where('key', '[a-f0-9]{32}')->name('indexnow.key');
 
 // Old URLs
 Route::redirect('/about', '/za-nas', 301);

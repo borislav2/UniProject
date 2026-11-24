@@ -74,7 +74,7 @@ class DesignGTest extends TestCase
         $this->get('/')->assertOk()
             ->assertSee('class="design-g"', false)
             ->assertSee('class="g-hd"', false)
-            ->assertDontSee('name="robots"', false)
+            ->assertDontSee('content="noindex', false)
             ->assertDontSee('g-preview', false);
     }
 

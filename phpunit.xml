@@ -32,6 +32,7 @@
         <env name="CREATIUM_DESIGN" value="current"/>
         <env name="OPPORTUNITIES_ENABLED" value="false"/>
         <env name="SEO_HEALTH_AUTO" value="false"/>
+        <env name="INDEXNOW_ENABLED" value="false"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>

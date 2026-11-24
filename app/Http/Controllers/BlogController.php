@@ -57,6 +57,22 @@ class BlogController extends Controller
         ]);
     }
 
+    /**
+     * /blog/{slug}.md and /en/blog/{slug}.md: the post as plain Markdown for AI assistants. Visible posts only, 404 otherwise.
+     * The HTML page stays the canonical address (Link header), and the twins are not in the sitemap.
+     */
+    public function markdown(string $slug)
+    {
+        $this->ensureEnabled();
+        $locale = app()->getLocale();
+        $post = Post::with(['category', 'author'])->where("slug->$locale", $slug)->first();
+        abort_unless($post && $post->isVisible(), 404);
+
+        return response(\App\Support\Seo\PostSchema::markdown($post, $locale))
+            ->header('Content-Type', 'text/markdown; charset=UTF-8')
+            ->header('Link', '<' . $post->url() . '>; rel="canonical"');
+    }
+
     private function listing(?PostCategory $category)
     {
         $posts = Post::visible()->with('category')

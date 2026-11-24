@@ -166,16 +166,20 @@ class PageController extends Controller
         $blog = config('creatium.blog_enabled');
         $pages = array_values(array_filter(['home', 'services', 'site-check', 'packages', 'portfolio', 'blog.index', 'about', 'faq', 'contact', 'privacy', 'terms', 'cookies'], fn ($name) => $blog || $name !== 'blog.index'));
         $urls = [];
+        $posts = ! $blog ? collect() : Post::where('status', 'published')->where('published_at', '<=', now())->latest('published_at')->get();
+        // The date a post last changed (never before it was published); the blog list changes whenever a post does.
+        $postDate = fn (Post $post) => $post->updated_at && $post->updated_at->gt($post->published_at) ? $post->updated_at : $post->published_at;
+        $blogLastmod = $posts->map($postDate)->max();
 
         $englishBlog = $blog && Post::visible('en')->exists();
         foreach ($pages as $name) {
             if ($name === 'blog.index' && ! $englishBlog) {
-                $urls[] = ['loc' => lroute($name, [], 'bg'), 'alternates' => []];
+                $urls[] = ['loc' => lroute($name, [], 'bg'), 'alternates' => [], 'lastmod' => $blogLastmod];
                 continue;
             }
             $alternates = ['bg' => lroute($name, [], 'bg'), 'en' => lroute($name, [], 'en')];
             foreach ($alternates as $url) {
-                $urls[] = ['loc' => $url, 'alternates' => $alternates];
+                $urls[] = ['loc' => $url, 'alternates' => $alternates] + ($name === 'blog.index' ? ['lastmod' => $blogLastmod] : []);
             }
         }
 
@@ -196,11 +200,10 @@ class PageController extends Controller
         }
 
         // Blog posts and categories: alternates only between languages that really exist.
-        $posts = ! $blog ? collect() : Post::where('status', 'published')->where('published_at', '<=', now())->latest('published_at')->get();
         foreach ($posts as $post) {
             $alternates = collect($post->locales())->mapWithKeys(fn ($l) => [$l => $post->url($l)])->all();
             foreach ($alternates as $url) {
-                $urls[] = ['loc' => $url, 'alternates' => count($alternates) > 1 ? $alternates : [], 'lastmod' => $post->updated_at];
+                $urls[] = ['loc' => $url, 'alternates' => count($alternates) > 1 ? $alternates : [], 'lastmod' => $postDate($post)];
             }
         }
 
@@ -211,8 +214,9 @@ class PageController extends Controller
                     $alternates[$l] = lroute('blog.category', ['slug' => $category->tr('slug', $l)], $l);
                 }
             }
+            $categoryLastmod = $category->posts()->where('status', 'published')->where('published_at', '<=', now())->get()->map($postDate)->max();
             foreach ($alternates as $url) {
-                $urls[] = ['loc' => $url, 'alternates' => count($alternates) > 1 ? $alternates : []];
+                $urls[] = ['loc' => $url, 'alternates' => count($alternates) > 1 ? $alternates : [], 'lastmod' => $categoryLastmod];
             }
         }
 
@@ -236,6 +240,8 @@ class PageController extends Controller
             '',
             '> ' . __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.') . ' ' . site('services_page')['intro'],
             '',
+            \App\Support\Geo\LlmsFull::disambiguation('bg'),
+            '',
             'Екип в ' . __($contact['city']) . ', България, който работи с бизнеси. Сайтът на български е на ' . lroute('home', [], 'bg') . ', на английски на ' . lroute('home', [], 'en') . '.',
             '',
             '## Услуги',
@@ -258,14 +264,7 @@ class PageController extends Controller
         $lines[] = '## Пакети и цени';
         $lines[] = '';
         $plansBg = app(\App\Support\Content::class)->withDefaults('plans', 'bg');
-        if ($g) {
-            // Design G: the monthly figure and the yearly one (the same model as the current design, monthly subscription only).
-            foreach (\App\Support\GPlans::cards($plansBg) as $card) {
-                $lines[] = '- ' . \App\Support\GPlans::label($card) . '. ' . \App\Support\GPlans::priceLine($card) . (filled($card['yearly']) ? '. При годишно плащане ' . $card['yearly'] . ' на година, 2 месеца безплатно' : '') . (filled($card['audience']) ? '. ' . rtrim($card['audience'], '.') : '');
-            }
-        } else {
-            array_push($lines, ...\App\Support\PlanBilling::textLines($plansBg, true));
-        }
+        array_push($lines, ...\App\Support\Geo\LlmsFull::planLines($plansBg, $g));
         $lines[] = '- Всички пакети на ' . lroute('packages', [], 'bg');
         $lines[] = '';
         $lines[] = '## Екипът';
@@ -298,8 +297,29 @@ class PageController extends Controller
         }
         $lines[] = '- Запазете час за разговор на ' . lroute('contact', [], 'bg') . '#konsultatsiya';
         $lines[] = '- Проекти и сайтове по браншове на ' . lroute('portfolio', [], 'bg');
+        $lines[] = '';
+        $lines[] = '## Пълно описание';
+        $lines[] = '';
+        $lines[] = '- [Всичко на едно място в обикновен текст](' . route('llms-full') . '). Екипът, услугите, цените, въпросите и последните статии.';
+        $lines[] = '- [Full description in English](' . route('en.llms-full') . ')';
 
         return response(implode("\n", $lines) . "\n")->header('Content-Type', 'text/markdown; charset=UTF-8');
+    }
+
+    /** /llms-full.txt and /en/llms-full.txt: the whole site in plain Markdown for AI assistants (cached for an hour, see Geo\\LlmsFull). */
+    public function llmsFull(): Response
+    {
+        $locale = request()->segment(1) === 'en' ? 'en' : 'bg';
+
+        return response(\App\Support\Geo\LlmsFull::get($locale))->header('Content-Type', 'text/markdown; charset=UTF-8');
+    }
+
+    /** IndexNow key file: the key and nothing else (public by design); any other 32 hex name is a 404. */
+    public function indexNowKey(string $key): Response
+    {
+        abort_unless(\App\Support\Seo\IndexNow::key() !== '' && hash_equals(\App\Support\Seo\IndexNow::key(), $key), 404);
+
+        return response(\App\Support\Seo\IndexNow::key())->header('Content-Type', 'text/plain; charset=UTF-8');
     }
 
     /**

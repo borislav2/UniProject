@@ -3,22 +3,7 @@
 @section('title', $post->tr('title'))
 
 @push('head')
-    <meta property="article:published_time" content="{{ $post->published_at->toAtomString() }}">
-    <meta property="article:modified_time" content="{{ $post->updated_at->toAtomString() }}">
-    @php($ld = [
-        '@context' => 'https://schema.org',
-        '@type' => 'BlogPosting',
-        'headline' => $post->tr('title'),
-        'description' => $post->excerptOrSummary(),
-        'datePublished' => $post->published_at->toAtomString(),
-        'dateModified' => $post->updated_at->toAtomString(),
-        'inLanguage' => app()->getLocale(),
-        'mainEntityOfPage' => $post->url(),
-        'image' => $post->cover_image ? asset($post->cover_image) : \App\Support\Schema::shareImage(),
-        'author' => \App\Support\Schema::postAuthor($post),
-        'publisher' => ['@type' => 'Organization', '@id' => \App\Support\Schema::organizationId(), 'name' => 'Creatium Lab', 'logo' => ['@type' => 'ImageObject', 'url' => \App\Support\Schema::logoUrl()]],
-    ])
-    <script type="application/ld+json">{!! json_encode($ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
+    @include('partials.post-head')
 @endpush
 
 @section('content')
@@ -29,6 +14,7 @@
             <a href="{{ lroute('blog.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-200 hover:text-white"><x-icon name="arrow-left" class="text-xs" /> {{ __('Новини') }}</a>
             <h1 class="mt-5 text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">{{ $post->tr('title') }}</h1>
             <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-brand-100/90">
+                @include('partials.post-byline', ['class' => 'font-semibold text-white'])
                 <time datetime="{{ $post->published_at->toDateString() }}">{{ $post->published_at->locale(app()->getLocale())->translatedFormat('j F Y') }}</time>
                 @if($post->category && $post->category->tr('slug'))
                     <a href="{{ lroute('blog.category', ['slug' => $post->category->tr('slug')]) }}" class="rounded-full bg-white/10 px-3 py-1 font-semibold hover:bg-white/20">{{ $post->category->trOrBg('name') }}</a>

@@ -21,7 +21,14 @@ class Post extends Model
         'canonical_url', 'og_title', 'og_description', 'focus_keyword', 'cover_image', 'og_image', 'status', 'published_at',
     ];
 
-    protected $casts = ['published_at' => 'datetime', 'facebook_posted_at' => 'datetime', 'linkedin_posted_at' => 'datetime'];
+    protected $casts = ['published_at' => 'datetime', 'indexnow_at' => 'datetime', 'facebook_posted_at' => 'datetime', 'linkedin_posted_at' => 'datetime'];
+
+    protected static function booted(): void
+    {
+        // /llms-full.txt lists the latest posts and is cached for an hour: a saved or deleted post must show at once.
+        static::saved(fn () => \App\Support\Geo\LlmsFull::flush());
+        static::deleted(fn () => \App\Support\Geo\LlmsFull::flush());
+    }
 
     public function category(): BelongsTo
     {

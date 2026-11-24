@@ -82,6 +82,9 @@
         <meta name="robots" content="noindex">
     @elseif(!empty($noindex))
         <meta name="robots" content="noindex, follow">
+    @else
+        {{-- Indexable pages: full snippets and large previews are allowed, so search and AI answers can quote and show the page. --}}
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     @endif
     @if(count($hreflang) > 1)
         @foreach($hreflang as $lang => $href)

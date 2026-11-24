@@ -190,6 +190,9 @@
 .design-g .g-cover { margin-bottom: 32px; }
 .design-g .g-cover img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
 .design-g .g-post-lead { font: 300 clamp(1.2rem, 1.8vw, 1.45rem)/1.45 var(--g-head); letter-spacing: -.012em; margin-bottom: 24px; }
+.design-g .g-tldr { margin-top: 28px; padding: 18px 22px; border: 1px solid var(--g-line); border-left: 3px solid var(--g-accent); background: var(--g-bg); max-width: 46em; }
+.design-g .g-tldr-label { color: var(--g-mute); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
+.design-g .g-tldr-text { font: 300 clamp(1.1rem, 1.6vw, 1.3rem)/1.5 var(--g-head); letter-spacing: -.01em; }
 .design-g .g-share { margin-top: 48px; display: grid; gap: 12px; }
 .design-g .g-share > p { font-size: 15.5px; }
 .design-g .g-share-row { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }

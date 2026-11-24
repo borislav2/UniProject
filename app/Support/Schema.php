@@ -80,7 +80,8 @@ class Schema
             'url' => lroute('home'),
             'logo' => self::logoUrl(),
             'image' => self::shareImage(),
-            'description' => __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.'),
+            'alternateName' => __('Creatium Lab агенция'),
+            'description' => __('Creatium Lab е агенция за уеб сайтове и дигитален маркетинг в София, България. Правим сайтове за бизнеси и се грижим хората да ги намират в Google.'),
             'email' => $contact['email'] ?? null,
             'telephone' => $phones[0] ?? null,
             'address' => $address,
@@ -95,8 +96,53 @@ class Schema
             ]),
             'sameAs' => array_values(array_filter([$contact['facebook'] ?? null, $contact['linkedin'] ?? null])),
             'priceRange' => self::priceRange(),
-            'knowsAbout' => [__('Изработка на сайт'), 'SEO', __('Google Business профил'), __('Имейл маркетинг'), __('Видимост в AI асистенти')],
+            'knowsAbout' => [
+                __('Изработка на сайт'), 'SEO', __('Техническо SEO'), __('Google Business профил'), __('Имейл маркетинг'), __('Имейл автоматизации'),
+                __('Видимост в AI асистенти'), __('Оптимизация за AI търсене (GEO)'), 'Google Ads', 'Meta Ads', 'Google Shopping', __('AI агенти'),
+            ],
+            'slogan' => filled(site('home_hero')['title'] ?? null) ? trim((string) site('home_hero')['title']) : null,
+            'founder' => self::teamRefs(array_slice(self::teamMembers(), 0, 2)),
+            'employee' => self::teamRefs(array_slice(self::teamMembers(), 2)),
+            'hasOfferCatalog' => self::offerCatalog(),
         ]);
+    }
+
+    /** Team members with a name, in the order of the team block: the first two are the founders (the same rule as the Kreo knowledge). */
+    private static function teamMembers(): array
+    {
+        return array_values(array_filter((array) site('team'), fn ($m) => filled($m['name'] ?? null)));
+    }
+
+    /** References to the Person nodes of /za-nas (same @id), without repeating the data. */
+    private static function teamRefs(array $members): array
+    {
+        return array_map(fn ($m) => ['@type' => 'Person', '@id' => self::personId((array) $m), 'name' => trim((string) $m['name'])], $members);
+    }
+
+    /** The services as an OfferCatalog: name, address and lead of each service page. No prices (the packages carry them), no invented offers. */
+    public static function offerCatalog(): ?array
+    {
+        $items = [];
+        foreach ((array) site('service_pages') as $key => $service) {
+            if (! empty($service['g_only']) && ! Design::is('g')) {
+                continue;
+            }
+            if (! filled($service['title'] ?? null)) {
+                continue;
+            }
+            $items[] = [
+                '@type' => 'Offer',
+                'itemOffered' => array_filter([
+                    '@type' => 'Service',
+                    'name' => $service['title'],
+                    'url' => \App\Http\Controllers\PageController::serviceUrl($key),
+                    'description' => $service['lead'] ?? null,
+                    'provider' => ['@id' => self::organizationId()],
+                ]),
+            ];
+        }
+
+        return $items ? ['@type' => 'OfferCatalog', 'name' => __('Услуги'), 'itemListElement' => $items] : null;
     }
 
     public static function website(): array
@@ -163,7 +209,17 @@ class Schema
     public static function postAuthor(Post $post): array
     {
         return self::personForUser((string) $post->author?->name)
+            ?? self::personForCategory($post)
             ?? ['@type' => 'Organization', '@id' => self::organizationId(), 'name' => 'Creatium Lab', 'url' => lroute('home')];
+    }
+
+    /** The team member who writes in the category of the post (config `blog_authors`, by the Bulgarian slug), or null for no or an unknown category. */
+    public static function personForCategory(Post $post): ?array
+    {
+        $slug = (string) $post->category?->tr('slug', 'bg');
+        $first = (string) (config('creatium.blog_authors')[$slug] ?? '');
+
+        return $first === '' ? null : self::personForUser($first);
     }
 
     /** The Person of the team member whose first name matches the user's name, or null (shared accounts such as „Админ“ match nobody). */

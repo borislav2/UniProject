@@ -307,6 +307,25 @@ return [
         ],
     ],
 
+    // Автор на статия, когато я е записал общият акаунт („Админ“) или никой: по категорията (български slug => малко име от екипа).
+    // Статия от личния акаунт на член на екипа остава на него. Решение на собствениците, 24.11.2026.
+    'blog_authors' => [
+        'google-i-ai-tarsene' => 'Владимир',
+        'platena-reklama' => 'Владимир',
+        'sajtove' => 'Борислав',
+        'poddrazhka-i-sigurnost' => 'Борислав',
+        'imeyl-kampanii' => 'Мария',
+        'onlayn-targoviya' => 'Мария',
+    ],
+
+    // IndexNow (Bing, Yandex, Seznam, Naver): новите статии и страници се подават веднага, а Bing захранва ChatGPT търсенето и Copilot.
+    // Ключът е публичен по замисъл (файл /{ключ}.txt), затова има фиксирана стойност по подразбиране. Включено само в production.
+    'indexnow' => [
+        'key' => env('INDEXNOW_KEY', 'b216fc604b83f8af95298b89af885c02'),
+        'enabled' => (bool) env('INDEXNOW_ENABLED', env('APP_ENV') === 'production'),
+        'endpoint' => 'https://api.indexnow.org/indexnow',
+    ],
+
     // Публичен блог (/blog, линк в менюто, sitemap). BLOG_ENABLED=false го скрива (404); админът работи и така.
     'blog_enabled' => (bool) env('BLOG_ENABLED', true),
 
