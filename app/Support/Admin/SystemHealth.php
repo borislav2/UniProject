@@ -80,6 +80,15 @@ class SystemHealth
                 : 'Последна проверка ' . $seoReport->ran_at->timezone('Europe/Sofia')->format('d.m.Y H:i') . ': оценка ' . $seoReport->score . '/100, грешки ' . $seoReport->errors . ', предупреждения ' . $seoReport->warnings . ', адреси ' . $seoReport->pages . '.'
                 . (! empty($seoState['last_error']) ? ' Последна грешка: ' . $seoState['last_error'] : '') . ($seoStale ? ' Проверката е стара: не е пускана над 3 дни.' : ''),
             $seoState_ === 'warn' ? 'Отворете SEO, раздел „SEO здраве“, или пуснете php artisan creatium:seo-health' : null);
+        $inEnabled = \App\Support\Seo\IndexNow::enabled();
+        $inState = \App\Support\Seo\IndexNow::state();
+        $inPending = $inEnabled && config('creatium.blog_enabled') ? \App\Support\Seo\IndexNow::pendingPosts()->count() : 0;
+        $inLast = ! empty($inState['last_ok_at']) ? Carbon::parse($inState['last_ok_at'])->timezone('Europe/Sofia')->format('d.m.Y H:i') : null;
+        $add('Сайт', 'IndexNow (Bing, ChatGPT търсене)', ! $inEnabled ? 'off' : (! empty($inState['last_error']) ? 'warn' : 'ok'),
+            ! $inEnabled ? 'Изключен (INDEXNOW_ENABLED). Новите статии не се подават към Bing.'
+                : 'Новите статии се подават сами към Bing, Yandex и Seznam. ' . ($inLast ? 'Последно подаване ' . $inLast . ', ' . ($inState['last_count'] ?? 0) . ' адреса.' : 'Още няма подаване.')
+                . ($inPending > 0 ? ' Чакат ' . $inPending . ' статии.' : '') . (! empty($inState['last_error']) ? ' Последна грешка ' . $inState['last_error'] : ''),
+            ! empty($inState['last_error']) ? 'Пуснете php artisan creatium:indexnow' : ($inEnabled && ! $inLast ? 'След внедряване пуснете php artisan creatium:indexnow --all' : null));
         $add('Сайт', 'Скорост на телефон в проверката на сайт', filled(config('services.pagespeed.key')) ? 'ok' : 'off',
             filled(config('services.pagespeed.key')) ? 'Отчетът от безплатната проверка включва оценка, LCP, CLS и INP от Google PageSpeed.' : 'По желание. Без ключ отчетът няма оценка за скорост на телефон.',
             filled(config('services.pagespeed.key')) ? null : 'PAGESPEED_API_KEY=... в .env (безплатен ключ от Google Cloud, PageSpeed Insights API)');

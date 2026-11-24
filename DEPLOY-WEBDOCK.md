@@ -103,6 +103,8 @@ cd /var/www/creatiumlab
 bash deploy/deploy.sh
 ```
 
+След първия деплой на GEO промените пуснете веднъж `php artisan creatium:indexnow --all`: подава всички адреси от sitemap към IndexNow (Bing, а през него ChatGPT търсене и Copilot). Новите статии оттук нататък се подават сами.
+
 ### Автоматичен деплой (GitHub Actions)
 
 `.github/workflows/deploy.yml` пуска `deploy/deploy.sh` на сървъра по SSH след всеки push в `main`, но само ако workflow-ът **Tests** е минал. Нощното пускане на тестовете не деплойва. Докато тайните по-долу липсват, workflow-ът само пише предупреждение и не прави нищо.

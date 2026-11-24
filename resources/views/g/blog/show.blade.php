@@ -5,22 +5,7 @@
 @section('g_lean', 'inner')
 
 @push('head')
-    <meta property="article:published_time" content="{{ $post->published_at->toAtomString() }}">
-    <meta property="article:modified_time" content="{{ $post->updated_at->toAtomString() }}">
-    @php($ld = [
-        '@context' => 'https://schema.org',
-        '@type' => 'BlogPosting',
-        'headline' => $post->tr('title'),
-        'description' => $post->excerptOrSummary(),
-        'datePublished' => $post->published_at->toAtomString(),
-        'dateModified' => $post->updated_at->toAtomString(),
-        'inLanguage' => app()->getLocale(),
-        'mainEntityOfPage' => $post->url(),
-        'image' => $post->cover_image ? asset($post->cover_image) : \App\Support\Schema::shareImage(),
-        'author' => \App\Support\Schema::postAuthor($post),
-        'publisher' => ['@type' => 'Organization', '@id' => \App\Support\Schema::organizationId(), 'name' => 'Creatium Lab', 'logo' => ['@type' => 'ImageObject', 'url' => \App\Support\Schema::logoUrl()]],
-    ])
-    <script type="application/ld+json">{!! json_encode($ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
+    @include('partials.post-head')
 @endpush
 
 @section('content')
@@ -29,11 +14,21 @@
         <div class="g-wrap g-narrow">
             <h1 class="g-h">{{ $post->tr('title') }}</h1>
             <p class="g-post-meta g-mono">
-                <time datetime="{{ $post->published_at->toDateString() }}">{{ $post->published_at->locale(app()->getLocale())->translatedFormat('j F Y') }}</time>
+                <span>{{ __('Публикувано') }} <time datetime="{{ $post->published_at->toDateString() }}">{{ $post->published_at->locale(app()->getLocale())->translatedFormat('j F Y') }}</time></span>
+                @if(\App\Support\Seo\PostSchema::wasUpdated($post))
+                    <span>{{ __('Обновено') }} <time datetime="{{ $post->updated_at->toDateString() }}">{{ $post->updated_at->locale(app()->getLocale())->translatedFormat('j F Y') }}</time></span>
+                @endif
                 @if($post->category && $post->category->tr('slug'))
                     <a href="{{ lroute('blog.category', ['slug' => $post->category->tr('slug')]) }}">{{ $post->category->trOrBg('name') }}</a>
                 @endif
             </p>
+            {{-- Answer first: the short answer sits right under the title, for readers and for assistants that quote the top of a page. --}}
+            @if($post->tr('excerpt'))
+                <div class="g-tldr" data-tldr>
+                    <p class="g-tldr-label g-mono">{{ __('Накратко') }}</p>
+                    <p class="g-tldr-text">{{ $post->tr('excerpt') }}</p>
+                </div>
+            @endif
         </div>
     </header>
 
@@ -42,7 +37,6 @@
             @if($post->cover_image)
                 <div class="g-frame g-cover"><img src="{{ asset(g_cover($post)) }}" alt="{{ $post->tr('title') }}" width="1200" height="675" fetchpriority="high"></div>
             @endif
-            @if($post->tr('excerpt'))<p class="g-post-lead">{{ $post->tr('excerpt') }}</p>@endif
             <div class="g-prose g-article">
                 {!! $post->bodyHtml() !!}
             </div>

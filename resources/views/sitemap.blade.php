@@ -3,9 +3,9 @@
 @foreach($urls as $url)
     <url>
         <loc>{{ $url['loc'] }}</loc>
-@isset($url['lastmod'])
+@if(! empty($url['lastmod']))
         <lastmod>{{ $url['lastmod']->toAtomString() }}</lastmod>
-@endisset
+@endif
 @foreach($url['alternates'] as $lang => $href)
         <xhtml:link rel="alternate" hreflang="{{ $lang }}" href="{{ $href }}"/>
 @endforeach

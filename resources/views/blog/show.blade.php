@@ -3,22 +3,7 @@
 @section('title', $post->tr('title'))
 
 @push('head')
-    <meta property="article:published_time" content="{{ $post->published_at->toAtomString() }}">
-    <meta property="article:modified_time" content="{{ $post->updated_at->toAtomString() }}">
-    @php($ld = [
-        '@context' => 'https://schema.org',
-        '@type' => 'BlogPosting',
-        'headline' => $post->tr('title'),
-        'description' => $post->excerptOrSummary(),
-        'datePublished' => $post->published_at->toAtomString(),
-        'dateModified' => $post->updated_at->toAtomString(),
-        'inLanguage' => app()->getLocale(),
-        'mainEntityOfPage' => $post->url(),
-        'image' => $post->cover_image ? asset($post->cover_image) : \App\Support\Schema::shareImage(),
-        'author' => \App\Support\Schema::postAuthor($post),
-        'publisher' => ['@type' => 'Organization', '@id' => \App\Support\Schema::organizationId(), 'name' => 'Creatium Lab', 'logo' => ['@type' => 'ImageObject', 'url' => \App\Support\Schema::logoUrl()]],
-    ])
-    <script type="application/ld+json">{!! json_encode($ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
+    @include('partials.post-head')
 @endpush
 
 @section('content')
