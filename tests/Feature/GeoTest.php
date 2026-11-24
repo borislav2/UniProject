@@ -540,6 +540,135 @@ class GeoTest extends TestCase
         $this->assertStringContainsString('<lastmod>' . $post->fresh()->updated_at->toAtomString() . '</lastmod>', $block('http://localhost/blog'));
     }
 
+    // Follow-up: authors by category, facts for assistants, disambiguation
+
+    private function categoryPost(string $categorySlug, ?User $user, string $slug = 'avtor-statia'): Post
+    {
+        $category = PostCategory::firstOrCreate(['slug->bg' => $categorySlug], ['name' => ['bg' => 'Категория ' . $categorySlug], 'slug' => ['bg' => $categorySlug]]);
+
+        return $this->makePost($slug, ['post_category_id' => $category->id, 'user_id' => $user?->id]);
+    }
+
+    public function test_the_author_comes_from_the_category_for_the_shared_account_and_for_no_user(): void
+    {
+        $this->assertSame([
+            'google-i-ai-tarsene' => 'Владимир', 'platena-reklama' => 'Владимир', 'sajtove' => 'Борислав',
+            'poddrazhka-i-sigurnost' => 'Борислав', 'imeyl-kampanii' => 'Мария', 'onlayn-targoviya' => 'Мария',
+        ], config('creatium.blog_authors'));
+        $shared = User::factory()->create(['name' => 'Админ']);
+        $about = collect($this->jsonLd($this->get('/za-nas')->getContent()))->flatMap(fn ($b) => $b['@graph'] ?? [])->where('@type', 'Person')->keyBy('name');
+
+        $expected = [
+            'google-i-ai-tarsene' => 'Владимир Цончев', 'platena-reklama' => 'Владимир Цончев', 'sajtove' => 'Борислав Костадинов',
+            'poddrazhka-i-sigurnost' => 'Борислав Костадинов', 'imeyl-kampanii' => 'Мария Флорова', 'onlayn-targoviya' => 'Мария Флорова',
+        ];
+        foreach (['current', 'g'] as $design) {
+            $this->design($design);
+            foreach ([$shared, null] as $user) {
+                foreach ($expected as $slug => $name) {
+                    Post::query()->delete();
+                    $this->categoryPost($slug, $user);
+                    $html = $this->get('/blog/avtor-statia')->assertOk()->getContent();
+                    $ld = collect($this->jsonLd($html))->firstWhere('@type', 'BlogPosting');
+                    $this->assertSame('Person', $ld['author']['@type'], "$design $slug");
+                    $this->assertSame($name, $ld['author']['name']);
+                    $this->assertSame($about[$name]['@id'], $ld['author']['@id'], 'the same @id as on /za-nas');
+                    $this->assertNotEmpty($ld['author']['sameAs']);
+                    $this->assertSame($about[$name]['sameAs'], $ld['author']['sameAs']);
+                    // The visible byline: name and role, linking to /za-nas.
+                    $this->assertMatchesRegularExpression('~<a href="http://localhost/za-nas" rel="author">' . preg_quote($name, '~') . '</a>, ~u', $html);
+                    $this->assertStringContainsString('- Автор ' . $name, $this->get('/blog/avtor-statia.md')->getContent());
+                }
+            }
+        }
+    }
+
+    public function test_a_team_members_own_account_keeps_the_person_whatever_the_category(): void
+    {
+        $maria = User::factory()->create(['name' => 'Мария Флорова']);
+        $this->categoryPost('sajtove', $maria);
+        $ld = collect($this->jsonLd($this->get('/blog/avtor-statia')->getContent()))->firstWhere('@type', 'BlogPosting');
+        $this->assertSame('Мария Флорова', $ld['author']['name']);
+        $this->assertSame('Мария Флорова', \App\Support\Schema::postAuthor(Post::first())['name']);
+    }
+
+    public function test_an_unknown_or_missing_category_falls_back_to_the_company_without_a_byline(): void
+    {
+        $shared = User::factory()->create(['name' => 'Админ']);
+        $this->categoryPost('nyama-takava', $shared, 'nepoznata');
+        $this->makePost('bez-kategoriya', ['user_id' => $shared->id]);
+        foreach (['/blog/nepoznata', '/blog/bez-kategoriya'] as $path) {
+            foreach (['current', 'g'] as $design) {
+                $this->design($design);
+                $html = $this->get($path)->assertOk()->getContent();
+                $ld = collect($this->jsonLd($html))->firstWhere('@type', 'BlogPosting');
+                $this->assertSame('Organization', $ld['author']['@type']);
+                $this->assertSame('Creatium Lab', $ld['author']['name']);
+                $this->assertStringNotContainsString('data-byline', $html);
+            }
+        }
+    }
+
+    public function test_the_admin_seo_preview_shows_the_category_author(): void
+    {
+        $shared = User::factory()->create(['name' => 'Админ']);
+        $post = $this->categoryPost('platena-reklama', $shared);
+        $this->assertSame('Владимир Цончев (от екипа)', \App\Support\Seo\PostSeo::authorLabel($post->load('category', 'author')));
+        $post2 = $this->categoryPost('nyama-takava', $shared, 'druga');
+        $this->assertSame('Creatium Lab (фирмата)', \App\Support\Seo\PostSeo::authorLabel($post2->load('category', 'author')));
+    }
+
+    public function test_g_byline_uses_the_g_role_and_links_to_the_team_page(): void
+    {
+        $this->design('g');
+        $this->categoryPost('imeyl-kampanii', null);
+        $member = collect(config('creatium.team'))->firstWhere('name', 'Мария Флорова');
+        $role = $member['g_role'] ?? $member['role'];
+        $this->get('/blog/avtor-statia')->assertSee('rel="author">Мария Флорова</a>, ' . e($role), false);
+    }
+
+    public function test_llms_files_open_with_the_disambiguation_line_and_llms_full_has_the_evaluation_facts(): void
+    {
+        $bg = 'Creatium Lab е агенция за уеб сайтове и дигитален маркетинг в София, България (не е марка за хранителни добавки).';
+        $en = 'Creatium Lab is a web design and digital marketing agency in Sofia, Bulgaria (not a food supplement brand).';
+        foreach (['current', 'g'] as $design) {
+            $this->design($design);
+            Cache::flush();
+            $this->assertStringContainsString("\n\n$bg\n\n", $this->get('/llms.txt')->getContent());
+            $full = $this->get('/llms-full.txt')->getContent();
+            $this->assertStringContainsString("\n\n$bg\n\n", $full);
+            $this->assertStringContainsString("\n\n$en\n\n", $this->get('/en/llms-full.txt')->getContent());
+
+            $section = substr($full, strpos($full, '## Как да ни оцените'));
+            $section = substr($section, 0, strpos($section, "\n## ", 5));
+            $plans = config('creatium.plans');
+            $this->assertStringContainsString('Домейнът, профилите и достъпите са на ваше име', $section);
+            $this->assertStringContainsString($plans['guarantee']['text'], $section);
+            $this->assertStringContainsString('месечен отчет', $section);
+            $this->assertStringContainsString('директно на Meta', $section);
+            $this->assertStringContainsString('Фиксирана цена в офертата', $section);
+            $this->assertStringContainsString('Екипът е от ' . count(config('creatium.team')) . ' души', $section);
+            $this->assertStringContainsString('Намираме се в София, България', $section);
+            $this->assertDoesNotMatchRegularExpression('/минимален срок|основана|година на основаване|отзив/ui', $section, 'nothing invented');
+
+            $enFull = $this->get('/en/llms-full.txt')->getContent();
+            $this->assertStringContainsString('## How to evaluate us', $enFull);
+            $this->assertStringContainsString('The domain, profiles and access are in your name', $enFull);
+            $this->assertStringContainsString('The team is ' . count(config('creatium_en.team')) . ' people', $enFull);
+            $this->assertStringContainsString('We are based in Sofia, Bulgaria', $enFull);
+        }
+    }
+
+    public function test_organization_has_an_alternate_name_and_says_what_it_is(): void
+    {
+        foreach (['/' => ['Creatium Lab агенция', 'агенция за уеб сайтове и дигитален маркетинг в София'], '/en' => ['Creatium Lab agency', 'web design and digital marketing agency in Sofia']] as $path => [$alt, $text]) {
+            $org = collect($this->jsonLd($this->get($path)->getContent()))->firstWhere('@type', 'ProfessionalService');
+            $this->assertSame($alt, $org['alternateName']);
+            $this->assertStringContainsString($text, $org['description']);
+            $this->assertSame([], PlainCopyTest::offences($org['description']));
+        }
+    }
+
     // 8. Bing
 
     public function test_bing_verification_is_untouched(): void

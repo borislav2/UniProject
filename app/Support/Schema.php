@@ -80,7 +80,8 @@ class Schema
             'url' => lroute('home'),
             'logo' => self::logoUrl(),
             'image' => self::shareImage(),
-            'description' => __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.'),
+            'alternateName' => __('Creatium Lab агенция'),
+            'description' => __('Creatium Lab е агенция за уеб сайтове и дигитален маркетинг в София, България. Правим сайтове за бизнеси и се грижим хората да ги намират в Google.'),
             'email' => $contact['email'] ?? null,
             'telephone' => $phones[0] ?? null,
             'address' => $address,
@@ -208,7 +209,17 @@ class Schema
     public static function postAuthor(Post $post): array
     {
         return self::personForUser((string) $post->author?->name)
+            ?? self::personForCategory($post)
             ?? ['@type' => 'Organization', '@id' => self::organizationId(), 'name' => 'Creatium Lab', 'url' => lroute('home')];
+    }
+
+    /** The team member who writes in the category of the post (config `blog_authors`, by the Bulgarian slug), or null for no or an unknown category. */
+    public static function personForCategory(Post $post): ?array
+    {
+        $slug = (string) $post->category?->tr('slug', 'bg');
+        $first = (string) (config('creatium.blog_authors')[$slug] ?? '');
+
+        return $first === '' ? null : self::personForUser($first);
     }
 
     /** The Person of the team member whose first name matches the user's name, or null (shared accounts such as „Админ“ match nobody). */

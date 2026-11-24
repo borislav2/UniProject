@@ -64,7 +64,7 @@ class PostSchema
     /** The post as Markdown: title, date, author, summary and body (the body is the Markdown the editors wrote). */
     public static function markdown(Post $post, string $locale): string
     {
-        $author = $post->author?->name ? Schema::personForUser((string) $post->author->name)['name'] ?? 'Creatium Lab' : 'Creatium Lab';
+        $author = Schema::postAuthor($post)['name'];
         $words = $locale === 'en'
             ? ['published' => 'Published', 'updated' => 'Updated', 'author' => 'Author', 'section' => 'Section', 'url' => 'Address', 'summary' => 'In short']
             : ['published' => 'Публикувана', 'updated' => 'Обновена', 'author' => 'Автор', 'section' => 'Раздел', 'url' => 'Адрес', 'summary' => 'Накратко'];

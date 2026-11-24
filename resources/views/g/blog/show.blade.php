@@ -14,6 +14,7 @@
         <div class="g-wrap g-narrow">
             <h1 class="g-h">{{ $post->tr('title') }}</h1>
             <p class="g-post-meta g-mono">
+                @include('partials.post-byline')
                 <span>{{ __('Публикувано') }} <time datetime="{{ $post->published_at->toDateString() }}">{{ $post->published_at->locale(app()->getLocale())->translatedFormat('j F Y') }}</time></span>
                 @if(\App\Support\Seo\PostSchema::wasUpdated($post))
                     <span>{{ __('Обновено') }} <time datetime="{{ $post->updated_at->toDateString() }}">{{ $post->updated_at->locale(app()->getLocale())->translatedFormat('j F Y') }}</time></span>

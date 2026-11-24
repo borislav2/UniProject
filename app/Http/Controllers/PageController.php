@@ -240,6 +240,8 @@ class PageController extends Controller
             '',
             '> ' . __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.') . ' ' . site('services_page')['intro'],
             '',
+            \App\Support\Geo\LlmsFull::disambiguation('bg'),
+            '',
             'Екип в ' . __($contact['city']) . ', България, който работи с бизнеси. Сайтът на български е на ' . lroute('home', [], 'bg') . ', на английски на ' . lroute('home', [], 'en') . '.',
             '',
             '## Услуги',

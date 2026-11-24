@@ -32,6 +32,9 @@ class LlmsFull
             'email' => 'Имейл', 'phone' => 'Телефон', 'city' => 'Град', 'company' => 'Фирма', 'book' => 'Запазете час за разговор', 'check' => 'Безплатна проверка на сайт',
             'check_text' => 'Въвеждате адреса и имейл и получавате отчет за минута.', 'published' => 'Публикувана', 'site' => 'Сайт',
             'intro' => 'Пълно описание на Creatium Lab в обикновен текст, за да може асистент да отговаря без да отваря страници.',
+            'disambiguation' => 'Creatium Lab е агенция за уеб сайтове и дигитален маркетинг в София, България (не е марка за хранителни добавки).',
+            'evaluate' => 'Как да ни оцените', 'team_size' => 'Екипът е от :n души', 'location' => 'Намираме се в :city, България',
+            'guarantee' => 'Гаранция', 'report' => 'Отчет', 'ownership' => 'Собственост', 'prices' => 'Цени',
         ],
         'en' => [
             'who' => 'Who we are', 'team' => 'The team', 'founders' => 'Founders and owners', 'colleagues' => 'Colleagues', 'skills' => 'Skills',
@@ -42,8 +45,65 @@ class LlmsFull
             'email' => 'Email', 'phone' => 'Phone', 'city' => 'City', 'company' => 'Company', 'book' => 'Book a call', 'check' => 'Free website check',
             'check_text' => 'Enter the address and an email and get a report within a minute.', 'published' => 'Published', 'site' => 'Website',
             'intro' => 'The full description of Creatium Lab in plain text, so an assistant can answer without opening any page.',
+            'disambiguation' => 'Creatium Lab is a web design and digital marketing agency in Sofia, Bulgaria (not a food supplement brand).',
+            'evaluate' => 'How to evaluate us', 'team_size' => 'The team is :n people', 'location' => 'We are based in :city, Bulgaria',
+            'guarantee' => 'Guarantee', 'report' => 'Report', 'ownership' => 'Ownership', 'prices' => 'Prices',
         ],
     ];
+
+    /** One line that tells an assistant which Creatium Lab this is (used at the top of /llms.txt and /llms-full.txt). */
+    public static function disambiguation(string $locale): string
+    {
+        return self::LABELS[$locale === 'en' ? 'en' : 'bg']['disambiguation'];
+    }
+
+    /**
+     * Facts an assistant needs to judge us, each read from config or site() and left out when it is not there: ownership, guarantee,
+     * monthly report, ad budget, public prices, team size and place. Nothing is added that the site does not already say.
+     *
+     * @return list<string>
+     */
+    public static function evaluationLines(string $locale): array
+    {
+        $t = self::LABELS[$locale];
+        $plans = app(Content::class)->withDefaults('plans', $locale);
+        $trust = collect((array) ($plans['trust'] ?? []));
+        $trustText = fn (string $icon) => trim((string) ($trust->firstWhere('icon', $icon)['text'] ?? ''));
+        $questions = collect((array) site('questions'))->filter(fn ($q) => filled($q['q'] ?? null) && filled($q['a'] ?? null));
+        $ads = $questions->first(fn ($q) => preg_match('/Рекламният бюджет|ad budget/ui', $q['q']));
+        $guarantee = (array) ($plans['guarantee'] ?? []);
+        $reportSentence = '';
+        foreach ($questions as $q) {
+            foreach (preg_split('/(?<=[.!?])\s+/u', (string) $q['a']) as $sentence) {
+                if (preg_match('/месечен отчет|monthly report/ui', $sentence)) {
+                    $reportSentence = trim($sentence);
+                    break 2;
+                }
+            }
+        }
+        $team = array_filter((array) site('team'), fn ($m) => filled($m['name'] ?? null));
+        $city = __((string) config('creatium.contact.city'));
+
+        $lines = [];
+        $add = function (string $label, string $text) use (&$lines) {
+            if ($text !== '') {
+                $lines[] = '- **' . $label . '** ' . $text;
+            }
+        };
+        $add($t['ownership'], $trustText('lock'));
+        $add($t['guarantee'], trim(($guarantee['text'] ?? '') . ' ' . ($guarantee['note'] ?? '')));
+        $add($t['report'], $reportSentence);
+        if ($ads) {
+            $add(rtrim(trim($ads['q']), '?'), trim($ads['a']));
+        }
+        $add($t['prices'], trim($trustText('tag') . ($trustText('tag') !== '' ? '. ' : '') . '[' . $t['all_packages'] . '](' . lroute('packages') . ')'));
+        if ($team) {
+            $add($t['team'], strtr($t['team_size'], [':n' => count($team)]));
+        }
+        $add($t['city'], $city !== '' ? strtr($t['location'], [':city' => $city]) : '');
+
+        return $lines;
+    }
 
     public static function cacheKey(string $locale): string
     {
@@ -116,6 +176,7 @@ class LlmsFull
 
         $l = ['# Creatium Lab', '', '> ' . __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.') . ' ' . ($page['intro'] ?? ''), '', $t['intro'], ''];
         $l[] = '- ' . $t['site'] . ' ' . $home;
+        array_splice($l, 4, 0, [$t['disambiguation'], '']);
 
         // Who we are
         $l[] = '';
@@ -245,6 +306,14 @@ class LlmsFull
                     $l[] = '- [' . $post->tr('title', $locale) . '](' . $post->url($locale) . ') ' . $t['published'] . ' ' . $post->published_at->toDateString() . ($summary !== '' ? '. ' . $summary : '');
                 }
             }
+        }
+
+        // How to evaluate us: only facts the site already states.
+        if ($facts = self::evaluationLines($locale)) {
+            $l[] = '';
+            $l[] = '## ' . $t['evaluate'];
+            $l[] = '';
+            array_push($l, ...$facts);
         }
 
         // Contacts
