@@ -68,3 +68,24 @@ We want to be a source of information for small businesses, not only how-to text
   - Never invent dates, numbers or quotes. Quote numbers only as the source states them, with the source named.
   - Always explain what the news means for a small Bulgarian business and what to do now.
 - **Advice** covers SEO, GEO, paid ads (category `reklama`), websites and email.
+
+## Търсения от Search Console (25.11.2026)
+
+The owners' Search Console report (last 3 months, Bulgaria) shows what people really type. Use it to choose topics and keywords for the weekly articles, in this order of priority.
+
+1. **Brand.** People search for Creatium Lab by name. Articles that explain who we are and how we work help them confirm they found the right company.
+2. **Домейн.** „избор на домейн“ and „домейн .bg“ (position 24). The article exists, so write related ones (регистрация, подновяване, имейл с името на фирмата).
+3. **Сайт за малък бизнес.** „сайт за малък бизнес“ (position 28). Link to `/izrabotka-na-sait-za-malak-biznes`.
+4. **GEO и видимост в ChatGPT.** „какво е geo“, „видимост в chatgpt“, „seo и ai видимост“ (positions 21 to 22). Link to `/uslugi/seo-i-ai-vidimost`.
+5. **Отзиви в Google.** How to ask for them, how to answer them, what to do with a bad one.
+6. **Позициониране.** What the business is known for and why a customer should pick it.
+7. **Имейл кампании.** Welcome, reminder and abandoned cart emails, in plain words.
+8. **„Близо до мен“ на български.** Local searches like „зъболекар близо до мен“ and how the Google profile answers them.
+9. **Скорост на сайта.** Why a slow site loses customers on a phone and how to check it.
+
+Rules that follow from this:
+
+- **New articles target Bulgarian searches.** Pick the phrase a Bulgarian customer would type, put it in the title, the first paragraph and one heading, and use it naturally in the text. English phrases only where Bulgarians really use them (GEO, ChatGPT, Google Business Profile).
+- Seasonal topics (for example Black Friday) go out early, before the date, because Google needs time to index them.
+- Every article links to at least one service page and, when it fits, to an earlier article.
+- Do not invent numbers or results. The owners' copy rules above still apply (no dashes, no colons).

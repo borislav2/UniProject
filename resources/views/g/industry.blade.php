@@ -9,7 +9,8 @@
 @include('partials.g.page-head', ['heading' => $page['title'], 'sub' => $page['lead']])
 
 <section class="g-s g-tight">
-    <div class="g-wrap g-sys g-ind">
+    <div class="g-wrap g-sys{{ $demo ? ' g-ind' : '' }}">
+        @if($demo)
         <div class="g-sh">
             <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="g-frame-link">
                 <div class="g-frame">
@@ -20,6 +21,7 @@
             </a>
             <p class="g-case-links"><a class="g-link" href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener">Вижте сайта<x-icon name="arrow-right" class="g-ar" /></a></p>
         </div>
+        @endif
         <div>
             <h2 class="g-h g-rows-h">{{ $page['must_have_title'] }}</h2>
             <ol class="g-rows">
@@ -40,13 +42,13 @@
             <div class="g-col">
                 <h3 class="g-col-h">Къде се губят клиенти</h3>
                 <ol class="g-rows g-rows-tight">
-                    @foreach($demo['problems'] as [$title, $text])<li><h3>{{ $title }}</h3><p>{{ $text }}</p></li>@endforeach
+                    @foreach($content['problems'] as [$title, $text])<li><h3>{{ $title }}</h3><p>{{ $text }}</p></li>@endforeach
                 </ol>
             </div>
             <div class="g-col">
                 <h3 class="g-col-h">Как го оправя сайтът</h3>
                 <ol class="g-rows g-rows-tight">
-                    @foreach($demo['solutions'] as [$title, $text])<li><h3>{{ $title }}</h3><p>{{ $text }}</p></li>@endforeach
+                    @foreach($content['solutions'] as [$title, $text])<li><h3>{{ $title }}</h3><p>{{ $text }}</p></li>@endforeach
                 </ol>
             </div>
         </div>
@@ -62,7 +64,7 @@
                 @if($plan)
                     <ul class="g-pkg-list">@foreach($plan['prices'] as $price)<li>{{ $price }}</li>@endforeach</ul>
                 @endif
-                <p class="g-pkg-note">{{ $demo['package']['why'] }}</p>
+                <p class="g-pkg-note">{{ $content['package']['why'] }}</p>
             </div>
             <div class="g-cta">
                 <a class="g-btn" href="{{ lroute('contact') }}#konsultatsiya">Запазете час за разговор</a>
@@ -77,7 +79,7 @@
         <div class="g-sh">
             <h2 class="g-h">Често задавани въпроси</h2>
         </div>
-        @include('partials.g.faq', ['items' => $demo['faq']])
+        @include('partials.g.faq', ['items' => $content['faq']])
     </div>
 </section>
 
@@ -110,7 +112,7 @@
         ],
         [
             '@type' => 'FAQPage',
-            'mainEntity' => array_map(fn ($qa) => ['@type' => 'Question', 'name' => $qa[0], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $qa[1]]], $demo['faq']),
+            'mainEntity' => array_map(fn ($qa) => ['@type' => 'Question', 'name' => $qa[0], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $qa[1]]], $content['faq']),
         ],
     ],
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}

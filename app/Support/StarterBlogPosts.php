@@ -44,6 +44,16 @@ class StarterBlogPosts
 
     public const EXPANDED_DIR = 'data/blog-expanded';
 
+    public const PREVIOUS_DIR = 'data/blog-previous';
+
+    /** The earlier expanded text of a post that was expanded again (search console pass, 25.11.2026), or null. */
+    public static function previousBody(string $slug): ?string
+    {
+        $file = database_path(self::PREVIOUS_DIR . "/$slug.md");
+
+        return is_file($file) ? trim(file_get_contents($file)) : null;
+    }
+
     public const COVERS_DIR = 'images/blog';
 
     /**
@@ -71,7 +81,11 @@ class StarterBlogPosts
             }
 
             $body = $post->body;
-            if (isset($originals[$slug]) && trim((string) ($body['bg'] ?? '')) === $originals[$slug]) {
+            // Replaced when the text is still the original or, for a post that got a newer expanded version, exactly the previous
+            // expanded version (kept in database/data/blog-previous/{slug}.md). Anything the owners edited stays.
+            $previous = self::previousBody($slug);
+            $current = trim((string) ($body['bg'] ?? ''));
+            if ($current !== trim(file_get_contents($path)) && ((isset($originals[$slug]) && $current === $originals[$slug]) || ($previous !== null && $current === $previous))) {
                 $post->body = ['bg' => trim(file_get_contents($path))] + (array) $body;
                 $done['bodies']++;
             }

@@ -549,9 +549,9 @@ return [
         'seo' => [
             'slug' => 'seo-and-ai-visibility', 'icon' => 'magnifying-glass', 'menu' => 'SEO and AI visibility',
             'title' => 'Visibility in Google, Google Maps and AI assistants',
-            'seo_title' => 'SEO, local SEO and visibility in ChatGPT | Creatium Lab',
+            'seo_title' => 'SEO and AI visibility, visibility in ChatGPT | Creatium Lab',
             'seo_description' => 'Show up in Google, Google Maps and in ChatGPT and Gemini answers when customers search for what you offer.',
-            'lead' => 'People now ask Google and ChatGPT for "the best one nearby". We make sure the answer is you.',
+            'lead' => 'SEO and AI visibility for small businesses. People now ask Google and ChatGPT for "the best one nearby". We make sure the answer is you.',
             'g_what' => 'We set up your site and profiles so customers find you in Google, in Google Maps and in the answers of ChatGPT.',
             'problems' => ['Competitors show up before you on Google Maps', 'You have a website, but nobody finds it', 'You don\'t know where customers come from'],
             'includes' => [
@@ -568,6 +568,9 @@ return [
                 ['When will I see results?', 'The first Google Maps improvements often show within 1 or 2 months. SEO compounds and each month builds on the last.'],
                 ['What is AI visibility?', 'AI assistants recommend businesses that clearly say what they do and where. We structure your site and profiles so they understand it.'],
                 ['Do you guarantee first place?', 'No honest specialist guarantees a ranking. We guarantee the work and a clear monthly report of what changed.'],
+                ['What is GEO?', 'GEO stands for Generative Engine Optimization, which means setting up your site and profiles so AI assistants understand and cite you. While SEO aims for a place in the Google list, GEO aims to make you part of the answer itself in ChatGPT, Gemini or Perplexity. The two work together, because AI search relies on the same clear pages, structured data and trust in the business.'],
+                ['How do I become visible in ChatGPT?', 'Your site needs to say clearly who you are, what you do and where you work, and have structured data, reviews and profiles that support each other. We set these up and check every month how AI assistants describe your business. Nobody can guarantee a specific mention, so we show what changed and what is visible.'],
+                ['What does SEO and AI visibility include?', 'It includes a technical check of the site, local SEO for Google Maps, structured data, content for the searches of your customers and setup for AI assistants. Every month you get a report with rankings, enquiries and how AI assistants describe your business. The work is part of the monthly package, with no separate start fee.'],
             ],
             'g_direction' => 'seo',
             'g_hero_title' => 'Be the brand that Google shows and AI assistants recommend by name',
@@ -590,6 +593,9 @@ return [
             'g_faq' => [
                 ['q' => 'When can we expect a real return from SEO and GEO?', 'a' => 'The first serious movement in rankings and mentions is usually visible between the second and third month, and a steady flow of enquiries usually develops fully after the fourth month.'],
                 ['q' => 'How do you measure the success of your work?', 'a' => 'We track rankings for key commercial words, citations in AI answers, organic traffic and the real enquiries and calls that came from search.'],
+                ['q' => 'What is GEO?', 'a' => 'GEO stands for Generative Engine Optimization, which means setting up your site and profiles so AI assistants understand and cite you. While SEO aims for a place in the Google list, GEO aims to make you part of the answer itself in ChatGPT, Gemini or Perplexity. The two work together, because AI search relies on the same clear pages, structured data and trust in the business.'],
+                ['q' => 'How do I become visible in ChatGPT?', 'a' => 'Your site needs to say clearly who you are, what you do and where you work, and have structured data, reviews and profiles that support each other. We set these up and check every month how AI assistants describe your business. Nobody can guarantee a specific mention, so we show what changed and what is visible.'],
+                ['q' => 'What does SEO and AI visibility include?', 'a' => 'It includes a technical check of the site, local SEO for Google Maps, structured data, content for the searches of your customers and setup for AI assistants. Every month you get a report with rankings, enquiries and how AI assistants describe your business. The work is part of the monthly package, with no separate start fee.'],
             ],
             'g_vis' => [
                 'hero' => [

@@ -87,7 +87,7 @@ class FaqResponder
         if (app()->getLocale() === 'bg') {
             $demoBySlug = collect($demos)->keyBy('slug');
             foreach (config('creatium.industry_pages', []) as $slug => $page) {
-                $demo = $demoBySlug[$page['demo']] ?? [];
+                $demo = isset($page['demo']) ? ($demoBySlug[$page['demo']] ?? []) : $page;
                 $plan = $demo['package']['name'] ?? null;
                 $topics[] = [
                     $page['title'] . ', сайт за ' . mb_strtolower($page['menu']) . ' ' . ($demo['industry'] ?? ''),
