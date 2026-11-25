@@ -13,7 +13,7 @@ return [
         'city' => env('CREATIUM_CITY', 'София'),
         // Страницата във Facebook (CREATIUM_FACEBOOK_URL): връзка във футъра и блога и sameAs в данните за Google.
         // CREATIUM_FACEBOOK_URL= (празно) я скрива. Линкът за споделяне от приложението води към страницата.
-        'facebook' => env('CREATIUM_FACEBOOK_URL', 'https://www.facebook.com/share/1JDKDcn3rM/'),
+        'facebook' => env('CREATIUM_FACEBOOK_URL', 'https://www.facebook.com/profile.php?id=61595819339267'),
         // Страницата на фирмата в LinkedIn (CREATIUM_LINKEDIN_URL): само sameAs в данните за Google, докато собствениците не я създадат е празно.
         'linkedin' => env('CREATIUM_LINKEDIN_URL') ?: null,
         // Google Business профилът (CREATIUM_GOOGLE_BUSINESS_URL, owners 25.11.2026): sameAs в данните за Google и връзка в /llms-full.txt.
