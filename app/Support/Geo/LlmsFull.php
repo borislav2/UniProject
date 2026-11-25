@@ -325,6 +325,11 @@ class LlmsFull
             $l[] = '- ' . $t['phone'] . ' ' . $phone;
         }
         $l[] = '- ' . $t['book'] . ' ' . lroute('contact') . '#konsultatsiya';
+        foreach (['facebook' => 'Facebook', 'linkedin' => 'LinkedIn', 'google_business' => 'Google Business'] as $key => $label) {
+            if (filled($contact[$key] ?? null)) {
+                $l[] = '- ' . $label . ' ' . $contact[$key];
+            }
+        }
 
         return implode("\n", $l) . "\n";
     }

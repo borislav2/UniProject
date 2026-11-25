@@ -94,7 +94,7 @@ class Schema
                 'areaServed' => 'BG',
                 'availableLanguage' => ['bg', 'en'],
             ]),
-            'sameAs' => array_values(array_filter([$contact['facebook'] ?? null, $contact['linkedin'] ?? null])),
+            'sameAs' => array_values(array_filter([$contact['facebook'] ?? null, $contact['linkedin'] ?? null, $contact['google_business'] ?? null])),
             'priceRange' => self::priceRange(),
             'knowsAbout' => [
                 __('Изработка на сайт'), 'SEO', __('Техническо SEO'), __('Google Business профил'), __('Имейл маркетинг'), __('Имейл автоматизации'),
