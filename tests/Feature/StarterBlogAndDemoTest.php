@@ -71,6 +71,8 @@ class StarterBlogAndDemoTest extends TestCase
     {
         config(['creatium.blog_enabled' => true]);
         StarterBlogPosts::import(now());
+        // The starter posts now come with English (25.11.2026); this test is about a blog that has none yet.
+        \App\Models\Post::all()->each(fn ($p) => $p->forceFill(['title' => ['bg' => $p->tr('title', 'bg')], 'slug' => ['bg' => $p->tr('slug', 'bg')]])->save());
 
         $this->get('/en/blog')->assertOk()->assertSee('Our articles are in Bulgarian for now')->assertSee('href="' . url('/blog') . '"', false);
     }

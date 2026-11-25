@@ -3,7 +3,7 @@
 Creatium Lab is a team of three in Bulgaria (Борислав, Владимир, Мария). It builds websites for small Bulgarian businesses and looks after visibility in Google, Google Maps and AI assistants (ChatGPT, Gemini), ads, email campaigns, support and hosting. The blog readers are owners of small Bulgarian businesses: a dental clinic, an accountant, a car service, a guest house, a small online shop. They are not technical people.
 
 ## Output
-Write ONE PHP data file at the exact path you are given. Format:
+Write ONE PHP data file at the exact path you are given, and also one English text file per article (see "Every article exists in Bulgarian AND English" below). Format of the data file:
 ```php
 <?php
 
@@ -52,9 +52,33 @@ Before writing, open database/data/blog-posts.php in /home/user/UniProject and c
 
 After writing, re-read every article and fix any violation: search your file for "–", "—", " - ", ":" (outside the PHP syntax and URLs) and the banned phrases.
 
+## Every article exists in Bulgarian AND English (owners, 25.11.2026)
+
+Every new article is written in BOTH languages, and the English version is part of the same delivery, never a later task. The English text is written for small business owners the way an experienced practitioner would explain it, not as a literal translation. Bulgarian examples (Plovdiv, Varna, Burgas, Bansko) stay, because the readers are still Bulgarian businesses.
+
+Each post needs four English fields next to the Bulgarian ones, so the data file posts get `title_en`, `slug_en`, `excerpt_en` and `body_en`. The English text of a post sits in `database/data/en/{Bulgarian slug}.md` and `StarterBlogPosts::data()` merges it into the post as those four fields (a data file may also carry the four keys itself). The file has this shape.
+
+```
+English title
+english-slug
+English excerpt
+---
+English body in Markdown
+```
+
+The first three lines are the title, the slug and the excerpt, then a line with three dashes, then the body.
+
+- **Title** 45 to 65 characters, starting with the phrase people would type into Google. **Slug** Latin, lowercase, natural English words, unique across all posts. **Excerpt** 120 to 155 characters.
+- **Body** at least about 500 words, 3 to 6 `##` headings, full sentences. The same rules as the Bulgarian text apply: no dash or hyphen as punctuation, no colon (except clock times and URLs), no "=", no arrows or emoji, no bullet lists of fragments (a short numbered list of full sentences is allowed once), no invented statistics, clients or results, and no free consultation (only the website check is free). Write ranges as "10 to 15", never "10-15". An example email subject goes into a sentence ("The subject line reads ..."), not after a colon.
+- **Sources.** Numbers that the Bulgarian article attributes to a named source keep the same source and the same figure. External https links stay as in the Bulgarian article.
+- **Internal links** point to the English pages only and are the same ones as in the Bulgarian text. Allowed targets are /en/website-check, /en/services/website-design, /en/services/seo-and-ai-visibility, /en/services/google-business-profile, /en/services/email-marketing, /en/services/maintenance-and-hosting, /en/services/google-shopping-readiness, /en/services/ai-agents, /en/packages, /en/contact and /en/projects. A link to an earlier article is `/en/blog/{its slug_en}`. The industry page /izrabotka-na-sait-za-malak-biznes has no English version, so the English text links to /en/services/website-design instead.
+- The cover is shared: `cover_image` is one field for both languages (see Covers below).
+
+`EnglishBlogPostsTest` fails when a post has no English, when the shape or the copy rules are broken, or when a link is not allowed. For posts that are already live, ship a migration that calls `StarterBlogPosts::fillEnglish('<file>')` (see `2026_11_25_000002_add_english_to_blog_posts.php`, skipped in tests). It fills English only where the English title is empty and never changes what the owners wrote.
+
 ## Covers
 
-Every new daily article needs a cover, or the blog shows it without a picture. For each new batch of articles (details in `tools/blog-covers/README.md`):
+Every article, in both languages, needs a cover. Every new daily article needs a cover, or the blog shows it without a picture. For each new batch of articles (details in `tools/blog-covers/README.md`):
 1. **Scene.** In `tools/blog-covers/cover-g.html` add one hand drawn scene per new slug (the key is the slug). Design G: light surface, ink, thin frames, one orange accent, simple UI mock-ups and icons that show the article's own idea (a price breakdown, an inbox with a subject line, a Search Console graph, a map with pins). Every scene is different. Visible text follows the owners' rule: no dashes, no colons except clock times and URLs, no invented statistics, short labels only. Do not touch existing scenes. Use only icons that exist in `icons.json`.
 2. **Render.** `PLAYWRIGHT_PATH=/opt/node22/lib/node_modules/playwright/index.mjs node tools/blog-covers/render-g.mjs -o /tmp/covers <slugs>`, look at every PNG and fix clipping and overlaps, then `php tools/blog-covers/render-g.php /tmp/covers 88` (writes `public/images/blog/g/{slug}.webp` and `{slug}-640.webp`). Also copy the 1200 version to `public/images/blog/{slug}.webp`: the post's `cover_image` is that path, `g_cover()` maps it to the G file, and the share image and JSON-LD use the original.
 3. **Data file.** Add `'cover' => 'images/blog/{slug}.webp'` to each post in `database/data/daily-*.php`. `DailyBlogPostsTest` fails when a daily post has no cover or the G files are missing.
