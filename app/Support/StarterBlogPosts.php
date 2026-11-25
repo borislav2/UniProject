@@ -20,7 +20,91 @@ class StarterBlogPosts
 
     public static function data(string $file = 'blog-posts.php'): array
     {
-        return require database_path('data/' . $file);
+        $data = require database_path('data/' . $file);
+
+        // The English version of a post sits in database/data/en/{Bulgarian slug}.md (see english()). It is merged here as
+        // title_en, slug_en, excerpt_en and body_en, unless the data file already carries those keys itself.
+        foreach ($data['posts'] as $i => $post) {
+            $english = self::english($post['slug']);
+            if ($english) {
+                $data['posts'][$i] += ['title_en' => $english['title'], 'slug_en' => $english['slug'], 'excerpt_en' => $english['excerpt'], 'body_en' => $english['body']];
+            }
+        }
+
+        return $data;
+    }
+
+    public const ENGLISH_DIR = 'data/en';
+
+    /**
+     * The English text of a post, from database/data/en/{Bulgarian slug}.md: the first three lines are the title, the slug and the
+     * excerpt, then a line with three dashes, then the Markdown body. Null when the file does not exist.
+     *
+     * @return array{title: string, slug: string, excerpt: string, body: string}|null
+     */
+    public static function english(string $bulgarianSlug): ?array
+    {
+        $path = database_path(self::ENGLISH_DIR . "/$bulgarianSlug.md");
+        if (! is_file($path)) {
+            return null;
+        }
+
+        [$head, $body] = array_pad(explode("\n---\n", str_replace("\r\n", "\n", file_get_contents($path)), 2), 2, '');
+        $lines = array_map('trim', explode("\n", trim($head)));
+
+        return ['title' => $lines[0] ?? '', 'slug' => $lines[1] ?? '', 'excerpt' => $lines[2] ?? '', 'body' => trim($body)];
+    }
+
+    /** True when no other post already uses this English address. */
+    public static function englishSlugIsFree(string $slug, ?int $exceptId = null): bool
+    {
+        return ! Post::where('slug->en', $slug)->when($exceptId, fn ($q) => $q->whereKeyNot($exceptId))->exists();
+    }
+
+    /** The English address, or the same with -2, -3 ... added when another post already has it. */
+    private static function uniqueEnglishSlug(string $slug, ?int $exceptId = null): string
+    {
+        $candidate = $slug;
+        for ($n = 2; ! self::englishSlugIsFree($candidate, $exceptId); $n++) {
+            $candidate = "$slug-$n";
+        }
+
+        return $candidate;
+    }
+
+    /**
+     * Gives the posts of $file their English version (title_en, slug_en, excerpt_en, body_en) where the post exists and its English
+     * title is still empty. A post with an English title (written by the owners or filled earlier) is never touched, and the
+     * Bulgarian fields are never changed. Returns the number of posts filled.
+     */
+    public static function fillEnglish(string $file): int
+    {
+        $filled = 0;
+        foreach (self::data($file)['posts'] as $data) {
+            if (blank($data['title_en'] ?? null) || blank($data['body_en'] ?? null)) {
+                continue;
+            }
+            $post = Post::where('slug->bg', $data['slug'])->first();
+            if (! $post || filled($post->tr('title', 'en'))) {
+                continue;
+            }
+
+            $fields = [
+                'title' => $data['title_en'],
+                'slug' => filled($post->tr('slug', 'en')) && self::englishSlugIsFree($post->tr('slug', 'en'), $post->id)
+                    ? $post->tr('slug', 'en') : self::uniqueEnglishSlug($data['slug_en'], $post->id),
+                'excerpt' => filled($post->tr('excerpt', 'en')) ? $post->tr('excerpt', 'en') : $data['excerpt_en'],
+                'body' => filled($post->tr('body', 'en')) ? $post->tr('body', 'en') : trim($data['body_en']),
+            ];
+            foreach ($fields as $field => $value) {
+                $values = (array) $post->getAttribute($field);
+                $post->setAttribute($field, array_merge($values, ['en' => $value]));
+            }
+            $post->save();
+            $filled++;
+        }
+
+        return $filled;
     }
 
     /** Датите на публикуване по реда на статиите. */
@@ -163,12 +247,13 @@ class StarterBlogPosts
             if (Post::where('slug->bg', $post['slug'])->exists()) {
                 continue;
             }
+            $english = filled($post['title_en'] ?? null) && filled($post['body_en'] ?? null);
             Post::create([
                 'post_category_id' => $categories[$post['category']]->id,
-                'title' => ['bg' => $post['title']],
-                'slug' => ['bg' => $post['slug']],
-                'excerpt' => ['bg' => $post['excerpt']],
-                'body' => ['bg' => trim($post['body'])],
+                'title' => ['bg' => $post['title']] + ($english ? ['en' => $post['title_en']] : []),
+                'slug' => ['bg' => $post['slug']] + ($english ? ['en' => self::uniqueEnglishSlug($post['slug_en'])] : []),
+                'excerpt' => ['bg' => $post['excerpt']] + ($english ? ['en' => $post['excerpt_en']] : []),
+                'body' => ['bg' => trim($post['body'])] + ($english ? ['en' => trim($post['body_en'])] : []),
                 // Корица по избор ('cover' = път под public/): само ако файлът съществува.
                 'cover_image' => isset($post['cover']) && is_file(public_path($post['cover'])) ? $post['cover'] : null,
                 'status' => $status,
