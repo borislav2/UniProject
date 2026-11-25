@@ -236,6 +236,9 @@ class Schema
             $name = $bgName !== '' ? $bgName : $name;
         }
 
+        // Official Bulgarian transliteration for the letters Str::slug renders differently (Цончев = tsonchev, not conchev).
+        $name = strtr($name, ['Ц' => 'Ts', 'ц' => 'ts', 'Щ' => 'Sht', 'щ' => 'sht', 'Ж' => 'Zh', 'ж' => 'zh', 'Ч' => 'Ch', 'ч' => 'ch', 'Ш' => 'Sh', 'ш' => 'sh', 'Ю' => 'Yu', 'ю' => 'yu', 'Я' => 'Ya', 'я' => 'ya', 'Ъ' => 'A', 'ъ' => 'a']);
+
         return rtrim(lroute('about', [], 'bg'), '/') . '#' . Str::slug($name, '-', 'bg');
     }
 

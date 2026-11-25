@@ -131,7 +131,7 @@ class AuditFixes2511Test extends TestCase
         $this->assertSame($ids['bg'], $ids['en']);
         $this->assertSame('http://localhost/za-nas#borislav-kostadinov', $ids['bg'][0]);
         $this->assertSame('http://localhost/za-nas#' . \Illuminate\Support\Str::slug('Мария Флорова', '-', 'bg'), $ids['bg'][2]);
-        $this->assertSame('http://localhost/za-nas#' . \Illuminate\Support\Str::slug('Владимир Цончев', '-', 'bg'), $ids['bg'][1]);
+        $this->assertSame('http://localhost/za-nas#vladimir-tsonchev', $ids['bg'][1]);
     }
 
     public function test_founders_employees_and_authors_use_the_same_ids_in_both_languages(): void
@@ -142,7 +142,7 @@ class AuditFixes2511Test extends TestCase
             $persons = collect($this->jsonLd($this->get($about)->getContent()))->flatMap(fn ($b) => $b['@graph'] ?? [])->where('@type', 'Person')->values();
             $refs = array_merge(array_column($org['founder'], '@id'), array_column($org['employee'], '@id'));
             $this->assertSame($persons->pluck('@id')->all(), $refs, $home);
-            $this->assertSame('http://localhost/za-nas#' . \Illuminate\Support\Str::slug('Владимир Цончев', '-', 'bg'), $refs[1]);
+            $this->assertSame('http://localhost/za-nas#vladimir-tsonchev', $refs[1]);
             foreach ($persons as $person) {
                 $this->assertSame(Schema::organizationId(), $person['worksFor']['@id']);
             }
@@ -156,7 +156,7 @@ class AuditFixes2511Test extends TestCase
         ]);
         foreach (['/blog/statia', '/en/blog/article'] as $path) {
             $posting = collect($this->jsonLd($this->get($path)->getContent()))->firstWhere('@type', 'BlogPosting');
-            $this->assertSame('http://localhost/za-nas#' . \Illuminate\Support\Str::slug('Владимир Цончев', '-', 'bg'), $posting['author']['@id'], $path);
+            $this->assertSame('http://localhost/za-nas#vladimir-tsonchev', $posting['author']['@id'], $path);
         }
     }
 
