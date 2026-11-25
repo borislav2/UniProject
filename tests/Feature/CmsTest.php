@@ -276,7 +276,7 @@ class CmsTest extends TestCase
 
     public function test_posts_can_be_shared_and_the_facebook_page_is_linked(): void
     {
-        config(['creatium.blog_enabled' => true, 'creatium.contact.facebook' => null]);
+        config(['creatium.blog_enabled' => true, 'creatium.contact.facebook' => null, 'creatium.contact.google_business' => null]);
         $this->makePost();
         $share = 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode(url('/blog/kak-da-izberete-domeyn'));
 
