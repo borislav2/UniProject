@@ -229,9 +229,23 @@ class Schema
         if ($name === '') {
             return null;
         }
-        foreach ((array) site('team') as $member) {
+        $wanted = Str::lower(Str::before($name, ' '));
+        $team = (array) site('team');
+        // The user names and the blog_authors config are Bulgarian, so the first name is also looked up in the Bulgarian team and the
+        // member at the same place in the page language is returned (an English post page shows „Borislav“, not nobody).
+        $bulgarian = app()->getLocale() === 'bg' ? $team : (array) app(\App\Support\Content::class)->get('team', 'bg');
+        foreach ($bulgarian as $i => $member) {
+            $first = Str::lower(Str::before((string) (((array) $member)['name'] ?? ''), ' '));
+            if ($first !== '' && $first === $wanted) {
+                $person = self::person((array) ($team[$i] ?? $member));
+                if ($person) {
+                    return $person;
+                }
+            }
+        }
+        foreach ($team as $member) {
             $first = Str::lower(Str::before((string) ($member['name'] ?? ''), ' '));
-            if ($first !== '' && Str::lower(Str::before($name, ' ')) === $first) {
+            if ($first !== '' && $first === $wanted) {
                 $person = self::person((array) $member);
                 if ($person) {
                     return $person;
