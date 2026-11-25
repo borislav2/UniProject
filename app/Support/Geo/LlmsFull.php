@@ -24,7 +24,7 @@ class LlmsFull
 
     private const LABELS = [
         'bg' => [
-            'who' => 'Кои сме', 'team' => 'Екипът', 'founders' => 'Основатели и собственици', 'colleagues' => 'Колеги от екипа', 'skills' => 'Умения',
+            'who' => 'Кои сме', 'team' => 'Екипът', 'skills' => 'Умения',
             'services' => 'Услуги', 'includes' => 'Какво включва', 'result' => 'Какво получава клиентът', 'problems' => 'Какви проблеми решава',
             'packages' => 'Пакети и цени', 'all_packages' => 'Всички пакети', 'yearly' => 'При годишно плащане :y на година, 2 месеца безплатно',
             'price_model' => 'Цените са фиксирани. Плащането е само месечен абонамент, без еднократна стартова цена и без капаро. Годишното плащане е за 10 месеца вместо 12.',
@@ -37,7 +37,7 @@ class LlmsFull
             'guarantee' => 'Гаранция', 'report' => 'Отчет', 'ownership' => 'Собственост', 'prices' => 'Цени',
         ],
         'en' => [
-            'who' => 'Who we are', 'team' => 'The team', 'founders' => 'Founders and owners', 'colleagues' => 'Colleagues', 'skills' => 'Skills',
+            'who' => 'Who we are', 'team' => 'The team', 'skills' => 'Skills',
             'services' => 'Services', 'includes' => 'What it includes', 'result' => 'What the client gets', 'problems' => 'Problems it solves',
             'packages' => 'Packages and prices', 'all_packages' => 'All packages', 'yearly' => 'Paid yearly it is :y a year, 2 months free',
             'price_model' => 'Prices are fixed. Payment is a monthly subscription only, with no one-time start price and no deposit. Yearly payment covers 10 months instead of 12.',
@@ -197,22 +197,22 @@ class LlmsFull
             $l[] = '- ' . $t['company'] . ' ' . $legal['company'] . (filled($legal['eik'] ?? null) ? ', EIK ' . $legal['eik'] : '') . (filled($legal['address'] ?? null) ? ', ' . $legal['address'] : '');
         }
 
-        // Team: the first two members are the founders, as in SiteKnowledge.
+        // Team: one list of everyone with the size in the heading, then a note on who the founders are (the first two members, as in SiteKnowledge).
         $team = array_values(array_filter((array) site('team'), fn ($m) => filled($m['name'] ?? null)));
         if ($team) {
             $l[] = '';
-            $l[] = '## ' . $t['team'];
-            foreach ($team as $i => $member) {
-                if ($i === 0 || $i === 2) {
-                    $l[] = '';
-                    $l[] = '### ' . ($i === 0 ? $t['founders'] : $t['colleagues']);
-                    $l[] = '';
-                }
+            $l[] = '## ' . TeamFacts::heading($locale);
+            $l[] = '';
+            foreach ($team as $member) {
                 $role = $g && filled($member['g_role'] ?? null) ? $member['g_role'] : ($member['role'] ?? '');
                 $description = $g && filled($member['g_description'] ?? null) ? $member['g_description'] : ($member['description'] ?? '');
                 $skills = array_filter((array) ($g && ! empty($member['g_skills']) ? $member['g_skills'] : ($member['skills'] ?? [])), 'is_string');
                 $l[] = '- **' . $member['name'] . '**' . ($role ? ', ' . $role : '') . ($description ? '. ' . rtrim($description, '.') : '')
                     . ($skills ? '. ' . $t['skills'] . ' ' . implode(', ', $skills) : '') . (filled($member['linkedin'] ?? null) ? ' (' . $member['linkedin'] . ')' : '');
+            }
+            if (($note = TeamFacts::founderNote($locale)) !== '') {
+                $l[] = '';
+                $l[] = $note;
             }
         }
 

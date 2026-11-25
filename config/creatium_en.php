@@ -126,6 +126,7 @@ return [
             ['title' => 'Everything we build stays with you', 'text' => 'We do not believe in artificial lock-in and hidden loopholes. All the accounts, data, systems and resources we create together are entirely yours from day one.'],
         ],
         'g_founders_title' => 'The team',
+        'g_team_line' => 'Creatium Lab is a team of {count} people in Sofia, {names}.',
         'story_title' => 'Why we do it',
         'story' => [
             'The website is ready, the ads are running, and the phone stays silent.',
@@ -946,7 +947,7 @@ return [
             'slug' => 'ai-agents', 'icon' => 'robot', 'menu' => 'AI agents',
             'title' => 'AI agents that take over the operational work',
             'seo_title' => 'AI agents for your business | Creatium Lab',
-            'seo_description' => 'Autonomous AI agents connected to your CRM, calendar and email. Priced by offer after a conversation about your processes.',
+            'seo_description' => 'Autonomous AI agents connected to your CRM, calendar and email. They take over routine work and customer service. Priced by offer after a conversation.',
             'lead' => 'We design and deploy AI agents that do not just answer questions but complete whole workflows.',
             'g_what' => 'We build AI agents that serve your customers and do the repetitive work, connected to your own systems.',
             'g_only' => true,

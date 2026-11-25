@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'Cookie policy')
+@section('title', 'Cookie policy, which cookies we use and why')
 @section('meta_description', 'Which cookies the Creatium Lab website uses, what they are for and how to manage your consent.')
 
 @section('content')

@@ -3,7 +3,7 @@
 {{-- The blog list in design G: a hairline category row, a grid of posts with equal 16:10 covers, plain pagination. --}}
 @section('title', $category ? __('Новини за :category', ['category' => $category->trOrBg('name')]) : __('Новини за клиенти от Google и ChatGPT'))
 @section('breadcrumb', $category ? $category->trOrBg('name') : '')
-@section('meta_description', $category ? __('Статии от категория „:category“. Практични съвети за бизнеси, просто и с примери.', ['category' => $category->trOrBg('name')]) : __('Практични статии за собственици на бизнес. Как да ви намират в Google и ChatGPT, какво трябва да има сайтът и кои реклами и имейли се изплащат.'))
+@section('meta_description', $category ? __('Статии от категория „:category“ за собственици на бизнес. Практични съвети с примери, на български и на английски.', ['category' => $category->trOrBg('name')]) : __('Практични статии за собственици на бизнес. Как да ви намират в Google и ChatGPT, какво трябва да има сайтът и кои реклами и имейли се изплащат.'))
 @section('g_lean', 'inner')
 
 @section('content')

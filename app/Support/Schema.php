@@ -104,7 +104,16 @@ class Schema
             'founder' => self::teamRefs(array_slice(self::teamMembers(), 0, 2)),
             'employee' => self::teamRefs(array_slice(self::teamMembers(), 2)),
             'hasOfferCatalog' => self::offerCatalog(),
+            'numberOfEmployees' => self::numberOfEmployees(),
         ]);
+    }
+
+    /** The team size as a QuantitativeValue: the number of team members, the same count the visible team line and llms.txt state. */
+    private static function numberOfEmployees(): ?array
+    {
+        $count = Geo\TeamFacts::count();
+
+        return $count > 0 ? ['@type' => 'QuantitativeValue', 'value' => $count] : null;
     }
 
     /** Team members with a name, in the order of the team block: the first two are the founders (the same rule as the Kreo knowledge). */
@@ -145,6 +154,48 @@ class Schema
         return $items ? ['@type' => 'OfferCatalog', 'name' => __('Услуги'), 'itemListElement' => $items] : null;
     }
 
+    /**
+     * The three packages of design G as an OfferCatalog: one Service per plan with its monthly price as a UnitPriceSpecification
+     * (EUR, per month, P1M) and the yearly price (10 months, P1Y) as a second one. A plan marked „от“ states `minPrice`, as the
+     * page does. The figures are the ones of `plans.g_items`, nothing is added. Null when no plan has a monthly price.
+     */
+    public static function packages(array $plans): ?array
+    {
+        $items = [];
+        foreach (GPlans::cards($plans) as $card) {
+            $item = (array) (($plans['g_items'] ?? [])[$card['index']] ?? []);
+            $monthly = self::number($item['monthly'] ?? null);
+            if ($monthly === null) {
+                continue;
+            }
+            $key = filled($card['from']) ? 'minPrice' : 'price';
+            $specs = [[
+                '@type' => 'UnitPriceSpecification', $key => $monthly, 'priceCurrency' => 'EUR', 'unitCode' => 'MON', 'billingDuration' => 'P1M',
+            ]];
+            if (($yearly = self::number($item['yearly'] ?? null)) !== null) {
+                $specs[] = ['@type' => 'UnitPriceSpecification', $key => $yearly, 'priceCurrency' => 'EUR', 'unitCode' => 'ANN', 'billingDuration' => 'P1Y'];
+            }
+            $items[] = [
+                '@type' => 'Service',
+                'name' => GPlans::label($card),
+                'description' => $card['audience'] !== '' ? $card['audience'] : null,
+                'url' => lroute('packages'),
+                'provider' => ['@id' => self::organizationId()],
+                'areaServed' => ['@type' => 'Country', 'name' => __('България')],
+                'offers' => ['@type' => 'Offer', 'priceCurrency' => 'EUR', 'url' => lroute('packages'), 'priceSpecification' => $specs],
+            ];
+        }
+        $items = array_map(fn ($i) => array_filter($i, fn ($v) => $v !== null), $items);
+
+        return $items ? [
+            '@' . 'context' => 'https://schema.org',
+            '@type' => 'OfferCatalog',
+            'name' => (string) ($plans['g_title'] ?? __('План за всеки етап от вашия бизнес')),
+            'url' => lroute('packages'),
+            'itemListElement' => $items,
+        ] : null;
+    }
+
     public static function website(): array
     {
         return [
@@ -164,12 +215,28 @@ class Schema
         return ['@type' => 'Organization', '@id' => self::organizationId(), 'name' => 'Creatium Lab', 'url' => lroute('home')];
     }
 
+    /**
+     * The @id of a Person: /za-nas#{transliterated Bulgarian name}, the same on the Bulgarian and the English page (a photo file name
+     * or an English spelling must never change it). An English member is matched to the Bulgarian one at the same place in the team.
+     */
     public static function personId(array $member): string
     {
-        // The photo file name is already a stable Latin slug (borislav-kostadinov); a member without one falls back to the transliterated name.
-        $slug = filled($member['image'] ?? null) ? pathinfo((string) $member['image'], PATHINFO_FILENAME) : Str::slug((string) ($member['name'] ?? ''), '-', 'bg');
+        $name = trim((string) ($member['name'] ?? ''));
+        if (app()->getLocale() !== 'bg') {
+            $team = array_values((array) site('team'));
+            $bulgarian = array_values((array) app(Content::class)->get('team', 'bg'));
+            $index = null;
+            foreach ($team as $i => $m) {
+                if ($name !== '' && trim((string) (((array) $m)['name'] ?? '')) === $name) {
+                    $index = $i;
+                    break;
+                }
+            }
+            $bgName = trim((string) (((array) ($bulgarian[$index] ?? []))['name'] ?? ''));
+            $name = $bgName !== '' ? $bgName : $name;
+        }
 
-        return rtrim(lroute('about', [], 'bg'), '/') . '#' . $slug;
+        return rtrim(lroute('about', [], 'bg'), '/') . '#' . Str::slug($name, '-', 'bg');
     }
 
     /** A team member as a Person: real name, role, photo and LinkedIn profile (when the team entry has one). */

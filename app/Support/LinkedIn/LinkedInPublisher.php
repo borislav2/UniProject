@@ -135,6 +135,8 @@ class LinkedInPublisher
             return $this->fail($post, trim($message . ' (код ' . $response->status() . ')'));
         }
 
+        // Bookkeeping about the social post is not a change of the article: updated_at is its dateModified.
+        $post->timestamps = false;
         $post->forceFill(['linkedin_post_id' => $id, 'linkedin_posted_at' => now(), 'linkedin_error' => null])->save();
         Cache::forget(self::PAUSE_KEY);
 
@@ -185,6 +187,8 @@ class LinkedInPublisher
 
     private function fail(Post $post, string $error): string
     {
+        // Bookkeeping about the social post is not a change of the article: updated_at is its dateModified.
+        $post->timestamps = false;
         $post->forceFill(['linkedin_error' => mb_substr($error, 0, 1000)])->save();
         Log::warning('LinkedIn publish failed', ['post_id' => $post->id, 'error' => $error]);
 

@@ -100,11 +100,115 @@ class StarterBlogPosts
                 $values = (array) $post->getAttribute($field);
                 $post->setAttribute($field, array_merge($values, ['en' => $value]));
             }
-            $post->save();
+            self::saveKeepingDates($post);
             $filled++;
         }
 
         return $filled;
+    }
+
+    /**
+     * Saves a post without touching updated_at. A back-fill (English text, cover, longer starter text) is not a change the owners
+     * made to the article, and updated_at is what the JSON-LD dateModified, the sitemap lastmod and the visible „Обновено“ line show.
+     */
+    private static function saveKeepingDates(Post $post): void
+    {
+        $post->timestamps = false;
+        $post->save();
+    }
+
+    /** The moments (UTC) at which back-fills bumped updated_at on many posts at once, and how far around each one counts as the same run. */
+    public const BULK_WINDOWS = ['2026-11-24 20:03', '2026-11-25 07:53', '2026-11-25 11:09'];
+
+    public const BULK_WINDOW_MINUTES = 10;
+
+    /**
+     * Puts updated_at back to the publish date (the creation date for a post without one) on posts from the data files whose
+     * updated_at falls inside one of the bulk windows and is later than that date: those timestamps come from a back-fill, not from an
+     * edit, and they made dateModified, the sitemap lastmod and „Обновено“ wrong. A post edited at any other time is not touched.
+     * Returns the number of posts fixed.
+     *
+     * @param  list<string>|null  $windows  UTC moments, default BULK_WINDOWS
+     */
+    public static function restoreBulkTimestamps(?array $windows = null): int
+    {
+        $windows = array_map(fn ($w) => Carbon::parse($w, 'UTC'), $windows ?? self::BULK_WINDOWS);
+        $slugs = [];
+        foreach (glob(database_path('data/*.php')) as $path) {
+            foreach (self::data(basename($path))['posts'] as $post) {
+                $slugs[] = $post['slug'];
+            }
+        }
+
+        $fixed = 0;
+        foreach (Post::whereIn('slug->bg', $slugs)->get() as $post) {
+            $base = $post->published_at ?? $post->created_at;
+            $updated = $post->updated_at;
+            if (! $base || ! $updated || ! $updated->gt($base)) {
+                continue;
+            }
+            $inWindow = collect($windows)->contains(fn (Carbon $w) => abs($updated->diffInSeconds($w, false)) <= self::BULK_WINDOW_MINUTES * 60);
+            if (! $inWindow) {
+                continue;
+            }
+            $post->updated_at = $base;
+            $post->timestamps = false;
+            $post->save();
+            $fixed++;
+        }
+
+        return $fixed;
+    }
+
+    /** Articles whose text was changed on purpose after they were first imported: the new text is in the data files, the old one in blog-previous. */
+    public const REFRESHED = ['kolko-struva-sait-za-malak-biznes-2026'];
+
+    /** The text the article had before it was refreshed: {slug}.md (Bulgarian) or {slug}.en.md (English), or null. */
+    public static function refreshedPrevious(string $slug, string $locale): ?string
+    {
+        $file = database_path(self::PREVIOUS_DIR . "/$slug" . ($locale === 'en' ? '.en' : '') . '.md');
+
+        return is_file($file) ? trim(file_get_contents($file)) : null;
+    }
+
+    /**
+     * Gives the REFRESHED articles their new text, per language and only where the text in the database is still exactly the previous
+     * text kept in database/data/blog-previous. Anything the owners edited stays. This is a real content change, so updated_at moves.
+     *
+     * @return array{bg: int, en: int}
+     */
+    public static function refreshBodies(): array
+    {
+        $done = ['bg' => 0, 'en' => 0];
+        foreach (self::REFRESHED as $slug) {
+            $post = Post::where('slug->bg', $slug)->first();
+            if (! $post) {
+                continue;
+            }
+            $new = [];
+            foreach (glob(database_path('data/*.php')) as $path) {
+                foreach (self::data(basename($path))['posts'] as $data) {
+                    if ($data['slug'] === $slug) {
+                        $new = ['bg' => trim($data['body']), 'en' => trim((string) ($data['body_en'] ?? ''))];
+                    }
+                }
+            }
+            $body = (array) $post->body;
+            foreach (['bg', 'en'] as $locale) {
+                $previous = self::refreshedPrevious($slug, $locale);
+                $current = trim((string) ($body[$locale] ?? ''));
+                if (filled($new[$locale] ?? null) && $previous !== null && $current === $previous && $current !== $new[$locale]) {
+                    $body[$locale] = $new[$locale];
+                    $done[$locale]++;
+                }
+            }
+            if ($body !== (array) $post->body) {
+                $post->body = $body;
+                $post->save();
+            }
+        }
+
+        return $done;
     }
 
     /** Датите на публикуване по реда на статиите. */
@@ -180,7 +284,7 @@ class StarterBlogPosts
                 $done['covers']++;
             }
 
-            $post->save();
+            self::saveKeepingDates($post);
         }
 
         return $done;
@@ -196,7 +300,8 @@ class StarterBlogPosts
         $posts = self::data($file)['posts'];
         $count = 0;
         foreach ($posts as $i => $data) {
-            $count += Post::where('slug->bg', $data['slug'])->where('status', 'draft')->whereNull('published_at')
+            // toBase(): publishing a draft on a date is not an edit of the text, updated_at stays.
+            $count += Post::where('slug->bg', $data['slug'])->where('status', 'draft')->whereNull('published_at')->toBase()
                 ->update(['status' => 'published', 'published_at' => $at->copy()->addMinutes(count($posts) - 1 - $i)->utc()]);
         }
 
@@ -218,7 +323,7 @@ class StarterBlogPosts
             $post = Post::where('slug->bg', $data['slug'])->first();
             if ($post && blank($post->cover_image)) {
                 $post->cover_image = $data['cover'];
-                $post->save();
+                self::saveKeepingDates($post);
                 $filled++;
             }
         }

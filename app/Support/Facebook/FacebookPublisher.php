@@ -99,6 +99,8 @@ class FacebookPublisher
             return $this->fail($post, trim(($error['message'] ?? 'Грешка ' . $response->status()) . (isset($error['code']) ? ' (код ' . $error['code'] . ')' : '')));
         }
 
+        // Bookkeeping about the social post is not a change of the article: updated_at is its dateModified.
+        $post->timestamps = false;
         $post->forceFill(['facebook_post_id' => $response->json('id'), 'facebook_posted_at' => now(), 'facebook_error' => null])->save();
         Cache::forget(self::PAUSE_KEY);
 
@@ -123,6 +125,8 @@ class FacebookPublisher
 
     private function fail(Post $post, string $error): string
     {
+        // Bookkeeping about the social post is not a change of the article: updated_at is its dateModified.
+        $post->timestamps = false;
         $post->forceFill(['facebook_error' => mb_substr($error, 0, 1000)])->save();
         Log::warning('Facebook publish failed', ['post_id' => $post->id, 'error' => $error]);
 

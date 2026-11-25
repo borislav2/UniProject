@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'Общи условия')
+@section('title', 'Общи условия за услугите и ползване на сайта')
 @section('meta_description', 'Общи условия за ползване на сайта на Creatium Lab и за запитванията, изпратени през него.')
 
 @section('content')
