@@ -17,7 +17,7 @@ return [
         // Страницата на фирмата в LinkedIn (CREATIUM_LINKEDIN_URL): само sameAs в данните за Google, докато собствениците не я създадат е празно.
         'linkedin' => env('CREATIUM_LINKEDIN_URL') ?: null,
         // Google Business профилът (CREATIUM_GOOGLE_BUSINESS_URL, owners 25.11.2026): sameAs в данните за Google и връзка в /llms-full.txt.
-        'google_business' => env('CREATIUM_GOOGLE_BUSINESS_URL', 'https://share.google/0u0Q2PqSiNXcUED4a') ?: null,
+        'google_business' => env('CREATIUM_GOOGLE_BUSINESS_URL', 'https://maps.app.goo.gl/vkBxxnC33SqBRcDH7') ?: null,
     ],
 
     // Чатът на сайта (AI асистент с Claude, без ANTHROPIC_API_KEY отговаря от честите въпроси).

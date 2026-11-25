@@ -378,7 +378,7 @@ class SeoAuditTest extends TestCase
         $this->assertSame('€500 – €1200+', $org['priceRange'], 'both designs show the same monthly price range');
         $this->assertSame('http://localhost/images/logo.webp', $org['logo']);
         $this->assertContains('https://www.facebook.com/profile.php?id=61595819339267', $org['sameAs']);
-        $this->assertContains('https://share.google/0u0Q2PqSiNXcUED4a', $org['sameAs']);
+        $this->assertContains('https://maps.app.goo.gl/vkBxxnC33SqBRcDH7', $org['sameAs']);
         $this->assertSame('BG', $org['address']['addressCountry']);
         $this->assertSame(['bg', 'en'], $org['contactPoint']['availableLanguage']);
         $this->assertSame('WebSite', $site['@type']);
