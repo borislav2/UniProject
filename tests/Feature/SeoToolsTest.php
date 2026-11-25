@@ -64,18 +64,24 @@ class SeoToolsTest extends TestCase
         $this->assertSame('missing', Snippet::titleState(''));
         $this->assertSame('short', Snippet::titleState(str_repeat('а', 29)));
         $this->assertSame('ok', Snippet::titleState(str_repeat('а', 30)));
-        $this->assertSame('ok', Snippet::titleState(str_repeat('а', 60)));
-        $this->assertSame('long', Snippet::titleState(str_repeat('а', 61)));
+        // Narrow letters, so that only the character limit decides (Cyrillic reaches 561 px before 60 characters, see SeoAuditTest).
+        $this->assertSame('ok', Snippet::titleState(str_repeat('i', 60)));
+        $this->assertSame('long', Snippet::titleState(str_repeat('i', 61)));
+        $this->assertSame('long', Snippet::titleState(str_repeat('а', 60)), 'wide letters pass 561 px');
         $this->assertSame('short', Snippet::descriptionState(str_repeat('а', 69)));
-        $this->assertSame('ok', Snippet::descriptionState(str_repeat('а', 155)));
-        $this->assertSame('long', Snippet::descriptionState(str_repeat('а', 156)));
+        $this->assertSame('ok', Snippet::descriptionState(str_repeat('i', 155)));
+        $this->assertSame('long', Snippet::descriptionState(str_repeat('i', 156)));
+        $this->assertSame('long', Snippet::descriptionState(str_repeat('а', 155)), 'wide letters pass 985 px');
 
         $long = str_repeat('Изработка на сайт ', 8);
         $cut = Snippet::truncateTitle($long);
         $this->assertStringEndsWith('…', $cut);
         $this->assertLessThanOrEqual(Snippet::TITLE_PX, Snippet::width(rtrim($cut, '…')));
         $this->assertSame('Кратко', Snippet::truncateTitle('Кратко'));
-        $this->assertSame(155, mb_strlen(Snippet::truncateDescription(str_repeat('я', 300))));
+        $this->assertSame(155, mb_strlen(Snippet::truncateDescription(str_repeat('i', 300))));
+        $wide = Snippet::truncateDescription(str_repeat('я', 300));
+        $this->assertStringEndsWith('…', $wide);
+        $this->assertLessThanOrEqual(Snippet::DESC_PX, Snippet::width($wide, Snippet::DESC_FONT));
         $this->assertSame('creatiumlab.com › uslugi › sait', Snippet::breadcrumb('https://creatiumlab.com/uslugi/sait'));
     }
 

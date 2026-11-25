@@ -106,7 +106,7 @@ class HomeCopyTest extends TestCase
             'published_at' => now()->subDay(),
         ]);
 
-        $this->get('/blog/4-te-avtomatichni-imeyla')->assertSee('<title>4-те автоматични имейла, които всеки онлайн магазин трябва да има</title>', false);
+        $this->get('/blog/4-te-avtomatichni-imeyla')->assertSee('<title>' . \App\Support\Seo\Snippet::fitTitle('4-те автоматични имейла, които всеки онлайн магазин трябва да има') . '</title>', false);
         $this->get('/paketi')->assertSee('| Creatium Lab</title>', false);
 
         $this->get('/en/blog')->assertOk()->assertSee('<meta name="robots" content="noindex, follow">', false);

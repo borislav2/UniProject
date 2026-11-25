@@ -26,11 +26,11 @@
                     <small>{{ $post->status === 'published' ? ($post->published_at?->isFuture() ? 'насрочена' : 'публикувана') : 'чернова' }} · {{ ($post->published_at ?? $post->updated_at)->format('d.m.Y') }}</small></td>
                 <td>
                     <div class="sx-text">{{ $r['title'] ?: '—' }}</div>
-                    <div class="sx-meta"><span class="sx-len {{ $state(Snippet::titleState($r['title'])) }}">{{ Snippet::length($r['title']) }} / 60</span><span class="sx-tag {{ $r['title_own'] ? 'own' : 'quiet' }}">{{ $r['title_own'] ? 'Ваш текст' : 'по подразбиране' }}</span></div>
+                    <div class="sx-meta"><span class="sx-len {{ $state(Snippet::titleState($r['title'])) }}">{{ Snippet::length($r['title']) }} / 60 · {{ round(Snippet::width((string) $r['title'])) }} / {{ Snippet::TITLE_PX }} px</span><span class="sx-tag {{ $r['title_own'] ? 'own' : 'quiet' }}">{{ $r['title_own'] ? 'Ваш текст' : 'по подразбиране' }}</span></div>
                 </td>
                 <td>
                     <div class="sx-text">{{ $r['description'] ?: '—' }}</div>
-                    <div class="sx-meta"><span class="sx-len {{ $state(Snippet::descriptionState($r['description'])) }}">{{ Snippet::length($r['description']) }} / 155</span><span class="sx-tag {{ $r['description_own'] ? 'own' : 'quiet' }}">{{ $r['description_own'] ? 'Ваш текст' : 'по подразбиране' }}</span></div>
+                    <div class="sx-meta"><span class="sx-len {{ $state(Snippet::descriptionState($r['description'])) }}">{{ Snippet::length($r['description']) }} / 155 · {{ round(Snippet::descriptionWidth($r['description'])) }} / {{ Snippet::DESC_PX }} px</span><span class="sx-tag {{ $r['description_own'] ? 'own' : 'quiet' }}">{{ $r['description_own'] ? 'Ваш текст' : 'по подразбиране' }}</span></div>
                 </td>
                 <td>{{ $r['keyword'] ?: '—' }}</td>
                 <td>{{ $r['author'] }}</td>

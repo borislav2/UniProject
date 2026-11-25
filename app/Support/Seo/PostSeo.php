@@ -16,7 +16,7 @@ class PostSeo
 
     public const WARN_WORDS = 150;
 
-    /** Заглавието в Google: meta_title или заглавието + „ | Creatium Lab“ (без наставката, когато заглавието стане над 60 знака), като в layouts/public. */
+    /** Заглавието в Google: meta_title или заглавието + „ | Creatium Lab“ (без наставката, когато заглавието стане над 60 знака или 561 px), като в layouts/public. */
     public static function effectiveTitle(Post $post, string $locale): ?string
     {
         if ($meta = $post->tr('meta_title', $locale)) {
@@ -24,7 +24,7 @@ class PostSeo
         }
         $title = $post->tr('title', $locale);
 
-        return $title ? (mb_strlen($title) + 15 > 60 ? $title : $title . ' | Creatium Lab') : null;
+        return $title ? Snippet::withSuffix($title) : null;
     }
 
     public static function effectiveDescription(Post $post, string $locale): ?string
