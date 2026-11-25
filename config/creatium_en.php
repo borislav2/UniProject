@@ -631,7 +631,7 @@ return [
         'google' => [
             'slug' => 'google-business-profile', 'icon' => 'location-dot', 'menu' => 'Google profile and reviews',
             'title' => 'Google Business Profile and reviews',
-            'seo_title' => 'Google Business Profile and review management | Creatium Lab',
+            'seo_title' => 'Google Business Profile and reviews | Creatium Lab',
             'seo_description' => 'A complete Google Business Profile, a reply to every review and more new reviews. Rank higher on Google Maps.',
             'lead' => 'For many customers the first impression is not your website but your Google Maps profile. We make it win.',
             'g_what' => 'We keep your Google Maps profile up to date and answer your reviews, so more people choose you.',
@@ -818,7 +818,7 @@ return [
             'slug' => 'google-shopping-readiness', 'icon' => 'bag-shopping', 'menu' => 'Google Shopping',
             'title' => 'Get your online shop ready for Google Shopping',
             'seo_title' => 'Google Shopping readiness in Bulgaria | Creatium Lab',
-            'seo_description' => 'Google Shopping is expected in Bulgaria, with no official date. We prepare the feed, Merchant Center, policies and tracking so you are ready on launch day.',
+            'seo_description' => 'Get ready for Google Shopping in Bulgaria. We prepare the feed, Merchant Center, policies and tracking so you are ready on launch day.',
             'lead' => 'Google Shopping is expected in Bulgaria, but there is no official date. The shops that have their data ready on launch day win. We get yours ready.',
             'g_what' => 'We prepare the products, the prices and the data of your shop for Google Shopping, so you do not start from zero on the day it launches in Bulgaria.',
             'problems' => [
@@ -947,7 +947,7 @@ return [
             'slug' => 'ai-agents', 'icon' => 'robot', 'menu' => 'AI agents',
             'title' => 'AI agents that take over the operational work',
             'seo_title' => 'AI agents for your business | Creatium Lab',
-            'seo_description' => 'Autonomous AI agents connected to your CRM, calendar and email. They take over routine work and customer service. Priced by offer after a conversation.',
+            'seo_description' => 'AI agents connected to your CRM, calendar and email take over routine work and customer service. Priced by offer after a conversation.',
             'lead' => 'We design and deploy AI agents that do not just answer questions but complete whole workflows.',
             'g_what' => 'We build AI agents that serve your customers and do the repetitive work, connected to your own systems.',
             'g_only' => true,

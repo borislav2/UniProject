@@ -7,6 +7,8 @@ use App\Models\PostCategory;
 use App\Models\Project;
 use App\Models\User;
 use App\Support\PostMetaTitles2026;
+use App\Support\Seo\Snippet;
+use App\Support\SnippetLimits2026;
 use App\Support\Schema;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
@@ -582,5 +584,149 @@ class SeoAuditTest extends TestCase
         }
 
         $this->get('/blog/kak-da-vdignete-srednata-porachka')->assertSee('<title>Как да вдигнете средната поръчка без повече реклама</title>', false);
+    }
+
+    // Screaming Frog pass (25.11.2026): pixel limits. Titles 561 px (Arial 20px), descriptions 985 px (Arial 14px).
+
+    public function test_every_sitemap_page_in_design_g_fits_the_pixel_limits_in_both_languages_with_long_cyrillic_and_english_posts(): void
+    {
+        $category = PostCategory::create(['name' => ['bg' => 'Имейл кампании', 'en' => 'Email campaigns'], 'slug' => ['bg' => 'imeyl-kampanii', 'en' => 'email-campaigns']]);
+        $long = 'Много дълго заглавие на статия за имейл кампании и сайтове за малък бизнес в България';
+        $excerpt = 'Дълго описание на статията, което се пише на кирилица и затова е по-широко от латиницата. Втори дълъг сегмент за да мине всяка граница, трети сегмент със снимки и примери за малък бизнес. Четвърти.';
+        Post::create([
+            'title' => ['bg' => $long, 'en' => 'A very long English title about email campaigns and websites for small business owners'],
+            'slug' => ['bg' => 'dalgo-zaglavie', 'en' => 'long-title'], 'excerpt' => ['bg' => $excerpt, 'en' => str_repeat('Long English excerpt that goes on and on. ', 8)],
+            'body' => ['bg' => 'Текст.', 'en' => 'Text.'], 'status' => 'published', 'published_at' => now()->subDay(), 'post_category_id' => $category->id,
+        ]);
+        Post::create([
+            'title' => ['bg' => 'Кратка статия за сайта', 'en' => 'A short article'], 'slug' => ['bg' => 'kratka-statia', 'en' => 'short-article'],
+            'excerpt' => ['bg' => 'Кратко описание на статията за сайта на малкия бизнес, което стига за Google.', 'en' => 'A short description of the article for a small business website, enough for Google.'],
+            'body' => ['bg' => 'Текст.', 'en' => 'Text.'], 'status' => 'published', 'published_at' => now()->subDays(2),
+        ]);
+        $this->design('g');
+
+        $paths = $this->sitemapPaths();
+        $this->assertContains('/en/blog/long-title', $paths);
+        $this->assertContains('/blog/dalgo-zaglavie', $paths);
+        $this->assertGreaterThan(40, count($paths));
+
+        foreach ($paths as $path) {
+            $html = $this->get($path)->assertOk()->getContent();
+            $title = $this->title($html);
+            $description = $this->description($html);
+
+            $this->assertLessThanOrEqual(Snippet::TITLE_PX, Snippet::width($title), "$path title is " . round(Snippet::width($title)) . "px: $title");
+            $this->assertLessThanOrEqual(Snippet::TITLE_MAX, mb_strlen($title), "$path title is $title");
+            $this->assertGreaterThanOrEqual(Snippet::TITLE_MIN, mb_strlen($title), "$path title is $title");
+            $this->assertLessThanOrEqual(Snippet::DESC_PX, Snippet::width($description, Snippet::DESC_FONT), "$path description is " . round(Snippet::width($description, Snippet::DESC_FONT)) . "px: $description");
+            $this->assertLessThanOrEqual(Snippet::DESC_MAX, mb_strlen($description), "$path description is $description");
+        }
+    }
+
+    public function test_the_cyrillic_widths_are_those_of_arial(): void
+    {
+        // Arial advance widths in 1000ths of an em: а 556, о 556, ж 833 (capital Ж 923), i 222, space 278, m 833.
+        $this->assertEqualsWithDelta(11.12, Snippet::charWidth('а'), 0.01);
+        $this->assertEqualsWithDelta(18.46, Snippet::charWidth('Ж'), 0.01);
+        $this->assertEqualsWithDelta(4.44, Snippet::charWidth('i'), 0.01);
+        $this->assertEqualsWithDelta(5.56, Snippet::charWidth(' '), 0.01);
+        $this->assertEqualsWithDelta(7.78, Snippet::charWidth('а', 14), 0.01);
+        // A Bulgarian title is much wider than the same number of narrow Latin letters.
+        $this->assertGreaterThan(Snippet::width(str_repeat('i', 50)) * 2, Snippet::width(str_repeat('ж', 50)));
+        $this->assertEqualsWithDelta(Snippet::width('Колко'), Snippet::width('Колко', 20), 0.001);
+    }
+
+    public function test_the_suffix_is_dropped_when_the_whole_title_would_pass_561_px_not_only_60_characters(): void
+    {
+        // 42 characters, so 42 + 14 = 56 fits 60 characters, but the Cyrillic capitals are wide and the whole title passes 561 px.
+        $title = 'Как работят ЖЪЛТИТЕ ШАПКИ НА МАЛКИЯ БИЗНЕС';
+        $this->assertLessThanOrEqual(60, mb_strlen($title . Snippet::SUFFIX));
+        $this->assertGreaterThan(Snippet::TITLE_PX, Snippet::width($title . Snippet::SUFFIX));
+        $this->assertSame($title, Snippet::withSuffix($title));
+        $this->assertSame('Кратко заглавие | Creatium Lab', Snippet::withSuffix('Кратко заглавие'));
+        // 50 characters of narrow Latin letters stay under 561 px but the character limit still drops the suffix.
+        $this->assertSame(str_repeat('l', 50), Snippet::withSuffix(str_repeat('l', 50)));
+        // A title that is too wide even without the suffix is cut at the last whole word.
+        $cut = Snippet::withSuffix('Много дълго заглавие на статия за имейл кампании и сайтове за малък бизнес в България');
+        $this->assertSame('Много дълго заглавие на статия за имейл кампании', $cut);
+        $this->assertLessThanOrEqual(Snippet::TITLE_PX, Snippet::width($cut));
+
+        $post = Post::create([
+            'title' => ['bg' => $title], 'slug' => ['bg' => 'shiroko-zaglavie'],
+            'body' => ['bg' => 'x'], 'status' => 'published', 'published_at' => now()->subDay(),
+        ]);
+        $this->assertGreaterThan(Snippet::TITLE_PX, Snippet::width($post->tr('title', 'bg') . Snippet::SUFFIX));
+        $this->assertLessThanOrEqual(60, mb_strlen($post->tr('title', 'bg') . Snippet::SUFFIX));
+        $html = $this->get('/blog/shiroko-zaglavie')->assertOk()->getContent();
+        $this->assertSame($post->tr('title', 'bg'), $this->title($html));
+        $this->assertSame($post->tr('title', 'bg'), \App\Support\Seo\PostSeo::effectiveTitle($post, 'bg'), 'the admin preview follows the layout');
+    }
+
+    public function test_the_fallback_description_respects_the_pixel_limit_and_the_admin_states_count_pixels(): void
+    {
+        $text = str_repeat('Описание на услугата за малкия бизнес, което е написано на кирилица. ', 6);
+        $fit = Snippet::fit($text);
+        $this->assertLessThanOrEqual(Snippet::DESC_PX, Snippet::width($fit, Snippet::DESC_FONT));
+        $this->assertLessThan(155, mb_strlen($fit), 'Cyrillic reaches 985 px well before 155 characters');
+        $this->assertLessThanOrEqual(Snippet::DESC_PX - 80, Snippet::width(Snippet::fit($text, 155, Snippet::DESC_PX - 80), Snippet::DESC_FONT));
+        $this->assertSame('Кратко описание.', Snippet::fit('Кратко описание.'));
+
+        // Narrow Latin text of 150 characters is fine, wide Cyrillic of 150 characters is "long".
+        $this->assertSame('ok', Snippet::descriptionState(str_repeat('i ', 75)));
+        $this->assertSame('long', Snippet::descriptionState(str_repeat('ж', 150)));
+        $this->assertSame('long', Snippet::titleState(str_repeat('ж', 55)));
+        $this->assertSame('ok', Snippet::titleState('Изработка на сайт за малък бизнес, цена'));
+    }
+
+    public function test_our_own_meta_values_fit_and_the_pixel_migration_only_fills_empty_fields_and_exact_old_values(): void
+    {
+        foreach (SnippetLimits2026::POSTS as $fields) {
+            foreach ($fields as $field => $locales) {
+                foreach ($locales as [$text]) {
+                    $this->assertSnippetText($field, $text);
+                }
+            }
+        }
+        foreach (SnippetLimits2026::TITLES as [$bg, $en]) {
+            foreach (array_filter([$bg, $en]) as $text) {
+                $this->assertSnippetText('meta_title', $text);
+            }
+        }
+
+        $empty = Post::create([
+            'title' => ['bg' => 'Колко бързо трябва да се зарежда сайтът и как да проверите', 'en' => 'Website Speed Test'], 'slug' => ['bg' => 'kolko-barzo-tryabva-da-se-zarezhda-saytat'],
+            'body' => ['bg' => 'x'], 'status' => 'published', 'published_at' => now()->subDay(),
+        ]);
+        $old = Post::create([
+            'title' => ['bg' => 'Напомнящи имейли: как да върнете клиенти, които не са идвали отдавна'], 'slug' => ['bg' => 'napomnyashti-imeyli'],
+            'meta_title' => ['bg' => 'Напомнящи имейли за клиенти, които не са идвали отдавна'], 'body' => ['bg' => 'x'], 'status' => 'published', 'published_at' => now()->subDay(),
+        ]);
+        $edited = Post::create([
+            'title' => ['bg' => 'Какво е GEO и защо AI асистентите вече отговарят вместо Google'], 'slug' => ['bg' => 'kakvo-e-geo'],
+            'meta_title' => ['bg' => 'Моето заглавие за GEO'], 'meta_description' => ['bg' => 'Моето описание.'], 'body' => ['bg' => 'x'], 'status' => 'published', 'published_at' => now()->subDay(),
+        ]);
+        $modified = $empty->fresh()->updated_at;
+
+        $this->assertGreaterThan(0, SnippetLimits2026::apply());
+        $this->assertSame('Колко бързо трябва да се зарежда сайтът', $empty->fresh()->tr('meta_title', 'bg'));
+        $this->assertNull($empty->fresh()->tr('meta_title', 'en'), 'the English field is not filled for a slug that has no entry');
+        $this->assertSame('Напомнящи имейли за клиенти, които не идват', $old->fresh()->tr('meta_title', 'bg'));
+        $this->assertSame('Моето заглавие за GEO', $edited->fresh()->tr('meta_title', 'bg'));
+        $this->assertSame('Моето описание.', $edited->fresh()->tr('meta_description', 'bg'));
+        $this->assertTrue($modified->equalTo($empty->fresh()->updated_at), 'a meta title is not an edit of the article');
+        $this->assertSame(0, SnippetLimits2026::apply(), 'a second run changes nothing');
+    }
+
+    private function assertSnippetText(string $field, string $text): void
+    {
+        $this->assertDoesNotMatchRegularExpression('~[:–—]| - ~u', $text);
+        if ($field === 'meta_title') {
+            $this->assertLessThanOrEqual(Snippet::TITLE_PX, Snippet::width($text), $text);
+            $this->assertLessThanOrEqual(Snippet::TITLE_MAX, mb_strlen($text), $text);
+            $this->assertGreaterThanOrEqual(Snippet::TITLE_MIN, mb_strlen($text), $text);
+        } else {
+            $this->assertLessThanOrEqual(Snippet::DESC_PX, Snippet::width($text, Snippet::DESC_FONT), $text);
+            $this->assertLessThanOrEqual(Snippet::DESC_MAX, mb_strlen($text), $text);
+        }
     }
 }

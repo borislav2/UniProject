@@ -38,7 +38,7 @@
 
         // SEO: values from the controller (blog posts) or the admin's per-page settings override the view's defaults.
         $seo = array_filter($seo ?? [], 'filled') ?: app(\App\Support\Content::class)->seo($routeName);
-        // „ | Creatium Lab“ отпада, когато цялото заглавие заедно с него би надхвърлило 60 знака (Google иначе го реже).
+        // „ | Creatium Lab“ отпада, когато цялото заглавие заедно с него би надхвърлило 60 знака или 561 px (Google иначе го реже), вж. Snippet::withSuffix().
         // Страница 2 и следващите на списък (блог) получават свое заглавие и описание („…, страница 2“), дори когато заглавието и
         // описанието идват от администрацията, за да не повтарят първата страница.
         $pageLabel = ($pageNumber ?? 1) > 1 ? __('страница :n', ['n' => $pageNumber]) : '';
@@ -46,11 +46,11 @@
         $titleNote = $pageLabel !== '' ? ', ' . $pageLabel : '';
         $pageTitle = isset($seo['meta_title'])
             ? $seo['meta_title'] . $titleNote
-            : (mb_strlen($baseTitle . $titleNote) + mb_strlen(' | Creatium Lab') > 60 ? $baseTitle . $titleNote : $baseTitle . $titleNote . ' | Creatium Lab');
+            : \App\Support\Seo\Snippet::withSuffix($baseTitle . $titleNote);
         $pageDescription = $seo['meta_description'] ?? trim($__env->yieldContent('meta_description', __('Правим сайтове за бизнеси и се грижим хората да ги намират в Google.')));
         if ($pageLabel !== '') {
             $descNote = ' ' . mb_strtoupper(mb_substr($pageLabel, 0, 1)) . mb_substr($pageLabel, 1) . '.';
-            $pageDescription = \App\Support\Seo\Snippet::fit($pageDescription, 155 - mb_strlen($descNote)) . $descNote;
+            $pageDescription = \App\Support\Seo\Snippet::fit($pageDescription, 155 - mb_strlen($descNote), \App\Support\Seo\Snippet::DESC_PX - \App\Support\Seo\Snippet::width($descNote, \App\Support\Seo\Snippet::DESC_FONT)) . $descNote;
         }
         $canonicalUrl = $seo['canonical_url'] ?? ($canonical ?? url()->current());
         // Share image in the G style. Images are cached for a year and social networks cache by URL, so the files carry new names:
