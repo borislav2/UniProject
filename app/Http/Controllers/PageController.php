@@ -271,7 +271,7 @@ class PageController extends Controller
         array_push($lines, ...\App\Support\Geo\LlmsFull::planLines($plansBg, $g));
         $lines[] = '- Всички пакети на ' . lroute('packages', [], 'bg');
         $lines[] = '';
-        $lines[] = '## Екипът';
+        $lines[] = '## ' . \App\Support\Geo\TeamFacts::heading('bg');
         $lines[] = '';
         foreach ((array) site('team') as $member) {
             if (! filled($member['name'] ?? null)) {
@@ -279,6 +279,11 @@ class PageController extends Controller
             }
             $role = $g && filled($member['g_role'] ?? null) ? $member['g_role'] : ($member['role'] ?? '');
             $lines[] = '- ' . $member['name'] . ($role ? ', ' . $role : '') . (filled($member['linkedin'] ?? null) ? ' (' . $member['linkedin'] . ')' : '');
+        }
+        if (($note = \App\Support\Geo\TeamFacts::founderNote('bg')) !== '') {
+            $lines[] = '';
+            $lines[] = $note;
+            $lines[] = '';
         }
         $lines[] = '- Повече за екипа на ' . lroute('about', [], 'bg') . ' и често задавани въпроси на ' . lroute('faq', [], 'bg');
         if (config('creatium.blog_enabled')) {

@@ -137,7 +137,7 @@ class GeoTest extends TestCase
                 $this->assertStringNotContainsString($locale === 'en' ? 'Втора статия' : 'Second article', $body);
                 $this->assertStringContainsString($locale === 'en' ? '[Second article](http://localhost/en/blog/second)' : '[Втора статия](http://localhost/blog/vtora)', $body);
                 $this->assertStringContainsString($locale === 'en' ? 'English summary of the second article' : 'Описание', $body);
-                $this->assertStringContainsString($locale === 'en' ? 'Founders and owners' : 'Основатели и собственици', $body);
+                $this->assertStringContainsString($locale === 'en' ? 'founders and owners' : 'Основатели и собственици', $body);
                 if ($locale === 'bg') {
                     $this->assertStringContainsString('/izrabotka-na-sait-za-', $body);
                 }

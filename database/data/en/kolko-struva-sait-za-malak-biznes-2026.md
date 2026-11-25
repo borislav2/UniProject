@@ -36,6 +36,18 @@ A website is not something you make once and forget. Systems are updated, certif
 
 So with every quote it is good to ask what happens after launch, who is responsible when there is a problem and how long the reply takes. Some people prefer to pay monthly and know that someone looks after the site, and others prefer a one time price and take the risk themselves. Both approaches are legitimate, and what matters is that you know which one you are choosing.
 
+## What our packages cost
+
+Since we are talking about prices, we will be specific about ourselves too. We work with fixed prices and only with a monthly subscription. There is no one time start price and there is no deposit, and the price in the offer is the price you pay.
+
+The Core Build package is from €500 a month. It includes a fast website built with clean code that works well on a phone, the setup of your Google profile, a logo and a basic visual identity, written texts for the main pages and tracking set up for your enquiries. The hosting, the security certificate and the daily backups are included as well. The package is for a new or small business that does not yet have a good presence online.
+
+The Pro Accelerate package is from €800 a month. It contains everything in the first package and adds advertising in Google and Meta, landing pages for specific offers, email campaigns, collecting good reviews in Google and more accurate tracking of where your customers come from. It suits a business that already has a working product and wants to bring in new customers every day.
+
+The Enterprise Partnership package is from €1,200 a month and is set by an offer. It is for established companies, online shops and businesses that sell to other businesses and want to grow faster. It brings a coordinated advertising mix, work on the cost of a new customer and on the average order, automated email series connected to your sales team and a personal marketing strategist.
+
+If you pay for a whole year, you pay for 10 months instead of 12. That makes the yearly amounts €5,000, €8,000 and €12,000 for the three packages. The advertising budget in Facebook and Instagram is not included in the price and you pay it directly to Meta. You will find the details of what each package includes on the [packages and prices](/en/packages) page.
+
 ## How to compare quotes
 
 Ask for all quotes against the same list. Write which pages you want, which actions the site must have and who will provide the texts and photos. Then compare not the final sum but what exactly you get for it. A quote that is a third cheaper but does not include texts, hosting and maintenance often turns out more expensive after half a year.

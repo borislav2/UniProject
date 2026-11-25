@@ -36,6 +36,9 @@
     <div class="g-wrap">
         <div class="g-sh">
             <h2 class="g-h">{{ $about['g_founders_title'] ?? __('Екипът') }}</h2>
+            @if(filled($teamLine = \App\Support\Geo\TeamFacts::line($about)))
+                <p class="g-sh-text" data-team-line>{{ $teamLine }}</p>
+            @endif
         </div>
         {{-- Team cards (fifth round): photo or initials, name, role, a short description, the longer text, skills and LinkedIn. Horizontal cards, one per row, any number of members. --}}
         <div class="g-team" data-g-team>

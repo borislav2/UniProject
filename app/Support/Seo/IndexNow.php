@@ -79,7 +79,8 @@ class IndexNow
             if (! self::submit($urls)) {
                 return 0;
             }
-            Post::whereIn('id', $posts->pluck('id'))->update(['indexnow_at' => now()]);
+            // toBase(): a submission stamp is not a change of the article, so updated_at (its dateModified) stays.
+            Post::whereIn('id', $posts->pluck('id'))->toBase()->update(['indexnow_at' => now()]);
 
             return $posts->count();
         } catch (\Throwable $e) {

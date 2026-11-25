@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
 @section('title', 'Terms and conditions')
-@section('meta_description', 'Terms for using the Creatium Lab website and for inquiries sent through it.')
+@section('meta_description', 'Terms for using the Creatium Lab website and sending inquiries, with offers, price and payment, the guarantee, ownership, liability and governing law.')
 
 @section('content')
 @include('partials/page-header', ['heading' => 'Terms and conditions'])

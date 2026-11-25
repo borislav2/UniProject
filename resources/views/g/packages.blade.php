@@ -5,6 +5,12 @@
 @section('meta_description', __('Изграждане от €500, Ускорение от €800 и Партньорство от €1 200 на месец. Ясна структура за изграждане, поддръжка и устойчив растеж.'))
 @section('g_lean', 'inner')
 
+@push('head')
+    @if($packagesLd = \App\Support\Schema::packages((array) $plans))
+        <script type="application/ld+json">{!! json_encode($packagesLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
+    @endif
+@endpush
+
 @php
     $pad = fn ($n) => str_pad((string) $n, 2, '0', STR_PAD_LEFT);
     $gSteps = collect((array) ($plans['g_steps'] ?? []))->filter(fn ($s) => filled($s['title'] ?? null))->values();
