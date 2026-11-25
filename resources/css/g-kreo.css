@@ -1,8 +1,9 @@
 /*
  * Design G home, „Как работим“ (partials/g/kreo-story.blade.php, resources/js/g-kreo.js). Imported by g-lean.css.
  * Base = a plain list of the four steps with a still above each (phones, reduced motion, no WebGL, no JavaScript).
- * .g-kreo-3d (set by g-kreo.js on a wide screen without reduced motion and with WebGL2) = the sticky scroll story: the steps stacked on the
- * left, one shown at a time, the canvas (aria-hidden) on the right, with the first still as the poster until the 3D code is there.
+ * .g-kreo-3d (set by g-kreo.js without reduced motion and with WebGL2) = the sticky scroll story, one step shown at a time, the canvas (aria-hidden)
+ * with the first still as the poster until the 3D code is there. From 1024px the text is on the left and the stage on the right; below that (phones,
+ * tablets) the stage is on top, under the sticky header, and the text under it, above the phone bar.
  */
 .design-g .g-kreo-steps { list-style: none; margin: var(--g-gap) 0 0; padding: 0; display: grid; gap: 40px 32px; grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 760px) { .design-g .g-kreo-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 40px; } }
@@ -14,26 +15,51 @@
 .design-g .g-kreo-step p { color: var(--g-mute); margin: 0; max-width: 34em; }
 .design-g .g-kreo-stage, .design-g .g-kreo-bar { display: none; }
 
-/* Story mode */
+/* Story mode, shared by both layouts */
+.design-g .g-kreo-3d .g-kreo-story { height: 320vh; height: 320svh; }
+.design-g .g-kreo-3d .g-kreo-stick { position: sticky; top: calc(61px + env(safe-area-inset-top, 0px)); --kreo-bar: 0px; height: calc(100vh - 61px - var(--kreo-bar)); height: calc(100svh - 61px - var(--kreo-bar) - env(safe-area-inset-top, 0px)); min-height: 440px; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; gap: 8px; }
+.design-g .g-kreo-3d .g-kreo-text { display: contents; }
+.design-g .g-kreo-3d .g-kreo-text h2 { grid-row: 1; grid-column: 1; align-self: start; position: relative; z-index: 2; margin: 0; padding-top: 10px; font-size: 1.15rem; line-height: 1.2; max-width: 20em; }
+.design-g .g-kreo-3d .g-kreo-stage { display: block; grid-row: 1; grid-column: 1; position: relative; min-height: 0; min-width: 0; margin-top: 30px; }
+.design-g .g-kreo-3d .g-kreo-steps { grid-row: 2; grid-column: 1; display: grid; margin: 0; gap: 0; grid-template-columns: minmax(0, 1fr); padding-right: 64px; }
+.design-g .g-kreo-3d .g-kreo-step { grid-area: 1 / 1; gap: 6px; opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s ease; pointer-events: none; }
+.design-g .g-kreo-3d .g-kreo-step.is-active { opacity: 1; transform: none; pointer-events: auto; }
+.design-g .g-kreo-3d .g-kreo-still { display: none; }
+.design-g .g-kreo-3d .g-kreo-step .g-n { font: 300 1.9rem/1 var(--g-head); letter-spacing: -.03em; }
+.design-g .g-kreo-3d .g-kreo-step h3 { font-size: 1.3rem; line-height: 1.15; }
+.design-g .g-kreo-3d .g-kreo-step p { font-size: 15px; line-height: 1.45; }
+.design-g .g-kreo-3d .g-kreo-bar { display: block; grid-row: 3; grid-column: 1; position: relative; height: 2px; margin-bottom: 10px; background: var(--g-line); }
+.design-g .g-kreo-3d .g-kreo-bar i { position: absolute; inset: 0 auto 0 0; width: calc(var(--kreo-p, 0) * 100%); background: var(--g-accent); }
+.design-g .g-kreo-stage .g-kreo-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transition: opacity .5s ease; }
+/* the canvas has square edges: the floor and the orange line fade out before them */
+.design-g .g-kreo-stage { -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 93%, transparent), linear-gradient(to bottom, #000 80%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent, #000 9%, #000 93%, transparent), linear-gradient(to bottom, #000 80%, transparent); mask-composite: intersect; }
+.design-g .g-kreo-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .5s ease; }
+.design-g .g-kreo-stage.is-live .g-kreo-canvas { opacity: 1; }
+.design-g .g-kreo-stage.is-live .g-kreo-poster { opacity: 0; }
+
+/* Phones: the phone bar (56px) is fixed at the bottom, so the pinned box ends above it; the chat button (bottom right) has its own 64px gutter in the text */
+@media (max-width: 767px) {
+    .design-g .g-kreo-3d .g-kreo-stick { --kreo-bar: calc(56px + env(safe-area-inset-bottom, 0px)); }
+    .design-g.g-bar-off .g-kreo-3d .g-kreo-stick { --kreo-bar: 0px; }
+}
+/* Tablets: a roomier stack, the stage keeps the most of the height */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .design-g .g-kreo-3d .g-kreo-text h2 { font-size: 1.5rem; }
+    .design-g .g-kreo-3d .g-kreo-steps { padding-right: 0; }
+    .design-g .g-kreo-3d .g-kreo-step p { font-size: 1.05rem; max-width: 36em; }
+}
+
+/* Wide screens: the text on the left, the stage on the right */
 @media (min-width: 1024px) {
     .design-g .g-kreo-3d .g-kreo-story { height: 380vh; height: 380svh; }
-    .design-g .g-kreo-3d .g-kreo-stick { position: sticky; top: 68px; height: calc(100vh - 68px); height: calc(100svh - 68px); min-height: 560px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(24px, 4vw, 64px); align-items: center; }
-    .design-g .g-kreo-3d .g-kreo-text { position: relative; z-index: 1; display: grid; gap: clamp(24px, 4vh, 48px); align-content: center; }
-    .design-g .g-kreo-3d .g-kreo-text h2 { font-size: clamp(1.5rem, 2.2vw, 2.1rem); max-width: 20em; }
-    .design-g .g-kreo-3d .g-kreo-steps { display: grid; margin: 0; gap: 0; grid-template-columns: minmax(0, 1fr); }
-    .design-g .g-kreo-3d .g-kreo-step { grid-area: 1 / 1; gap: 12px; opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s ease; pointer-events: none; }
-    .design-g .g-kreo-3d .g-kreo-step.is-active { opacity: 1; transform: none; pointer-events: auto; }
-    .design-g .g-kreo-3d .g-kreo-still { display: none; }
-    .design-g .g-kreo-3d .g-kreo-step .g-n { font: 300 clamp(3rem, 5.5vw, 5rem)/1 var(--g-head); letter-spacing: -.03em; }
-    .design-g .g-kreo-3d .g-kreo-step h3 { font-size: clamp(1.5rem, 2.3vw, 2.1rem); line-height: 1.15; }
+    .design-g .g-kreo-3d .g-kreo-stick { top: 68px; height: calc(100vh - 68px); height: calc(100svh - 68px); min-height: 560px; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: none; gap: clamp(24px, 4vw, 64px); align-items: center; }
+    .design-g .g-kreo-3d .g-kreo-text { position: relative; z-index: 1; display: grid; gap: clamp(24px, 4vh, 48px); align-content: center; grid-column: 1; grid-row: 1; }
+    .design-g .g-kreo-3d .g-kreo-text h2 { grid-row: auto; grid-column: auto; position: static; padding-top: 0; font-size: clamp(1.5rem, 2.2vw, 2.1rem); }
+    .design-g .g-kreo-3d .g-kreo-steps { grid-row: auto; grid-column: auto; padding-right: 0; }
+    .design-g .g-kreo-3d .g-kreo-step { gap: 12px; }
+    .design-g .g-kreo-3d .g-kreo-step .g-n { font-size: clamp(3rem, 5.5vw, 5rem); }
+    .design-g .g-kreo-3d .g-kreo-step h3 { font-size: clamp(1.5rem, 2.3vw, 2.1rem); }
     .design-g .g-kreo-3d .g-kreo-step p { font-size: 1.05rem; }
-    .design-g .g-kreo-3d .g-kreo-bar { display: block; position: relative; height: 2px; background: var(--g-line); }
-    .design-g .g-kreo-3d .g-kreo-bar i { position: absolute; inset: 0 auto 0 0; width: calc(var(--kreo-p, 0) * 100%); background: var(--g-accent); }
-    .design-g .g-kreo-3d .g-kreo-stage { display: block; position: relative; height: 100%; min-width: 0; }
-    .design-g .g-kreo-stage .g-kreo-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transition: opacity .5s ease; }
-    /* the canvas has square edges: the floor and the orange line fade out before them */
-    .design-g .g-kreo-stage { -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 93%, transparent), linear-gradient(to bottom, #000 80%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent, #000 9%, #000 93%, transparent), linear-gradient(to bottom, #000 80%, transparent); mask-composite: intersect; }
-    .design-g .g-kreo-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .5s ease; }
-    .design-g .g-kreo-stage.is-live .g-kreo-canvas { opacity: 1; }
-    .design-g .g-kreo-stage.is-live .g-kreo-poster { opacity: 0; }
+    .design-g .g-kreo-3d .g-kreo-bar { grid-row: auto; grid-column: auto; margin-bottom: 0; }
+    .design-g .g-kreo-3d .g-kreo-stage { grid-column: 2; grid-row: 1; height: 100%; margin-top: 0; }
 }

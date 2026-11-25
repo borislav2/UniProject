@@ -2,7 +2,7 @@
 // Imported dynamically by g-kreo.js (it pulls in three.js). Renders only while the stage is on screen and the tab is visible.
 import { createStory } from './story.js';
 
-export async function mount({ section, stageEl, getT, onLost }) {
+export async function mount({ section, stageEl, getT, onLost, lite = false }) {
     const root = document.documentElement;
     // The board shows the short step names (config short, e.g. „Стратегия“) so they are readable from afar; the full title is the fallback.
     const titles = [...section.querySelectorAll('[data-g-step]')].map((li) => (li.dataset.short || li.querySelector('h3')?.textContent || '').trim());
@@ -25,7 +25,7 @@ export async function mount({ section, stageEl, getT, onLost }) {
     try {
         story = createStory({
             canvas, width: w, height: h, pixelRatio: Math.min(window.devicePixelRatio || 1, 1.5), planTitles: titles,
-            siteImage: section.dataset.site || '', dark: root.classList.contains('dark'),
+            siteImage: section.dataset.site || '', dark: root.classList.contains('dark'), lite,
         });
         await story.ready;
     } catch (e) {
