@@ -51,8 +51,11 @@ class PageController extends Controller
     public function industry(string $slug)
     {
         $page = site('industry_pages')[$slug] ?? null;
-        $demo = $page ? collect(site('demos'))->firstWhere('slug', $page['demo']) : null;
-        abort_unless($page && $demo, 404);
+        // A page names a concept site in `demo` and borrows its problems, solutions, package and FAQ; a page without `demo`
+        // (for example „малък бизнес“) carries those four keys itself and has no concept site to show.
+        $demo = $page && isset($page['demo']) ? collect(site('demos'))->firstWhere('slug', $page['demo']) : null;
+        abort_unless($page && ($demo || ! isset($page['demo'])), 404);
+        $content = $demo ?? $page;
 
         $alternates = ['bg' => route('industry', $slug), 'en' => self::serviceUrl('website', 'en')];
 
@@ -60,7 +63,8 @@ class PageController extends Controller
             'slug' => $slug,
             'page' => $page,
             'demo' => $demo,
-            'plan' => $demo['package']['name'] ? \App\Support\Plans::find(site('plans')['items'], $demo['package']['name']) : null,
+            'content' => $content,
+            'plan' => $content['package']['name'] ? \App\Support\Plans::find(site('plans')['items'], $content['package']['name']) : null,
             'others' => collect(site('industry_pages'))->except($slug),
             'pageAlternates' => $alternates,
             'hreflangAlternates' => [],

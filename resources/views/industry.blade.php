@@ -8,7 +8,8 @@
 @include('partials/page-header', ['eyebrow' => 'Изработка на сайт', 'heading' => $page['title'], 'sub' => $page['lead']])
 
 <section class="py-16 md:py-24 bg-white dark:bg-ink-950">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-10 lg:grid-cols-2 lg:items-center">
+    <div class="{{ $demo ? 'max-w-6xl lg:grid-cols-2 lg:items-center' : 'max-w-3xl' }} mx-auto px-4 sm:px-6 lg:px-8 grid gap-10">
+        @if($demo)
         <div class="reveal">
             <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="group block overflow-hidden rounded-3xl border border-gray-200 bg-gray-100 shadow-xl shadow-brand-900/10 dark:border-white/10 dark:bg-white/5">
                 @if(is_file(public_path('images/demos/' . $demo['slug'] . '.webp')))
@@ -19,6 +20,7 @@
                 <a href="{{ route('demo.show', $demo['slug']) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">Вижте сайта {{ $demo['name'] }} <x-icon name="arrow-right" class="text-xs" /></a>
             </div>
         </div>
+        @endif
 
         <div class="reveal" style="--reveal-delay: 100ms">
             <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $page['must_have_title'] }}</h2>
@@ -40,14 +42,14 @@
 <section class="py-16 md:py-24 bg-brand-50/60 dark:bg-ink-900">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-2xl">
-            <span class="text-brand-600 text-sm font-bold uppercase tracking-wider dark:text-brand-300">{{ $demo['industry'] }}</span>
+            <span class="text-brand-600 text-sm font-bold uppercase tracking-wider dark:text-brand-300">{{ $demo['industry'] ?? $page['menu'] }}</span>
             <h2 class="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight text-brand-950 dark:text-white">Къде губите клиенти и как го оправяме</h2>
         </div>
         <div class="mt-10 grid gap-6 lg:grid-cols-2">
             <div class="reveal rounded-3xl border border-gray-200 bg-white p-7 md:p-8 dark:border-white/10 dark:bg-white/[0.03]">
                 <h3 class="flex items-center gap-3 text-lg font-bold text-brand-950 dark:text-white"><span class="w-9 h-9 rounded-xl bg-red-50 text-red-600 inline-flex items-center justify-center dark:bg-red-500/15 dark:text-red-300"><x-icon name="triangle-exclamation" class="text-sm" /></span>Познато ли ви е?</h3>
                 <ul class="mt-6 space-y-5">
-                    @foreach($demo['problems'] as [$title, $text])
+                    @foreach($content['problems'] as [$title, $text])
                         <li><p class="font-semibold text-brand-950 dark:text-white">{{ $title }}</p><p class="mt-1 leading-relaxed text-gray-600 dark:text-gray-300">{{ $text }}</p></li>
                     @endforeach
                 </ul>
@@ -55,7 +57,7 @@
             <div class="reveal rounded-3xl border border-gray-200 bg-white p-7 md:p-8 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: 100ms">
                 <h3 class="flex items-center gap-3 text-lg font-bold text-brand-950 dark:text-white"><span class="w-9 h-9 rounded-xl bg-brand-50 text-brand-600 inline-flex items-center justify-center dark:bg-white/10 dark:text-brand-300"><x-icon name="check" class="text-sm" /></span>Какво прави сайтът</h3>
                 <ul class="mt-6 space-y-5">
-                    @foreach($demo['solutions'] as [$title, $text])
+                    @foreach($content['solutions'] as [$title, $text])
                         <li><p class="font-semibold text-brand-950 dark:text-white">{{ $title }}</p><p class="mt-1 leading-relaxed text-gray-600 dark:text-gray-300">{{ $text }}</p></li>
                     @endforeach
                 </ul>
@@ -72,7 +74,7 @@
                         @foreach($plan['prices'] as $price)<li>{{ $price }}</li>@endforeach
                     </ul>
                 @endif
-                <p class="mt-4 leading-relaxed text-gray-300">{{ $demo['package']['why'] }}</p>
+                <p class="mt-4 leading-relaxed text-gray-300">{{ $content['package']['why'] }}</p>
             </div>
             <div class="relative md:col-span-5 flex flex-col gap-3">
                 <a href="{{ lroute('contact') }}#konsultatsiya" class="btn-shine btn-glow inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 font-semibold text-brand-950 hover:bg-brand-50">Запазете час за разговор <x-icon name="arrow-right" class="text-sm" /></a>
@@ -86,7 +88,7 @@
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 text-center dark:text-white">Често задавани въпроси</h2>
         <div class="mt-8 space-y-3">
-            @foreach($demo['faq'] as [$question, $answer])
+            @foreach($content['faq'] as [$question, $answer])
                 <details class="group rounded-2xl border border-gray-200 bg-white p-5 dark:border-white/10 dark:bg-white/[0.04]">
                     <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-brand-950 dark:text-white">
                         {{ $question }}
@@ -132,7 +134,7 @@
         ],
         [
             '@type' => 'FAQPage',
-            'mainEntity' => array_map(fn ($qa) => ['@type' => 'Question', 'name' => $qa[0], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $qa[1]]], $demo['faq']),
+            'mainEntity' => array_map(fn ($qa) => ['@type' => 'Question', 'name' => $qa[0], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $qa[1]]], $content['faq']),
         ],
     ],
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}

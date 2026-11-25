@@ -14,18 +14,22 @@ class IndustryPagesTest extends TestCase
         $demos = collect(config('creatium.demos'))->keyBy('slug');
 
         foreach (config('creatium.industry_pages') as $slug => $page) {
-            $demo = $demos[$page['demo']];
+            // A page without `demo` (malak-biznes) carries its own problems, package and FAQ and shows no concept site.
+            $demo = isset($page['demo']) ? $demos[$page['demo']] : null;
+            $content = $demo ?? $page;
 
             $this->get("/izrabotka-na-sait-za-$slug")->assertOk()
                 ->assertSee('<title>' . e($page['seo_title']) . '</title>', false)
                 ->assertSee('<meta name="description" content="' . e($page['seo_description']) . '">', false)
                 ->assertSee($page['title'])
                 ->assertSee($page['must_have'][0][0])
-                ->assertSee($demo['problems'][0][0])
-                ->assertSee(route('demo.show', $demo['slug']), false)
+                ->assertSee($content['problems'][0][0])
                 ->assertSee('"@type":"FAQPage"', false)
                 ->assertSee('"position":2,"name":"' . config('creatium.service_pages.website.menu') . '"', false)
                 ->assertSee('<link rel="canonical" href="' . url("/izrabotka-na-sait-za-$slug") . '">', false);
+            if ($demo) {
+                $this->get("/izrabotka-na-sait-za-$slug")->assertSee(route('demo.show', $demo['slug']), false);
+            }
         }
 
         $this->get('/izrabotka-na-sait-za-restorant')->assertSee('Core Изграждане')->assertSee('Изработка на сайт за автосервиз');
