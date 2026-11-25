@@ -1,6 +1,7 @@
 // Design G home, „Как работим“: the scroll story with Kreo. This file is tiny and the only part that is loaded with the page. The 3D scene
-// (three.js, ./kreo/stage.js) is imported dynamically only when the section is within about one screen of the viewport, on a wide screen,
-// without reduced motion and with WebGL2. Everywhere else the four steps stay a plain list with a still image each (see the markup).
+// (three.js, ./kreo/stage.js) is imported dynamically only when the section is within about one screen of the viewport, without reduced
+// motion and with WebGL2. Below 1024px the same scene runs in a stacked phone layout (stage on top, text under it) in a lighter mode (no shadow map).
+// With reduced motion or without WebGL2 the four steps stay a plain list with a still image each (see the markup).
 const section = document.querySelector('[data-g-kreo]');
 
 if (section) {
@@ -8,10 +9,10 @@ if (section) {
     const stick = section.querySelector('[data-g-kreo-stick]');
     const stageEl = section.querySelector('[data-g-kreo-stage]');
     const steps = [...section.querySelectorAll('[data-g-step]')];
-    const wide = window.matchMedia('(min-width: 1024px)');
+    const small = window.matchMedia('(max-width: 1023px)');
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    // The WebGL probe creates a context, so it runs only when the scene could actually start (wide screen, motion allowed), never on a phone.
+    // The WebGL probe creates a context, so it runs only once the section is near the screen (never at page load).
     let glChecked = null;
     const hasGl = () => {
         if (glChecked !== null) return glChecked;
@@ -80,7 +81,7 @@ if (section) {
         try {
             const { mount } = await import('./kreo/stage.js');
             if (!active) { loading = false; return; }
-            stage = await mount({ section, stageEl, getT: sceneValue, onLost: fallBack });
+            stage = await mount({ section, stageEl, getT: sceneValue, onLost: fallBack, lite: small.matches });
         } catch (e) {
             fallBack();
         }
@@ -95,7 +96,9 @@ if (section) {
     }
 
     function evaluate() {
-        const on = wide.matches && !calm.matches && !broken && hasGl();
+        // The layout switches on at once (stable page height); the context probe waits until the section is near, a device without WebGL2 then goes back to the list.
+        let on = !calm.matches && !broken;
+        if (on && (near || glChecked !== null)) on = hasGl();
         section.classList.toggle('g-kreo-3d', on);
         if (on !== active) {
             active = on;
@@ -108,7 +111,7 @@ if (section) {
         if (on && near) load();
     }
 
-    wide.addEventListener('change', evaluate);
+    small.addEventListener('change', () => { if (stage) { stop(); loading = false; } evaluate(); });
     calm.addEventListener('change', evaluate);
     window.addEventListener('pagehide', stop);
 

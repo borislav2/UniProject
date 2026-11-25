@@ -109,7 +109,17 @@ class GKreoTest extends TestCase
         $this->assertStringContainsString('IntersectionObserver', $loader);
         $this->assertStringContainsString("rootMargin: '100% 0px'", $loader, 'loaded within about one screen');
         $this->assertStringContainsString('(prefers-reduced-motion: reduce)', $loader);
-        $this->assertStringContainsString('(min-width: 1024px)', $loader);
+        // Phones run the same scene in a stacked layout (no width gate any more), in a lighter mode, and the context probe waits until the section is near.
+        $this->assertStringNotContainsString('(min-width: 1024px)', $loader);
+        $this->assertStringContainsString('(max-width: 1023px)', $loader);
+        $this->assertStringContainsString('lite: small.matches', $loader);
+        $this->assertStringContainsString('near || glChecked !== null', $loader, 'no WebGL probe at page load');
+        $css = file_get_contents(base_path('resources/css/g-kreo.css'));
+        $this->assertStringContainsString('--kreo-bar: calc(56px', $css, 'the pinned box ends above the phone bar');
+        $this->assertStringContainsString('@media (min-width: 1024px)', $css);
+        $story = file_get_contents(base_path('resources/js/kreo/story.js'));
+        $this->assertStringContainsString('renderer.shadowMap.enabled = !lite', $story, 'no shadow map on phones');
+        $this->assertStringContainsString('lite', file_get_contents(base_path('resources/js/kreo/stage.js')));
         $this->assertStringContainsString("getContext('webgl2')", $loader, 'no WebGL2 means the stills stay');
 
         $vite = file_get_contents(base_path('vite.config.js'));

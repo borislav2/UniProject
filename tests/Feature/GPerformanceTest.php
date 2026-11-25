@@ -57,12 +57,14 @@ class GPerformanceTest extends TestCase
         $this->assertDoesNotMatchRegularExpression('~\nglobe\(\);\n.*getComputedStyle~s', $js);
     }
 
-    public function test_the_kreo_story_probes_webgl_only_when_the_scene_could_start(): void
+    public function test_the_kreo_story_probes_webgl_only_when_the_section_is_near(): void
     {
         $js = $this->source('resources/js/g-kreo.js');
 
         $this->assertStringContainsString('const hasGl = () => {', $js);
-        $this->assertStringContainsString('wide.matches && !calm.matches && !broken && hasGl()', $js);
+        // Motion allowed and not broken, and the context is created only once the section is near (or an earlier probe answered).
+        $this->assertStringContainsString('let on = !calm.matches && !broken;', $js);
+        $this->assertStringContainsString('if (on && (near || glChecked !== null)) on = hasGl();', $js);
         // The 3D chunk stays a dynamic import.
         $this->assertStringContainsString("await import('./kreo/stage.js')", $js);
         $this->assertStringNotContainsString("import { mount }", explode('async function load', $js)[0]);

@@ -61,12 +61,13 @@ const CAMS = [
     { t: [X[3] + 0.1, 0.9, 0], d: [0.08, 0.14, 1], w: 4.4, h: 3.0 },
 ];
 
-export function createStory({ canvas, width, height, pixelRatio = 1.5, planTitles = [], siteImage = '', dark = false, antialias = true } = {}) {
+export function createStory({ canvas, width, height, pixelRatio = 1.5, planTitles = [], siteImage = '', dark = false, antialias = true, lite = false } = {}) {
     const renderer = new WebGLRenderer({ canvas, antialias, alpha: true, preserveDrawingBuffer: false, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(pixelRatio, 1.5));
     renderer.setSize(width, height, false);
     renderer.setClearColor(0x000000, 0);
-    renderer.shadowMap.enabled = true;
+    // lite (phones and tablets): no shadow map at all, the robot keeps its soft blob shadow and the floor pools stay
+    renderer.shadowMap.enabled = !lite;
     renderer.shadowMap.type = PCFSoftShadowMap;
     renderer.toneMapping = ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;
@@ -82,7 +83,7 @@ export function createStory({ canvas, width, height, pixelRatio = 1.5, planTitle
 
     // Light: one key light with a soft shadow that follows the camera focus, a cool fill, a warm rim from behind.
     const key = new DirectionalLight('#ffffff', 2.6);
-    key.castShadow = true;
+    key.castShadow = !lite;
     key.shadow.mapSize.set(2048, 2048);
     key.shadow.radius = 8;
     key.shadow.blurSamples = 20;
@@ -108,6 +109,7 @@ export function createStory({ canvas, width, height, pixelRatio = 1.5, planTitle
     catcher.rotation.x = -Math.PI / 2;
     catcher.position.y = 0.002;
     catcher.receiveShadow = true;
+    catcher.visible = !lite;
     catcher.renderOrder = 1;
     scene.add(catcher);
 
