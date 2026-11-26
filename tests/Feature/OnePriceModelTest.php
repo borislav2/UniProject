@@ -38,6 +38,8 @@ class OnePriceModelTest extends TestCase
             return null;
         }
         $body = preg_replace('#<option\b[^>]*>.*?</option>#si', ' ', $response->getContent());
+        // The website check page names the one time price of the separate offer „Оправяме трите най-важни проблема“ (not a package price).
+        $body = str_replace(\App\Support\SiteCheck\Offers::priceLine('fix'), ' ', $body);
 
         return $body;
     }

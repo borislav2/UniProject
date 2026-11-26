@@ -33,6 +33,8 @@
         <env name="OPPORTUNITIES_ENABLED" value="false"/>
         <env name="SEO_HEALTH_AUTO" value="false"/>
         <env name="INDEXNOW_ENABLED" value="false"/>
+        <env name="SITE_CHECK_FOLLOWUPS" value="false"/>
+        <env name="SITE_CHECK_MONTHLY" value="false"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>

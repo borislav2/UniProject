@@ -57,7 +57,7 @@
                         </div>
                         <div>
                             <label for="domain" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">{{ __('Адрес на сайта') }}</label>
-                            <input type="text" id="domain" name="domain" value="{{ old('domain') }}" required inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="{{ __('vashiyatsait.bg') }}"
+                            <input type="text" id="domain" name="domain" value="{{ old('domain', $prefill ?? '') }}" required inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="{{ __('vashiyatsait.bg') }}"
                                    class="w-full px-4 py-3 border border-gray-200 bg-gray-50/60 rounded-xl focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-100 focus:border-brand-400 transition dark:bg-white/5 dark:border-white/15 dark:text-white dark:focus:bg-white/10 dark:focus:ring-brand-500/30 placeholder:text-gray-500 dark:placeholder:text-gray-400">
                             @error('domain')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
                         </div>
@@ -70,7 +70,7 @@
                         <div>
                             <label class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
                                 <input type="checkbox" name="consent" value="1" class="mt-1 accent-brand-600" {{ old('consent') ? 'checked' : '' }}>
-                                <span>{!! __('Съгласявам се да ми изпратите отчета на този имейл и да се свържете с мен за него. Прочетох :link.', ['link' => '<a href="' . e(lroute('privacy')) . '" target="_blank" class="text-brand-700 underline dark:text-brand-300">' . e(__('Политиката за поверителност')) . '</a>']) !!}</span>
+                                <span>{!! __('Съгласявам се да ми изпратите отчета на този имейл и да се свържете с мен за него. Може да получа до три кратки писма за отчета и мога да се отпиша с едно кликване. Прочетох :link.', ['link' => '<a href="' . e(lroute('privacy')) . '" target="_blank" class="text-brand-700 underline dark:text-brand-300">' . e(__('Политиката за поверителност')) . '</a>']) !!}</span>
                             </label>
                             @error('consent')<p class="text-red-600 text-sm mt-1 dark:text-red-400">{{ $message }}</p>@enderror
                         </div>
@@ -108,6 +108,31 @@
         </div>
         <div class="mt-10">
             <a href="{{ lroute('contact') }}" class="inline-flex items-center gap-2 font-semibold text-brand-700 hover:text-brand-900 dark:text-brand-300 dark:hover:text-white">{{ __('Свържете се с нас') }} <x-icon name="arrow-right" class="text-xs" /></a>
+        </div>
+    </div>
+</section>
+@php
+    $after = (array) site('site_check_offers.after');
+    $fixOffer = \App\Support\SiteCheck\Offers::text('fix');
+    $monitorOffer = \App\Support\SiteCheck\Offers::text('monitor');
+@endphp
+<section class="py-16 md:py-24 bg-brand-50/60 dark:bg-ink-900">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-brand-950 dark:text-white">{{ $after['title'] ?? '' }}</h2>
+        <p class="mt-3 max-w-3xl text-gray-600 leading-relaxed dark:text-gray-300">{{ $after['text'] ?? '' }}</p>
+        <div class="mt-8 grid md:grid-cols-2 gap-6">
+            <div class="reveal card-hover rounded-2xl border border-gray-200 bg-white p-6 dark:border-white/10 dark:bg-white/[0.03]">
+                <x-icon name="screwdriver-wrench" class="text-brand-600 dark:text-brand-300" />
+                <h3 class="mt-4 font-bold text-brand-950 dark:text-white">{{ $fixOffer['name'] ?? '' }}</h3>
+                <p class="mt-1 text-sm font-semibold text-brand-700 dark:text-brand-300">{{ \App\Support\SiteCheck\Offers::priceLine('fix') }}</p>
+                <p class="mt-2 text-sm text-gray-600 leading-relaxed dark:text-gray-300">{{ \App\Support\SiteCheck\Offers::fill((string) ($after['fix_text'] ?? ''), 'fix') }}</p>
+            </div>
+            <div class="reveal card-hover rounded-2xl border border-gray-200 bg-white p-6 dark:border-white/10 dark:bg-white/[0.03]" style="--reveal-delay: 100ms">
+                <x-icon name="gauge-high" class="text-brand-600 dark:text-brand-300" />
+                <h3 class="mt-4 font-bold text-brand-950 dark:text-white">{{ $monitorOffer['name'] ?? '' }}</h3>
+                <p class="mt-1 text-sm font-semibold text-brand-700 dark:text-brand-300">{{ \App\Support\SiteCheck\Offers::priceLine('monitor') }}</p>
+                <p class="mt-2 text-sm text-gray-600 leading-relaxed dark:text-gray-300">{{ \App\Support\SiteCheck\Offers::fill((string) ($after['monitor_text'] ?? ''), 'monitor') }}</p>
+            </div>
         </div>
     </div>
 </section>

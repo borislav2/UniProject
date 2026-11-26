@@ -39,6 +39,7 @@
     </div>
 
     @include('admin.inquiries._review')
+    @include('admin.inquiries._followup')
 
     @if($summary)
         {{-- Обобщение на проверката: поводът за разговора. --}}

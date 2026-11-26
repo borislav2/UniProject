@@ -195,7 +195,7 @@ class Profiles
      */
     public static function todaySections(?string $key): array
     {
-        $sales = ['sales-queue', 'sales-opportunities', 'sales-deadlines', 'sales-consultations', 'sales-unread', 'sales-due', 'sales-calls', 'sales-hot', 'sales-followups', 'sales-nostep', 'sales-seo'];
+        $sales = ['sales-queue', 'sales-opportunities', 'sales-deadlines', 'sales-consultations', 'sales-offers', 'sales-unread', 'sales-due', 'sales-calls', 'sales-hot', 'sales-followups', 'sales-nostep', 'sales-seo'];
         $dev = ['dev-projects', 'dev-clients', 'dev-reviews', 'dev-site-checks', 'dev-leads', 'dev-health'];
         $brand = ['brand-posts', 'brand-autopost', 'brand-linkedin', 'brand-reviews', 'brand-reports', 'brand-emails'];
 

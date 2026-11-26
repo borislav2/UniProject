@@ -39,7 +39,7 @@
                         </div>
                         <div class="g-fld">
                             <label for="domain">{{ $sc['domain_label'] ?? '' }}</label>
-                            <input class="g-in" type="text" id="domain" name="domain" value="{{ old('domain') }}" required inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="{{ __('vashiyatsait.bg') }}"@error('domain') aria-invalid="true" aria-describedby="err-domain"@enderror>
+                            <input class="g-in" type="text" id="domain" name="domain" value="{{ old('domain', $prefill ?? '') }}" required inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="{{ __('vashiyatsait.bg') }}"@error('domain') aria-invalid="true" aria-describedby="err-domain"@enderror>
                             @error('domain')<p class="g-err" id="err-domain">{{ $message }}</p>@enderror
                         </div>
                         <div class="g-fld">
@@ -59,7 +59,7 @@
                         <div class="g-fld">
                             <label class="g-chk">
                                 <input type="checkbox" name="consent" value="1" {{ old('consent') ? 'checked' : '' }}@error('consent') aria-invalid="true" aria-describedby="err-consent"@enderror>
-                                <span>{!! __('Съгласявам се да ми изпратите отчета на този имейл и да се свържете с мен за него. Прочетох :link.', ['link' => '<a href="' . e(lroute('privacy')) . '" target="_blank">' . e(__('Политиката за поверителност')) . '</a>']) !!}</span>
+                                <span>{!! __('Съгласявам се да ми изпратите отчета на този имейл и да се свържете с мен за него. Може да получа до три кратки писма за отчета и мога да се отпиша с едно кликване. Прочетох :link.', ['link' => '<a href="' . e(lroute('privacy')) . '" target="_blank">' . e(__('Политиката за поверителност')) . '</a>']) !!}</span>
                             </label>
                             @error('consent')<p class="g-err" id="err-consent">{{ $message }}</p>@enderror
                         </div>
@@ -85,6 +85,25 @@
             @foreach($different as $item)
                 <li><span class="g-n g-mono" aria-hidden="true">{{ sprintf('%02d', $loop->iteration) }}</span><h3>{{ $item['title'] ?? '' }}</h3><p>{{ $item['text'] ?? '' }}</p></li>
             @endforeach
+        </ol>
+    </div>
+</section>
+
+{{-- „След проверката“: двете платени стъпки по желание. Без бутони, защото поръчката иска отчет (линкът в имейла). --}}
+@php
+    $after = (array) site('site_check_offers.after');
+    $fixOffer = \App\Support\SiteCheck\Offers::text('fix');
+    $monitorOffer = \App\Support\SiteCheck\Offers::text('monitor');
+@endphp
+<section class="g-s">
+    <div class="g-wrap g-sys">
+        <div class="g-sh">
+            <h2 class="g-h">{{ $after['title'] ?? '' }}</h2>
+            <p class="g-lead">{{ $after['text'] ?? '' }}</p>
+        </div>
+        <ol class="g-rows g-rows-tight g-numbered">
+            <li><span class="g-n g-mono" aria-hidden="true">01</span><h3>{{ $fixOffer['name'] ?? '' }}, {{ \App\Support\SiteCheck\Offers::priceLine('fix') }}</h3><p>{{ \App\Support\SiteCheck\Offers::fill((string) ($after['fix_text'] ?? ''), 'fix') }}</p></li>
+            <li><span class="g-n g-mono" aria-hidden="true">02</span><h3>{{ $monitorOffer['name'] ?? '' }}, {{ \App\Support\SiteCheck\Offers::priceLine('monitor') }}</h3><p>{{ \App\Support\SiteCheck\Offers::fill((string) ($after['monitor_text'] ?? ''), 'monitor') }}</p></li>
         </ol>
     </div>
 </section>

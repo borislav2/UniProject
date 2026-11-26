@@ -20,7 +20,8 @@ class SiteCheckController extends Controller
 
     public function show()
     {
-        return gview('site-check');
+        // ?site=domain.bg (линкът от третото писмо след отчета) попълва адреса; показва се само коректно нормализиран домейн.
+        return gview('site-check', ['prefill' => SiteChecker::normalizeDomain(request()->query('site')) ?? '']);
     }
 
     public function submit(Request $request)

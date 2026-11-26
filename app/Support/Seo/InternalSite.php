@@ -29,6 +29,8 @@ class InternalSite
         \App\Http\Middleware\RunOutreachAutopilot::class,
         \App\Http\Middleware\CollectOpportunities::class,
         \App\Http\Middleware\RunSeoHealth::class,
+        \App\Http\Middleware\SubmitToIndexNow::class,
+        \App\Http\Middleware\SendSiteCheckFollowUps::class,
     ];
 
     public const USER_AGENT = 'CreatiumSeoHealth/1.0 (internal)';

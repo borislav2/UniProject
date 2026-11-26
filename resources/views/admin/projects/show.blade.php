@@ -62,6 +62,10 @@
     <div class="mb-6">@include('admin.inquiries._review', ['inquiry' => $project])</div>
 @endif
 
+@if($project->leadKind() === 'site-check')
+    <div class="mb-6 -mt-3">@include('admin.inquiries._followup', ['inquiry' => $project])</div>
+@endif
+
 @if($project->stage)
     <div class="mb-6 rounded-lg bg-white p-5 shadow">
         <h3 class="mb-3 font-semibold text-gray-800">Продажба</h3>

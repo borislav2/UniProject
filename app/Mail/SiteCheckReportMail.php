@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Mail\Concerns\AddsPlainTextPart;
+use App\Models\Project;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
@@ -13,7 +14,11 @@ class SiteCheckReportMail extends Mailable
 {
     use AddsPlainTextPart;
 
-    public function __construct(public array $report)
+    /**
+     * $lead (запитването) дава подписаните линкове към офертите; без него писмото е без оферти (преглед, стари извиквания).
+     * $monthly е месечната проверка на абонат: без продажбени части и с реда за предишния резултат ($previousScore).
+     */
+    public function __construct(public array $report, public ?Project $lead = null, public bool $monthly = false, public ?int $previousScore = null)
     {
     }
 
@@ -22,7 +27,8 @@ class SiteCheckReportMail extends Mailable
         $contact = config('creatium.contact.email');
 
         return new Envelope(
-            subject: __('Проверка на :domain, оценка :score от 100', ['domain' => $this->report['domain'], 'score' => $this->report['score']]),
+            subject: ($this->monthly ? __('Месечна проверка на :domain, оценка :score от 100', ['domain' => $this->report['domain'], 'score' => $this->report['score']])
+                : __('Проверка на :domain, оценка :score от 100', ['domain' => $this->report['domain'], 'score' => $this->report['score']])),
             replyTo: $contact ? [new Address($contact, 'Creatium Lab')] : [],
         );
     }
@@ -31,6 +37,9 @@ class SiteCheckReportMail extends Mailable
     {
         return new Content(view: 'emails.site-check', with: [
             'report' => $this->report,
+            'lead' => $this->lead,
+            'monthly' => $this->monthly,
+            'previousScore' => $this->previousScore,
             'data' => ['pad' => 28],
             'subject' => $this->envelope()->subject,
         ]);
