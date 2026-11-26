@@ -25,6 +25,9 @@
     $passed = collect($report['checks'])->where('status', 'ok')->reject(fn ($c) => $schemaProblem && ($c['key'] ?? null) === 'schema');
     $shopping = $report['shopping'] ?? null;
     $pad = 28;
+    $monthly = (bool) ($monthly ?? false);
+    $lead = $lead ?? null;
+    $previousScore = $previousScore ?? null;
 
     // Какво бихме направили за най-слабите области: до три, най-слабите първи. Без слаба област има един общ ред.
     $weak = collect($areas)->filter(fn ($r) => $r['score'] < 80 && count($byArea[$r['area']] ?? []) > 0)->sortBy('score')->take(3)->keys()->all();
@@ -45,9 +48,9 @@
     $lbl = fn ($t, $c = '#C4300F') => ['part' => 'label', 'text' => $t, 'color' => $c];
 @endphp
 
-@section('eyebrow', __('Безплатна проверка на сайт'))
+@section('eyebrow', $monthly ? __('Месечна проверка на сайта') : __('Безплатна проверка на сайт'))
 @section('headline'){{ $report['domain'] }}@endsection
-@section('sub'){{ __('Здравейте, проверката на :domain е готова. Резултатът е по-долу, а след него ви разказваме кои сме и как бихме помогнали.', ['domain' => $report['domain']]) }}@endsection
+@section('sub'){{ $monthly ? __('Здравейте, ето месечната проверка на :domain. Резултатът е по-долу.', ['domain' => $report['domain']]) : __('Здравейте, проверката на :domain е готова. Резултатът е по-долу, а след него ви разказваме кои сме и как бихме помогнали.', ['domain' => $report['domain']]) }}@endsection
 
 @section('body')
 <tr><td class="g-pad" style="padding:28px {{ $pad }}px 0;">
@@ -63,6 +66,9 @@
 @if($crawl && $pagesChecked > 0)
 <div style="{{ $f }}font-size:13px;line-height:1.6;color:#5A6068;padding-top:8px;">{{ __('Обходихме :n страници от сайта.', ['n' => $pagesChecked]) }}</div>
 @endif
+@if($previousScore !== null)
+<div style="{{ $f }}font-size:14px;line-height:1.6;color:#0C0E12;padding-top:8px;"><strong>{{ __('Резултатът е :score от 100, преди месец беше :previous.', ['score' => $score, 'previous' => $previousScore]) }}</strong></div>
+@endif
 </td></tr>
 
 @if($top)
@@ -75,6 +81,11 @@
 @endforeach
 </table>
 </td></tr>
+@endif
+
+@if($lead && $top && ! $monthly)
+@include('emails._site-check-offer', ['offer' => 'fix', 'url' => \App\Support\SiteCheck\Offers::url($lead, 'fix'), 'pad' => $pad])
+<tr><td class="g-pad" style="padding:12px {{ $pad }}px 0;{{ $f }}font-size:14px;line-height:1.6;color:#4A5058;">{{ __('Ако искате само да следим сайта ви, следенето е :price на месец.', ['price' => \App\Support\SiteCheck\Offers::money(\App\Support\SiteCheck\Offers::price('monitor'))]) }} <a href="{{ \App\Support\SiteCheck\Offers::url($lead, 'monitor') }}" style="color:#C4300F;font-weight:bold;text-decoration:none;white-space:nowrap;">{{ __('Вижте как работи') }} &rarr;</a></td></tr>
 @endif
 
 @if($speed)
@@ -105,7 +116,9 @@
 </td></tr>
 @endforeach
 </table>
+@unless($monthly)
 <div style="{{ $f }}font-size:14px;line-height:1.6;color:#0C0E12;padding-top:12px;">{{ __('Пълният списък с точните страници и как се поправя всяко нещо е част от личния преглед и разговора с екипа.') }} {{ __('Специалист от нашия екип ще ви изпрати и личен преглед на сайта до два работни дни.') }}</div>
+@endunless
 <div style="{{ $f }}font-size:12px;line-height:1.6;color:#6B7178;padding-top:8px;">{{ __('Оценките са от нашите автоматични проверки. Не са позиция в Google и не обещават резултат.') }}</div>
 </td></tr>
 
@@ -124,6 +137,7 @@
 </td></tr>
 @endif
 
+@unless($monthly)
 <tr><td class="g-pad" style="padding:34px {{ $pad }}px 0;">
 <div style="border-top:1px solid #D9DBDE;line-height:1px;font-size:0;">&nbsp;</div>
 <div style="padding-top:26px;">@include('emails.client._parts', $lbl(__('Кои сме')))</div>
@@ -171,6 +185,7 @@
 </table>
 </td></tr>
 
+@endunless
 <tr><td class="g-pad" style="padding:22px {{ $pad }}px 0;{{ $f }}font-size:12px;line-height:1.6;color:#6B7178;">
 {{ __('Проверката е автоматична и гледа техническите основи на сайта. Не оценява качеството на текстовете и профила в Google Business, не знае как сайтът се подрежда в Google и не показва дали носи запитвания.') }}
 </td></tr>

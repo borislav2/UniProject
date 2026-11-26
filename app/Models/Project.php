@@ -54,6 +54,14 @@ class Project extends Model
         'review_due_at',
         'reviewed_at',
         'check_goal',
+        'site_check_offer',
+        'site_check_offer_at',
+        'followup_step',
+        'followup_sent_at',
+        'followup_stopped_at',
+        'followup_failures',
+        'monthly_check',
+        'monthly_check_at',
     ];
     
     protected $casts = [
@@ -74,6 +82,11 @@ class Project extends Model
         'site_check_report' => 'array',
         'review_due_at' => 'datetime',
         'reviewed_at' => 'datetime',
+        'site_check_offer_at' => 'datetime',
+        'followup_sent_at' => 'datetime',
+        'followup_stopped_at' => 'datetime',
+        'monthly_check' => 'boolean',
+        'monthly_check_at' => 'datetime',
     ];
 
     /** Етапите на продажбата за запитванията. Отворените са тези, които още чакат действие от нас. */

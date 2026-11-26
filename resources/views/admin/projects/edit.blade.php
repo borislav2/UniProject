@@ -125,6 +125,10 @@
                        class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 @error('billing_day')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
             </div>
+            <label class="md:col-span-3 flex items-start gap-2 text-sm text-gray-700">
+                <input type="checkbox" name="monthly_check" value="1" class="mt-1" {{ old('monthly_check', $project->monthly_check ?? false) ? 'checked' : '' }}>
+                <span>Месечна проверка на сайта <span class="block text-xs text-gray-500">На 30 дни пускаме пълната проверка и пращаме на клиента кратък отчет с предишния резултат. Иска адрес на сайта и имейл на клиента.</span></span>
+            </label>
             <p class="md:col-span-3 -mt-3 text-xs text-gray-500">Празна такса = не е на абонамент. Със сайт в „Адрес на сайта“ сайтът се наблюдава автоматично.</p>
         </div>
 

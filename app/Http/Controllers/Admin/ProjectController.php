@@ -80,6 +80,7 @@ class ProjectController extends Controller
             'package' => 'nullable|string|max:80',
             'monthly_fee' => 'nullable|numeric|min:0|max:100000',
             'billing_day' => 'nullable|integer|min:1|max:31',
+            'monthly_check' => 'nullable|boolean',
             'technologies' => 'nullable|array',
             'technologies.*' => 'exists:technologies,id',
             'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240',
@@ -88,6 +89,7 @@ class ProjectController extends Controller
         
         $data = $request->except('technologies', 'file', 'screenshot', 'remove_screenshot');
         $data['is_public'] = $request->boolean('is_public');
+        $data['monthly_check'] = $request->boolean('monthly_check');
         
         if ($request->hasFile('file')) {
             $file = $request->file('file');
@@ -143,6 +145,7 @@ class ProjectController extends Controller
             'package' => 'nullable|string|max:80',
             'monthly_fee' => 'nullable|numeric|min:0|max:100000',
             'billing_day' => 'nullable|integer|min:1|max:31',
+            'monthly_check' => 'nullable|boolean',
             'technologies' => 'nullable|array',
             'technologies.*' => 'exists:technologies,id',
             'file' => 'nullable|file|mimes:pdf,doc,docx,txt,jpg,jpeg,png,gif|max:10240',
@@ -151,6 +154,7 @@ class ProjectController extends Controller
         
         $data = $request->except('technologies', 'file', 'screenshot', 'remove_screenshot');
         $data['is_public'] = $request->boolean('is_public');
+        $data['monthly_check'] = $request->boolean('monthly_check');
         
         if ($request->hasFile('file')) {
             // Delete old file if exists
@@ -247,6 +251,18 @@ class ProjectController extends Controller
     }
 
     /** Ръчна бележка или запис за разговор в историята на проекта. */
+    /** „Спри писмата“: повече писма след проверката до този клиент не тръгват (отписването от самия клиент прави същото). */
+    public function stopFollowUps(Request $request, Project $project)
+    {
+        abort_unless($project->leadKind() === 'site-check', 404);
+        if (! $project->followup_stopped_at) {
+            $project->forceFill(['followup_stopped_at' => now()])->save();
+            $project->notes()->create(['user_id' => $request->user()->id, 'kind' => 'note', 'body' => 'Спрени са писмата след проверката.']);
+        }
+
+        return back()->with('success', 'Писмата след проверката са спрени.');
+    }
+
     public function note(Request $request, Project $project)
     {
         $data = $request->validate([

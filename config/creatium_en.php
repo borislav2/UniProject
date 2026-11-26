@@ -1423,6 +1423,39 @@ return [
             ['name' => '_gcl_au', 'provider' => 'Google Ads (Google Ireland Ltd.)', 'purpose' => 'Measures inquiries coming from our Google ads', 'duration' => 'up to 90 days'],
         ],
     ],
+    // Texts of the paid next steps after the free check (26.11.2026). The numbers live in config/creatium.php (site_check.offers).
+    'site_check_offers' => [
+        'fix' => [
+            'name' => 'We fix your three most important issues',
+            'lead' => 'We take the three most important issues from your report and fix them for you.',
+            'price_line' => ':price, one time',
+            'days_line' => 'Done within :days days.',
+            'credit' => 'If you start one of our packages within :credit_days days, :price is deducted from its price.',
+            'button' => 'Order the fix',
+            'note' => 'The button is not a payment. You only confirm that you want us to write to you, and we send you an offer.',
+            'next_action' => 'Get in touch with an offer for the three issues',
+        ],
+        'monitor' => [
+            'name' => 'Website monitoring',
+            'lead' => 'We watch your website and send you a new report every month.',
+            'price_line' => ':price a month',
+            'items' => [
+                'Every 6 hours we check that your website works.',
+                'We keep track of when the SSL certificate and the domain expire.',
+                'Every month we run the full check again and send you a short report.',
+            ],
+            'button' => 'Order the monitoring',
+            'note' => 'The button is not a payment. You only confirm that you want us to write to you, and we send you an offer.',
+            'next_action' => 'Get in touch with an offer for website monitoring',
+        ],
+        'after' => [
+            'title' => 'After the check',
+            'text' => 'The check stays free. If you want help, there are two optional steps. You order them from the link in the email with your report, so there is no button here.',
+            'fix_text' => 'We fix the three most important issues from your report. Done within :days days. If you start one of our packages within :credit_days days, :price is deducted from its price.',
+            'monitor_text' => 'Every month we run the full check again and send you a short report. Every 6 hours we check that your website works and when the SSL certificate and the domain expire.',
+        ],
+    ],
+
     // The /website-check page in design G. The check is both automatic (a report by email within minutes) and manual (a personal review
     // by a specialist within two working days). Goals are keys; their labels live here (the admin reads the Bulgarian ones).
     'site_check_page' => [

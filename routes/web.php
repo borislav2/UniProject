@@ -31,6 +31,8 @@ use App\Http\Controllers\OutreachClickController;
 use App\Http\Controllers\OutreachUnsubscribeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SiteCheckController;
+use App\Http\Controllers\SiteCheckOfferController;
+use App\Http\Controllers\SiteCheckUnsubscribeController;
 use Illuminate\Support\Facades\Route;
 
 // Public site: Bulgarian at the root, English under /en. Route names are the same with an "en." prefix (see lroute()).
@@ -76,6 +78,12 @@ foreach (['bg', 'en'] as $locale) {
         Route::post($locale === 'en' ? '/website-check' : '/proverka-na-sait', [SiteCheckController::class, 'submit'])
             ->middleware('throttle:5,10')
             ->name('site-check.submit');
+
+        // Поръчка с един клик от писмата след проверката: подписан адрес (60 дни), GET показва потвърждение, POST записва интереса.
+        Route::get(($locale === 'en' ? '/website-check' : '/proverka-na-sait') . '/{project}/{offer}', [SiteCheckOfferController::class, 'show'])
+            ->whereNumber('project')->whereIn('offer', \App\Support\SiteCheck\Offers::KEYS)->middleware('signed')->name('site-check.offer');
+        Route::post(($locale === 'en' ? '/website-check' : '/proverka-na-sait') . '/{project}/{offer}', [SiteCheckOfferController::class, 'confirm'])
+            ->whereNumber('project')->whereIn('offer', \App\Support\SiteCheck\Offers::KEYS)->middleware(['signed', 'throttle:20,10'])->name('site-check.offer.confirm');
     });
 }
 
@@ -91,6 +99,8 @@ Route::get('/demo/{slug}', [DemoController::class, 'show'])->where('slug', '[a-z
 
 // Отписване от първите писма до бизнеси (линк в писмото + one-click от пощенския клиент)
 Route::match(['get', 'post'], '/otpisvane/{prospect}', OutreachUnsubscribeController::class)->middleware('signed')->name('outreach.unsubscribe');
+// Отписване от писмата след безплатната проверка на сайт (линк в писмото + one-click). Под otpisvane/, затова е без CSRF.
+Route::match(['get', 'post'], '/otpisvane/proverka/{project}', SiteCheckUnsubscribeController::class)->whereNumber('project')->middleware('signed')->name('site-check.unsubscribe');
 Route::get('/o/{prospect}/{link}', OutreachClickController::class)->middleware(['signed', 'throttle:60,1'])->name('outreach.click');
 
 Route::get('/sitemap.xml', [PageController::class, 'sitemap'])->name('sitemap');
@@ -205,6 +215,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('projects/search', [ProjectController::class, 'search'])->name('projects.search');
     Route::patch('projects/{project}/pipeline', [ProjectController::class, 'pipeline'])->name('projects.pipeline');
     Route::post('projects/{project}/notes', [ProjectController::class, 'note'])->name('projects.notes');
+    Route::post('projects/{project}/followup-stop', [ProjectController::class, 'stopFollowUps'])->name('projects.followup-stop');
     Route::resource('projects', ProjectController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('technologies', TechnologyController::class);

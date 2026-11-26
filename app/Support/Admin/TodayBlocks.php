@@ -199,6 +199,23 @@ class TodayBlocks
         return $this->block('Консултации', $rows, ['url' => route('admin.inquiries.index')]);
     }
 
+    /** Клиенти, потвърдили платена оферта от писмо след безплатната проверка (Offers): обещахме им отговор до един работен ден. */
+    private function blockSalesOffers(): array
+    {
+        $rows = $this->only(Project::siteChecks()->openLeads()->whereNotNull('site_check_offer')->orderBy('site_check_offer_at')->get())->map(fn ($lead) => [
+            'title' => $lead->website_url ? preg_replace('#^https?://#', '', $lead->website_url) : $lead->name,
+            'url' => route('admin.projects.show', $lead),
+            'chips' => [[config('creatium.site_check_offers.' . $lead->site_check_offer . '.name'), 'bg-green-100 text-green-800']],
+            'sub' => 'Поискан ' . $this->sofia($lead->site_check_offer_at)->format('d.m H:i') . ', отговор до един работен ден',
+            'tone' => $lead->site_check_offer_at->lt(now()->subDay()) ? 'danger' : 'info',
+            'phone' => $lead->client_phone,
+            'mailto' => $lead->client_email,
+            'pipeline' => $lead,
+        ]);
+
+        return $this->block('Поръчани след проверка', $rows, ['hint' => 'платена оферта от писмо след проверката', 'url' => route('admin.site-checks.index'), 'empty' => 'Никой не е поръчвал след проверка.']);
+    }
+
     private function blockSalesUnread(): array
     {
         $rows = $this->only(Today::unread())->map(function ($lead) {

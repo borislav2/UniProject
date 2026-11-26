@@ -47,7 +47,7 @@ class SendSiteCheckReport
             $notes[] = $problems->isEmpty() ? 'Без открити проблеми.' : "За оправяне:\n- " . $problems->implode("\n- ");
 
             try {
-                Mail::to($email)->send(new SiteCheckReportMail($report));
+                Mail::to($email)->send(new SiteCheckReportMail($report, $lead));
                 $notes[] = "Отчетът е изпратен на {$email}.";
                 $sent = true;
             } catch (\Throwable $e) {
@@ -61,18 +61,7 @@ class SendSiteCheckReport
         // Резултатът се пази цял: страницата „Проверки на сайт“ го показва като обобщение най-отгоре.
         $lead->forceFill([
             'description' => implode("\n\n", $notes),
-            'site_check_report' => $report ? [
-                'domain' => $domain,
-                'score' => $report['score'],
-                'home_score' => $report['home_score'] ?? $report['score'],
-                'crawl' => $report['crawl'] ?? null,
-                'issues' => $report['issues'] ?? [],
-                'pagespeed' => $report['pagespeed'] ?? null,
-                'shopping' => $report['shopping'] ?? null,
-                'checks' => collect($report['checks'])->map(fn ($c) => ['key' => $c['key'] ?? null, 'status' => $c['status'], 'title' => $c['title'], 'detail' => $c['detail'] ?? ''])->values()->all(),
-                'sent' => $sent,
-                'checked_at' => now()->toIso8601String(),
-            ] : ['domain' => $domain, 'failed' => true, 'checked_at' => now()->toIso8601String()],
+            'site_check_report' => self::stored($report, $domain, $sent),
         ])->save();
 
         try {
@@ -82,5 +71,22 @@ class SendSiteCheckReport
             Log::error('Lead notification email failed: ' . $e->getMessage(), ['project_id' => $lead->id]);
         }
         \App\Support\Notify\Telegram::newLead($lead, 'Проверка на сайт', defer: false);
+    }
+
+    /** Отчетът във вида, в който се пази в projects.site_check_report (общ за проверката и за месечната проверка на абонатите). */
+    public static function stored(?array $report, string $domain, bool $sent): array
+    {
+        return $report ? [
+            'domain' => $domain,
+            'score' => $report['score'],
+            'home_score' => $report['home_score'] ?? $report['score'],
+            'crawl' => $report['crawl'] ?? null,
+            'issues' => $report['issues'] ?? [],
+            'pagespeed' => $report['pagespeed'] ?? null,
+            'shopping' => $report['shopping'] ?? null,
+            'checks' => collect($report['checks'])->map(fn ($c) => ['key' => $c['key'] ?? null, 'status' => $c['status'], 'title' => $c['title'], 'detail' => $c['detail'] ?? ''])->values()->all(),
+            'sent' => $sent,
+            'checked_at' => now()->toIso8601String(),
+        ] : ['domain' => $domain, 'failed' => true, 'checked_at' => now()->toIso8601String()];
     }
 }
